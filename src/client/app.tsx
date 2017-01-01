@@ -1,4 +1,3 @@
-import 'bootstrap/scss/bootstrap.scss';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';

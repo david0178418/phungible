@@ -47,7 +47,11 @@ function buildServerTask() {
 }
 
 function copyStaticTask() {
-	return gulp.src('./src/client/index.html')
+	return gulp.src([
+			'./src/client/index.html',
+			'./node_modules/bootstrap/dist/css/bootstrap.min.css',
+			'./node_modules/bootstrap/dist/css/bootstrap.min.css.map',
+		])
 		.pipe(gulp.dest('./build/client/'));
 }
 
