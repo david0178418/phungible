@@ -10,7 +10,10 @@ gulp.task('build:client', buildClientTask);
 gulp.task('build:client:watch', buildClientWatchTask);
 gulp.task('build:server', buildServerTask);
 gulp.task('build:server:watch', buildServerWatchTask);
-gulp.task('copy:static', copyStaticTask);
+gulp.task('copy:static:css', copyStaticCssTask);
+gulp.task('copy:static:font', copyStaticFontTask);
+gulp.task('copy:static:html', copyStaticHtmlTask);
+gulp.task('copy:static', ['copy:static:css', 'copy:static:font', 'copy:static:html']);
 gulp.task('copy:static:watch', copyStaticWatchTask);
 gulp.task('server:listen', serverTask);
 gulp.task('server:watch', serverWatchTask);
@@ -23,7 +26,7 @@ gulp.task('default', gulpSequence('build', 'copy', ['build:watch', 'server']));
 function buildClientTask() {
 	return gulp.src('./src/client/index.ts')
 		.pipe(webpack(webpackConfig))
-		.pipe(gulp.dest('build/client'));
+		.pipe(gulp.dest('build/client/js/'));
 }
 
 function buildClientWatchTask() {
@@ -32,8 +35,7 @@ function buildClientWatchTask() {
 	}, webpackConfig);
 
 	return gulp.src('./src/client/index.js')
-		.pipe(webpack(webpackWatchConfig))
-		.pipe(gulp.dest('build/client'));
+		.pipe(webpack(webpackWatchConfig));
 }
 
 function buildServerWatchTask() {
@@ -46,17 +48,36 @@ function buildServerTask() {
 		.js.pipe(gulp.dest('build/server'));
 }
 
-function copyStaticTask() {
+function copyStaticCssTask() {
 	return gulp.src([
-			'./src/client/index.html',
 			'./node_modules/bootstrap/dist/css/bootstrap.min.css',
 			'./node_modules/bootstrap/dist/css/bootstrap.min.css.map',
+			'./node_modules/font-awesome/css/font-awesome.css',
+			'./node_modules/font-awesome/css/font-awesome.font-awesome.css.map',
+		])
+		.pipe(gulp.dest('./build/client/css/'));
+}
+
+function copyStaticFontTask() {
+	return gulp.src([
+			'./node_modules/font-awesome/fonts/fontawesome-webfont.ttf',
+			'./node_modules/font-awesome/fonts/FontAwesome.otf',
+			'./node_modules/font-awesome/fonts/fontawesome-webfont.eot',
+			'./node_modules/font-awesome/fonts/fontawesome-webfont.woff',
+			'./node_modules/font-awesome/fonts/fontawesome-webfont.woff2',
+		])
+		.pipe(gulp.dest('./build/client/fonts/'));
+}
+
+function copyStaticHtmlTask() {
+	return gulp.src([
+			'./src/client/index.html',
 		])
 		.pipe(gulp.dest('./build/client/'));
 }
 
 function copyStaticWatchTask() {
-	return gulp.watch('./src/client/index.html', copyStaticTask);
+	return gulp.watch('./src/client/index.html', copyStaticHtmlTask);
 }
 
 function serverTask() {

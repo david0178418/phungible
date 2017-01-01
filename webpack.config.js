@@ -48,10 +48,10 @@ module.exports = {
 	},
 	output: {
 		filename: 'app.js',
-		path: __dirname + '/build/client/',
+		path: __dirname + '/build/client/js/',
 	},
 	plugins: [
-		new ExtractTextPlugin('styles.css'),
+		new ExtractTextPlugin('../css/styles.css'),
 	],
 	resolve: {
 		extensions: [
