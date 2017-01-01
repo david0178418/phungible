@@ -1,12 +1,12 @@
 import {useStrict} from 'mobx';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import {render} from 'react-dom';
 
-import App from './app';
+import Routes from './routes';
 
 useStrict(true);
 
-ReactDOM.render(
-	React.createElement(App, {}),
+render(
+	React.createElement(Routes, {}),
 	document.getElementById('app'),
 );
