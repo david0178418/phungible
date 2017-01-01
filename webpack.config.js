@@ -25,8 +25,8 @@ module.exports = {
 				exclude: [
 					path.resolve(__dirname, 'src/server/'),
 				],
-				loader: ExtractTextPlugin.extract('css-loader?sourceMap!' + 'less-loader?sourceMap'),
-				test: /\.less$/,
+				loader: ExtractTextPlugin.extract('css-loader?sourceMap!' + 'sass-loader?sourceMap'),
+				test: /\.scss$/,
 			}, {
 				exclude: [
 					path.resolve(__dirname, 'src/server/'),

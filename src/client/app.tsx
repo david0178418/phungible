@@ -1,10 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/scss/bootstrap.scss';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import './app.less';
+import './app.scss';
 
 const enum RepeatInterval {
 	Daily,
