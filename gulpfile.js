@@ -35,7 +35,8 @@ function buildClientWatchTask() {
 	}, webpackConfig);
 
 	return gulp.src('./src/client/index.js')
-		.pipe(webpack(webpackWatchConfig));
+		.pipe(webpack(webpackWatchConfig))
+		.pipe(gulp.dest('build/client/js/'));
 }
 
 function buildServerWatchTask() {

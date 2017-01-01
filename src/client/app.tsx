@@ -4,6 +4,7 @@ import {Component} from 'react';
 import * as React from 'react';
 
 import './app.scss';
+import Icon from  './global/icon';
 
 const enum RepeatInterval {
 	Daily,
@@ -75,7 +76,7 @@ class App extends Component<any, any> {
 						</select>
 					</div>
 					<button type="submit" className="btn btn-default">
-						<span className="fa fa-plus"></span>
+						<Icon type="plus" />
 						Add Item
 					</button>
 				</form>
