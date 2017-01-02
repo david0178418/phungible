@@ -7,7 +7,9 @@ function MainLayout(props: any) {
 	return (
 		<div>
 			<Nav />
-			{props.children}
+			<div className="container">
+				{props.children}
+			</div>
 		</div>
 	);
 }

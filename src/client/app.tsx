@@ -6,14 +6,7 @@ import * as React from 'react';
 import Layout from './layout';
 
 import './app.scss';
-import {RepeatInterval} from './global/types';
-
-class BudgetItem {
-	public amount: number;
-	public label: string;
-	public type: RepeatInterval;
-	public startDate: string;
-}
+import {BudgetItem} from './global/types';
 
 export
 class AppStore {

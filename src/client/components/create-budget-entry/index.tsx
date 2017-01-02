@@ -1,15 +1,19 @@
 import * as React from 'react';
 
-import Icon from  '../global/icon';
-import {RepeatInterval} from '../global/types';
+import Icon from  '../../global/icon';
+import {BudgetItem, RepeatInterval} from '../../global/types';
 
 export default
-function CreateBudgetEntry() {
+function CreateBudgetEntry(props: BudgetItem) {
 	return (
 		<form className="create-budget-entry">
 			<div className="form-group">
 				<label>Name</label>
-				<input type="text" className="form-control" placeholder="e.g. 'Car payment', 'Rent, 'Groceries'" />
+				<input
+					className="form-control"
+					placeholder="e.g. 'Car payment', 'Rent, 'Groceries'"
+					type="text"
+				/>
 			</div>
 			<div className="form-group">
 				<label>Amount</label>
@@ -47,7 +51,7 @@ function CreateBudgetEntry() {
 					</select>
 				</div>
 			</div>
-			<button type="submit" className="btn btn-default">
+			<button type="submit" className="btn btn-primary">
 				<Icon type="plus" />
 				{' Add Entry'}
 			</button>
