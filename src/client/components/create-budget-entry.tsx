@@ -4,9 +4,9 @@ import Icon from  '../global/icon';
 import {RepeatInterval} from '../global/types';
 
 export default
-function CreateBudgetItem() {
+function CreateBudgetEntry() {
 	return (
-		<form className="create-budget-item">
+		<form className="create-budget-entry">
 			<div className="form-group">
 				<label>Name</label>
 				<input type="text" className="form-control" placeholder="e.g. 'Car payment', 'Rent, 'Groceries'" />
@@ -49,7 +49,7 @@ function CreateBudgetItem() {
 			</div>
 			<button type="submit" className="btn btn-default">
 				<Icon type="plus" />
-				{' Add Item'}
+				{' Add Entry'}
 			</button>
 		</form>
 	);

@@ -1,15 +1,17 @@
 import * as React from 'react';
-import {browserHistory, Route, Router} from 'react-router';
+import {browserHistory, IndexRoute, Route, Router} from 'react-router';
 
 import App from './app';
-import CreateBudgetItem from './components/create-budget-item';
+import CreateBudgetItem from './components/create-budget-entry';
+import Index from './components/index';
 
 export default
 function Routes() {
 	return (
 		<Router history={browserHistory}>
 			<Route path="/" component={App}>
-				<Route path="create-budget-item" component={CreateBudgetItem} />
+				<IndexRoute component={Index} />
+				<Route path="create-budget-entry" component={CreateBudgetItem} />
 			</Route>
 		</Router>
 	);

@@ -2,7 +2,8 @@ import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {Link} from 'react-router';
+
+import Layout from './layout';
 
 import './app.scss';
 import {RepeatInterval} from './global/types';
@@ -35,11 +36,9 @@ class App extends Component<any, any> {
 		} = this.store;
 
 		return (
-			<div>
-				APP
-				<Link to="/create-budget-item">Create</Link>
+			<Layout>
 				{this.props.children}
-			</div>
+			</Layout>
 		);
 	}
 }
