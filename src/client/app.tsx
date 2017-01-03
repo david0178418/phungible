@@ -6,11 +6,11 @@ import * as React from 'react';
 import Layout from './layout';
 
 import './app.scss';
-import {BudgetItem} from './global/types';
+import {BudgetEntry} from './global/types';
 
 export
 class AppStore {
-	@observable public budgetItems: BudgetItem[];
+	@observable public budgetItems: BudgetEntry[];
 }
 
 @observer

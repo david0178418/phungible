@@ -1,19 +1,19 @@
 export
-class BudgetItem {
+class BudgetEntry {
 	public amount: number;
 	public exceptions: string[];
 	public labels: string[];
 	public name: string;
-	public type: RepeatInterval;
+	public repeatValue: number = 1;
+	public repeatUnit: RepeatUnits = RepeatUnits.Month;
 	public startDate: string;
 };
 
 export
-const enum RepeatInterval {
-	Daily,
-	Weekdays,
-	Weekly,
-	Monthly,
-	Yearly,
+const enum RepeatUnits {
+	Day,
+	Week,
+	Month,
+	Year,
 	None,
 };
