@@ -69,6 +69,7 @@
         "only-arrow-functions": [
           false
         ],
+        "object-literal-sort-keys": true,
         "quotemark": [
             true,
             "single",

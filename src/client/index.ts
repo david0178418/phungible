@@ -4,7 +4,7 @@ import {render} from 'react-dom';
 
 import Routes from './routes';
 
-useStrict(true);
+useStrict(false);
 
 render(
 	React.createElement(Routes, {}),
