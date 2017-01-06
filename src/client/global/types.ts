@@ -34,7 +34,7 @@ class BudgetEntry {
 		}
 	}
 	get startDate() {
-		return moment(this._startDate).toDate();
+		return moment(this._startDate, 'MM/DD/YYYY').toDate();
 	}
 	@computed get formattedStartDate() {
 		return this._startDate;
