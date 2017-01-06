@@ -54,11 +54,11 @@ class BudgetEntry {
 
 export
 class AppStore {
-	@observable public budgetItems: BudgetEntry[];
-	@observable public openBudgetItem: BudgetEntry | null = null;
+	@observable public budgetEntries: BudgetEntry[];
+	@observable public openBudgetEntry: BudgetEntry | null = null;
 
 	constructor() {
-		this.budgetItems = observable([]);
+		this.budgetEntries = observable([]);
 	}
 };
 

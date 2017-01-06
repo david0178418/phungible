@@ -24,6 +24,6 @@ class CreateBudgetEntry extends Component<Props, any> {
 	}
 
 	private onSubmit(newBudgetEntry: BudgetEntry) {
-		this.props.store.budgetItems.push(newBudgetEntry);
+		this.props.store.budgetEntries.push(newBudgetEntry);
 	}
 }

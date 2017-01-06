@@ -131,7 +131,7 @@ class BudgetEntryEdit extends Component<Props, State> {
 
 	private handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		this.props.onSubmit(this.props.budgetEntry);
+		this.props.onSubmit(this.state.budgetEntry);
 	}
 	private handleToggleRepeats() {
 		if(this.state.budgetEntry.repeats) {

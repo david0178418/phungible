@@ -6,6 +6,7 @@ function Nav() {
 	return (
 		<nav className="navbar nav-inline">
 			<Link className="nav-link" to="/">Home</Link>
+			<Link className="nav-link" to="/overview">Overview</Link>
 			<Link className="nav-link" to="/create-budget-entry">Create</Link>
 		</nav>
 	);
