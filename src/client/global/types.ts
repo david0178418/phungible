@@ -10,6 +10,7 @@ class BudgetEntry {
 	@observable public name = '';
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.None;
 	@observable public repeatValue = 1;
+	@observable public type: 
 
 	@observable private _startDate: string;
 
@@ -63,7 +64,7 @@ class AppStore {
 };
 
 export
-const enum RepeatUnits {
+enum RepeatUnits {
 	Day,
 	Week,
 	Month,
