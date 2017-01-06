@@ -2,7 +2,7 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
-import {AppStore, BudgetEntry, RepeatUnits} from '../../global/types';
+import {AppStore, BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
 
 type Props = {
 	store: AppStore;
@@ -10,8 +10,9 @@ type Props = {
 
 function Row(budgetEntry: BudgetEntry) {
 	return (
-		<tr key={budgetEntry.name}>
+		<tr key={`${budgetEntry.name}+${budgetEntry.type}+${budgetEntry.amount}`}>
 			<td>{budgetEntry.name}</td>
+			<td>{BudgetType[budgetEntry.type]}</td>
 			<td>${budgetEntry.prettyAmount}</td>
 			<td>{budgetEntry.startDate.toLocaleDateString()}</td>
 			<td>
@@ -42,6 +43,7 @@ class Overview extends Component<Props, any> {
 					<thead>
 						<tr>
 							<th>Name</th>
+							<th>Type</th>
 							<th>Amount</th>
 							<th>Start Date</th>
 							<th>Repeats</th>

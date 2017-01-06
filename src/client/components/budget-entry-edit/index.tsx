@@ -3,7 +3,7 @@ import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
 import Icon from  '../../global/icon';
-import {BudgetEntry, RepeatUnits} from '../../global/types';
+import {BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
 
 type Props = {
 	budgetEntry?: BudgetEntry;
@@ -64,6 +64,17 @@ class BudgetEntryEdit extends Component<Props, State> {
 							value={budgetEntry.prettyAmount}
 						/>
 					</div>
+				</div>
+				<div className="form-group row">
+					<label>Type</label>
+					<select
+						className="form-control"
+						defaultValue={budgetEntry.type.toString()}
+						onChange={(ev) => this.handleUpdateType(+(ev.target as HTMLSelectElement).value)}
+					>
+						<option value={BudgetType.Income}>Income</option>
+						<option value={BudgetType.Expense}>Expense</option>
+					</select>
 				</div>
 				<div className="form-group row">
 					<label>Starts</label>
@@ -132,7 +143,7 @@ class BudgetEntryEdit extends Component<Props, State> {
 	private handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		this.props.onSubmit(this.state.budgetEntry);
-		
+
 		this.setState({
 			budgetEntry: new BudgetEntry(),
 		});
@@ -160,5 +171,8 @@ class BudgetEntryEdit extends Component<Props, State> {
 	}
 	private handleUpdateStartDate(newDate: Date) {
 		this.state.budgetEntry.startDate = newDate;
+	}
+	private handleUpdateType(newType: BudgetType) {
+		this.state.budgetEntry.type = newType;
 	}
 }

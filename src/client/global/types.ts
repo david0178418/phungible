@@ -10,7 +10,7 @@ class BudgetEntry {
 	@observable public name = '';
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.None;
 	@observable public repeatValue = 1;
-	@observable public type: 
+	@observable public type: BudgetType = BudgetType.Expense;
 
 	@observable private _startDate: string;
 
@@ -61,6 +61,12 @@ class AppStore {
 	constructor() {
 		this.budgetEntries = observable([]);
 	}
+};
+
+export
+enum BudgetType {
+	Income,
+	Expense,
 };
 
 export
