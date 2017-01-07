@@ -1,17 +1,25 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
-
+import {identifier, list, object, serializable} from 'serializr';
 export
 class BudgetEntry {
+	@serializable
 	@observable public amount = 0;
+	@serializable
 	@observable public exceptions: string[];
+	@serializable(identifier())
 	public id: number;
+	@serializable
 	@observable public labels: string[];
+	@serializable
 	@observable public name = '';
+	@serializable
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.None;
+	@serializable
 	@observable public repeatValue = 1;
+	@serializable
 	@observable public type: BudgetType = BudgetType.Expense;
-
+	@serializable
 	@observable private _startDate: string;
 
 	constructor(originalEntry?: BudgetEntry) {
@@ -55,13 +63,16 @@ class BudgetEntry {
 
 export
 class AppStore {
+	@serializable(list(object(BudgetEntry)))
 	@observable public budgetEntries: BudgetEntry[];
 	@observable public openBudgetEntry: BudgetEntry | null = null;
 
 	constructor() {
 		this.budgetEntries = observable([]);
+		(window as any).store = this;
 	}
 };
+
 
 export
 enum BudgetType {

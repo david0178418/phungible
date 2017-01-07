@@ -1,5 +1,7 @@
 import {Component} from 'react';
 import * as React from 'react';
+import {deserialize} from 'serializr';
+import {getItem} from '../client/global/storage';
 
 import Layout from './layout';
 
@@ -12,8 +14,13 @@ class App extends Component<any, any> {
 
 	constructor(props: {}) {
 		super(props);
+		let data = getItem('store');
 
-		this.store = new AppStore();
+		if(data) {
+			this.store = deserialize(AppStore, data);
+		} else {
+			this.store = new AppStore();
+		}
 	}
 
 	public render() {

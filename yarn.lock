@@ -3330,6 +3330,10 @@ sequencify@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/sequencify/-/sequencify-0.0.7.tgz#90cff19d02e07027fd767f5ead3e7b95d1e7380c"
 
+serializr@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/serializr/-/serializr-1.1.8.tgz#a5ae514b1f11372d95d359aa31e4cb2657530883"
+
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
