@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import Nav from './navigation';
+import Navigation from './navigation';
 
 export default
 function MainLayout(props: any) {
 	return (
 		<div>
-			<Nav />
+			<Navigation />
 			<div className="container">
 				{props.children}
 			</div>
