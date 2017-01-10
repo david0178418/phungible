@@ -1,3 +1,4 @@
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
@@ -111,34 +112,34 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 	);
 });
 
-function handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
+const handleSubmit = action(function(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
 	e.preventDefault();
 	onSubmit();
-}
-function handleToggleRepeats(budgetEntry: BudgetEntry) {
+});
+const handleToggleRepeats = action(function(budgetEntry: BudgetEntry) {
 	if(budgetEntry.repeats) {
 		budgetEntry.repeatUnit = RepeatUnits.None;
 	} else {
 		budgetEntry.repeatUnit = RepeatUnits.Month;
 	}
-}
-function handleUpdateAmount(newAmount: number, budgetEntry: BudgetEntry) {
+});
+const handleUpdateAmount = action(function(newAmount: number, budgetEntry: BudgetEntry) {
 	budgetEntry.amount = newAmount * 100;
-}
-function handleUpdateRepeatUnit(newRepeatUnit: RepeatUnits, budgetEntry: BudgetEntry) {
+});
+const handleUpdateRepeatUnit = action(function(newRepeatUnit: RepeatUnits, budgetEntry: BudgetEntry) {
 	budgetEntry.repeatUnit = newRepeatUnit;
-}
-function handleUpdateRepeatValue(newRepeatValue: number, budgetEntry: BudgetEntry) {
+});
+const handleUpdateRepeatValue = action(function(newRepeatValue: number, budgetEntry: BudgetEntry) {
 	if(newRepeatValue > 0) {
 		budgetEntry.repeatValue = newRepeatValue | 0;
 	}
-}
-function handleUpdateName(newName: string, budgetEntry: BudgetEntry) {
+});
+const handleUpdateName = action(function(newName: string, budgetEntry: BudgetEntry) {
 	budgetEntry.name = newName;
-}
-function handleUpdateStartDate(newDate: Date, budgetEntry: BudgetEntry) {
+});
+const handleUpdateStartDate = action(function(newDate: Date, budgetEntry: BudgetEntry) {
 	budgetEntry.startDate = newDate;
-}
-function handleUpdateType(newType: BudgetType, budgetEntry: BudgetEntry) {
+});
+const handleUpdateType = action(function(newType: BudgetType, budgetEntry: BudgetEntry) {
 	budgetEntry.type = newType;
-}
+});

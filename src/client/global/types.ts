@@ -1,6 +1,9 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, serializable} from 'serializr';
+import {deserialize, identifier, list, object, serialize, serializable} from 'serializr';
+
+import {setItem} from './storage';
+
 export
 class BudgetEntry {
 	@serializable
@@ -71,6 +74,16 @@ class AppStore {
 
 		this.budgetEntries = observable([]);
 		(window as any).store = this;
+	}
+
+	public save() {
+		setItem('store', serialize(this));
+	}
+
+	@action
+	public addBudgetItem(budgetEntry: BudgetEntry) {
+		this.budgetEntries.push(budgetEntry);
+		this.save();
 	}
 
 	@action

@@ -2,10 +2,8 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 import {Button} from 'reactstrap';
-import {serialize} from 'serializr';
 
 import Icon from  '../../global/icon';
-import {setItem} from '../../global/storage';
 import {AppStore, BudgetEntry} from '../../global/types';
 import BudgetEntryEdit from '../budget-entry-edit';
 
@@ -20,9 +18,16 @@ class CreateBudgetEntryStore {
 
 	public saveBudgetEntry() {
 		if(this.budgetEntry.isValid) {
-			this.appStore.budgetEntries.push(this.budgetEntry);
+			this.appStore.addBudgetItem(this.budgetEntry);
 			this.budgetEntry = new BudgetEntry();
-			setItem('store', serialize(this.appStore));
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public removeBudgetEntry(budgetEntry: BudgetEntry) {
+		if((this.appStore.budgetEntries as any).remove(budgetEntry)) {
 			return true;
 		} else {
 			return false;
