@@ -1,6 +1,6 @@
-import {computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {identifier, list, object, serializable} from 'serializr';
+import {deserialize, identifier, list, object, serializable} from 'serializr';
 export
 class BudgetEntry {
 	@serializable
@@ -68,8 +68,14 @@ class AppStore {
 	@observable public openBudgetEntry: BudgetEntry | null = null;
 
 	constructor() {
+
 		this.budgetEntries = observable([]);
 		(window as any).store = this;
+	}
+
+	@action
+	public static deserialize(data: any) {
+		return deserialize(AppStore, data);
 	}
 };
 
