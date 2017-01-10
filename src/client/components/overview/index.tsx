@@ -1,3 +1,4 @@
+import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
@@ -67,11 +68,10 @@ function CreateModal({isOpen, toggle}: {isOpen: boolean, toggle: () => void}) {
 @observer
 export default
 class Overview extends Component<Props, any> {
+	@observable isOpen: boolean = false;
+
 	constructor(props: Props) {
 		super(props);
-		this.state = {
-			isOpen: false,
-		};
 	}
 
 	public render() {
@@ -81,12 +81,12 @@ class Overview extends Component<Props, any> {
 
 		return (
 			<div>
-				<Button color="primary" onClick={() => this.setState({isOpen: true})}>
+				<Button color="primary" onClick={() => this.isOpen = true}>
 					<Icon type="plus" />
 					{' Create an Entry'}
 				</Button>
 				<Table budgetEntries={budgetEntries}/>
-				<CreateModal isOpen={this.state.isOpen} toggle={() => this.setState({isOpen: false})}/>
+				<CreateModal isOpen={this.isOpen} toggle={() => this.isOpen = false}/>
 			</div>
 		);
 	}
