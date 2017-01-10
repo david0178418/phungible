@@ -1,4 +1,4 @@
-import {observable} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
@@ -31,6 +31,9 @@ function Row(onRemove: removeHandler, budgetEntry: BudgetEntry) {
 				}
 			</td>
 			<td>
+				<Button color="link">
+					<Icon type="pencil"/>
+				</Button>
 				<Button color="link" onClick={() => onRemove(budgetEntry)}>
 					<Icon type="close"/>
 				</Button>
@@ -83,6 +86,18 @@ class Overview extends Component<Props, any> {
 		super(props);
 	}
 
+	@action public openModal() {
+		this.isOpen = true;
+	}
+
+	@action public closeModal() {
+		this.isOpen = false;
+	}
+
+	public removeEntry(budgetEntry: BudgetEntry) {
+		this.props.store.removeBudgetEntry(budgetEntry)
+	}
+
 	public render() {
 		const {
 			budgetEntries,
@@ -90,12 +105,15 @@ class Overview extends Component<Props, any> {
 
 		return (
 			<div>
-				<Button color="primary" onClick={() => this.isOpen = true}>
+				<Button color="primary" onClick={() => this.openModal()}>
 					<Icon type="plus" />
 					{' Create an Entry'}
 				</Button>
-				<Table budgetEntries={budgetEntries} onRemove={(budgetEntry: BudgetEntry) => this.props.store.removeBudgetEntry(budgetEntry)}/>
-				<CreateModal isOpen={this.isOpen} toggle={() => this.isOpen = false}/>
+				<Table
+					budgetEntries={budgetEntries}
+					onRemove={(entry) => this.removeEntry(entry)}
+				/>
+				<CreateModal isOpen={this.isOpen} toggle={() => this.closeModal()}/>
 			</div>
 		);
 	}
