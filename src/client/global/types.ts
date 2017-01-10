@@ -73,7 +73,6 @@ class AppStore {
 	}
 };
 
-
 export
 enum BudgetType {
 	Income,
