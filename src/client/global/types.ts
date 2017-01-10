@@ -81,8 +81,14 @@ class AppStore {
 	}
 
 	@action
-	public addBudgetItem(budgetEntry: BudgetEntry) {
+	public addBudgetEntry(budgetEntry: BudgetEntry) {
 		this.budgetEntries.push(budgetEntry);
+		this.save();
+	}
+
+	@action
+	public removeBudgetEntry(budgetEntry: BudgetEntry) {
+		(this.budgetEntries as any).remove(budgetEntry);
 		this.save();
 	}
 

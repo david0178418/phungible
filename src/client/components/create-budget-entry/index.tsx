@@ -18,16 +18,8 @@ class CreateBudgetEntryStore {
 
 	public saveBudgetEntry() {
 		if(this.budgetEntry.isValid) {
-			this.appStore.addBudgetItem(this.budgetEntry);
+			this.appStore.addBudgetEntry(this.budgetEntry);
 			this.budgetEntry = new BudgetEntry();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public removeBudgetEntry(budgetEntry: BudgetEntry) {
-		if((this.appStore.budgetEntries as any).remove(budgetEntry)) {
 			return true;
 		} else {
 			return false;

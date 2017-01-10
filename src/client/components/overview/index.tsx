@@ -7,14 +7,17 @@ import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import {Icon} from '../../global/shared-components';
 import {AppStore, BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
 
+type removeHandler = (budgetEntry: BudgetEntry) => void;
+
 type Props = {
 	store: AppStore;
 };
 type TableProps = {
 	budgetEntries: BudgetEntry[];
+	onRemove: removeHandler;
 };
 
-function Row(budgetEntry: BudgetEntry) {
+function Row(onRemove: removeHandler, budgetEntry: BudgetEntry) {
 	return (
 		<tr key={`${budgetEntry.name}+${budgetEntry.type}+${budgetEntry.amount}`}>
 			<td>{budgetEntry.name}</td>
@@ -27,11 +30,16 @@ function Row(budgetEntry: BudgetEntry) {
 					'Never'
 				}
 			</td>
+			<td>
+				<Button color="link" onClick={() => onRemove(budgetEntry)}>
+					<Icon type="close"/>
+				</Button>
+			</td>
 		</tr>
 	);
 }
 
-function Table({budgetEntries}: TableProps) {
+const Table = observer(function({budgetEntries, onRemove}: TableProps) {
 	return (
 		<table className="table">
 			<thead>
@@ -41,14 +49,15 @@ function Table({budgetEntries}: TableProps) {
 					<th>Amount</th>
 					<th>Start Date</th>
 					<th>Repeats</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				{budgetEntries.map(Row)}
+				{budgetEntries.map(Row.bind(null, onRemove))}
 			</tbody>
 		</table>
 	);
-}
+});
 
 function CreateModal({isOpen, toggle}: {isOpen: boolean, toggle: () => void}) {
 	return (
@@ -85,7 +94,7 @@ class Overview extends Component<Props, any> {
 					<Icon type="plus" />
 					{' Create an Entry'}
 				</Button>
-				<Table budgetEntries={budgetEntries}/>
+				<Table budgetEntries={budgetEntries} onRemove={(budgetEntry: BudgetEntry) => this.props.store.removeBudgetEntry(budgetEntry)}/>
 				<CreateModal isOpen={this.isOpen} toggle={() => this.isOpen = false}/>
 			</div>
 		);
