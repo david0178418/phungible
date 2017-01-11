@@ -3,8 +3,8 @@ import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
 
-import Icon from  '../../global/icon';
-import {BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
+import Icon from  '../../shared/icon';
+import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
 
 type Props = {
 	budgetEntry?: BudgetEntry;
@@ -59,7 +59,7 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 						<Icon type="calendar" />
 					</span>
 					<input
-						className="form-control"
+						className="form-control TEMP_DATE_INPUT_FIX"
 						onChange={(ev) => handleUpdateStartDate((ev.target as HTMLInputElement).valueAsDate, budgetEntry)}
 						type="date"
 						value={budgetEntry.inputFormattedDate}

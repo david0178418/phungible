@@ -4,8 +4,9 @@ import * as React from 'react';
 import {Component} from 'react';
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 
-import {Icon} from '../../global/shared-components';
-import {AppStore, BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
+import {Icon} from '../../shared/shared-components';
+import AppStore from '../../shared/stores/app';
+import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
 import BudgetEntryEdit from '../budget-entry-edit';
 
 type BudgetHandler = (budgetEntry: BudgetEntry) => void;
@@ -106,12 +107,11 @@ const Table = observer(function({budgetEntries, onEdit, onRemove}: TableProps) {
 const EditModal = observer(function({budgetEntry, cancel, isOpen, save}: EditModalProps) {
 	return (
 		<Modal isOpen={isOpen} toggle={cancel}>
-			<ModalHeader toggle={cancel}>Modal title</ModalHeader>
+			<ModalHeader toggle={cancel}>Create Budget Entry</ModalHeader>
 			<ModalBody>
 				<BudgetEntryEdit
 					budgetEntry={budgetEntry}
 					onSubmit={cancel}
-					
 				/>
 			</ModalBody>
 			<ModalFooter>

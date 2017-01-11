@@ -1,11 +1,11 @@
 import {Component} from 'react';
 import * as React from 'react';
-import {getItem} from '../client/global/storage';
+import {getItem} from '../client/shared/storage';
 
 import Layout from './layout';
 
 import './app.scss';
-import {AppStore} from './global/types';
+import AppStore from './shared/stores/app';
 
 export default
 class App extends Component<any, any> {

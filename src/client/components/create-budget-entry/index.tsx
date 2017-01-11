@@ -3,8 +3,9 @@ import {Component} from 'react';
 import * as React from 'react';
 import {Button} from 'reactstrap';
 
-import Icon from  '../../global/icon';
-import {AppStore, BudgetEntry} from '../../global/types';
+import Icon from '../../shared/icon';
+import AppStore from '../../shared/stores/app';
+import BudgetEntry from '../../shared/stores/budget-entry';
 import BudgetEntryEdit from '../budget-entry-edit';
 
 class CreateBudgetEntryStore {

@@ -10,13 +10,10 @@ function Navigation() {
 				<NavbarBrand href="/">Budget Tool</NavbarBrand>
 				<Nav className="float-right" navbar>
 					<NavItem>
-						<Link className="nav-link" to="/overview">Overview</Link>
+						<Link className="nav-link" to="/overview">Budget Entries</Link>
 					</NavItem>
 					<NavItem>
 						<Link className="nav-link" to="/accounts">Accounts</Link>
-					</NavItem>
-					<NavItem>
-						<Link className="nav-link" to="/create-budget-entry">Create</Link>
 					</NavItem>
 				</Nav>
 			</Navbar>

@@ -21,6 +21,13 @@ declare module "reactstrap" {
 	
 
 	class Button extends Component<any, any> {}
+	class Col extends Component<any, any> {}
+	class Form extends Component<any, any> {}
+	class FormGroup extends Component<any, any> {}
+	class Input extends Component<any, any> {}
+	class InputGroup extends Component<any, any> {}
+	class InputGroupAddon extends Component<any, any> {}
+	class Label extends Component<any, any> {}
 	class ModalFooter extends Component<any, any> {}
 	class ModalHeader extends Component<any, any> {}
 	class ModalBody extends Component<any, any> {}

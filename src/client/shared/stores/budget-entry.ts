@@ -1,11 +1,27 @@
 import {action, computed, observable} from 'mobx';
+import {deserialize, identifier, list, primitive, serializable, serialize} from 'serializr';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, primitive, serialize, serializable} from 'serializr';
-
-import {setItem} from './storage';
 
 export
+enum BudgetType {
+	Income,
+	Expense,
+};
+
+export
+enum RepeatUnits {
+	Day,
+	Week,
+	Month,
+	Year,
+	None,
+};
+
+export default
 class BudgetEntry {
+	@action public static deserialize(data: any) {
+		return deserialize(BudgetEntry, data);
+	}
 	@serializable
 	@observable public amount = 0;
 	@serializable
@@ -60,60 +76,4 @@ class BudgetEntry {
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
 	}
-
-	@action public static deserialize(data: any) {
-		return deserialize(BudgetEntry, data);
-	}
-};
-
-export
-class AppStore {
-	@serializable(list(object(BudgetEntry)))
-	@observable public budgetEntries: BudgetEntry[];
-	@observable public openBudgetEntry: BudgetEntry | null = null;
-
-	constructor() {
-
-		this.budgetEntries = observable([]);
-		(window as any).store = this;
-	}
-
-	public save() {
-		setItem('store', serialize(this));
-	}
-	@action public saveBudgetEntry(newBudgetEntry: BudgetEntry) {
-		if(!newBudgetEntry.id) {
-			newBudgetEntry.id = Date.now();
-			this.budgetEntries.push(newBudgetEntry);
-		} else {
-			const index = this.budgetEntries.findIndex(budgetEntry => budgetEntry.id === newBudgetEntry.id);
-			this.budgetEntries[index] = newBudgetEntry;
-		}
-		this.save();
-	}
-	@action public removeBudgetEntry(budgetEntry: BudgetEntry) {
-		(this.budgetEntries as any).remove(budgetEntry);
-		this.save();
-	}
-	@action public static deserialize(data: any) {
-		return deserialize(AppStore, data);
-	}
-	public findBudgetEntry(id: number) {
-		return this.budgetEntries.find(budgetEntry => budgetEntry.id === id);
-	}
-};
-
-export
-enum BudgetType {
-	Income,
-	Expense,
-};
-
-export
-enum RepeatUnits {
-	Day,
-	Week,
-	Month,
-	Year,
-	None,
 };

@@ -52,6 +52,7 @@
             true,
             "tabs"
         ],
+        "interface-over-type-literal": false,
         "max-classes-per-file": [
           false
         ],
