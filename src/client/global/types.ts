@@ -1,6 +1,6 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, serialize, serializable} from 'serializr';
+import {deserialize, identifier, list, object, primitive, serialize, serializable} from 'serializr';
 
 import {setItem} from './storage';
 
@@ -8,11 +8,11 @@ export
 class BudgetEntry {
 	@serializable
 	@observable public amount = 0;
-	@serializable
+	@serializable(list(primitive()))
 	@observable public exceptions: string[];
 	@serializable(identifier())
 	public id: number;
-	@serializable
+	@serializable(list(primitive()))
 	@observable public labels: string[];
 	@serializable
 	@observable public name = '';
@@ -27,6 +27,7 @@ class BudgetEntry {
 
 	constructor(originalEntry?: BudgetEntry) {
 		if(originalEntry) {
+			// TODO use serializr to simplifiy
 			this.amount = originalEntry.amount;
 			this.id = originalEntry.id;
 			this.exceptions = originalEntry.exceptions.slice(0);
@@ -34,7 +35,10 @@ class BudgetEntry {
 			this.name = originalEntry.name;
 			this.repeatUnit = originalEntry.repeatUnit;
 			this.repeatValue = originalEntry.repeatValue;
+			this._startDate = originalEntry._startDate;
 		} else {
+			this.exceptions = [];
+			this.labels = [];
 			this._startDate = moment().format('MM/DD/YYYY');
 		}
 	}
@@ -79,22 +83,25 @@ class AppStore {
 	public save() {
 		setItem('store', serialize(this));
 	}
-
-	@action
-	public addBudgetEntry(budgetEntry: BudgetEntry) {
-		this.budgetEntries.push(budgetEntry);
+	@action public saveBudgetEntry(newBudgetEntry: BudgetEntry) {
+		if(!newBudgetEntry.id) {
+			newBudgetEntry.id = Date.now();
+			this.budgetEntries.push(newBudgetEntry);
+		} else {
+			const index = this.budgetEntries.findIndex(budgetEntry => budgetEntry.id === newBudgetEntry.id);
+			this.budgetEntries[index] = newBudgetEntry;
+		}
 		this.save();
 	}
-
-	@action
-	public removeBudgetEntry(budgetEntry: BudgetEntry) {
+	@action public removeBudgetEntry(budgetEntry: BudgetEntry) {
 		(this.budgetEntries as any).remove(budgetEntry);
 		this.save();
 	}
-
-	@action
-	public static deserialize(data: any) {
+	@action public static deserialize(data: any) {
 		return deserialize(AppStore, data);
+	}
+	public findBudgetEntry(id: number) {
+		return this.budgetEntries.find(budgetEntry => budgetEntry.id === id);
 	}
 };
 

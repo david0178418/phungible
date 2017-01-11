@@ -18,7 +18,7 @@ class CreateBudgetEntryStore {
 
 	public saveBudgetEntry() {
 		if(this.budgetEntry.isValid) {
-			this.appStore.addBudgetEntry(this.budgetEntry);
+			this.appStore.saveBudgetEntry(this.budgetEntry);
 			this.budgetEntry = new BudgetEntry();
 			return true;
 		} else {

@@ -8,13 +8,14 @@ import {Icon} from '../../global/shared-components';
 import {AppStore, BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
 import BudgetEntryEdit from '../budget-entry-edit';
 
-type removeHandler = (budgetEntry: BudgetEntry) => void;
+type BudgetHandler = (budgetEntry: BudgetEntry) => void;
 type Props = {
 	store: AppStore;
 };
 type TableProps = {
 	budgetEntries: BudgetEntry[];
-	onRemove: removeHandler;
+	onEdit: BudgetHandler;
+	onRemove: BudgetHandler;
 };
 type EditModalProps = {
 	budgetEntry: BudgetEntry;
@@ -39,11 +40,11 @@ class OverviewStore {
 		this._openBudgetEntry = new BudgetEntry();
 	}
 	@action public saveBudgetEntry() {
-		this.appStore.addBudgetEntry(this._openBudgetEntry);
+		this.appStore.saveBudgetEntry(this._openBudgetEntry);
 		this.closeBudgetOpenEntry();
 	}
-	public editBudgetEntry(budgetEntry: BudgetEntry) {
-		this._openBudgetEntry
+	@action public editBudgetEntry(budgetEntry: BudgetEntry) {
+		this._openBudgetEntry = new BudgetEntry(budgetEntry);
 	}
 
 	@computed get budgetEntries() {
@@ -57,7 +58,7 @@ class OverviewStore {
 	}
 }
 
-function Row(onRemove: removeHandler, budgetEntry: BudgetEntry) {
+function Row(onRemove: BudgetHandler, onEdit:BudgetHandler, budgetEntry: BudgetEntry) {
 	return (
 		<tr key={`${budgetEntry.name}+${budgetEntry.type}+${budgetEntry.amount}`}>
 			<td>{budgetEntry.name}</td>
@@ -71,7 +72,7 @@ function Row(onRemove: removeHandler, budgetEntry: BudgetEntry) {
 				}
 			</td>
 			<td>
-				<Button color="link">
+				<Button color="link" onClick={() => onEdit(budgetEntry)}>
 					<Icon type="pencil"/>
 				</Button>
 				<Button color="link" onClick={() => onRemove(budgetEntry)}>
@@ -82,7 +83,7 @@ function Row(onRemove: removeHandler, budgetEntry: BudgetEntry) {
 	);
 }
 
-const Table = observer(function({budgetEntries, onRemove}: TableProps) {
+const Table = observer(function({budgetEntries, onEdit, onRemove}: TableProps) {
 	return (
 		<table className="table">
 			<thead>
@@ -96,7 +97,7 @@ const Table = observer(function({budgetEntries, onRemove}: TableProps) {
 				</tr>
 			</thead>
 			<tbody>
-				{budgetEntries.map(Row.bind(null, onRemove))}
+				{budgetEntries.map(Row.bind(null, onRemove, onEdit))}
 			</tbody>
 		</table>
 	);
@@ -148,6 +149,7 @@ class Overview extends Component<Props, any> {
 				<Table
 					budgetEntries={store.budgetEntries}
 					onRemove={(budgetEntry: BudgetEntry) => this.props.store.removeBudgetEntry(budgetEntry)}
+					onEdit={(budgetEntry: BudgetEntry) => this.store.editBudgetEntry(budgetEntry)}
 				/>
 				{store.isOpen &&
 					<EditModal
