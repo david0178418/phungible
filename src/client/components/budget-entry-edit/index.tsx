@@ -8,14 +8,14 @@ import {BudgetEntry, BudgetType, RepeatUnits} from '../../global/types';
 
 type Props = {
 	budgetEntry?: BudgetEntry;
-	onSubmit(): boolean;
+	onSubmit(): void;
 };
 
 export default
 observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 	return (
 		<form className="create-budget-entry" onSubmit={(ev) => handleSubmit(ev, onSubmit)}>
-			<div className="form-group row">
+			<div className="form-group">
 				<label>Name</label>
 				<input
 					className="form-control"
@@ -25,7 +25,7 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 					value={budgetEntry.name}
 				/>
 			</div>
-			<div className="form-group row">
+			<div className="form-group">
 				<label>Amount</label>
 				<div className="input-group">
 					<span className="input-group-addon">
@@ -41,7 +41,7 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 					/>
 				</div>
 			</div>
-			<div className="form-group row">
+			<div className="form-group">
 				<label>Type</label>
 				<select
 					className="form-control"
@@ -52,7 +52,7 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 					<option value={BudgetType.Expense}>Expense</option>
 				</select>
 			</div>
-			<div className="form-group row">
+			<div className="form-group">
 				<label>Starts</label>
 				<div className="input-group">
 					<span className="input-group-addon">
@@ -81,7 +81,7 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 				</div>
 			</div>
 			{budgetEntry.repeats && (
-				<div className="form-group row">
+				<div className="form-group">
 					<div className="input-group">
 						<label className="col-xs-5 col-sm-4 col-md-3 col-lg-2 col-form-label">Repeats Every</label>
 						<div className="col-xs-3 col-md-2 col-lg-1">

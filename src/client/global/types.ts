@@ -54,7 +54,7 @@ class BudgetEntry {
 		return moment(this._startDate, 'MM/DD/YYYY').format('YYYY-MM-DD');
 	}
 	@computed get isValid() {
-		return this.amount && this.name;
+		return !!(this.amount && this.name);
 	}
 	@computed get prettyAmount() {
 		return (this.amount / 100).toFixed(2);
