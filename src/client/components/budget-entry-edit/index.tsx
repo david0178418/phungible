@@ -66,6 +66,15 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 					/>
 				</div>
 			</div>
+			<div className="form-group">
+				<label>Description</label>
+				<input
+					className="form-control"
+					onChange={(ev) => handleUpdateDescription((ev.target as HTMLInputElement).value, budgetEntry)}
+					type="text"
+					value={budgetEntry.description}
+				/>
+			</div>
 			<div className="row">
 				<div className="col-sm-12">
 					<label className="custom-control custom-checkbox">
@@ -125,6 +134,9 @@ const handleToggleRepeats = action(function(budgetEntry: BudgetEntry) {
 });
 const handleUpdateAmount = action(function(newAmount: number, budgetEntry: BudgetEntry) {
 	budgetEntry.amount = newAmount * 100;
+});
+const handleUpdateDescription = action(function(newDescription: string, budgetEntry: BudgetEntry) {
+	budgetEntry.description = newDescription;
 });
 const handleUpdateRepeatUnit = action(function(newRepeatUnit: RepeatUnits, budgetEntry: BudgetEntry) {
 	budgetEntry.repeatUnit = newRepeatUnit;

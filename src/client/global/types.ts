@@ -8,6 +8,8 @@ export
 class BudgetEntry {
 	@serializable
 	@observable public amount = 0;
+	@serializable
+	@observable public description: string;
 	@serializable(list(primitive()))
 	@observable public exceptions: string[];
 	@serializable(identifier())
@@ -27,15 +29,7 @@ class BudgetEntry {
 
 	constructor(originalEntry?: BudgetEntry) {
 		if(originalEntry) {
-			// TODO use serializr to simplifiy
-			this.amount = originalEntry.amount;
-			this.id = originalEntry.id;
-			this.exceptions = originalEntry.exceptions.slice(0);
-			this.labels = originalEntry.labels.slice(0);
-			this.name = originalEntry.name;
-			this.repeatUnit = originalEntry.repeatUnit;
-			this.repeatValue = originalEntry.repeatValue;
-			this._startDate = originalEntry._startDate;
+			return BudgetEntry.deserialize(serialize(originalEntry));
 		} else {
 			this.exceptions = [];
 			this.labels = [];
@@ -65,6 +59,10 @@ class BudgetEntry {
 	}
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
+	}
+
+	@action public static deserialize(data: any) {
+		return deserialize(BudgetEntry, data);
 	}
 };
 

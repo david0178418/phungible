@@ -115,7 +115,13 @@ const EditModal = observer(function({budgetEntry, cancel, isOpen, save}: EditMod
 				/>
 			</ModalBody>
 			<ModalFooter>
-				<Button color="primary" onClick={save} disabled={!budgetEntry.isValid}>Save</Button>{' '}
+				<Button
+					color="primary"
+					onClick={save}
+					disabled={!budgetEntry.isValid}
+				>
+					Save
+				</Button>{' '}
 				<Button color="secondary" onClick={cancel}>Cancel</Button>
 			</ModalFooter>
 		</Modal>
