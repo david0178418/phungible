@@ -4,10 +4,10 @@ import {Component} from 'react';
 import * as React from 'react';
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 
-import AccountEdit from '../account-edit';
 import Icon from '../../shared/icon';
-import AppStore from '../../shared/stores/app';
 import Account, {AccountType} from '../../shared/stores/account';
+import AppStore from '../../shared/stores/app';
+import AccountEdit from '../account-edit';
 
 type AccountHandler = (account: Account) => void;
 type Props = {
@@ -104,7 +104,7 @@ const EditModal = observer(function({account, cancel, isOpen, save}: EditModalPr
 			<ModalBody>
 				<AccountEdit
 					account={account}
-					onSubmit={() => {}}
+					onSubmit={() => {/*TODO*/}}
 				/>
 			</ModalBody>
 			<ModalFooter>

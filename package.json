@@ -56,7 +56,7 @@
     "react-addons-transition-group": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.0",
-    "reactstrap": "^4.0.0-alpha.8",
+    "reactstrap": "4.0.0-alpha.8",
     "serializr": "^1.1.8"
   }
 }

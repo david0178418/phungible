@@ -2,8 +2,17 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
+import {
+	Col,
+	Form,
+	FormGroup,
+	Input,
+	InputGroup,
+	InputGroupAddon,
+	Label,
+} from 'reactstrap';
 
-import Icon from  '../../shared/icon';
+import Icon from '../../shared/icon';
 import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
 
 type Props = {
@@ -14,70 +23,65 @@ type Props = {
 export default
 observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 	return (
-		<form className="create-budget-entry" onSubmit={(ev) => handleSubmit(ev, onSubmit)}>
-			<div className="form-group">
-				<label>Name</label>
-				<input
-					className="form-control"
-					onChange={(ev) => handleUpdateName((ev.target as HTMLInputElement).value, budgetEntry)}
+		<Form className="create-budget-entry" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
+			<FormGroup>
+				<Label>Name</Label>
+				<Input
+					onChange={(ev: any) => handleUpdateName((ev.target as HTMLInputElement).value, budgetEntry)}
 					placeholder="e.g. 'Car payment', 'Rent, 'Groceries'"
-					type="text"
 					value={budgetEntry.name}
 				/>
-			</div>
-			<div className="form-group">
-				<label>Amount</label>
-				<div className="input-group">
-					<span className="input-group-addon">
+			</FormGroup>
+			<FormGroup>
+				<Label>Amount</Label>
+				<InputGroup>
+					<InputGroupAddon>
 						<Icon type="usd" />
-					</span>
-					<input
-						className="form-control"
-						onChange={(ev) => handleUpdateAmount((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
+					</InputGroupAddon>
+					<Input
+						onChange={(ev: any) => handleUpdateAmount((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
 						placeholder="0.00"
 						step={10}
 						type="number"
 						value={budgetEntry.prettyAmount}
 					/>
-				</div>
-			</div>
-			<div className="form-group">
-				<label>Type</label>
-				<select
-					className="form-control"
+				</InputGroup>
+			</FormGroup>
+			<FormGroup>
+				<Label>Type</Label>
+				<Input
 					defaultValue={budgetEntry.type.toString()}
-					onChange={(ev) => handleUpdateType(+(ev.target as HTMLSelectElement).value, budgetEntry)}
+					onChange={(ev: any) => handleUpdateType(+(ev.target as HTMLSelectElement).value, budgetEntry)}
+					type="select"
 				>
 					<option value={BudgetType.Income}>Income</option>
 					<option value={BudgetType.Expense}>Expense</option>
-				</select>
-			</div>
-			<div className="form-group">
-				<label>Starts</label>
-				<div className="input-group">
-					<span className="input-group-addon">
+				</Input>
+			</FormGroup>
+			<FormGroup>
+				<Label>Starts</Label>
+				<InputGroup>
+					<InputGroupAddon>
 						<Icon type="calendar" />
-					</span>
-					<input
-						className="form-control TEMP_DATE_INPUT_FIX"
-						onChange={(ev) => handleUpdateStartDate((ev.target as HTMLInputElement).valueAsDate, budgetEntry)}
+					</InputGroupAddon>
+					<Input
+						className="TEMP_DATE_INPUT_FIX"
+						onChange={(ev: any) => handleUpdateStartDate((ev.target as HTMLInputElement).valueAsDate, budgetEntry)}
 						type="date"
 						value={budgetEntry.inputFormattedDate}
 					/>
-				</div>
-			</div>
-			<div className="form-group">
-				<label>Description</label>
-				<input
-					className="form-control"
-					onChange={(ev) => handleUpdateDescription((ev.target as HTMLInputElement).value, budgetEntry)}
-					type="text"
+				</InputGroup>
+			</FormGroup>
+			<FormGroup>
+				<Label>Description</Label>
+				<Input
+					onChange={(ev: any) => handleUpdateDescription((ev.target as HTMLInputElement).value, budgetEntry)}
 					value={budgetEntry.description}
 				/>
-			</div>
-			<div className="row">
-				<div className="col-sm-12">
-					<label className="custom-control custom-checkbox">
+			</FormGroup>
+			<FormGroup row>
+				<Col sm={12}>
+					<Label className="custom-control custom-checkbox">
 						<input
 							checked={!budgetEntry.repeats}
 							className="custom-control-input"
@@ -86,38 +90,37 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 						/>
 						<span className="custom-control-indicator"></span>
 						<span className="custom-control-description">One-time entry</span>
-					</label>
-				</div>
-			</div>
+					</Label>
+				</Col>
+			</FormGroup>
 			{budgetEntry.repeats && (
-				<div className="form-group">
-					<div className="input-group">
-						<label className="col-xs-5 col-sm-4 col-md-3 col-lg-2 col-form-label">Repeats Every</label>
-						<div className="col-xs-3 col-md-2 col-lg-1">
-							<input
-								className="form-control"
-								onChange={(ev) => handleUpdateRepeatValue((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
-								type="number"
-								value={budgetEntry.repeatValue}
-								step="1"
-							/>
-						</div>
-						<div className="col-xs-4 col-sm-3 col-md-2">
-							<select
-								className="form-control"
-								defaultValue={budgetEntry.repeatUnit.toString()}
-								onChange={(ev) => handleUpdateRepeatUnit(+(ev.target as HTMLSelectElement).value, budgetEntry)}
-							>
-								<option value={RepeatUnits.Day}>Day</option>
-								<option value={RepeatUnits.Week}>Week</option>
-								<option value={RepeatUnits.Month}>Month</option>
-								<option value={RepeatUnits.Year}>Year</option>
-							</select>
-						</div>
-					</div>
-				</div>
+				<FormGroup row>
+					<Label md={4} lg={3}>
+						Repeats Every
+					</Label>
+					<Col md={3} lg={2}>
+						<Input
+							onChange={(ev: any) => handleUpdateRepeatValue((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
+							type="number"
+							value={budgetEntry.repeatValue}
+							step="1"
+						/>
+					</Col>
+					<Col md={4} lg={3}>
+						<Input
+							type="select"
+							defaultValue={budgetEntry.repeatUnit.toString()}
+							onChange={(ev: any) => handleUpdateRepeatUnit(+(ev.target as HTMLSelectElement).value, budgetEntry)}
+						>
+							<option value={RepeatUnits.Day}>Day</option>
+							<option value={RepeatUnits.Week}>Week</option>
+							<option value={RepeatUnits.Month}>Month</option>
+							<option value={RepeatUnits.Year}>Year</option>
+						</Input>
+					</Col>
+				</FormGroup>
 			)}
-		</form>
+		</Form>
 	);
 });
 

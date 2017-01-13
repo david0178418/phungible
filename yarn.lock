@@ -3124,7 +3124,7 @@ react@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-reactstrap@^4.0.0-alpha.8:
+reactstrap@4.0.0-alpha.8:
   version "4.0.0-alpha.8"
   resolved "https://registry.yarnpkg.com/reactstrap/-/reactstrap-4.0.0-alpha.8.tgz#2d4d7d6ed9eb21586e7b8be1128e59d451263693"
   dependencies:

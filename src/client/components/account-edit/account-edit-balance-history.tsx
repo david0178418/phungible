@@ -65,7 +65,7 @@ function BalanceHistoryUpdate({balanceUpdate, onRemove}: BalanceHistoryUpdatePro
 				</Button>
 			</Col>
 		</FormGroup>
-	)
+	);
 }
 
 @observer
@@ -94,7 +94,9 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 								<Icon type="usd" />
 							</InputGroupAddon>
 							<Input
-								onChange={(ev: any) => this.handleUpdateBalanceAmount((ev.target as HTMLInputElement).valueAsNumber, newBalanceUpdate)}
+								onChange={(ev: any) => {
+									return this.handleUpdateBalanceAmount((ev.target as HTMLInputElement).valueAsNumber, newBalanceUpdate);
+								}}
 								placeholder="0.00"
 								step={10}
 								type="number"
@@ -109,7 +111,9 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							</InputGroupAddon>
 							<Input
 								className="TEMP_DATE_INPUT_FIX"
-								onChange={(ev: any) => this.handleUpdateBalanceDate((ev.target as HTMLInputElement).valueAsDate, newBalanceUpdate)}
+								onChange={(ev: any) => {
+									return this.handleUpdateBalanceDate((ev.target as HTMLInputElement).valueAsDate, newBalanceUpdate);
+								}}
 								type="date"
 								value={newBalanceUpdate.inputFormattedDate}
 							/>

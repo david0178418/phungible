@@ -8,7 +8,7 @@ function Navigation() {
 		<div>
 			<Navbar color="faded">
 				<NavbarBrand href="/">Budget Tool</NavbarBrand>
-				<Nav className="float-right" navbar>
+				<Nav className="ml-auto" navbar>
 					<NavItem>
 						<Link className="nav-link" to="/overview">Budget Entries</Link>
 					</NavItem>

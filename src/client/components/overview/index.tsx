@@ -59,7 +59,7 @@ class OverviewStore {
 	}
 }
 
-function Row(onRemove: BudgetHandler, onEdit:BudgetHandler, budgetEntry: BudgetEntry) {
+function Row(onRemove: BudgetHandler, onEdit: BudgetHandler, budgetEntry: BudgetEntry) {
 	return (
 		<tr key={`${budgetEntry.name}+${budgetEntry.type}+${budgetEntry.amount}`}>
 			<td>{budgetEntry.name}</td>
@@ -106,7 +106,7 @@ const Table = observer(function({budgetEntries, onEdit, onRemove}: TableProps) {
 
 const EditModal = observer(function({budgetEntry, cancel, isOpen, save}: EditModalProps) {
 	return (
-		<Modal isOpen={isOpen} toggle={cancel}>
+		<Modal isOpen={isOpen} toggle={cancel} className="modal-lg">
 			<ModalHeader toggle={cancel}>Create Budget Entry</ModalHeader>
 			<ModalBody>
 				<BudgetEntryEdit
@@ -131,7 +131,7 @@ const EditModal = observer(function({budgetEntry, cancel, isOpen, save}: EditMod
 @observer
 export default
 class Overview extends Component<Props, any> {
-	store: OverviewStore
+	private store: OverviewStore;
 
 	constructor(props: Props) {
 		super(props);
@@ -140,7 +140,7 @@ class Overview extends Component<Props, any> {
 	}
 
 	public removeEntry(budgetEntry: BudgetEntry) {
-		this.props.store.removeBudgetEntry(budgetEntry)
+		this.props.store.removeBudgetEntry(budgetEntry);
 	}
 
 	public render() {
