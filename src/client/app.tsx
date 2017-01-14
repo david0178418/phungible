@@ -13,7 +13,7 @@ class App extends Component<any, any> {
 
 	constructor(props: {}) {
 		super(props);
-		let data = getItem('store');
+		const data = getItem('store');
 
 		if(data) {
 			this.store = AppStore.deserialize(data);
