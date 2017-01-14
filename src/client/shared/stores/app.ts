@@ -1,5 +1,5 @@
 import {action, observable} from 'mobx';
-import {deserialize, list, object, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
 import {setItem} from '../storage';
 import Account from './account';
@@ -10,6 +10,8 @@ class AppStore {
 	@action public static deserialize(data: any) {
 		return deserialize(AppStore, data);
 	}
+	@serializable(identifier())
+	public id = 1;
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
 	@serializable(list(object(BudgetEntry)))
@@ -23,6 +25,9 @@ class AppStore {
 
 	public save() {
 		setItem('store', serialize(this));
+	}
+	public findAccount(accountId: number) {
+		return this.accounts.find((account) => accountId === account.id);
 	}
 	@action public saveBudgetEntry(newBudgetEntry: BudgetEntry) {
 		if(!newBudgetEntry.id) {

@@ -13,15 +13,19 @@ import {
 } from 'reactstrap';
 
 import Icon from '../../shared/icon';
+import Account from '../../shared/stores/account';
+import AppStore from '../../shared/stores/app';
 import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
 
 type Props = {
-	budgetEntry?: BudgetEntry;
+	accounts: Account[];
+	appStore: AppStore;
+	budgetEntry: BudgetEntry;
 	onSubmit(): void;
 };
 
 export default
-observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
+observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: Props) {
 	return (
 		<Form className="create-budget-entry" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<FormGroup>
@@ -94,31 +98,56 @@ observer(function BudgetEntryEdit({budgetEntry, onSubmit}: Props) {
 				</Col>
 			</FormGroup>
 			{budgetEntry.repeats && (
-				<FormGroup row>
-					<Label md={4} lg={3}>
-						Repeats Every
-					</Label>
-					<Col md={3} lg={2}>
-						<Input
-							onChange={(ev: any) => handleUpdateRepeatValue((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
-							type="number"
-							value={budgetEntry.repeatValue}
-							step="1"
-						/>
-					</Col>
-					<Col md={4} lg={3}>
-						<Input
-							type="select"
-							defaultValue={budgetEntry.repeatUnit.toString()}
-							onChange={(ev: any) => handleUpdateRepeatUnit(+(ev.target as HTMLSelectElement).value, budgetEntry)}
-						>
-							<option value={RepeatUnits.Day}>Day</option>
-							<option value={RepeatUnits.Week}>Week</option>
-							<option value={RepeatUnits.Month}>Month</option>
-							<option value={RepeatUnits.Year}>Year</option>
-						</Input>
-					</Col>
-				</FormGroup>
+				<div>
+					<FormGroup row>
+						<Col md={3} lg={2}>
+							<Input
+								onChange={(ev: any) => handleUpdateRepeatValue((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
+								type="number"
+								value={budgetEntry.repeatValue}
+								step="1"
+							/>
+						</Col>
+						<Col md={4} lg={3}>
+							<Input
+								type="select"
+								defaultValue={budgetEntry.repeatUnit.toString()}
+								onChange={(ev: any) => handleUpdateRepeatUnit(+(ev.target as HTMLSelectElement).value, budgetEntry)}
+							>
+								<option value={RepeatUnits.Day}>Day</option>
+								<option value={RepeatUnits.Week}>Week</option>
+								<option value={RepeatUnits.Month}>Month</option>
+								<option value={RepeatUnits.Year}>Year</option>
+							</Input>
+						</Col>
+					</FormGroup>
+					{!!accounts.length && (
+						<FormGroup>
+							<Label md={4} lg={3}>
+								Towards Account:
+							</Label>
+							<Col md={6}>
+								<Input
+									type="select"
+									defaultValue={budgetEntry.account ? budgetEntry.account.id : 0}
+									onChange={(ev: any) => handleUpdateAccount(+(ev.target as HTMLSelectElement).value, budgetEntry, appStore)}
+								>
+									<option value={0}>None</option>
+									{accounts.map((account) => {
+										return (
+											<option
+												key={account.id}
+												value={account.id}
+											>
+												{account.name}
+											</option>
+										);
+									})}
+								</Input>
+							</Col>
+						</FormGroup>
+					)}
+				</div>
 			)}
 		</Form>
 	);
@@ -132,8 +161,11 @@ const handleToggleRepeats = action(function(budgetEntry: BudgetEntry) {
 	if(budgetEntry.repeats) {
 		budgetEntry.repeatUnit = RepeatUnits.None;
 	} else {
-		budgetEntry.repeatUnit = RepeatUnits.Month;
+		budgetEntry.repeatUnit = RepeatUnits.Week;
 	}
+});
+const handleUpdateAccount = action(function(accountId: number, budgetEntry: BudgetEntry, appStore: AppStore) {
+	budgetEntry.account = appStore.findAccount(accountId);
 });
 const handleUpdateAmount = action(function(newAmount: number, budgetEntry: BudgetEntry) {
 	budgetEntry.amount = newAmount * 100;

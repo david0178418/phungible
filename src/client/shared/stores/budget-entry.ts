@@ -1,6 +1,8 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, primitive, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
+
+import Account from './account';
 
 export
 enum BudgetType {
@@ -22,6 +24,11 @@ class BudgetEntry {
 	@action public static deserialize(data: any) {
 		return deserialize(BudgetEntry, data);
 	}
+	@action public static clone(originalEntry: BudgetEntry) {
+		return BudgetEntry.deserialize(serialize(originalEntry));
+	}
+	@serializable(object(Account))
+	@observable public account: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public amount = 0;
 	@serializable
@@ -35,7 +42,7 @@ class BudgetEntry {
 	@serializable
 	@observable public name = '';
 	@serializable
-	@observable public repeatUnit: RepeatUnits = RepeatUnits.None;
+	@observable public repeatUnit: RepeatUnits = RepeatUnits.Week;
 	@serializable
 	@observable public repeatValue = 1;
 	@serializable
@@ -43,16 +50,11 @@ class BudgetEntry {
 	@serializable
 	@observable private _startDate: string;
 
-	constructor(originalEntry?: BudgetEntry) {
-		if(originalEntry) {
-			return BudgetEntry.deserialize(serialize(originalEntry));
-		} else {
-			this.exceptions = [];
-			this.labels = [];
-			this._startDate = moment().format('MM/DD/YYYY');
-		}
+	constructor() {
+		this.exceptions = [];
+		this.labels = [];
+		this._startDate = moment().format('MM/DD/YYYY');
 	}
-
 	set startDate(newDate: Date) {
 		if(!isNaN(newDate.getTime())) {
 			this._startDate = moment(newDate).format('MM/DD/YYYY');

@@ -5,6 +5,7 @@ import {Component} from 'react';
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 
 import {Icon} from '../../shared/shared-components';
+import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
 import BudgetEntryEdit from '../budget-entry-edit';
@@ -19,6 +20,8 @@ type TableProps = {
 	onRemove: BudgetHandler;
 };
 type EditModalProps = {
+	accounts: Account[];
+	appStore: AppStore;
 	budgetEntry: BudgetEntry;
 	isOpen: boolean;
 	save(): void;
@@ -45,9 +48,12 @@ class OverviewStore {
 		this.closeBudgetOpenEntry();
 	}
 	@action public editBudgetEntry(budgetEntry: BudgetEntry) {
-		this._openBudgetEntry = new BudgetEntry(budgetEntry);
+		this._openBudgetEntry = BudgetEntry.clone(budgetEntry);
 	}
 
+	@computed get accounts() {
+		return this.appStore.accounts;
+	}
 	@computed get budgetEntries() {
 		return this.appStore.budgetEntries;
 	}
@@ -104,12 +110,22 @@ const Table = observer(function({budgetEntries, onEdit, onRemove}: TableProps) {
 	);
 });
 
-const EditModal = observer(function({budgetEntry, cancel, isOpen, save}: EditModalProps) {
+const EditModal = observer(function(props: EditModalProps) {
+	const {
+		accounts,
+		appStore,
+		budgetEntry,
+		cancel,
+		isOpen,
+		save,
+	} = props;
 	return (
 		<Modal isOpen={isOpen} toggle={cancel} className="modal-lg">
 			<ModalHeader toggle={cancel}>Create Budget Entry</ModalHeader>
 			<ModalBody>
 				<BudgetEntryEdit
+					accounts={accounts}
+					appStore={appStore}
 					budgetEntry={budgetEntry}
 					onSubmit={cancel}
 				/>
@@ -159,6 +175,8 @@ class Overview extends Component<Props, any> {
 				/>
 				{store.isOpen &&
 					<EditModal
+						accounts={store.accounts}
+						appStore={store.appStore}
 						budgetEntry={store.openBudgetEntry}
 						cancel={() => store.closeBudgetOpenEntry()}
 						isOpen={store.isOpen}

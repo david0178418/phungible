@@ -9,11 +9,13 @@ enum AccountType {
 	Savings,
 };
 
-
 export default
 class Account {
 	@action public static deserialize(data: any) {
 		return deserialize(Account, data);
+	}
+	@action public static clone(originalEntry: Account) {
+		return Account.deserialize(serialize(originalEntry));
 	}
 	@serializable(identifier())
 	@observable public id: number;
@@ -28,28 +30,21 @@ class Account {
 	@serializable(list(object(BalanceUpdate)))
 	@observable public balanceHistory: BalanceUpdate[];
 
-	constructor(originalEntry?: Account) {
-		if(originalEntry) {
-			return Account.deserialize(serialize(originalEntry));
-		} else {
-			this.labels = [];
-			this.balanceHistory = [];
-		}
+	constructor() {
+		this.labels = [];
+		this.balanceHistory = [];
 	}
 
 	public addBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		this.balanceHistory.push(balanceUpdate);
 	}
-
 	public removeBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		(this.balanceHistory as any).remove(balanceUpdate);
 	}
-
 	public projectedBalance(date: string) {
 		// TODO
 		return this.latestBalanceUpdate;
 	}
-
 	@computed get prettyAmount() {
 		// TODO
 		return (this.todaysBalance / 100).toFixed(2);

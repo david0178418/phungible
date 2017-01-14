@@ -1,6 +1,6 @@
 import {computed, observable} from 'mobx';
-import {serializable} from 'serializr';
 import * as moment from 'moment';
+import {serializable} from 'serializr';
 
 export default
 class BalanceUpdate {
@@ -14,7 +14,7 @@ class BalanceUpdate {
 	}
 
 	@computed get prettyAmount() {
-		return (this.balance/100).toFixed(2);
+		return (this.balance / 100).toFixed(2);
 	}
 	@computed get inputFormattedDate() {
 		return moment(this._date, 'MM/DD/YYYY').format('YYYY-MM-DD');
@@ -22,7 +22,6 @@ class BalanceUpdate {
 	get formattedStartDate() {
 		return this._date;
 	}
-
 	set date(newDate: Date) {
 		if(!isNaN(newDate.getTime())) {
 			this._date = moment(newDate).format('MM/DD/YYYY');

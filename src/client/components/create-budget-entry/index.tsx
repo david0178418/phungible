@@ -26,6 +26,10 @@ class CreateBudgetEntryStore {
 			return false;
 		}
 	}
+
+	get accounts() {
+		return this.appStore.accounts;
+	}
 }
 type Props = {
 	store: AppStore;
@@ -50,6 +54,8 @@ class CreateBudgetEntry extends Component<Props, any> {
 			<div>
 				<h2>Create Budget Entry</h2>
 				<BudgetEntryEdit
+					accounts={this.store.accounts}
+					appStore={this.store.appStore}
 					budgetEntry={this.store.budgetEntry}
 					onSubmit={() => this.store.saveBudgetEntry()}
 				/>

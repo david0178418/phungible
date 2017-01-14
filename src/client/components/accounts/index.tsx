@@ -45,10 +45,10 @@ class AcountsStore {
 		this.closeOpenAccount();
 	}
 	@action public editAccount(account: Account) {
-		this._openAccount = new Account(account);
+		this._openAccount = Account.clone(account);
 	}
 	@action public removeAccount(account: Account) {
-		this._openAccount = new Account(account);
+		this._openAccount = Account.clone(account);
 	}
 	@computed get accounts() {
 		return this.appStore.accounts;
