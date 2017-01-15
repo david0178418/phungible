@@ -122,8 +122,8 @@ observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: P
 						</Col>
 					</FormGroup>
 					{!!accounts.length && (
-						<FormGroup>
-							<Label md={4} lg={3}>
+						<FormGroup row>
+							<Label md={5} lg={3}>
 								Towards Account:
 							</Label>
 							<Col md={6}>
