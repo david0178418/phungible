@@ -1,22 +1,48 @@
+import {AppBar, Drawer, MenuItem} from 'material-ui';
 import * as React from 'react';
-import {Link} from 'react-router';
-import { Nav, Navbar, NavbarBrand, NavItem } from 'reactstrap';
+import {browserHistory} from 'react-router';
 
 export default
-function Navigation() {
-	return (
-		<div>
-			<Navbar color="faded">
-				<NavbarBrand href="/">Budget Tool</NavbarBrand>
-				<Nav className="ml-auto" navbar>
-					<NavItem>
-						<Link className="nav-link" to="/overview">Budget Entries</Link>
-					</NavItem>
-					<NavItem>
-						<Link className="nav-link" to="/accounts">Accounts</Link>
-					</NavItem>
-				</Nav>
-			</Navbar>
-		</div>
-	);
+class Navigation extends React.Component<any, any> {
+	constructor(props: any) {
+		super(props);
+		this.state = {
+			isOpen: false,
+		};
+	}
+
+	public render() {
+		return (
+			<AppBar
+				className="app-title"
+				onLeftIconButtonTouchTap={() => this.handleDrawerToggle()}
+				title="Budget Tool"
+			>
+				<Drawer
+					containerClassName="app-title"
+					docked={false}
+					open={this.state.isOpen}
+					onRequestChange={() => this.handleDrawerToggle()}
+				>
+					<MenuItem onTouchTap={() => this.handleNavigateTo('/accounts')}>
+						Accounts
+					</MenuItem>
+					<MenuItem onTouchTap={() => this.handleNavigateTo('/overview')}>
+						Budget Entries
+					</MenuItem>
+				</Drawer>
+			</AppBar>
+		);
+	}
+
+	private handleNavigateTo(location: string) {
+		browserHistory.push(location);
+		this.handleDrawerToggle();
+	}
+
+	private handleDrawerToggle() {
+		this.setState({
+			isOpen: !this.state.isOpen,
+		});
+	}
 }

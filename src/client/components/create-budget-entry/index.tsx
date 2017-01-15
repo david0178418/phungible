@@ -1,9 +1,11 @@
+import {AppBar, FloatingActionButton, IconButton} from 'material-ui';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {Button} from 'reactstrap';
+import {browserHistory} from 'react-router';
 
-import Icon from '../../shared/icon';
 import AppStore from '../../shared/stores/app';
 import BudgetEntry from '../../shared/stores/budget-entry';
 import BudgetEntryEdit from '../budget-entry-edit';
@@ -12,9 +14,14 @@ class CreateBudgetEntryStore {
 	public budgetEntry: BudgetEntry;
 	public appStore: AppStore;
 
-	constructor(appStore: AppStore) {
+	constructor(appStore: AppStore, budgetEntryId?: number) {
 		this.appStore = appStore;
-		this.budgetEntry = new BudgetEntry();
+
+		if(budgetEntryId) {
+			this.budgetEntry = appStore.findBudgetEntry(budgetEntryId);
+		} else {
+			this.budgetEntry = new BudgetEntry();
+		}
 	}
 
 	public saveBudgetEntry() {
@@ -33,6 +40,9 @@ class CreateBudgetEntryStore {
 }
 type Props = {
 	store: AppStore;
+	params: {
+		id: number;
+	};
 };
 
 @observer
@@ -42,28 +52,42 @@ class CreateBudgetEntry extends Component<Props, any> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new CreateBudgetEntryStore(props.store);
+		this.store = new CreateBudgetEntryStore(props.store, +props.params.id);
 	}
 
 	public render() {
 		const {
 			budgetEntry,
 		} = this.store;
+		const action = budgetEntry.id ? 'Edit' : 'Create';
 
 		return (
 			<div>
-				<h2>Create Budget Entry</h2>
+				<AppBar
+					className="app-title"
+					onLeftIconButtonTouchTap={() => browserHistory.goBack()}
+					title={`${action} Budget Entry`}
+					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
+				/>
 				<BudgetEntryEdit
 					accounts={this.store.accounts}
 					appStore={this.store.appStore}
 					budgetEntry={this.store.budgetEntry}
-					onSubmit={() => this.store.saveBudgetEntry()}
+					onSubmit={() => this.handleSaveBudgetEntry()}
 				/>
-				<Button color="primary" disabled={!budgetEntry.isValid} onClick={() => this.store.saveBudgetEntry()}>
-					<Icon type="plus" />
-					{' Add Entry'}
-				</Button>
+				<FloatingActionButton
+					disabled={!budgetEntry.isValid}
+					onTouchTap={() => this.handleSaveBudgetEntry()}
+					zDepth={2}
+				>
+					<ActionDone />
+				</FloatingActionButton>
 			</div>
 		);
+	}
+
+	private handleSaveBudgetEntry() {
+		this.store.saveBudgetEntry();
+		browserHistory.push('/overview');
 	}
 }

@@ -1,9 +1,6 @@
 @import './_variables.scss';
 
-.btn {
-	cursor: pointer;
-}
-
-.TEMP_DATE_INPUT_FIX {
-	flex-direction: row !important;
+html {
+	font-family: 'Roboto', sans-serif;
+	-webkit-font-smoothing: antialiased;
 }

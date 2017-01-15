@@ -3,12 +3,24 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Budget Tool</title>
-		<link href="resources/css/font-awesome.css" type="text/css" rel="stylesheet"/>
-		<link href="resources/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
-		<link href="resources/css/styles.css" type="text/css" rel="stylesheet"/>
+		<link href="/resources/css/styles.css" type="text/css" rel="stylesheet"/>
 	</head>
 	<body>
+		<script>
+			var WebFontConfig = {
+				google: { families: [ 'Roboto:400,300,500:latin' ] }
+			};
+			(function() {
+				var wf = document.createElement('script');
+				wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+				'://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+				wf.type = 'text/javascript';
+				wf.async = 'true';
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(wf, s);
+			})();
+		</script>
 		<div id="app"></div>
 	</body>
-	<script src="resources/js/app.js"></script>
+	<script src="/resources/js/app.js"></script>
 </html>

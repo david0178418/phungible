@@ -1,82 +1,91 @@
-import {action} from 'mobx';
+import {AppBar, FloatingActionButton, IconButton} from 'material-ui';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
-import {FormEvent} from 'react';
+import {Component} from 'react';
 import * as React from 'react';
-import {
-	Col,
-	Form,
-	FormGroup,
-	Input,
-	Label,
-} from 'reactstrap';
+import {browserHistory} from 'react-router';
 
-import Account, {AccountType} from '../../shared/stores/account';
-import AccountEditBalanceHistory from './account-edit-balance-history';
+import Account from '../../shared/stores/account';
+import AppStore from '../../shared/stores/app';
+import AccountForm from '../account-form';
 
-import './account-edit.scss';
+class AccountEditStore {
+	public account: Account;
+	public appStore: AppStore;
 
+	constructor(appStore: AppStore, budgetEntryId?: number) {
+		this.appStore = appStore;
+
+		if(budgetEntryId) {
+			this.account = appStore.findAccount(budgetEntryId);
+		} else {
+			this.account = new Account();
+		}
+	}
+
+	public saveAccount() {
+		if(this.account.isValid) {
+			this.appStore.saveAccount(this.account);
+			this.account = new Account();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	get accounts() {
+		return this.appStore.accounts;
+	}
+}
 type Props = {
-	account?: Account;
-	onSubmit(): void;
+	store: AppStore;
+	params: {
+		id: number;
+	};
 };
 
+@observer
 export default
-observer(function AccountEdit({account, onSubmit}: Props) {
-	const LEFT_COL = 4;
-	const RIGHT_COL = 12 - LEFT_COL;
+class AccountEdit extends Component<Props, any> {
+	private store: AccountEditStore;
 
-	return (
-		<Form className="edit-account" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
-			<FormGroup row>
-				<Label sm={LEFT_COL}>Account Name</Label>
-				<Col sm={RIGHT_COL}>
-					<Input
-						onChange={(ev: any) => handleUpdateName((ev.target as HTMLInputElement).value, account)}
-						placeholder="Savings, Credit Card, etc"
-						value={account.name}
-					/>
-				</Col>
-			</FormGroup>
-			<FormGroup row>
-				<Label sm={LEFT_COL}>Type</Label>
-				<Col sm={RIGHT_COL}>
-					<Input
-						defaultValue={account.type.toString()}
-						onChange={(ev: any) => handleUpdateType(+(ev.target as HTMLSelectElement).value, account)}
-						type="select"
-					>
-						<option value={AccountType.Savings}>Savings</option>
-						<option value={AccountType.Debt}>Debt</option>
-					</Input>
-				</Col>
-			</FormGroup>
-			<FormGroup row>
-				<Label sm={LEFT_COL}>Description</Label>
-				<Col  sm={RIGHT_COL}>
-					<Input
-						onChange={(ev: any) => handleUpdateDescription((ev.target as HTMLInputElement).value, account)}
-						type="text"
-						value={account.description}
-					/>
-				</Col>
-			</FormGroup>
-			<AccountEditBalanceHistory
-				account={account}
-			/>
-		</Form>
-	);
-});
+	constructor(props: Props) {
+		super(props);
+		this.store = new AccountEditStore(props.store, +props.params.id);
+	}
 
-const handleSubmit = action(function(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
-	e.preventDefault();
-	onSubmit();
-});
-const handleUpdateDescription = action(function(newDescription: string, account: Account) {
-	account.description = newDescription;
-});
-const handleUpdateName = action(function(newName: string, account: Account) {
-	account.name = newName;
-});
-const handleUpdateType = action(function(newType: AccountType, account: Account) {
-	account.type = newType;
-});
+	public render() {
+		const {
+			account,
+		} = this.store;
+		const action = account.id ? 'Edit' : 'Create';
+
+		return (
+			<div>
+				<AppBar
+					className="app-title"
+					onLeftIconButtonTouchTap={() => browserHistory.goBack()}
+					title={`${action} Account`}
+					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
+				/>
+				<AccountForm
+					account={account}
+					onSubmit={() => this.handleSaveAccount()}
+				/>
+				<FloatingActionButton
+					disabled={!account.isValid}
+					onTouchTap={() => this.handleSaveAccount()}
+					zDepth={2}
+				>
+					<ActionDone />
+				</FloatingActionButton>
+			</div>
+		);
+	}
+
+	private handleSaveAccount() {
+		this.store.saveAccount();
+		browserHistory.push('/accounts');
+	}
+}

@@ -1,18 +1,9 @@
+import {Checkbox, DatePicker, MenuItem, SelectField, TextField} from 'material-ui';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
-import {
-	Col,
-	Form,
-	FormGroup,
-	Input,
-	InputGroup,
-	InputGroupAddon,
-	Label,
-} from 'reactstrap';
 
-import Icon from '../../shared/icon';
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
@@ -27,129 +18,109 @@ type Props = {
 export default
 observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: Props) {
 	return (
-		<Form className="create-budget-entry" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
-			<FormGroup>
-				<Label>Name</Label>
-				<Input
-					onChange={(ev: any) => handleUpdateName((ev.target as HTMLInputElement).value, budgetEntry)}
-					placeholder="e.g. 'Car payment', 'Rent, 'Groceries'"
+		<form className="create-budget-entry" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
+			<div>
+				<TextField
+					fullWidth
+					floatingLabelText="Transaction Name"
 					value={budgetEntry.name}
+					onChange={((ev: any, value: any) => handleUpdateName(value, budgetEntry)) as any}
 				/>
-			</FormGroup>
-			<FormGroup>
-				<Label>Amount</Label>
-				<InputGroup>
-					<InputGroupAddon>
-						<Icon type="usd" />
-					</InputGroupAddon>
-					<Input
-						onChange={(ev: any) => handleUpdateAmount((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
-						placeholder="0.00"
-						step={10}
-						type="number"
-						value={budgetEntry.prettyAmount}
-					/>
-				</InputGroup>
-			</FormGroup>
-			<FormGroup>
-				<Label>Type</Label>
-				<Input
-					defaultValue={budgetEntry.type.toString()}
-					onChange={(ev: any) => handleUpdateType(+(ev.target as HTMLSelectElement).value, budgetEntry)}
-					type="select"
+			</div>
+			<div>
+				<TextField
+					fullWidth
+					floatingLabelText="Transaction Amount"
+					onChange={((ev: any, value: any) => handleUpdateAmount(value, budgetEntry)) as any}
+					type="number"
+					value={budgetEntry.prettyAmount}
+				/>
+			</div>
+			<div>
+				<SelectField
+					fullWidth
+					floatingLabelText="Type"
+					value={budgetEntry.type}
+					onChange={(ev, index, value) => handleUpdateType(value, budgetEntry)}
 				>
-					<option value={BudgetType.Income}>Income</option>
-					<option value={BudgetType.Expense}>Expense</option>
-				</Input>
-			</FormGroup>
-			<FormGroup>
-				<Label>Starts</Label>
-				<InputGroup>
-					<InputGroupAddon>
-						<Icon type="calendar" />
-					</InputGroupAddon>
-					<Input
-						className="TEMP_DATE_INPUT_FIX"
-						onChange={(ev: any) => handleUpdateStartDate((ev.target as HTMLInputElement).valueAsDate, budgetEntry)}
-						type="date"
-						value={budgetEntry.inputFormattedDate}
-					/>
-				</InputGroup>
-			</FormGroup>
-			<FormGroup>
-				<Label>Description</Label>
-				<Input
+					<MenuItem value={BudgetType.Income} primaryText="Income" />
+					<MenuItem value={BudgetType.Expense} primaryText="Expense" />
+				</SelectField>
+			</div>
+			<div>
+				<DatePicker
+					autoOk
+					fullWidth
+					floatingLabelText="Starts"
+					hintText="Portrait Dialog"
+					locale="en-US"
+					onChange={(ev, date) => handleUpdateStartDate(date, budgetEntry)}
+					value={budgetEntry.startDate}
+				/>
+			</div>
+			<div>
+				<TextField
+					fullWidth
+					floatingLabelText="Description"
+					multiLine
 					onChange={(ev: any) => handleUpdateDescription((ev.target as HTMLInputElement).value, budgetEntry)}
 					value={budgetEntry.description}
 				/>
-			</FormGroup>
-			<FormGroup row>
-				<Col sm={12}>
-					<Label className="custom-control custom-checkbox">
-						<input
-							checked={!budgetEntry.repeats}
-							className="custom-control-input"
-							onChange={() => handleToggleRepeats(budgetEntry)}
-							type="checkbox"
-						/>
-						<span className="custom-control-indicator"></span>
-						<span className="custom-control-description">One-time entry</span>
-					</Label>
-				</Col>
-			</FormGroup>
+			</div>
+			<div>
+				<Checkbox
+					checked={!budgetEntry.repeats}
+					label="One-time entry"
+					onClick={() => handleToggleRepeats(budgetEntry)}
+					type="checkbox"
+				/>
+			</div>
 			{budgetEntry.repeats && (
 				<div>
-					<FormGroup row>
-						<Col md={3} lg={2}>
-							<Input
-								onChange={(ev: any) => handleUpdateRepeatValue((ev.target as HTMLInputElement).valueAsNumber, budgetEntry)}
-								type="number"
-								value={budgetEntry.repeatValue}
-								step="1"
-							/>
-						</Col>
-						<Col md={4} lg={3}>
-							<Input
-								type="select"
-								defaultValue={budgetEntry.repeatUnit.toString()}
-								onChange={(ev: any) => handleUpdateRepeatUnit(+(ev.target as HTMLSelectElement).value, budgetEntry)}
-							>
-								<option value={RepeatUnits.Day}>Day</option>
-								<option value={RepeatUnits.Week}>Week</option>
-								<option value={RepeatUnits.Month}>Month</option>
-								<option value={RepeatUnits.Year}>Year</option>
-							</Input>
-						</Col>
-					</FormGroup>
+					<div style={{display: 'flex'}}>
+						<TextField
+							onChange={((ev: any, value: any) => handleUpdateRepeatValue(value, budgetEntry)) as any}
+							type="number"
+							style={{width: 30}}
+							value={budgetEntry.repeatValue}
+							floatingLabelText="Every"
+						/>
+						<SelectField
+							value={budgetEntry.repeatUnit}
+							onChange={(ev, index, value) => handleUpdateRepeatUnit(value, budgetEntry)}
+							floatingLabelText=" "
+							style={{width: 'calc(100% - 30px)'}}
+						>
+							<MenuItem value={RepeatUnits.Day} primaryText="Day"/>
+							<MenuItem value={RepeatUnits.Week} primaryText="Week"/>
+							<MenuItem value={RepeatUnits.Month} primaryText="Month"/>
+							<MenuItem value={RepeatUnits.Year} primaryText="Year"/>
+						</SelectField>
+					</div>
 					{!!accounts.length && (
-						<FormGroup row>
-							<Label md={5} lg={3}>
-								Towards Account:
-							</Label>
-							<Col md={6}>
-								<Input
-									type="select"
-									defaultValue={budgetEntry.account ? budgetEntry.account.id : 0}
-									onChange={(ev: any) => handleUpdateAccount(+(ev.target as HTMLSelectElement).value, budgetEntry, appStore)}
-								>
-									<option value={0}>None</option>
-									{accounts.map((account) => {
-										return (
-											<option
-												key={account.id}
-												value={account.id}
-											>
-												{account.name}
-											</option>
-										);
-									})}
-								</Input>
-							</Col>
-						</FormGroup>
+						<div>
+							<SelectField
+								fullWidth
+								floatingLabelText="Towards Account"
+								value={budgetEntry.account ? budgetEntry.account.id : 0}
+								onChange={(ev, index, value) => handleUpdateAccount(value, budgetEntry, appStore)}
+							>
+								<MenuItem value={0} primaryText="None" />
+								{accounts.map((account) => {
+									return (
+										<MenuItem
+											key={account.id}
+											value={account.id}
+											primaryText={account.name}
+										/>
+									);
+								})}
+							</SelectField>
+						</div>
 					)}
 				</div>
 			)}
-		</Form>
+		</form>
 	);
 });
 

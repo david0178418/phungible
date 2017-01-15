@@ -1,15 +1,18 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {serializable} from 'serializr';
+import {identifier, serializable} from 'serializr';
 
 export default
 class BalanceUpdate {
+	@serializable(identifier())
+	public id: number;
 	@serializable
 	@observable public balance = 0;
 	@serializable
 	@observable private _date: string;
 
 	constructor() {
+		this.id = Date.now();
 		this.date = new Date();
 	}
 

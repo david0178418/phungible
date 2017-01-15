@@ -1,28 +1,25 @@
+import {FloatingActionButton} from 'material-ui';
+import {List, ListItem} from 'material-ui/List';
+import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import {browserHistory, Link} from 'react-router';
 
-import Icon from '../../shared/icon';
+import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import AccountEdit from '../account-edit';
 
-type AccountHandler = (account: Account) => void;
 type Props = {
 	store: AppStore;
 };
 type TableProps = {
 	accounts: Account[];
-	onEdit: AccountHandler;
-	onRemove: AccountHandler;
-};
-type EditModalProps = {
-	account: Account;
-	isOpen: boolean;
-	save(): void;
-	cancel(): void
+	onEdit: (accountId: number) => void;
+	onRemove: (account: Account) => void;
 };
 
 class AcountsStore {
@@ -61,63 +58,19 @@ class AcountsStore {
 	}
 }
 
-function Row(onRemove: AccountHandler, onEdit: AccountHandler, account: Account) {
+const AccountsList = observer(function({accounts, onEdit, onRemove}: TableProps) {
 	return (
-		<tr key={`${account.name}+${account.type}+${account.todaysBalance}`}>
-			<td>{account.name}</td>
-			<td>{AccountType[account.type]}</td>
-			<td>${account.prettyAmount}</td>
-			<td>
-				<Button color="link" onClick={() => onEdit(account)}>
-					<Icon type="pencil"/>
-				</Button>
-				<Button color="link" onClick={() => onRemove(account)}>
-					<Icon type="close"/>
-				</Button>
-			</td>
-		</tr>
-	);
-}
-
-const Table = observer(function({accounts, onEdit, onRemove}: TableProps) {
-	return (
-		<table className="table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Type</th>
-					<th>Balance</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{accounts.map(Row.bind(null, onRemove, onEdit))}
-			</tbody>
-		</table>
-	);
-});
-
-const EditModal = observer(function({account, cancel, isOpen, save}: EditModalProps) {
-	return (
-		<Modal isOpen={isOpen} toggle={cancel} className="modal-lg">
-			<ModalHeader toggle={cancel}>Create Account</ModalHeader>
-			<ModalBody>
-				<AccountEdit
-					account={account}
-					onSubmit={() => {/*TODO*/}}
+		<List>
+			{accounts.map((account) => (
+				<ListItem
+					key={account.id}
+					primaryText={`${account.name}`}
+					secondaryText={`Current Balance: $${account.todaysBalance}`}
+					leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
+					onTouchTap={() => onEdit(account.id)}
 				/>
-			</ModalBody>
-			<ModalFooter>
-				<Button
-					color="primary"
-					onClick={save}
-					disabled={!account.isValid}
-				>
-					Save
-				</Button>{' '}
-				<Button color="secondary" onClick={cancel}>Cancel</Button>
-			</ModalFooter>
-		</Modal>
+			))}
+		</List>
 	);
 });
 
@@ -141,28 +94,23 @@ class Accounts extends Component<any, any> {
 
 		return (
 			<div>
-				<Button color="primary" onClick={() => this.handleCreateAccount()}>
-					<Icon type="plus" />
-					{' Create Account'}
-				</Button>
-				<Table
+				<Navigation />
+				<AccountsList
 					accounts={store.accounts}
 					onRemove={(account: Account) => this.props.store.removeAccount(account)}
-					onEdit={(account: Account) => this.store.editAccount(account)}
+					onEdit={(accountId: number) => this.handleEditAccount(accountId)}
 				/>
-				{store.isOpen &&
-					<EditModal
-						account={store.openAccount}
-						cancel={() => store.closeOpenAccount()}
-						isOpen={store.isOpen}
-						save={() => store.saveAccount()}
-					/>
-				}
+				<FloatingActionButton
+					containerElement={<Link to="/account-edit" />}
+					zDepth={2}
+				>
+					<ContentAdd />
+				</FloatingActionButton>
 			</div>
 		);
 	}
 
-	public handleCreateAccount() {
-		this.store.createAccount();
+	private handleEditAccount(accountId: number) {
+		browserHistory.push(`/account-edit/${accountId}`);
 	}
 }

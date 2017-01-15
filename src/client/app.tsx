@@ -1,3 +1,4 @@
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Component} from 'react';
 import * as React from 'react';
 import {getItem} from '../client/shared/storage';
@@ -24,11 +25,13 @@ class App extends Component<any, any> {
 
 	public render() {
 		return (
-			<Layout>
-				{React.cloneElement(this.props.children, {
-					store: this.store,
-				})}
-			</Layout>
+			<MuiThemeProvider>
+				<Layout>
+					{React.cloneElement(this.props.children, {
+						store: this.store,
+					})}
+				</Layout>
+			</MuiThemeProvider>
 		);
 	}
 }
