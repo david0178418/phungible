@@ -22,10 +22,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@^4.14.45":
-  version "4.14.47"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.47.tgz#4f780d1de593baae2171998b24b4282c5a1f8698"
-
 "@types/material-ui@^0.16.46":
   version "0.16.46"
   resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.16.46.tgz#7b7a64132cba9bdfa0aac0bd0c0dd70823c155da"
@@ -1766,7 +1762,7 @@ lodash.throttle@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
 
-lodash@^4.13.1, lodash@^4.17.3:
+lodash@^4.13.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -1908,15 +1904,15 @@ minimist@^1.1.0, minimist@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
-mobx-react@^4.0.4:
+mobx-react@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.1.0.tgz#0b4927a8c4457dbb296c512693acdf9073d9afc7"
   dependencies:
     hoist-non-react-statics "^1.2.0"
 
-mobx@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-2.7.0.tgz#cf3d82d18c0ca7f458d8f2a240817b3dc7e54a01"
+mobx@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.0.1.tgz#b1273871efee368010e2f1e027cde97eed879700"
 
 moment-recur@^1.0.5:
   version "1.0.5"
@@ -2526,9 +2522,9 @@ sequencify@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/sequencify/-/sequencify-0.0.7.tgz#90cff19d02e07027fd767f5ead3e7b95d1e7380c"
 
-serializr@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/serializr/-/serializr-1.1.8.tgz#a5ae514b1f11372d95d359aa31e4cb2657530883"
+serializr@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/serializr/-/serializr-1.1.9.tgz#d9c193deb2cfa724bf3f459560f0ceb7b3bbeba7"
 
 set-blocking@~2.0.0:
   version "2.0.0"
