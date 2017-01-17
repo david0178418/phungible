@@ -4,8 +4,6 @@ import * as React from 'react';
 import {getItem} from '../client/shared/storage';
 
 import Layout from './layout';
-
-import './app.scss';
 import AppStore from './shared/stores/app';
 
 export default

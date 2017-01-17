@@ -9,8 +9,6 @@ import * as React from 'react';
 import Account, {AccountType} from '../../shared/stores/account';
 import AccountEditBalanceHistory from './account-edit-balance-history';
 
-import './account-edit.scss';
-
 type Props = {
 	account?: Account;
 	onSubmit(): void;

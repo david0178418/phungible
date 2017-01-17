@@ -1,4 +1,3 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -15,27 +14,6 @@ module.exports = {
 					configFileName: './src/client/tsconfig.json',
 				},
 				test: /\.tsx?$/,
-			}, {
-				exclude: [
-					path.resolve(__dirname, 'src/server/'),
-				],
-				loader: ExtractTextPlugin.extract('css-loader?sourceMap'),
-				test: /\.css$/,
-			}, {
-				exclude: [
-					path.resolve(__dirname, 'src/server/'),
-				],
-				loader: ExtractTextPlugin.extract('css-loader?sourceMap!' + 'sass-loader?sourceMap'),
-				test: /\.scss$/,
-			}, {
-				exclude: [
-					path.resolve(__dirname, 'src/server/'),
-				],
-			// 	test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
-			// 	loader: 'url?limit=100000@name=[name][ext]'
-			// }, {
-				loader: 'file-loader',
-				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
 			},
 		],
 		preLoaders: [
@@ -49,9 +27,6 @@ module.exports = {
 	output: {
 		filename: 'app.js',
 	},
-	plugins: [
-		new ExtractTextPlugin('../css/styles.css'),
-	],
 	resolve: {
 		extensions: [
 			'',
