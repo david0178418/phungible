@@ -8,8 +8,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import browserHistory from 'react-router/lib/browserHistory';
-import Link from 'react-router/lib/Link';
+import {browserHistory, Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';

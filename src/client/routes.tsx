@@ -1,8 +1,6 @@
 import * as React from 'react';
-import browserHistory from 'react-router/lib/browserHistory';
-import IndexRoute from 'react-router/lib/IndexRoute';
-import Route from 'react-router/lib/Route';
-import Router from 'react-router/lib/Router';
+import {IndexRoute, Route, Router} from 'react-router';
+import {browserHistory} from 'react-router';
 
 import App from './app';
 import AccountEdit from './components/account-edit';
