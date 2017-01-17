@@ -1,6 +1,10 @@
-import {DatePicker, FloatingActionButton, Subheader, TextField} from 'material-ui';
-import {List, ListItem} from 'material-ui/List';
+import DatePicker from 'material-ui/DatePicker';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Subheader from 'material-ui/Subheader';
 import ActionDone from 'material-ui/svg-icons/action/done';
+import TextField from 'material-ui/TextField';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';

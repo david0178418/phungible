@@ -1,4 +1,6 @@
-import {MenuItem, SelectField, TextField} from 'material-ui';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';

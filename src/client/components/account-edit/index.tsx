@@ -1,10 +1,12 @@
-import {AppBar, FloatingActionButton, IconButton} from 'material-ui';
+import AppBar from 'material-ui/AppBar';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {browserHistory} from 'react-router';
+import browserHistory from 'react-router/lib/browserHistory';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';

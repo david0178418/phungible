@@ -1,6 +1,8 @@
-import {AppBar, Drawer, MenuItem} from 'material-ui';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
-import {browserHistory} from 'react-router';
+import browserHistory from 'react-router/lib/browserHistory';
 
 export default
 class Navigation extends React.Component<any, any> {

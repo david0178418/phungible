@@ -44,7 +44,6 @@
   "dependencies": {
     "@types/react-tap-event-plugin": "^0.0.30",
     "classnames": "^2.2.5",
-    "font-awesome": "^4.7.0",
     "hapi": "^16.1.0",
     "inert": "^4.1.0",
     "lodash": "^4.17.3",

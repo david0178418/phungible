@@ -1,5 +1,5 @@
-import {FloatingActionButton} from 'material-ui';
 import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ContentCreate from 'material-ui/svg-icons/content/create';
@@ -15,7 +15,8 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {browserHistory, Link} from 'react-router';
+import browserHistory from 'react-router/lib/browserHistory';
+import Link from 'react-router/lib/Link';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';

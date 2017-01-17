@@ -1,4 +1,8 @@
-import {Checkbox, DatePicker, MenuItem, SelectField, TextField} from 'material-ui';
+import Checkbox from 'material-ui/Checkbox';
+import DatePicker from 'material-ui/DatePicker';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';

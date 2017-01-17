@@ -1,5 +1,6 @@
-import {FloatingActionButton} from 'material-ui';
-import {List, ListItem} from 'material-ui/List';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
 import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
@@ -7,7 +8,8 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {browserHistory, Link} from 'react-router';
+import browserHistory from 'react-router/lib/browserHistory';
+import Link from 'react-router/lib/Link';
 
 import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';
