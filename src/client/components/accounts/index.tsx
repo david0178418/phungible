@@ -19,7 +19,7 @@ import AppStore from '../../shared/stores/app';
 type Props = {
 	store: AppStore;
 };
-type TableProps = {
+type ListProps = {
 	accounts: Account[];
 	onEdit: (accountId: number) => void;
 	onRemove: (account: Account) => void;
@@ -61,7 +61,7 @@ class AcountsStore {
 	}
 }
 
-const AccountsList = observer(function({accounts, onEdit, onRemove}: TableProps) {
+const AccountsList = observer(function({accounts, onEdit, onRemove}: ListProps) {
 	return (
 		<List>
 			{accounts.map((account) => {

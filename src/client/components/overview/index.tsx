@@ -1,16 +1,12 @@
-import FlatButton from 'material-ui/FlatButton';
+
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentClear from 'material-ui/svg-icons/content/clear';
-import ContentCreate from 'material-ui/svg-icons/content/create';
-import {
-	Table,
-	TableBody,
-	TableHeader,
-	TableHeaderColumn,
-	TableRow,
-	TableRowColumn,
-} from 'material-ui/Table';
+import ContentRemove from 'material-ui/svg-icons/content/remove';
+import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
@@ -19,13 +15,13 @@ import {browserHistory, Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
-import BudgetEntry, {BudgetType, RepeatUnits} from '../../shared/stores/budget-entry';
+import BudgetEntry, {BudgetType} from '../../shared/stores/budget-entry';
 
 type BudgetHandler = (budgetEntry: BudgetEntry) => void;
 type Props = {
 	store: AppStore;
 };
-type TableProps = {
+type ListProps = {
 	budgetEntries: BudgetEntry[];
 	onEdit: BudgetHandler;
 	onRemove: BudgetHandler;
@@ -68,59 +64,27 @@ class OverviewStore {
 	}
 }
 
-function Row(onRemove: BudgetHandler, onEdit: BudgetHandler, budgetEntry: BudgetEntry) {
+const BudgetEntryList = observer(function({budgetEntries, onEdit, onRemove}: ListProps) {
 	return (
-		<TableRow
-			key={`${budgetEntry.name}+${budgetEntry.type}+${budgetEntry.amount}`}
-			selectable={false}
-		>
-			<TableRowColumn>{budgetEntry.name}</TableRowColumn>
-			<TableRowColumn>{BudgetType[budgetEntry.type]}</TableRowColumn>
-			<TableRowColumn>${budgetEntry.prettyAmount}</TableRowColumn>
-			<TableRowColumn>{budgetEntry.startDate.toLocaleDateString()}</TableRowColumn>
-			<TableRowColumn>
-				{budgetEntry.repeats ?
-					`Every ${budgetEntry.repeatValue} ${RepeatUnits[budgetEntry.repeatUnit]}s` :
-					'Never'
-				}
-			</TableRowColumn>
-			<TableRowColumn>
-				<FlatButton
-					icon={<ContentCreate />}
-					onClick={() => onEdit(budgetEntry)}
-				/>
-				<FlatButton
-					icon={<ContentClear />}
-					onClick={() => onRemove(budgetEntry)}
-				/>
-			</TableRowColumn>
-		</TableRow>
-	);
-}
-
-const TransationTable = observer(function({budgetEntries, onEdit, onRemove}: TableProps) {
-	return (
-		<Table
-		>
-			<TableHeader
-				displaySelectAll={false}
-				adjustForCheckbox={false}
-			>
-				<TableRow>
-					<TableHeaderColumn>Name</TableHeaderColumn>
-					<TableHeaderColumn>Type</TableHeaderColumn>
-					<TableHeaderColumn>Amount</TableHeaderColumn>
-					<TableHeaderColumn>Start Date</TableHeaderColumn>
-					<TableHeaderColumn>Repeats</TableHeaderColumn>
-					<TableHeaderColumn></TableHeaderColumn>
-				</TableRow>
-			</TableHeader>
-			<TableBody
-				displayRowCheckbox={false}
-			>
-				{budgetEntries.map(Row.bind(null, onRemove, onEdit))}
-			</TableBody>
-		</Table>
+		<List>
+			{budgetEntries.map((budgetEntry) => {
+				const iconButton = (
+					<IconButton
+						onTouchTap={() => onRemove(budgetEntry)}
+					><ContentRemove/></IconButton>
+				);
+				return (
+					<ListItem
+						key={budgetEntry.id}
+						primaryText={`${budgetEntry.name}`}
+						secondaryText={`Current Balance: $${budgetEntry.amount}`}
+						leftIcon={budgetEntry.type === BudgetType.Income ? <EditorMoneyOn/> : <ActionCreditCard/>}
+						onTouchTap={() => onEdit(budgetEntry)}
+						rightIconButton={iconButton}
+					/>
+				);
+			})}
+		</List>
 	);
 });
 
@@ -145,7 +109,7 @@ class Overview extends Component<Props, any> {
 		return (
 			<div>
 				<Navigation />
-				<TransationTable
+				<BudgetEntryList
 					budgetEntries={store.budgetEntries}
 					onRemove={(budgetEntry: BudgetEntry) => this.props.store.removeBudgetEntry(budgetEntry)}
 					onEdit={(budgetEntry: BudgetEntry) => this.handleEditBudgetEntry(budgetEntry.id)}
