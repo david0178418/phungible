@@ -1,8 +1,10 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentRemove from 'material-ui/svg-icons/content/remove';
 import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -62,15 +64,23 @@ class AcountsStore {
 const AccountsList = observer(function({accounts, onEdit, onRemove}: TableProps) {
 	return (
 		<List>
-			{accounts.map((account) => (
-				<ListItem
-					key={account.id}
-					primaryText={`${account.name}`}
-					secondaryText={`Current Balance: $${account.todaysBalance}`}
-					leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
-					onTouchTap={() => onEdit(account.id)}
-				/>
-			))}
+			{accounts.map((account) => {
+				const iconButton = (
+					<IconButton
+						onTouchTap={() => onRemove(account)}
+					><ContentRemove/></IconButton>
+				);
+				return (
+					<ListItem
+						key={account.id}
+						primaryText={`${account.name}`}
+						secondaryText={`Current Balance: $${account.todaysBalance}`}
+						leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
+						onTouchTap={() => onEdit(account.id)}
+						rightIconButton={iconButton}
+					/>
+				);
+			})}
 		</List>
 	);
 });

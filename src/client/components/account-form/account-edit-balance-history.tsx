@@ -1,9 +1,9 @@
 import DatePicker from 'material-ui/DatePicker';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Subheader from 'material-ui/Subheader';
-import ActionDone from 'material-ui/svg-icons/action/done';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import TextField from 'material-ui/TextField';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -72,13 +72,11 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}
 					/>
-					<FloatingActionButton
-						mini
+					<IconButton
 						onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
-						zDepth={2}
 					>
-						<ActionDone />
-					</FloatingActionButton>
+						<ContentAdd />
+					</IconButton>
 				</div>
 				<List>
 					{account.balanceHistory.map((balanceUpdate) => {
