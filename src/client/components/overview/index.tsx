@@ -3,10 +3,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
-import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
+import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
+import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
@@ -78,7 +78,7 @@ const BudgetEntryList = observer(function({budgetEntries, onEdit, onRemove}: Lis
 						key={budgetEntry.id}
 						primaryText={`${budgetEntry.name}`}
 						secondaryText={`Current Balance: $${budgetEntry.amount}`}
-						leftIcon={budgetEntry.type === BudgetType.Income ? <EditorMoneyOn/> : <ActionCreditCard/>}
+						leftIcon={budgetEntry.type === BudgetType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
 						onTouchTap={() => onEdit(budgetEntry)}
 						rightIconButton={iconButton}
 					/>
