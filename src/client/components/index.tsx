@@ -6,7 +6,9 @@ export default
 function Index() {
 	return (
 		<div>
-			<Navigation />
+			<Navigation
+				title="Budget Tracker"
+			/>
 			Index
 		</div>
 	);

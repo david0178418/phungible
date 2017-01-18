@@ -2,6 +2,7 @@ import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-forward';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
@@ -20,34 +21,35 @@ type Props = {
 };
 
 type AccountSelectorProps = {
-	budgetEntry: BudgetEntry;
 	accounts: Account[];
+	label: string;
+	selectedAccount: number;
+	style: {}
 	onChange(value: number): void;
 };
 
-const AccountsSelector = observer(function({accounts, budgetEntry, onChange}: AccountSelectorProps) {
+const AccountsSelector = function({accounts, label, onChange, selectedAccount, style}: AccountSelectorProps) {
 	return (
-		<div>
-			<SelectField
-				fullWidth
-				floatingLabelText="Towards Account"
-				value={budgetEntry.fromAccount ? budgetEntry.fromAccount.id : 0}
-				onChange={(ev, index, value) => onChange(value)}
-			>
-				<MenuItem value={0} primaryText="None" />
-				{accounts.map((account) => {
-					return (
-						<MenuItem
-							key={account.id}
-							value={account.id}
-							primaryText={account.name}
-						/>
-					);
-				})}
-			</SelectField>
-		</div>
+		<SelectField
+			fullWidth
+			floatingLabelText={label}
+			value={selectedAccount}
+			onChange={(ev, index, value) => onChange(value)}
+			style={style}
+		>
+			<MenuItem value={0} primaryText="None" />
+			{accounts.map((account) => {
+				return (
+					<MenuItem
+						key={account.id}
+						value={account.id}
+						primaryText={account.name}
+					/>
+				);
+			})}
+		</SelectField>
 	);
-});
+};
 
 export default
 observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: Props) {
@@ -101,6 +103,30 @@ observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: P
 					value={budgetEntry.description}
 				/>
 			</div>
+			{!!accounts.length && (
+				<div>
+					<AccountsSelector
+						accounts={accounts}
+						label="From Account"
+						onChange={(value) => handleUpdateFromAccount(value, budgetEntry, appStore)}
+						selectedAccount={budgetEntry.fromAccount ? budgetEntry.fromAccount.id : 0}
+						style={{width: 'calc(50% - 12px)'}}
+					/>
+					<NavigationArrowBack
+						style={{
+							marginTop: '32px',
+							verticalAlign: 'top',
+						}}
+					/>
+					<AccountsSelector
+						accounts={accounts}
+						label="Towards Account"
+						onChange={(value) => handleUpdateTowardAccount(value, budgetEntry, appStore)}
+						selectedAccount={budgetEntry.towardAccount ? budgetEntry.towardAccount.id : 0}
+						style={{width: 'calc(50% - 12px)'}}
+					/>
+				</div>
+			)}
 			<div>
 				<Checkbox
 					checked={!budgetEntry.repeats}
@@ -133,13 +159,6 @@ observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: P
 					</div>
 				</div>
 			)}
-			{!!accounts.length && (
-				<AccountsSelector
-					budgetEntry={budgetEntry}
-					accounts={accounts}
-					onChange={(value) => handleUpdateAccount(value, budgetEntry, appStore)}
-				/>
-			)}
 		</form>
 	);
 });
@@ -155,8 +174,11 @@ const handleToggleRepeats = action(function(budgetEntry: BudgetEntry) {
 		budgetEntry.repeatUnit = RepeatUnits.Week;
 	}
 });
-const handleUpdateAccount = action(function(accountId: number, budgetEntry: BudgetEntry, appStore: AppStore) {
+const handleUpdateFromAccount = action(function(accountId: number, budgetEntry: BudgetEntry, appStore: AppStore) {
 	budgetEntry.fromAccount = appStore.findAccount(accountId);
+});
+const handleUpdateTowardAccount = action(function(accountId: number, budgetEntry: BudgetEntry, appStore: AppStore) {
+	budgetEntry.towardAccount = appStore.findAccount(accountId);
 });
 const handleUpdateAmount = action(function(newAmount: number, budgetEntry: BudgetEntry) {
 	budgetEntry.amount = newAmount * 100;

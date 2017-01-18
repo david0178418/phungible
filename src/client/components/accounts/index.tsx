@@ -105,7 +105,9 @@ class Accounts extends Component<any, any> {
 
 		return (
 			<div>
-				<Navigation />
+				<Navigation
+					title="Accounts"
+				/>
 				<AccountsList
 					accounts={store.accounts}
 					onRemove={(account: Account) => this.props.store.removeAccount(account)}

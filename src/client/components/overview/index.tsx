@@ -108,7 +108,9 @@ class Overview extends Component<Props, any> {
 
 		return (
 			<div>
-				<Navigation />
+				<Navigation
+					title="Scheduled Transactions"
+				/>
 				<BudgetEntryList
 					budgetEntries={store.budgetEntries}
 					onRemove={(budgetEntry: BudgetEntry) => this.props.store.removeBudgetEntry(budgetEntry)}

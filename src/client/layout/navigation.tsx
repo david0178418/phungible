@@ -4,9 +4,13 @@ import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
 import {browserHistory} from 'react-router';
 
+type Props = {
+	title: string;
+};
+
 export default
-class Navigation extends React.Component<any, any> {
-	constructor(props: any) {
+class Navigation extends React.Component<Props, any> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isOpen: false,
@@ -18,7 +22,7 @@ class Navigation extends React.Component<any, any> {
 			<AppBar
 				className="app-title"
 				onLeftIconButtonTouchTap={() => this.handleDrawerToggle()}
-				title="Budget Tool"
+				title={this.props.title}
 			>
 				<Drawer
 					containerClassName="app-title"
@@ -26,6 +30,9 @@ class Navigation extends React.Component<any, any> {
 					open={this.state.isOpen}
 					onRequestChange={() => this.handleDrawerToggle()}
 				>
+					<MenuItem onTouchTap={() => this.handleNavigateTo('/')}>
+						Home
+					</MenuItem>
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/accounts')}>
 						Accounts
 					</MenuItem>
