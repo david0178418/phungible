@@ -3,7 +3,7 @@ import {deserialize, identifier, list, object, serializable, serialize} from 'se
 
 import {setItem} from '../storage';
 import Account from './account';
-import BudgetEntry from './budget-entry';
+import ScheduledTransaction from './scheduled-transaction';
 
 export default
 class AppStore {
@@ -14,11 +14,11 @@ class AppStore {
 	public id = 1;
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
-	@serializable(list(object(BudgetEntry)))
-	@observable public budgetEntries: BudgetEntry[];
+	@serializable(list(object(ScheduledTransaction)))
+	@observable public scheduledTransactions: ScheduledTransaction[];
 
 	constructor() {
-		this.budgetEntries = observable([]);
+		this.scheduledTransactions = observable([]);
 		this.accounts = observable([]);
 		(window as any).store = this;
 	}
@@ -29,13 +29,15 @@ class AppStore {
 	public findAccount(accountId: number) {
 		return this.accounts.find((account) => accountId === account.id);
 	}
-	@action public saveBudgetEntry(newBudgetEntry: BudgetEntry) {
-		if(!newBudgetEntry.id) {
-			newBudgetEntry.id = Date.now();
-			this.budgetEntries.push(newBudgetEntry);
+	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
+		if(!newScheduledTransaction.id) {
+			newScheduledTransaction.id = Date.now();
+			this.scheduledTransactions.push(newScheduledTransaction);
 		} else {
-			const index = this.budgetEntries.findIndex((budgetEntry) => budgetEntry.id === newBudgetEntry.id);
-			this.budgetEntries[index] = newBudgetEntry;
+			const index = this.scheduledTransactions.findIndex(
+				(scheduledTransaction) => scheduledTransaction.id === newScheduledTransaction.id
+			);
+			this.scheduledTransactions[index] = newScheduledTransaction;
 		}
 		this.save();
 	}
@@ -44,13 +46,13 @@ class AppStore {
 			newAccount.id = Date.now();
 			this.accounts.push(newAccount);
 		} else {
-			const index = this.accounts.findIndex((budgetEntry) => budgetEntry.id === newAccount.id);
+			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
 			this.accounts[index] = newAccount;
 		}
 		this.save();
 	}
-	@action public removeBudgetEntry(budgetEntry: BudgetEntry) {
-		(this.budgetEntries as any).remove(budgetEntry);
+	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
+		(this.scheduledTransactions as any).remove(scheduledTransaction);
 		this.save();
 	}
 
@@ -58,7 +60,7 @@ class AppStore {
 		(this.accounts as any).remove(account);
 		this.save();
 	}
-	public findBudgetEntry(id: number) {
-		return this.budgetEntries.find((budgetEntry) => budgetEntry.id === id);
+	public findScheduledTransaction(id: number) {
+		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
 	}
 };

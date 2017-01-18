@@ -1,4 +1,4 @@
-# Budget Tool
+# Budget Tracker
 
 ## Requires
 * node v6.9.0+

@@ -10,17 +10,18 @@ import {browserHistory} from 'react-router';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
+import Styles from '../../shared/styles';
 import AccountForm from '../account-form';
 
 class AccountEditStore {
 	public account: Account;
 	public appStore: AppStore;
 
-	constructor(appStore: AppStore, budgetEntryId?: number) {
+	constructor(appStore: AppStore, scheduledTransaction?: number) {
 		this.appStore = appStore;
 
-		if(budgetEntryId) {
-			this.account = appStore.findAccount(budgetEntryId);
+		if(scheduledTransaction) {
+			this.account = appStore.findAccount(scheduledTransaction);
 		} else {
 			this.account = new Account();
 		}
@@ -78,6 +79,7 @@ class AccountEdit extends Component<Props, any> {
 				<FloatingActionButton
 					disabled={!account.isValid}
 					onTouchTap={() => this.handleSaveAccount()}
+					style={Styles.floatingActionButton}
 					zDepth={2}
 				>
 					<ActionDone />
@@ -87,7 +89,9 @@ class AccountEdit extends Component<Props, any> {
 	}
 
 	private handleSaveAccount() {
-		this.store.saveAccount();
-		browserHistory.push('/accounts');
+		setTimeout(() => {
+			this.store.saveAccount();
+			browserHistory.push('/accounts');
+		}, 100);
 	}
 }

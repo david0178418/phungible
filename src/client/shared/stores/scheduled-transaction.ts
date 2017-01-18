@@ -5,7 +5,7 @@ import {deserialize, identifier, list, object, primitive, serializable, serializ
 import Account from './account';
 
 export
-enum BudgetType {
+enum TransactionType {
 	Income,
 	Expense,
 };
@@ -20,12 +20,12 @@ enum RepeatUnits {
 };
 
 export default
-class BudgetEntry {
+class ScheduledTransaction {
 	@action public static deserialize(data: any) {
-		return deserialize(BudgetEntry, data);
+		return deserialize(ScheduledTransaction, data);
 	}
-	@action public static clone(originalEntry: BudgetEntry) {
-		return BudgetEntry.deserialize(serialize(originalEntry));
+	@action public static clone(originalEntry: ScheduledTransaction) {
+		return ScheduledTransaction.deserialize(serialize(originalEntry));
 	}
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
@@ -47,7 +47,7 @@ class BudgetEntry {
 	@serializable
 	@observable public repeatValue = 1;
 	@serializable
-	@observable public type: BudgetType = BudgetType.Expense;
+	@observable public type: TransactionType = TransactionType.Expense;
 	@serializable
 	@observable private _startDate: string;
 

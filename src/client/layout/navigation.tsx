@@ -36,8 +36,8 @@ class Navigation extends React.Component<Props, any> {
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/accounts')}>
 						Accounts
 					</MenuItem>
-					<MenuItem onTouchTap={() => this.handleNavigateTo('/overview')}>
-						Budget Entries
+					<MenuItem onTouchTap={() => this.handleNavigateTo('/schduled-transactions')}>
+						Schedule Transactions
 					</MenuItem>
 				</Drawer>
 			</AppBar>

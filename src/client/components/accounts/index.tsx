@@ -15,6 +15,7 @@ import {browserHistory, Link} from 'react-router';
 import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
+import Styles from '../../shared/styles';
 
 type Props = {
 	store: AppStore;
@@ -115,6 +116,7 @@ class Accounts extends Component<any, any> {
 				/>
 				<FloatingActionButton
 					containerElement={<Link to="/account-edit" />}
+					style={Styles.floatingActionButton}
 					zDepth={2}
 				>
 					<ContentAdd />
