@@ -28,7 +28,8 @@ class BudgetEntry {
 		return BudgetEntry.deserialize(serialize(originalEntry));
 	}
 	@serializable(object(Account))
-	@observable public account: Account | null = null;	// TODO Clean up setting and access
+	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
+	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public amount = 0;
 	@serializable

@@ -19,6 +19,36 @@ type Props = {
 	onSubmit(): void;
 };
 
+type AccountSelectorProps = {
+	budgetEntry: BudgetEntry;
+	accounts: Account[];
+	onChange(value: number): void;
+};
+
+const AccountsSelector = observer(function({accounts, budgetEntry, onChange}: AccountSelectorProps) {
+	return (
+		<div>
+			<SelectField
+				fullWidth
+				floatingLabelText="Towards Account"
+				value={budgetEntry.fromAccount ? budgetEntry.fromAccount.id : 0}
+				onChange={(ev, index, value) => onChange(value)}
+			>
+				<MenuItem value={0} primaryText="None" />
+				{accounts.map((account) => {
+					return (
+						<MenuItem
+							key={account.id}
+							value={account.id}
+							primaryText={account.name}
+						/>
+					);
+				})}
+			</SelectField>
+		</div>
+	);
+});
+
 export default
 observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: Props) {
 	return (
@@ -101,28 +131,14 @@ observer(function BudgetEntryEdit({accounts, appStore, budgetEntry, onSubmit}: P
 							<MenuItem value={RepeatUnits.Year} primaryText="Year"/>
 						</SelectField>
 					</div>
-					{!!accounts.length && (
-						<div>
-							<SelectField
-								fullWidth
-								floatingLabelText="Towards Account"
-								value={budgetEntry.account ? budgetEntry.account.id : 0}
-								onChange={(ev, index, value) => handleUpdateAccount(value, budgetEntry, appStore)}
-							>
-								<MenuItem value={0} primaryText="None" />
-								{accounts.map((account) => {
-									return (
-										<MenuItem
-											key={account.id}
-											value={account.id}
-											primaryText={account.name}
-										/>
-									);
-								})}
-							</SelectField>
-						</div>
-					)}
 				</div>
+			)}
+			{!!accounts.length && (
+				<AccountsSelector
+					budgetEntry={budgetEntry}
+					accounts={accounts}
+					onChange={(value) => handleUpdateAccount(value, budgetEntry, appStore)}
+				/>
 			)}
 		</form>
 	);
@@ -140,7 +156,7 @@ const handleToggleRepeats = action(function(budgetEntry: BudgetEntry) {
 	}
 });
 const handleUpdateAccount = action(function(accountId: number, budgetEntry: BudgetEntry, appStore: AppStore) {
-	budgetEntry.account = appStore.findAccount(accountId);
+	budgetEntry.fromAccount = appStore.findAccount(accountId);
 });
 const handleUpdateAmount = action(function(newAmount: number, budgetEntry: BudgetEntry) {
 	budgetEntry.amount = newAmount * 100;
