@@ -4,6 +4,7 @@ import {deserialize, identifier, list, object, serializable, serialize} from 'se
 import {setItem} from '../storage';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
+import Transaction from './transaction';
 
 export default
 class AppStore {
@@ -16,10 +17,19 @@ class AppStore {
 	@observable public accounts: Account[];
 	@serializable(list(object(ScheduledTransaction)))
 	@observable public scheduledTransactions: ScheduledTransaction[];
+	@serializable(list(object(Transaction)))
+	@observable public transactions: Transaction[];
+	@serializable
+	private _nextTransactionId = 1;
+
+	get nextTransactionId() {
+		return this._nextTransactionId++;
+	}
 
 	constructor() {
-		this.scheduledTransactions = observable([]);
 		this.accounts = observable([]);
+		this.scheduledTransactions = observable([]);
+		this.transactions = observable([]);
 		(window as any).store = this;
 	}
 
@@ -29,16 +39,22 @@ class AppStore {
 	public findAccount(accountId: number) {
 		return this.accounts.find((account) => accountId === account.id);
 	}
-	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
-		if(!newScheduledTransaction.id) {
-			newScheduledTransaction.id = Date.now();
-			this.scheduledTransactions.push(newScheduledTransaction);
-		} else {
-			const index = this.scheduledTransactions.findIndex(
-				(scheduledTransaction) => scheduledTransaction.id === newScheduledTransaction.id
-			);
-			this.scheduledTransactions[index] = newScheduledTransaction;
-		}
+	public findScheduledTransaction(id: number) {
+		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
+	}
+	public findTransaction(id: number) {
+		return this.transactions.find((transaction) => transaction.id === id);
+	}
+	@action public removeAccount(account: Account) {
+		(this.accounts as any).remove(account);
+		this.save();
+	}
+	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
+		(this.scheduledTransactions as any).remove(scheduledTransaction);
+		this.save();
+	}
+	@action public removeTransaction(transaction: Transaction) {
+		(this.transactions as any).remove(transaction);
 		this.save();
 	}
 	@action public saveAccount(newAccount: Account) {
@@ -51,16 +67,26 @@ class AppStore {
 		}
 		this.save();
 	}
-	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		(this.scheduledTransactions as any).remove(scheduledTransaction);
+	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
+		if(!newScheduledTransaction.id) {
+			newScheduledTransaction.id = Date.now();
+			this.scheduledTransactions.push(newScheduledTransaction);
+		} else {
+			const index = this.scheduledTransactions.findIndex(
+				(scheduledTransaction) => scheduledTransaction.id === newScheduledTransaction.id,
+			);
+			this.scheduledTransactions[index] = newScheduledTransaction;
+		}
 		this.save();
 	}
-
-	@action public removeAccount(account: Account) {
-		(this.accounts as any).remove(account);
+	@action public saveTransaction(newTransaction: Transaction) {
+		if(!newTransaction.id) {
+			newTransaction.id = Date.now();
+			this.transactions.push(newTransaction);
+		} else {
+			const index = this.transactions.findIndex((transaction) => transaction.id === newTransaction.id);
+			this.transactions[index] = newTransaction;
+		}
 		this.save();
-	}
-	public findScheduledTransaction(id: number) {
-		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
 	}
 };

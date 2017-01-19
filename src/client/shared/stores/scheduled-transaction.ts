@@ -61,14 +61,8 @@ class ScheduledTransaction {
 			this._startDate = moment(newDate).format('MM/DD/YYYY');
 		}
 	}
-	get startDate() {
+	@computed get startDate() {
 		return moment(this._startDate, 'MM/DD/YYYY').toDate();
-	}
-	@computed get formattedStartDate() {
-		return this._startDate;
-	}
-	@computed get inputFormattedDate() {
-		return moment(this._startDate, 'MM/DD/YYYY').format('YYYY-MM-DD');
 	}
 	@computed get isValid() {
 		return !!(this.amount && this.name);
