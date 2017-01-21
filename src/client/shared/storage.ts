@@ -5,5 +5,10 @@ function setItem(key: string, value: any) {
 
 export
 function getItem(key: string) {
-	return JSON.parse(localStorage.getItem(key));
+	const data = localStorage.getItem(key);
+	if(data) {
+		return JSON.parse(data);
+	} else {
+		return null;
+	}
 }

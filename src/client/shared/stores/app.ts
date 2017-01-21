@@ -1,9 +1,11 @@
 import {action, observable} from 'mobx';
+import * as moment from 'moment';
+import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
 import {setItem} from '../storage';
 import Account from './account';
-import ScheduledTransaction from './scheduled-transaction';
+import ScheduledTransaction, {RepeatUnits} from './scheduled-transaction';
 import Transaction from './transaction';
 
 export default
@@ -15,6 +17,8 @@ class AppStore {
 	public id = 1;
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
+	@serializable
+	public lastUpdatedDate: string;
 	@serializable(list(object(ScheduledTransaction)))
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@serializable(list(object(Transaction)))
@@ -30,12 +34,10 @@ class AppStore {
 		this.accounts = observable([]);
 		this.scheduledTransactions = observable([]);
 		this.transactions = observable([]);
+		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 		(window as any).store = this;
 	}
 
-	public save() {
-		setItem('store', serialize(this));
-	}
 	public findAccount(accountId: number) {
 		return this.accounts.find((account) => accountId === account.id);
 	}
@@ -44,6 +46,16 @@ class AppStore {
 	}
 	public findTransaction(id: number) {
 		return this.transactions.find((transaction) => transaction.id === id);
+	}
+	public save() {
+		setItem('store', serialize(this));
+	}
+	public runTransactionSinceLastUpdate() {
+		this.scheduledTransactions.forEach((scheduledTransaction) => {
+			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
+			lastUpdate.add(1, 'day');
+			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
+		});
 	}
 	@action public removeAccount(account: Account) {
 		(this.accounts as any).remove(account);
@@ -56,6 +68,28 @@ class AppStore {
 	@action public removeTransaction(transaction: Transaction) {
 		(this.transactions as any).remove(transaction);
 		this.save();
+	}
+	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string) {
+		const lastUpdate = moment(from, 'MM/DD/YYYY');
+		const daysSince = moment().diff(lastUpdate, 'days');
+
+		const interval = (moment(scheduledTransaction.startDate) as any)
+			.recur()
+			.every(
+				scheduledTransaction.repeatValue,
+				RepeatUnits[scheduledTransaction.repeatUnit].toLowerCase(),
+			);
+
+		for(let x = 0; x < daysSince; x++) {
+			if(interval.matches(lastUpdate)) {
+				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate());
+				transaction.id = this.nextTransactionId;
+				this.transactions.push(transaction);
+			}
+			lastUpdate.add(1, 'day');
+		}
+
+		this.sortTransactions();
 	}
 	@action public saveAccount(newAccount: Account) {
 		if(!newAccount.id) {
@@ -71,12 +105,25 @@ class AppStore {
 		if(!newScheduledTransaction.id) {
 			newScheduledTransaction.id = Date.now();
 			this.scheduledTransactions.push(newScheduledTransaction);
+
+			if(moment().diff(newScheduledTransaction.startDate, 'days') > 0) {
+				if(newScheduledTransaction.repeats) {
+					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString);
+				} else {
+					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate);
+					transaction.id = this.nextTransactionId;
+					this.transactions.push(transaction);
+				}
+			}
 		} else {
 			const index = this.scheduledTransactions.findIndex(
 				(scheduledTransaction) => scheduledTransaction.id === newScheduledTransaction.id,
 			);
 			this.scheduledTransactions[index] = newScheduledTransaction;
+			// TODO figure out how to handle "startDate" updates
 		}
+
+		this.sortTransactions();
 		this.save();
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
@@ -87,6 +134,12 @@ class AppStore {
 			const index = this.transactions.findIndex((transaction) => transaction.id === newTransaction.id);
 			this.transactions[index] = newTransaction;
 		}
+		this.sortTransactions();
 		this.save();
+	}
+	@action public sortTransactions() {
+		(this.transactions as any).replace(this.transactions.sort((a, b) => {
+			return a.date.getTime() - b.date.getTime();
+		}));
 	}
 };

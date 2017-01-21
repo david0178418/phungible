@@ -31,9 +31,15 @@ class Transaction {
 	@serializable
 	@observable private _dateString: string;
 
-	constructor() {
-		this.labels = [];
-		this._dateString = moment().format('MM/DD/YYYY');
+	constructor(params?: Partial<Transaction>) {
+		if(params) {
+			return Object.assign(this, {
+				labels: [],
+			}, params);
+		} else {
+			this.labels = [];
+			this._dateString = moment().format('MM/DD/YYYY');
+		}
 	}
 
 	set date(newDate: Date) {

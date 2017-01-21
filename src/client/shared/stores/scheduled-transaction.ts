@@ -3,12 +3,7 @@ import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Account from './account';
-
-export
-enum TransactionType {
-	Income,
-	Expense,
-};
+import Transaction, {TransactionType} from './transaction';
 
 export
 enum RepeatUnits {
@@ -56,6 +51,9 @@ class ScheduledTransaction {
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
 	}
+	get startDateString() {
+		return this._startDate;
+	}
 	set startDate(newDate: Date) {
 		if(!isNaN(newDate.getTime())) {
 			this._startDate = moment(newDate).format('MM/DD/YYYY');
@@ -72,5 +70,14 @@ class ScheduledTransaction {
 	}
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
+	}
+
+	public generateTransaction(date: Date) {
+		return new Transaction({
+			amount: this.amount,
+			date,
+			name: this.name,
+			type: this.type,
+		});
 	}
 };

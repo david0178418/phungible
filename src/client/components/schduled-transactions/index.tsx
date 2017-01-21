@@ -15,7 +15,8 @@ import {browserHistory, Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
-import ScheduledTransaction, {TransactionType} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
+import {TransactionType} from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;

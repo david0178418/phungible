@@ -11,7 +11,8 @@ import * as React from 'react';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import ScheduledTransaction, {RepeatUnits, TransactionType} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
+import {TransactionType} from '../../shared/stores/transaction';
 
 type Props = {
 	accounts: Account[];
