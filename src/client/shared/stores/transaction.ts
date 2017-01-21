@@ -1,6 +1,8 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, primitive, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
+
+import ScheduledTransaction from './scheduled-transaction';
 
 export
 enum TransactionType {
@@ -28,6 +30,8 @@ class Transaction {
 	@observable public name = '';
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
+	@serializable(object(ScheduledTransaction))
+	public generatedFrom: ScheduledTransaction | null = null;
 	@serializable
 	@observable private _dateString: string;
 

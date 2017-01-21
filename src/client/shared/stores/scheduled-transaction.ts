@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Account from './account';
-import Transaction, {TransactionType} from './transaction';
 
 export
 enum RepeatUnits {
@@ -51,6 +50,7 @@ class ScheduledTransaction {
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
 	}
+
 	get startDateString() {
 		return this._startDate;
 	}
@@ -76,8 +76,12 @@ class ScheduledTransaction {
 		return new Transaction({
 			amount: this.amount,
 			date,
+			generatedFrom: this,
 			name: this.name,
 			type: this.type,
 		});
 	}
 };
+
+// Moved to resolve circular dependency issue.
+import Transaction, {TransactionType} from './transaction';
