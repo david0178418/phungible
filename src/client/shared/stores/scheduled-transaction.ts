@@ -77,8 +77,10 @@ class ScheduledTransaction {
 		return new Transaction({
 			amount: this.amount,
 			date,
+			fromAccount: this.fromAccount,
 			generatedFrom: this,
 			name: this.name,
+			towardAccount: this.towardAccount,
 			type: this.type,
 		});
 	}
