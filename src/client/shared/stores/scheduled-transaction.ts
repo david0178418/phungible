@@ -23,6 +23,7 @@ class ScheduledTransaction {
 	}
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
+	@serializable(object(Account))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public amount = 0;
@@ -63,7 +64,7 @@ class ScheduledTransaction {
 		return moment(this._startDate, 'MM/DD/YYYY').toDate();
 	}
 	@computed get isValid() {
-		return !!(this.amount && this.name);
+		return !!(this.amount && this.name && this.fromAccount);
 	}
 	@computed get prettyAmount() {
 		return (this.amount / 100).toFixed(2);

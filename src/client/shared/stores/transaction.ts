@@ -2,6 +2,7 @@ import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
+import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
 
 export
@@ -22,6 +23,10 @@ class Transaction {
 	@observable public id: number;
 	@serializable
 	@observable public amount = 0;
+	@serializable(object(Account))
+	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
+	@serializable(object(Account))
+	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public notes = '';
 	@serializable(list(primitive()))
@@ -59,6 +64,6 @@ class Transaction {
 		return (this.amount / 100).toFixed(2);
 	}
 	@computed get isValid() {
-		return !!(this.name && this.amount);
+		return !!(this.name && this.amount && this.fromAccount);
 	}
 }

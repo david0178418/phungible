@@ -2,7 +2,6 @@ import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-forward';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
@@ -10,50 +9,18 @@ import {FormEvent} from 'react';
 import * as React from 'react';
 
 import Account from '../../shared/stores/account';
-import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
+import AccountSelector from '../account-selector';
 
 type Props = {
 	accounts: Account[];
-	appStore: AppStore;
 	scheduledTransaction: ScheduledTransaction;
 	onSubmit(): void;
 };
 
-type AccountSelectorProps = {
-	accounts: Account[];
-	label: string;
-	selectedAccount: number;
-	style: {}
-	onChange(value: number): void;
-};
-
-const AccountsSelector = function({accounts, label, onChange, selectedAccount, style}: AccountSelectorProps) {
-	return (
-		<SelectField
-			fullWidth
-			floatingLabelText={label}
-			value={selectedAccount}
-			onChange={(ev, index, value) => onChange(value)}
-			style={style}
-		>
-			<MenuItem value={0} primaryText="None" />
-			{accounts.map((account) => {
-				return (
-					<MenuItem
-						key={account.id}
-						value={account.id}
-						primaryText={account.name}
-					/>
-				);
-			})}
-		</SelectField>
-	);
-};
-
 export default
-observer(function ScheduledTransactionEdit({accounts, appStore, scheduledTransaction, onSubmit}: Props) {
+observer(function ScheduledTransactionEdit({accounts, scheduledTransaction, onSubmit}: Props) {
 	return (
 		<form className="create-scheduled-transaction" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<div>
@@ -106,25 +73,17 @@ observer(function ScheduledTransactionEdit({accounts, appStore, scheduledTransac
 			</div>
 			{!!accounts.length && (
 				<div>
-					<AccountsSelector
+					<AccountSelector
 						accounts={accounts}
 						label="From Account"
-						onChange={(value) => handleUpdateFromAccount(value, scheduledTransaction, appStore)}
-						selectedAccount={scheduledTransaction.fromAccount ? scheduledTransaction.fromAccount.id : 0}
-						style={{width: 'calc(50% - 12px)'}}
+						onChange={(value) => handleUpdateFromAccount(value, scheduledTransaction)}
+						selectedAccount={scheduledTransaction.fromAccount || false}
 					/>
-					<NavigationArrowBack
-						style={{
-							marginTop: '32px',
-							verticalAlign: 'top',
-						}}
-					/>
-					<AccountsSelector
+					<AccountSelector
 						accounts={accounts}
 						label="Towards Account"
-						onChange={(value) => handleUpdateTowardAccount(value, scheduledTransaction, appStore)}
-						selectedAccount={scheduledTransaction.towardAccount ? scheduledTransaction.towardAccount.id : 0}
-						style={{width: 'calc(50% - 12px)'}}
+						onChange={(value) => handleUpdateTowardAccount(value, scheduledTransaction)}
+						selectedAccount={scheduledTransaction.towardAccount || false}
 					/>
 				</div>
 			)}
@@ -176,13 +135,13 @@ const handleToggleRepeats = action(function(scheduledTransaction: ScheduledTrans
 	}
 });
 const handleUpdateFromAccount = action(
-	function(accountId: number, scheduledTransaction: ScheduledTransaction, appStore: AppStore) {
-		scheduledTransaction.fromAccount = appStore.findAccount(accountId);
+	function(account: Account, scheduledTransaction: ScheduledTransaction) {
+		scheduledTransaction.fromAccount = account;
 	},
 );
 const handleUpdateTowardAccount = action(
-	function(accountId: number, scheduledTransaction: ScheduledTransaction, appStore: AppStore) {
-		scheduledTransaction.towardAccount = appStore.findAccount(accountId);
+	function(account: Account, scheduledTransaction: ScheduledTransaction) {
+		scheduledTransaction.towardAccount = account;
 	},
 );
 const handleUpdateAmount = action(function(newAmount: number, scheduledTransaction: ScheduledTransaction) {

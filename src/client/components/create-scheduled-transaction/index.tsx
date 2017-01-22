@@ -15,7 +15,7 @@ import ScheduledTransactionEdit from '../scheduled-transaction-edit';
 
 class CreateScheduledTransactionStore {
 	public scheduledTransaction: ScheduledTransaction;
-	public appStore: AppStore;
+	private appStore: AppStore;
 
 	constructor(appStore: AppStore, scheduledTransactionId?: number) {
 		this.appStore = appStore;
@@ -74,7 +74,6 @@ class CreateScheduledTransaction extends Component<Props, any> {
 				/>
 				<ScheduledTransactionEdit
 					accounts={this.store.accounts}
-					appStore={this.store.appStore}
 					scheduledTransaction={this.store.scheduledTransaction}
 					onSubmit={() => this.handleSaveScheduledTransaction()}
 				/>

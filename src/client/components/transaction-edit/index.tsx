@@ -15,7 +15,7 @@ import TransactionForm from '../transaction-form';
 
 class TransactionEditStore {
 	public transaction: Transaction;
-	public appStore: AppStore;
+	private appStore: AppStore;
 
 	constructor(appStore: AppStore, scheduledTransaction?: number) {
 		this.appStore = appStore;
@@ -35,6 +35,10 @@ class TransactionEditStore {
 		} else {
 			return false;
 		}
+	}
+
+	get accounts() {
+		return this.appStore.accounts;
 	}
 
 	get transactions() {
@@ -60,6 +64,7 @@ class TransactionEdit extends Component<Props, any> {
 
 	public render() {
 		const {
+			accounts,
 			transaction,
 		} = this.store;
 		const action = transaction.id ? 'Edit' : 'Create';
@@ -73,6 +78,7 @@ class TransactionEdit extends Component<Props, any> {
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<TransactionForm
+					accounts={accounts}
 					transaction={transaction}
 					onSubmit={() => this.handleSaveTransaction()}
 				/>
