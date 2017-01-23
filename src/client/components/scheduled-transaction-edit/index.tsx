@@ -141,7 +141,7 @@ const handleUpdateFromAccount = action(
 );
 const handleUpdateTowardAccount = action(
 	function(account: Account, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.towardAccount = account;
+		scheduledTransaction.towardAccount = account || null;
 	},
 );
 const handleUpdateAmount = action(function(newAmount: number, scheduledTransaction: ScheduledTransaction) {

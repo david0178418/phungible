@@ -102,7 +102,7 @@ const handleUpdateFromAccount = action(
 );
 const handleUpdateTowardAccount = action(
 	function(account: Account, transaction: Transaction) {
-		transaction.towardAccount = account;
+		transaction.towardAccount = account || null;
 	},
 );
 const handleUpdateNotes = action(function(newNote: string, transaction: Transaction) {
