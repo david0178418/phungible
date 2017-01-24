@@ -67,7 +67,6 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						autoOk
 						style={{display: 'inline-block'}}
 						floatingLabelText="Starts"
-						hintText="Portrait Dialog"
 						locale="en-US"
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}

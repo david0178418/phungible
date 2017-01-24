@@ -49,6 +49,7 @@
     "react-dom": "^15.4.2",
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^2.0.1",
+    "recharts": "^0.20.5",
     "serializr": "^1.1.9"
   }
 }

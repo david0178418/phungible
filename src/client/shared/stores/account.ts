@@ -1,4 +1,5 @@
 import {action, computed, observable} from 'mobx';
+import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import BalanceUpdate from './balance-update';
@@ -38,12 +39,42 @@ class Account {
 	public addBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		this.balanceHistory.push(balanceUpdate);
 	}
+	public lastBalanceUpdate(date: Date) {
+		const dateMoment = moment(date);
+		let lastBalanceUpdate: BalanceUpdate;
+		let returnVal;
+
+		this.balanceHistory.find((balanceUpdate) => {
+			if(balanceUpdate.date < date || dateMoment.isSame(balanceUpdate.date, 'd')) {
+				lastBalanceUpdate = balanceUpdate;
+			} else {
+				return false;
+			}
+		});
+
+		if(!lastBalanceUpdate) {
+			returnVal = {
+				amount: 0,
+				date: moment(),
+			};
+		} else {
+			returnVal = {
+				amount: lastBalanceUpdate.balance,
+				date: moment(lastBalanceUpdate.date),
+			};
+		}
+
+		return returnVal;
+	}
 	public removeBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		(this.balanceHistory as any).remove(balanceUpdate);
 	}
 	public projectedBalance(date: string) {
 		// TODO
 		return this.latestBalanceUpdate;
+	}
+	get firstBalanceUpdate() {
+		return this.balanceHistory[0];
 	}
 	@computed get prettyAmount() {
 		// TODO
