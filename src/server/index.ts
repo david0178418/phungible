@@ -34,10 +34,10 @@ server.route({
 	handler: {
 		directory: {
 			index: false,
-			path: path.normalize(__dirname + '/../client/'),
+			path: path.normalize(__dirname + '/../client/js/'),
 			redirectToSlash: true,
 		},
 	},
 	method: 'GET',
-	path: '/resources/{param*}',
+	path: '/js/{param*}',
 });
