@@ -9,7 +9,8 @@
   "scripts": {
     "start": "gulp",
     "test": "npm run test:lint",
-    "test:lint": "tslint --project tslint.json src/**/*.ts*"
+    "test:lint": "tslint --project tslint.json src/**/*.ts*",
+    "webpack": "webpack"
   },
   "author": "David Granado",
   "license": "ISC",

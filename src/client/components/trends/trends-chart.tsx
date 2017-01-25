@@ -29,8 +29,10 @@ type DayBalances = any & {
 };
 
 type Props = {
+	animate: boolean;
 	data: DayBalances[];
-	accountNames: string[];
+	onAnimationEnd(): void;
+	trendNames: string[];
 };
 
 function pickColor(index: number) {
@@ -38,7 +40,9 @@ function pickColor(index: number) {
 }
 
 export default
-function TrendsChart({data, accountNames}: Props) {
+function TrendsChart({animate, data, onAnimationEnd, trendNames}: Props) {
+	const animationDuration = animate ? 1000 : 0;
+
 	return (
 		<div style={style}>
 			<ResponsiveContainer width="100%" height="100%">
@@ -50,16 +54,12 @@ function TrendsChart({data, accountNames}: Props) {
 					<Tooltip />
 					<CartesianGrid strokeDasharray="3 3"/>
 					<Legend />
-					<Line
-						dataKey="Total"
-						key="Total"
-						stroke="#000"
-						type="monotone"
-					/>
-					{accountNames.map((name, index) => (
+					{trendNames.map((name, index) => (
 						<Line
+							animationDuration={animationDuration}
 							dataKey={name}
 							key={name}
+							onAnimationEnd={onAnimationEnd}
 							stroke={pickColor(index)}
 							type="monotone"
 						/>

@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
 	devtool: 'source-map',
@@ -27,6 +28,22 @@ module.exports = {
 	output: {
 		filename: 'app.js',
 	},
+	plugins: [
+		// new webpack.DefinePlugin({
+		// 	'process.env': {
+		// 		NODE_ENV: '"production"'
+		// 	}
+		// }),
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	compress: {
+		// 		warnings: true
+		// 	},
+		// 	output: {
+		// 		comments: false
+		// 	},
+		// 	sourceMap: false
+		// })
+	],
 	resolve: {
 		extensions: [
 			'',
