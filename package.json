@@ -17,7 +17,7 @@
     "@types/classnames": "^0.0.32",
     "@types/hapi": "^13.0.37",
     "@types/inert": "^4.0.0",
-    "@types/material-ui": "^0.16.46",
+    "@types/material-ui": "^0.16.48",
     "@types/react": "^0.14.55",
     "@types/react-dom": "^0.14.20",
     "@types/react-router": "^2.0.41",

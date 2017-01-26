@@ -22,9 +22,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/material-ui@^0.16.46":
-  version "0.16.46"
-  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.16.46.tgz#7b7a64132cba9bdfa0aac0bd0c0dd70823c155da"
+"@types/material-ui@^0.16.48":
+  version "0.16.48"
+  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.16.48.tgz#32230050bce47edaa122aeb6dab8541f9ad9074e"
   dependencies:
     "@types/react" "*"
     "@types/react-addons-linked-state-mixin" "*"
