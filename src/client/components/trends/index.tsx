@@ -20,15 +20,14 @@ class TrendsStore {
 	constructor(params?: Partial<TrendsStore>) {
 		this.fromDate = moment().startOf('month').toDate();
 		this.toDate = moment().endOf('month').toDate();
+		this.selectedTrends = ['Total'];
 		(window as any).trendsStore = this; // TODO remove debug
 
 		if(params) {
 			Object.assign(this, params);
-			this.selectedTrends = this.trendOptions.slice(0);
 		} else {
 			this.accounts = [];
 			this.transactions = [];
-			this.selectedTrends = [];
 		}
 	}
 
