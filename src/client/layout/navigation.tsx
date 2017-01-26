@@ -31,13 +31,13 @@ class Navigation extends React.Component<Props, any> {
 					onRequestChange={() => this.handleDrawerToggle()}
 				>
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/')}>
-						Home
+						Trends
 					</MenuItem>
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/accounts')}>
 						Accounts
 					</MenuItem>
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/schduled-transactions')}>
-						Schedule Transactions
+						Budget
 					</MenuItem>
 					<MenuItem onTouchTap={() => this.handleNavigateTo('/transactions')}>
 						Transactions

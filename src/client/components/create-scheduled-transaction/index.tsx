@@ -69,7 +69,7 @@ class CreateScheduledTransaction extends Component<Props, any> {
 				<AppBar
 					className="app-title"
 					onLeftIconButtonTouchTap={() => browserHistory.goBack()}
-					title={`${action} Scheduled Transaction`}
+					title={`${action} Budget Entry`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ScheduledTransactionEdit

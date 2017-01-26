@@ -111,7 +111,7 @@ class ScheduledTransactions extends Component<Props, any> {
 		return (
 			<div>
 				<Navigation
-					title="Scheduled Transactions"
+					title="Budget"
 				/>
 				<ScheduledTransactionList
 					scheduledTransactions={store.scheduledTransactions}
