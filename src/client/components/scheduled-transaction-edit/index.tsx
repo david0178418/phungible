@@ -12,6 +12,7 @@ import Account from '../../shared/stores/account';
 import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import AccountSelector from '../account-selector';
+import MoneyEdit from '../shared/money-edit';
 
 type Props = {
 	accounts: Account[];
@@ -32,13 +33,7 @@ observer(function ScheduledTransactionEdit({accounts, scheduledTransaction, onSu
 				/>
 			</div>
 			<div>
-				<TextField
-					fullWidth
-					floatingLabelText="Transaction Amount"
-					onChange={((ev: any, value: any) => handleUpdateAmount(value, scheduledTransaction)) as any}
-					type="number"
-					value={scheduledTransaction.prettyAmount}
-				/>
+				<MoneyEdit money={scheduledTransaction.amount} />
 			</div>
 			<div>
 				<SelectField
@@ -144,9 +139,6 @@ const handleUpdateTowardAccount = action(
 		scheduledTransaction.towardAccount = account || null;
 	},
 );
-const handleUpdateAmount = action(function(newAmount: number, scheduledTransaction: ScheduledTransaction) {
-	scheduledTransaction.amount = newAmount * 100;
-});
 const handleUpdateDescription = action(function(newDescription: string, scheduledTransaction: ScheduledTransaction) {
 	scheduledTransaction.description = newDescription;
 });

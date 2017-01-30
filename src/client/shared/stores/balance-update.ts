@@ -1,23 +1,22 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {identifier, serializable} from 'serializr';
+import {identifier, object, serializable} from 'serializr';
+
+import Money from '../utils/money';
 
 export default
 class BalanceUpdate {
 	@serializable(identifier())
 	public id: number;
-	@serializable
-	@observable public balance = 0;
+	@serializable(object(Money))
+	public balance: Money;
 	@serializable
 	@observable private _date: string;
 
 	constructor() {
 		this.id = Date.now();
 		this.date = new Date();
-	}
-
-	@computed get prettyAmount() {
-		return (this.balance / 100).toFixed(2);
+		this.balance = new Money();
 	}
 	@computed get inputFormattedDate() {
 		return moment(this._date, 'MM/DD/YYYY').format('YYYY-MM-DD');

@@ -2,6 +2,7 @@ import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
+import Money from '../utils/money';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
 
@@ -21,8 +22,8 @@ class Transaction {
 	}
 	@serializable(identifier())
 	@observable public id: number;
-	@serializable
-	@observable public amount = 0;
+	@serializable(object(Money))
+	public amount: Money;
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Account))
@@ -43,9 +44,11 @@ class Transaction {
 	constructor(params?: Partial<Transaction>) {
 		if(params) {
 			return Object.assign(this, {
+				amount: new Money(params.amount.valCents),
 				labels: [],
 			}, params);
 		} else {
+			this.amount = new Money();
 			this.labels = [];
 			this._dateString = moment().format('MM/DD/YYYY');
 		}
@@ -59,11 +62,7 @@ class Transaction {
 	@computed get date() {
 		return moment(this._dateString, 'MM/DD/YYYY').toDate();
 	}
-	@computed get prettyAmount() {
-		// TODO
-		return (this.amount / 100).toFixed(2);
-	}
 	@computed get isValid() {
-		return !!(this.name && this.amount && this.fromAccount);
+		return !!(this.name && this.amount.val && this.fromAccount);
 	}
 }

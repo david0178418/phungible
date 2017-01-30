@@ -89,19 +89,20 @@ class TrendsStore {
 	public applyTransactions(account: Account, date: Date) {
 		const lastBalanceUpdate = account.lastBalanceUpdate(date);
 		const {Debt, Savings} = AccountType;
+		let total = lastBalanceUpdate.amount.valCents;
 
 		this.transactions.forEach((transaction) => {
 			const transactionDate = moment(transaction.date);
 
 			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'd') && transactionDate.isSameOrBefore(date, 'd')) {
 				if(transaction.fromAccount && transaction.fromAccount.id === account.id) {
-					lastBalanceUpdate.amount += transaction.amount * (account.type === Debt ? 1 : -1);
+					total += transaction.amount.valCents * (account.type === Debt ? 1 : -1);
 				} else if(transaction.towardAccount && transaction.towardAccount.id === account.id) {
-					lastBalanceUpdate.amount += transaction.amount * (account.type === Savings ? 1 : -1);
+					total += transaction.amount.valCents * (account.type === Savings ? 1 : -1);
 				}}
 		});
 
-		return lastBalanceUpdate.amount;
+		return total;
 	}
 
 	@computed get formattedData() {

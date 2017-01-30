@@ -79,7 +79,7 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onEdi
 					<ListItem
 						key={scheduledTransaction.id}
 						primaryText={`${scheduledTransaction.name}`}
-						secondaryText={`Current Balance: $${scheduledTransaction.amount}`}
+						secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
 						leftIcon={scheduledTransaction.type === TransactionType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
 						onTouchTap={() => onEdit(scheduledTransaction)}
 						rightIconButton={iconButton}

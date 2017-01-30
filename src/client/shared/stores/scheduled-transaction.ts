@@ -2,6 +2,7 @@ import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
+import Money from '../utils/money';
 import Account from './account';
 
 export
@@ -25,8 +26,8 @@ class ScheduledTransaction {
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Account))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable
-	@observable public amount = 0;
+	@serializable(object(Money))
+	public amount: Money;
 	@serializable
 	@observable public description: string;
 	@serializable(list(primitive()))
@@ -50,6 +51,7 @@ class ScheduledTransaction {
 		this.exceptions = [];
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
+		this.amount = new Money();
 	}
 
 	get startDateString() {
@@ -70,9 +72,6 @@ class ScheduledTransaction {
 			this.type === Expense && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
-	}
-	@computed get prettyAmount() {
-		return (this.amount / 100).toFixed(2);
 	}
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;

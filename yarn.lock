@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/accounting@^0.3.31":
+  version "0.3.31"
+  resolved "https://registry.yarnpkg.com/@types/accounting/-/accounting-0.3.31.tgz#1220b229f72142e577b525a8335b6c66d45b88a5"
+
 "@types/classnames@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-0.0.32.tgz#449abcd9a826807811ef101e58df9f83cfc61713"
@@ -70,6 +74,10 @@ accept@2.x.x:
   dependencies:
     boom "4.x.x"
     hoek "4.x.x"
+
+accounting@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/accounting/-/accounting-0.4.1.tgz#87dd4103eff7f4460f1e186f5c677ed6cf566883"
 
 acorn@^3.0.0:
   version "3.3.0"

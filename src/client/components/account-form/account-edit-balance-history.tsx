@@ -4,7 +4,6 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Subheader from 'material-ui/Subheader';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import TextField from 'material-ui/TextField';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
@@ -12,6 +11,7 @@ import * as React from 'react';
 
 import Account from '../../shared/stores/account';
 import BalanceUpdate from '../../shared/stores/balance-update';
+import MoneyEdit from '../shared/money-edit';
 
 type Props = {
 	account: Account;
@@ -56,17 +56,11 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 			<div>
 				<Subheader>Balance History</Subheader>
 				<div>
-					<TextField
-						style={{display: 'inline-block'}}
-						floatingLabelText="Balance"
-						type="number"
-						value={newBalanceUpdate.prettyAmount}
-						onChange={((ev: any, value: any) => this.handleUpdateBalanceAmount(value, newBalanceUpdate)) as any}
-					/>
+					<MoneyEdit money={newBalanceUpdate.balance} />
 					<DatePicker
 						autoOk
 						style={{display: 'inline-block'}}
-						floatingLabelText="Starts"
+						floatingLabelText="As of"
 						locale="en-US"
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}
@@ -82,7 +76,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						return (
 							<ListItem
 								key={balanceUpdate.id}
-								primaryText={`$${balanceUpdate.prettyAmount}`}
+								primaryText={`${balanceUpdate.balance.valFormatted}`}
 								secondaryText={`as of ${balanceUpdate.formattedStartDate}`}
 								onTouchTap={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
 							/>
@@ -98,9 +92,6 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 	};
 	@action private handleUpdateRemoveBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		this.store.removeBalanceUpdate(balanceUpdate);
-	};
-	@action private handleUpdateBalanceAmount(newAmount: number, balanceUpdate: BalanceUpdate) {
-		balanceUpdate.balance = newAmount * 100;
 	};
 	@action private handleUpdateBalanceDate(newDate: Date, balanceUpdate: BalanceUpdate) {
 		balanceUpdate.date = newDate;

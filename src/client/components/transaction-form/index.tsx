@@ -10,6 +10,7 @@ import * as React from 'react';
 import Account from '../../shared/stores/account';
 import Transaction, {TransactionType} from '../../shared/stores/transaction';
 import AccountSelector from '../account-selector';
+import MoneyEdit from '../shared/money-edit';
 
 type Props = {
 	accounts: Account[];
@@ -25,18 +26,12 @@ observer(function TransactionForm({accounts, transaction, onSubmit}: Props) {
 				<TextField
 					fullWidth
 					floatingLabelText="Transaction Name"
-					value={transaction.name}
 					onChange={((ev: any, value: any) => handleUpdateName(value, transaction)) as any}
+					value={transaction.name}
 				/>
 			</div>
 			<div>
-				<TextField
-					fullWidth
-					floatingLabelText="Transaction Amount"
-					onChange={((ev: any, value: any) => handleUpdateAmount(value, transaction)) as any}
-					type="number"
-					value={transaction.prettyAmount}
-				/>
+				<MoneyEdit money={transaction.amount} />
 			</div>
 			<div>
 				<SelectField
@@ -91,9 +86,6 @@ observer(function TransactionForm({accounts, transaction, onSubmit}: Props) {
 const handleSubmit = action(function(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
 	e.preventDefault();
 	onSubmit();
-});
-const handleUpdateAmount = action(function(newAmount: number, transaction: Transaction) {
-	transaction.amount = newAmount * 100;
 });
 const handleUpdateFromAccount = action(
 	function(account: Account, transaction: Transaction) {

@@ -2,6 +2,7 @@ import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
+import Money from '../utils/money';
 import BalanceUpdate from './balance-update';
 
 export
@@ -54,12 +55,12 @@ class Account {
 
 		if(!lastBalanceUpdate) {
 			returnVal = {
-				amount: 0,
+				amount: new Money(),
 				date: moment(),
 			};
 		} else {
 			returnVal = {
-				amount: lastBalanceUpdate.balance,
+				amount: new Money(lastBalanceUpdate.balance.valCents),
 				date: moment(lastBalanceUpdate.date),
 			};
 		}
@@ -86,7 +87,7 @@ class Account {
 	}
 	@computed get latestBalanceUpdate() {
 		// TODO - pick out the latest balance
-		return this.balanceHistory[0] && this.balanceHistory[0].balance;
+		return this.balanceHistory[0] && this.balanceHistory[0].balance.val;
 	}
 	@computed get isValid() {
 		return !!(this.name && this.balanceHistory.length);

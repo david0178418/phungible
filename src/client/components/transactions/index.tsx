@@ -72,7 +72,7 @@ const TransactionsList = observer(function({transactions, onEdit, onRemove}: Lis
 				return (
 					<ListItem
 						key={transaction.id}
-						primaryText={`$${transaction.amount}`}
+						primaryText={`${transaction.amount.valFormatted}`}
 						secondaryText={`${transaction.name}`}
 						onTouchTap={() => onEdit(transaction.id)}
 						rightIconButton={iconButton}
