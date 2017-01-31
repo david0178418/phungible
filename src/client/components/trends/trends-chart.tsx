@@ -10,6 +10,8 @@ import {
 	YAxis,
 } from 'recharts';
 
+import Money from '../../shared/utils/money';
+
 const style = {
 	height: 400,
 };
@@ -50,8 +52,14 @@ function TrendsChart({animate, data, onAnimationEnd, trendNames}: Props) {
 					data={data}
 				>
 					<XAxis dataKey="date"/>
-					<YAxis/>
-					<Tooltip />
+					<YAxis
+						width={70}
+						tickFormatter={(val: number) => Money.formatMoney(val/100, 0)}
+					/>
+					<Tooltip
+						animationDuration={100}
+						formatter={(val: number) => Money.formatMoney(val/100)}
+					/>
 					<CartesianGrid strokeDasharray="3 3"/>
 					<Legend />
 					{trendNames.map((name, index) => (

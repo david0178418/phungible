@@ -14,6 +14,11 @@ class Money {
 	public static roundNearest(val: number) {
 		return Math.floor(val + 0.5);
 	}
+	public static formatMoney(val: number, precision: number = 2) {
+		return accounting.formatMoney(val, {
+			precision,
+		});
+	}
 	@serializable
 	@observable private totalValCents: number;
 
@@ -34,7 +39,7 @@ class Money {
 	}
 
 	@computed get valFormatted() {
-		return accounting.formatMoney(this.val);
+		return Money.formatMoney(this.val);
 	}
 
 	set cents(val) {
