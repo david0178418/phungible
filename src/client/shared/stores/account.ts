@@ -30,66 +30,56 @@ class Account {
 	@serializable
 	@observable public type: AccountType = AccountType.Savings;
 	@serializable(list(object(BalanceUpdate)))
-	@observable public balanceHistory: BalanceUpdate[];
+	@observable public balanceUpdateHistory: BalanceUpdate[];
 
 	constructor() {
 		this.labels = [];
-		this.balanceHistory = [];
+		this.balanceUpdateHistory = [];
 	}
 
 	public addBalanceUpdate(balanceUpdate: BalanceUpdate) {
-		this.balanceHistory.push(balanceUpdate);
+		this.balanceUpdateHistory.push(balanceUpdate);
+		// Keep sorted with oldest balace at 0
+		this.balanceUpdateHistory.sort((a, b) => a.date.getTime() - b.date.getTime());
 	}
-	public lastBalanceUpdate(date: Date) {
+	public lastBalanceUpdateAsOf(date: Date) {
 		const dateMoment = moment(date);
-		let lastBalanceUpdate: BalanceUpdate;
+		let lastBalanceUpdate: BalanceUpdate | null = null;
 		let returnVal;
 
-		this.balanceHistory.find((balanceUpdate) => {
-			if(balanceUpdate.date < date || dateMoment.isSame(balanceUpdate.date, 'd')) {
-				lastBalanceUpdate = balanceUpdate;
-			} else {
-				return false;
+		lastBalanceUpdate = this.balanceUpdateHistory.reduce((a, b) => {
+			if(!a || !a.isBefore(dateMoment)) {
+				// if the first element isn't before the date, none will be
+				return a;
 			}
+
+			return b.isBefore(dateMoment) ? b : a;
 		});
 
-		if(!lastBalanceUpdate) {
-			returnVal = {
-				amount: new Money(),
-				date: moment(),
-			};
-		} else {
+		if(lastBalanceUpdate) {
 			returnVal = {
 				amount: new Money(lastBalanceUpdate.balance.valCents),
 				date: moment(lastBalanceUpdate.date),
+			};
+		} else {
+			returnVal = {
+				amount: new Money(),
+				date: moment(),
 			};
 		}
 
 		return returnVal;
 	}
 	public removeBalanceUpdate(balanceUpdate: BalanceUpdate) {
-		(this.balanceHistory as any).remove(balanceUpdate);
+		(this.balanceUpdateHistory as any).remove(balanceUpdate);
 	}
-	public projectedBalance(date: string) {
-		// TODO
-		return this.latestBalanceUpdate;
-	}
-	get firstBalanceUpdate() {
-		return this.balanceHistory[0];
-	}
-	@computed get prettyAmount() {
-		// TODO
-		return (this.todaysBalance / 100).toFixed(2);
-	}
-	@computed get todaysBalance() {
-		// TODO
-		return this.projectedBalance('today');
+	@computed get firstBalanceUpdate() {
+		return this.balanceUpdateHistory[0] || null;
 	}
 	@computed get latestBalanceUpdate() {
-		// TODO - pick out the latest balance
-		return this.balanceHistory[0] && this.balanceHistory[0].balance.val;
+		return this.balanceUpdateHistory[this.balanceUpdateHistory.length - 1] || null;
 	}
 	@computed get isValid() {
-		return !!(this.name && this.balanceHistory.length);
+		return !!(this.name && this.balanceUpdateHistory.length);
 	}
 }

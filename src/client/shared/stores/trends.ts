@@ -4,6 +4,16 @@ import * as moment from 'moment';
 import Account, {AccountType} from '../../shared/stores/account';
 import Transaction from './transaction';
 
+type BalanceMap = {
+	[key: string]: number;
+};
+type BalanceData = {
+	Total: number;
+	date: string;
+} & BalanceMap;
+
+const DAY_OFFSET = 0;
+
 export default
 class TrendsStore {
 	@observable public fromDate: Date;
@@ -13,9 +23,9 @@ class TrendsStore {
 	@observable private selectedTrends: string[];
 
 	constructor(params?: Partial<TrendsStore>) {
-		this.fromDate = moment().startOf('month').toDate();
-		this.toDate = moment().endOf('month').toDate();
-		this.selectedTrends = ['Total'];
+		this.fromDate = moment().subtract(DAY_OFFSET, 'days').startOf('month').toDate();
+		this.toDate = moment().subtract(DAY_OFFSET, 'days').endOf('month').toDate();
+		this.selectedTrends = ['Total', 'Total (projection)'];
 		(window as any).trendsStore = this; // TODO remove debug
 
 		if(params) {
@@ -27,18 +37,14 @@ class TrendsStore {
 	}
 
 	@computed get minDate() {
-		let oldestBalanceDate: Date;
-
-		this.accounts.forEach((a, b) => {
-			// TODO Assuming last date is oldest.  Need to set up get/set
-			// to make this assumption true
-			const firstEntry = a.balanceHistory[a.balanceHistory.length - 1].date;
-
-			if(!oldestBalanceDate || oldestBalanceDate > firstEntry) {
-				oldestBalanceDate = firstEntry;
+		const oldestAccount = this.accounts.reduce((a, b) => {
+			if(!a.firstBalanceUpdate) {
+				return b;
 			}
+			return a.firstBalanceUpdate.date < b.firstBalanceUpdate.date ? a : b;
 		});
-		return oldestBalanceDate;
+
+		return oldestAccount.firstBalanceUpdate && oldestAccount.firstBalanceUpdate.date;
 	}
 
 	@computed get accountNames() {
@@ -62,7 +68,9 @@ class TrendsStore {
 			};
 
 			selectedTrends.forEach((trendName) => {
-				newDateData[trendName] = dateData[trendName];
+				if(dateData[trendName]) {
+					newDateData[trendName] = dateData[trendName];
+				}
 			});
 
 			return newDateData;
@@ -70,11 +78,12 @@ class TrendsStore {
 	}
 
 	public removeSelectedTrend(removedTrend: string) {
-		this.selectedTrends = (this.selectedTrends as any).filter((trend: string) => trend !== removedTrend);
+		this.selectedTrends = (this.selectedTrends as any).filter((trend: string) => !trend.startsWith(removedTrend));
 	}
 
 	public selectTrend(trend: string) {
 		this.selectedTrends.push(trend);
+		this.selectedTrends.push(`${trend} (projection)`);
 	}
 
 	public trendIsSelected(trend: string) {
@@ -82,7 +91,7 @@ class TrendsStore {
 	}
 
 	public applyTransactions(account: Account, date: Date) {
-		const lastBalanceUpdate = account.lastBalanceUpdate(date);
+		const lastBalanceUpdate = account.lastBalanceUpdateAsOf(date);
 		const {Debt, Savings} = AccountType;
 		let total = lastBalanceUpdate.amount.valCents;
 
@@ -100,6 +109,11 @@ class TrendsStore {
 		return total;
 	}
 
+	public getBalanceProjection(date: Date) {
+		// TODO
+		return 10000 + (100000 * Math.random());
+	}
+
 	@computed get formattedData() {
 		const fromDate = moment(this.fromDate);
 		const toDate = moment(this.toDate);
@@ -108,20 +122,44 @@ class TrendsStore {
 		const data: any[] = [];
 
 		for(let x = 0; x < diff; x++) {
-			const accountBalances: any = {
-				date: fromDate.format('MMM DD'),
+			const accountBalances: BalanceData = {
+				Total: 0,
+				date: fromDate.format('MMM DD') as any, // TODO Figure out why this is needed
 			};
 			this.accounts.forEach((account) => {
+				let balance;
+				if(!account.firstBalanceUpdate) {
+					return;
+				}
+
 				if(
 					fromDate.isSameOrBefore(today, 'day') &&
 					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
-					const balance = this.applyTransactions(account, fromDate.toDate());
-					accountBalances.Total = accountBalances.Total || 0;
-					accountBalances[account.name] = balance;
-					accountBalances.Total += balance * (account.type === AccountType.Savings ? 1 : -1);
-				} else {
-					// TODO projections
+					balance = this.applyTransactions(account, fromDate.toDate());
+
+					if(balance) {
+						accountBalances[account.name] = balance;
+						accountBalances.Total += balance * (account.type === AccountType.Savings ? 1 : -1);
+					}
+				}
+
+				if(
+					fromDate.isSameOrAfter(today, 'day') &&
+					fromDate.isAfter(account.firstBalanceUpdate.date)
+				) {
+					accountBalances['Total (projection)'] = accountBalances['Total (projection)'] || 0;
+
+					if(fromDate.isSame(today, 'day')) {
+						balance = this.applyTransactions(account, fromDate.toDate());
+					} else {
+						balance = this.getBalanceProjection(fromDate.toDate());
+					}
+
+					if(balance) {
+						accountBalances[`${account.name} (projection)`] = balance;
+						accountBalances['Total (projection)'] += balance * (account.type === AccountType.Savings ? 1 : -1);
+					}
 				}
 			});
 			data.push(accountBalances);
@@ -129,17 +167,5 @@ class TrendsStore {
 		}
 
 		return data;
-	}
-	@computed get summaryData() {
-		return this.formattedData.map((day) => ({
-			Total: day.Total,
-			date: day.date,
-		}));
-	}
-	public getAccountData() {
-		return this.formattedData.map((day) => {
-			delete day.total;
-			return day;
-		});
 	}
 }

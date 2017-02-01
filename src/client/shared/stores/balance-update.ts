@@ -21,6 +21,9 @@ class BalanceUpdate {
 	@computed get inputFormattedDate() {
 		return moment(this._date, 'MM/DD/YYYY').format('YYYY-MM-DD');
 	}
+	@computed get moment() {
+		return moment(new Date(this._date));
+	}
 	get formattedStartDate() {
 		return this._date;
 	}
@@ -31,5 +34,9 @@ class BalanceUpdate {
 	}
 	get date() {
 		return moment(this._date, 'MM/DD/YYYY').toDate();
+	}
+
+	public isBefore(a: moment.Moment) {
+		return !this.moment.isBefore(a, 'day');
 	}
 }

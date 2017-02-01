@@ -20,3 +20,7 @@ declare interface Array<T> {
 declare interface ObjectConstructor {
 	assign(...objects: any[]): any;
 }
+interface String {
+	endsWith(suffix: string): boolean;
+	startsWith(suffix: string): boolean;
+}

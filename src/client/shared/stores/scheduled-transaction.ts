@@ -1,5 +1,6 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
+import {Moment} from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../utils/money';
@@ -54,6 +55,14 @@ class ScheduledTransaction {
 		this.amount = new Money();
 	}
 
+	@computed get interval() {
+		return (moment(this.startDate) as any)
+			.recur()
+			.every(
+				this.repeatValue,
+				RepeatUnits[this.repeatUnit].toLowerCase(),
+			);
+	}
 	get startDateString() {
 		return this._startDate;
 	}
@@ -76,7 +85,12 @@ class ScheduledTransaction {
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
 	}
-
+	public affectsAccount(accountId: number) {
+		return (
+			(this.fromAccount && this.fromAccount.id === accountId) ||
+			(this.towardAccount && this.towardAccount.id === accountId)
+		);
+	}
 	public generateTransaction(date: Date) {
 		return new Transaction({
 			amount: this.amount,
@@ -87,6 +101,9 @@ class ScheduledTransaction {
 			towardAccount: this.towardAccount,
 			type: this.type,
 		});
+	}
+	public occursOn(date: Date | Moment) {
+		return this.interval.matches(date);
 	}
 };
 

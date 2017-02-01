@@ -6,6 +6,7 @@
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "module": "commonjs",
+        "strictNullChecks": false,
         "target": "es5",
         "jsx": "react"
     },

@@ -5,7 +5,7 @@ import {deserialize, identifier, list, object, serializable, serialize} from 'se
 
 import {setItem} from '../storage';
 import Account from './account';
-import ScheduledTransaction, {RepeatUnits} from './scheduled-transaction';
+import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
 export default
@@ -41,6 +41,9 @@ class AppStore {
 	public findAccount(accountId: number) {
 		return this.accounts.find((account) => accountId === account.id);
 	}
+	public findRelatedScheduledTransactions(accountId: number) {
+		return this.scheduledTransactions.filter((scheduledTrans) => scheduledTrans.affectsAccount(accountId));
+	}
 	public findScheduledTransaction(id: number) {
 		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
 	}
@@ -73,15 +76,8 @@ class AppStore {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
 		const daysSince = moment().diff(lastUpdate, 'days');
 
-		const interval = (moment(scheduledTransaction.startDate) as any)
-			.recur()
-			.every(
-				scheduledTransaction.repeatValue,
-				RepeatUnits[scheduledTransaction.repeatUnit].toLowerCase(),
-			);
-
 		for(let x = 0; x < daysSince; x++) {
-			if(interval.matches(lastUpdate)) {
+			if(scheduledTransaction.occursOn(lastUpdate)) {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate());
 				transaction.id = this.nextTransactionId;
 				this.transactions.push(transaction);

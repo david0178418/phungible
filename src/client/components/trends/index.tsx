@@ -33,7 +33,6 @@ class Trends extends Component<Props, State> {
 
 	public render() {
 		const store = this.store;
-
 		return (
 			<div>
 				<div>
@@ -71,6 +70,7 @@ class Trends extends Component<Props, State> {
 					data={store.selectedTrendData}
 					onAnimationEnd={() => this.handleAnimationEnd()}
 					trendNames={store.selectedTrendOptions}
+					allTrendNames={store.trendOptions}
 				/>
 			</div>
 		);
