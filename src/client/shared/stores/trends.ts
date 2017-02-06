@@ -90,30 +90,6 @@ class TrendsStore {
 		return this.selectedTrends.indexOf(trend) !== -1;
 	}
 
-	public applyTransactions(account: Account, date: Date) {
-		const lastBalanceUpdate = account.lastBalanceUpdateAsOf(date);
-		const {Debt, Savings} = AccountType;
-		let total = lastBalanceUpdate.amount.valCents;
-
-		this.transactions.forEach((transaction) => {
-			const transactionDate = moment(transaction.date);
-
-			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'd') && transactionDate.isSameOrBefore(date, 'd')) {
-				if(transaction.fromAccount && transaction.fromAccount.id === account.id) {
-					total += transaction.amount.valCents * (account.type === Debt ? 1 : -1);
-				} else if(transaction.towardAccount && transaction.towardAccount.id === account.id) {
-					total += transaction.amount.valCents * (account.type === Savings ? 1 : -1);
-				}}
-		});
-
-		return total;
-	}
-
-	public getBalanceProjection(date: Date) {
-		// TODO
-		return 10000 + (100000 * Math.random());
-	}
-
 	@computed get formattedData() {
 		const fromDate = moment(this.fromDate);
 		const toDate = moment(this.toDate);
@@ -136,7 +112,7 @@ class TrendsStore {
 					fromDate.isSameOrBefore(today, 'day') &&
 					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
-					balance = this.applyTransactions(account, fromDate.toDate());
+					balance = account.applyTransactions(this.transactions, fromDate.toDate());
 
 					if(balance) {
 						accountBalances[account.name] = balance;
@@ -151,9 +127,9 @@ class TrendsStore {
 					accountBalances['Total (projection)'] = accountBalances['Total (projection)'] || 0;
 
 					if(fromDate.isSame(today, 'day')) {
-						balance = this.applyTransactions(account, fromDate.toDate());
+						balance = account.applyTransactions(this.transactions, fromDate.toDate());
 					} else {
-						balance = this.getBalanceProjection(fromDate.toDate());
+						balance = account.getBalanceProjection(fromDate.toDate());
 					}
 
 					if(balance) {

@@ -4,6 +4,7 @@ import {deserialize, identifier, list, object, primitive, serializable, serializ
 
 import Money from '../utils/money';
 import BalanceUpdate from './balance-update';
+import Transaction from './transaction';
 
 export
 enum AccountType {
@@ -81,5 +82,28 @@ class Account {
 	}
 	@computed get isValid() {
 		return !!(this.name && this.balanceUpdateHistory.length);
+	}
+
+	public applyTransactions(transactions: Transaction[], date: Date) {
+		const lastBalanceUpdate = this.lastBalanceUpdateAsOf(date);
+		const {Debt, Savings} = AccountType;
+		let total = lastBalanceUpdate.amount.valCents;
+
+		transactions.forEach((transaction) => {
+			const transactionDate = moment(transaction.date);
+
+			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'd') && transactionDate.isSameOrBefore(date, 'd')) {
+				if(transaction.fromAccount && transaction.fromAccount.id === this.id) {
+					total += transaction.amount.valCents * (this.type === Debt ? 1 : -1);
+				} else if(transaction.towardAccount && transaction.towardAccount.id === this.id) {
+					total += transaction.amount.valCents * (this.type === Savings ? 1 : -1);
+				}}
+		});
+
+		return total;
+	}
+
+	public getBalanceProjection(date: Date) {
+		return 10000 + (100000 * Math.random());
 	}
 }
