@@ -4,6 +4,7 @@ import {deserialize, identifier, list, object, primitive, serializable, serializ
 
 import Money from '../utils/money';
 import BalanceUpdate from './balance-update';
+import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
 export
@@ -92,7 +93,7 @@ class Account {
 		transactions.forEach((transaction) => {
 			const transactionDate = moment(transaction.date);
 
-			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'd') && transactionDate.isSameOrBefore(date, 'd')) {
+			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'days') && transactionDate.isSameOrBefore(date, 'days')) {
 				if(transaction.fromAccount && transaction.fromAccount.id === this.id) {
 					total += transaction.amount.valCents * (this.type === Debt ? 1 : -1);
 				} else if(transaction.towardAccount && transaction.towardAccount.id === this.id) {
@@ -102,8 +103,17 @@ class Account {
 
 		return total;
 	}
+	public changeOnDate(scheduledTransactions: ScheduledTransaction[], date: Date) {
+		let change = 0;
 
-	public getBalanceProjection(date: Date) {
-		return 10000 + (100000 * Math.random());
+		scheduledTransactions.forEach((schedTrans) => {
+			if(this.id === schedTrans.fromAccount.id) {
+				change += schedTrans.amount.dollars;
+			} else if(this.id === schedTrans.towardAccount.id) {
+				change -= schedTrans.amount.dollars;
+			}
+		});
+
+		return change;
 	}
 }

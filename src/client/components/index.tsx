@@ -18,6 +18,7 @@ function Index({store}: Props) {
 			<Trends
 				accounts={store.accounts}
 				transactions={store.transactions}
+				scheduledTransactions={store.scheduledTransactions}
 			/>
 		</div>
 	);

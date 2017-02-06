@@ -1,6 +1,7 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {Moment} from 'moment';
+import 'moment-recur';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../utils/money';
@@ -104,6 +105,26 @@ class ScheduledTransaction {
 	}
 	public occursOn(date: Date | Moment) {
 		return this.interval.matches(date);
+	}
+	public occuranceCountInRange(fromDate: Date, toDate: Date) {
+		const from = moment(fromDate);
+		const to = moment(toDate);
+		const rangeSize = to.diff(from, 'days');
+		let occurances = 0;
+
+		for(let x = 0; x <= rangeSize; x++) {
+			if(this.interval.matches(from)) {
+				occurances++;
+			}
+			from.add(1, 'day');
+		}
+
+		return occurances;
+	}
+	public impactInRange(fromDate: Date, toDate: Date) {
+		return this.amount.val *
+			this.occuranceCountInRange(fromDate, toDate) *
+			(this.type === TransactionType.Income ? 1 : -1);
 	}
 };
 

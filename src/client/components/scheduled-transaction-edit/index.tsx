@@ -72,13 +72,13 @@ observer(function ScheduledTransactionEdit({accounts, scheduledTransaction, onSu
 						accounts={accounts}
 						label="From Account"
 						onChange={(value) => handleUpdateFromAccount(value, scheduledTransaction)}
-						selectedAccount={scheduledTransaction.fromAccount || false}
+						selectedAccount={scheduledTransaction.fromAccount || null}
 					/>
 					<AccountSelector
 						accounts={accounts}
 						label="Towards Account"
 						onChange={(value) => handleUpdateTowardAccount(value, scheduledTransaction)}
-						selectedAccount={scheduledTransaction.towardAccount || false}
+						selectedAccount={scheduledTransaction.towardAccount || null}
 					/>
 				</div>
 			)}

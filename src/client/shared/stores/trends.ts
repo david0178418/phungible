@@ -2,6 +2,7 @@ import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 
 import Account, {AccountType} from '../../shared/stores/account';
+import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
 type BalanceMap = {
@@ -19,6 +20,7 @@ class TrendsStore {
 	@observable public fromDate: Date;
 	@observable public toDate: Date;
 	public accounts: Account[];
+	public scheduledTransactions: ScheduledTransaction[];
 	public transactions: Transaction[];
 	@observable private selectedTrends: string[];
 
@@ -37,6 +39,10 @@ class TrendsStore {
 	}
 
 	@computed get minDate() {
+		if(!this.accounts.length) {
+			return new Date();
+		}
+
 		const oldestAccount = this.accounts.reduce((a, b) => {
 			if(!a.firstBalanceUpdate) {
 				return b;
@@ -129,7 +135,8 @@ class TrendsStore {
 					if(fromDate.isSame(today, 'day')) {
 						balance = account.applyTransactions(this.transactions, fromDate.toDate());
 					} else {
-						balance = account.getBalanceProjection(fromDate.toDate());
+						START HERE!!!
+						balance = account.changeOnDate(this.scheduledTransactions, fromDate.toDate());
 					}
 
 					if(balance) {
