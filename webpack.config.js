@@ -26,24 +26,9 @@ module.exports = {
 		],
 	},
 	output: {
+		path: path.join(__dirname, 'build/client/js/'),
 		filename: 'app.js',
 	},
-	plugins: [
-		// new webpack.DefinePlugin({
-		// 	'process.env': {
-		// 		NODE_ENV: '"production"'
-		// 	}
-		// }),
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	compress: {
-		// 		warnings: true
-		// 	},
-		// 	output: {
-		// 		comments: false
-		// 	},
-		// 	sourceMap: false
-		// })
-	],
 	resolve: {
 		extensions: [
 			'',

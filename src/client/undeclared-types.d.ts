@@ -12,3 +12,11 @@ declare module 'recharts' {
 		export const CartesianGrid: any;
 		export const ResponsiveContainer: any;
 }
+
+declare interface Array<T> {
+	find(predicate: (search: T) => boolean) : T;
+	findIndex(predicate: (search: T) => boolean) : number;
+}
+declare interface ObjectConstructor {
+	assign(...objects: any[]): any;
+}
