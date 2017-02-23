@@ -76,7 +76,7 @@ class AppStore {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
 		const daysSince = moment().diff(lastUpdate, 'days');
 
-		for(let x = 0; x < daysSince; x++) {
+		for(let x = 0; x <= daysSince; x++) {
 			if(scheduledTransaction.occursOn(lastUpdate)) {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate());
 				transaction.id = this.nextTransactionId;

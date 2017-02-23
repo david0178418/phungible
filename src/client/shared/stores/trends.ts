@@ -110,6 +110,7 @@ class TrendsStore {
 			};
 			this.accounts.forEach((account) => {
 				let balance;
+
 				if(!account.firstBalanceUpdate) {
 					return;
 				}
@@ -135,8 +136,16 @@ class TrendsStore {
 					if(fromDate.isSame(today, 'day')) {
 						balance = account.applyTransactions(this.transactions, fromDate.toDate());
 					} else {
-						START HERE!!!
-						balance = account.changeOnDate(this.scheduledTransactions, fromDate.toDate());
+						const prevBalances = data[data.length - 2];
+						let prevBalance = 0;
+
+						if(prevBalances[`${account.name} (projection)`]) {
+							prevBalance = prevBalances[`${account.name} (projection)`];
+						} else if(prevBalances[`${account.name}`]) {
+							prevBalance = prevBalances[`${account.name}`];
+						}
+
+						balance = account.changeOnDate(this.scheduledTransactions, fromDate.toDate()) + prevBalance;
 					}
 
 					if(balance) {

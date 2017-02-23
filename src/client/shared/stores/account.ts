@@ -107,13 +107,17 @@ class Account {
 		let change = 0;
 
 		scheduledTransactions.forEach((schedTrans) => {
-			if(this.id === schedTrans.fromAccount.id) {
-				change += schedTrans.amount.dollars;
-			} else if(this.id === schedTrans.towardAccount.id) {
-				change -= schedTrans.amount.dollars;
+			if(schedTrans.occursOn(date)) {
+				console.log('occurs!');
+				if(schedTrans.fromAccount && this.id === schedTrans.fromAccount.id) {
+					change += schedTrans.amount.cents;
+				} else if(schedTrans.towardAccount && this.id === schedTrans.towardAccount.id) {
+					change -= schedTrans.amount.cents;
+				}
+			} else {
+				console.log('does not occur!')
 			}
 		});
-
 		return change;
 	}
 }
