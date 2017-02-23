@@ -101,21 +101,18 @@ class Account {
 				}}
 		});
 
-		return total;
+		return total * (this.type === Savings ? 1 : -1);
 	}
 	public changeOnDate(scheduledTransactions: ScheduledTransaction[], date: Date) {
 		let change = 0;
 
 		scheduledTransactions.forEach((schedTrans) => {
 			if(schedTrans.occursOn(date)) {
-				console.log('occurs!');
 				if(schedTrans.fromAccount && this.id === schedTrans.fromAccount.id) {
-					change += schedTrans.amount.cents;
+					change -= schedTrans.amount.valCents;
 				} else if(schedTrans.towardAccount && this.id === schedTrans.towardAccount.id) {
-					change -= schedTrans.amount.cents;
+					change += schedTrans.amount.valCents;
 				}
-			} else {
-				console.log('does not occur!')
 			}
 		});
 		return change;

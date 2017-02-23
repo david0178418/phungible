@@ -1,7 +1,7 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 
-import Account, {AccountType} from '../../shared/stores/account';
+import Account from '../../shared/stores/account';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
@@ -9,7 +9,6 @@ type BalanceMap = {
 	[key: string]: number;
 };
 type BalanceData = {
-	Total: number;
 	date: string;
 } & BalanceMap;
 
@@ -74,7 +73,7 @@ class TrendsStore {
 			};
 
 			selectedTrends.forEach((trendName) => {
-				if(dateData[trendName]) {
+				if(dateData[trendName] || dateData[trendName] === 0) {
 					newDateData[trendName] = dateData[trendName];
 				}
 			});
@@ -102,10 +101,10 @@ class TrendsStore {
 		const today = moment();
 		const diff = toDate.diff(fromDate, 'days');
 		const data: any[] = [];
+		let prevBalances: any = {};
 
 		for(let x = 0; x < diff; x++) {
 			const accountBalances: BalanceData = {
-				Total: 0,
 				date: fromDate.format('MMM DD') as any, // TODO Figure out why this is needed
 			};
 			this.accounts.forEach((account) => {
@@ -119,11 +118,12 @@ class TrendsStore {
 					fromDate.isSameOrBefore(today, 'day') &&
 					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
+					accountBalances['Total'] = accountBalances['Total'] || 0;
 					balance = account.applyTransactions(this.transactions, fromDate.toDate());
 
 					if(balance) {
 						accountBalances[account.name] = balance;
-						accountBalances.Total += balance * (account.type === AccountType.Savings ? 1 : -1);
+						accountBalances['Total'] += balance;
 					}
 				}
 
@@ -136,7 +136,6 @@ class TrendsStore {
 					if(fromDate.isSame(today, 'day')) {
 						balance = account.applyTransactions(this.transactions, fromDate.toDate());
 					} else {
-						const prevBalances = data[data.length - 2];
 						let prevBalance = 0;
 
 						if(prevBalances[`${account.name} (projection)`]) {
@@ -144,16 +143,18 @@ class TrendsStore {
 						} else if(prevBalances[`${account.name}`]) {
 							prevBalance = prevBalances[`${account.name}`];
 						}
-
-						balance = account.changeOnDate(this.scheduledTransactions, fromDate.toDate()) + prevBalance;
+						const change = account.changeOnDate(this.scheduledTransactions, fromDate.toDate());
+						balance = change + prevBalance;
 					}
 
 					if(balance) {
 						accountBalances[`${account.name} (projection)`] = balance;
-						accountBalances['Total (projection)'] += balance * (account.type === AccountType.Savings ? 1 : -1);
+						accountBalances['Total (projection)'] += balance;
 					}
 				}
 			});
+
+			prevBalances = accountBalances;
 			data.push(accountBalances);
 			fromDate.add(1, 'days');
 		}
