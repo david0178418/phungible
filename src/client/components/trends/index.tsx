@@ -6,6 +6,7 @@ import {Component} from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
 import Account from '../../shared/stores/account';
+import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import Transaction from '../../shared/stores/transaction';
 import TrendsStore from '../../shared/stores/trends';
 import TrendsChart from './trends-chart';
@@ -13,6 +14,7 @@ import TrendsChart from './trends-chart';
 type Props = {
 	accounts: Account[];
 	transactions: Transaction[];
+	scheduledTransactions: ScheduledTransaction[];
 };
 type State = {
 	animateChart: boolean;
@@ -33,7 +35,6 @@ class Trends extends Component<Props, State> {
 
 	public render() {
 		const store = this.store;
-
 		return (
 			<div>
 				<div>
@@ -71,6 +72,7 @@ class Trends extends Component<Props, State> {
 					data={store.selectedTrendData}
 					onAnimationEnd={() => this.handleAnimationEnd()}
 					trendNames={store.selectedTrendOptions}
+					allTrendNames={store.trendOptions}
 				/>
 			</div>
 		);

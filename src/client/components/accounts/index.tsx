@@ -42,6 +42,10 @@ class AcountsStore {
 		this._openAccount = new Account();
 	}
 	@action public saveAccount() {
+		if(!this._openAccount) {
+			return;
+		}
+
 		this.appStore.saveAccount(this._openAccount);
 		this.closeOpenAccount();
 	}
@@ -57,7 +61,7 @@ class AcountsStore {
 	@computed get isOpen() {
 		return !!this._openAccount;
 	}
-	get openAccount(): Account {
+	get openAccount() {
 		return this._openAccount;
 	}
 }
@@ -75,7 +79,7 @@ const AccountsList = observer(function({accounts, onEdit, onRemove}: ListProps) 
 					<ListItem
 						key={account.id}
 						primaryText={`${account.name}`}
-						secondaryText={`Current Balance: $${account.todaysBalance}`}
+						secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
 						leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
 						onTouchTap={() => onEdit(account.id)}
 						rightIconButton={iconButton}

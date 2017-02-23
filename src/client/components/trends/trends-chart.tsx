@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Component} from 'react';
 import {
 	CartesianGrid,
 	Legend,
@@ -12,9 +13,8 @@ import {
 
 import Money from '../../shared/utils/money';
 
-const style = {
-	height: 400,
-};
+const BREAK_SIZE = 6;
+const DASH_SIZE = 3;
 const LineColors = [
 	'#e41a1c',
 	'#377eb8',
@@ -25,55 +25,96 @@ const LineColors = [
 	'#a65628',
 	'#f781bf',
 ];
+const style = {
+	height: 400,
+};
 
 type DayBalances = any & {
 	name: string;
 };
-
 type Props = {
+	allTrendNames: string[];
 	animate: boolean;
 	data: DayBalances[];
 	onAnimationEnd(): void;
 	trendNames: string[];
 };
-
-function pickColor(index: number) {
-	return LineColors[index % LineColors.length];
-}
+type State = {
+	assignedColors: {
+		[key: string]: string;
+	},
+};
 
 export default
-function TrendsChart({animate, data, onAnimationEnd, trendNames}: Props) {
-	const animationDuration = animate ? 1000 : 0;
+class TrendsChart extends Component<Props, State> {
+	constructor(props: Props) {
+		super(props);
+		this.state = {
+			assignedColors: {},
+		};
 
-	return (
-		<div style={style}>
-			<ResponsiveContainer width="100%" height="100%">
-				<LineChart
-					data={data}
-				>
-					<XAxis dataKey="date"/>
-					<YAxis
-						width={70}
-						tickFormatter={(val: number) => Money.formatMoney(val/100, 0)}
-					/>
-					<Tooltip
-						animationDuration={100}
-						formatter={(val: number) => Money.formatMoney(val/100)}
-					/>
-					<CartesianGrid strokeDasharray="3 3"/>
-					<Legend />
-					{trendNames.map((name, index) => (
-						<Line
-							animationDuration={animationDuration}
-							dataKey={name}
-							key={name}
-							onAnimationEnd={onAnimationEnd}
-							stroke={pickColor(index)}
-							type="monotone"
+		this.assignColors();
+	}
+
+	public render() {
+		const {
+			animate,
+			data,
+			onAnimationEnd,
+			trendNames,
+		} = this.props;
+
+		return (
+			<div style={style}>
+				<ResponsiveContainer width="100%" height="100%">
+					<LineChart
+						data={data}
+					>
+						<XAxis dataKey="date"/>
+						<YAxis
+							width={70}
+							tickFormatter={(val: number) => Money.formatMoney(val / 100, 0)}
 						/>
-					))}
-				</LineChart>
-			</ResponsiveContainer>
-		</div>
-	);
+						<Tooltip
+							animationDuration={100}
+							formatter={(val: number) => Money.formatMoney(val / 100)}
+						/>
+						<CartesianGrid strokeDasharray="3 3"/>
+						<Legend />
+						{trendNames.map((name, index) => {
+							const colorKey = name.split(' (projection)')[0];
+							const color = this.state.assignedColors[colorKey];
+							const animationDuration = animate ? 1000 : 0;
+							const isProjection: boolean = (name as any).endsWith('(projection)');
+							return (
+								<Line
+									animationDuration={animationDuration}
+									dataKey={name}
+									dot={false}
+									isAnimationActive={!isProjection}
+									key={name}
+									onAnimationEnd={onAnimationEnd}
+									stroke={color}
+									strokeDasharray={isProjection ? `${DASH_SIZE} ${BREAK_SIZE}` : ''}
+									type="natural"
+								/>
+							);
+						})}
+					</LineChart>
+				</ResponsiveContainer>
+			</div>
+		);
+	}
+
+	private assignColors() {
+		let assignedCount = 0;
+		this.props.allTrendNames.forEach((trendName) => {
+			if(trendName.endsWith('(projection)') || this.state.assignedColors[trendName]) {
+				return;
+			}
+
+			this.state.assignedColors[trendName] = LineColors[assignedCount];
+			assignedCount++;
+		});
+	}
 }

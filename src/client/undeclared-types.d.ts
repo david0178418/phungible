@@ -14,9 +14,13 @@ declare module 'recharts' {
 }
 
 declare interface Array<T> {
-	find(predicate: (search: T) => boolean) : T;
-	findIndex(predicate: (search: T) => boolean) : number;
+	find(predicate: (search: T) => boolean): T;
+	findIndex(predicate: (search: T) => boolean): number;
 }
 declare interface ObjectConstructor {
 	assign(...objects: any[]): any;
+}
+declare interface String {
+	endsWith(suffix: string): boolean;
+	startsWith(suffix: string): boolean;
 }

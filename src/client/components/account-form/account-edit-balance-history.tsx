@@ -72,7 +72,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 					</IconButton>
 				</div>
 				<List>
-					{account.balanceHistory.map((balanceUpdate) => {
+					{account.balanceUpdateHistory.map((balanceUpdate) => {
 						return (
 							<ListItem
 								key={balanceUpdate.id}

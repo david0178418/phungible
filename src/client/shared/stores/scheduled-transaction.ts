@@ -1,5 +1,7 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
+import {Moment} from 'moment';
+import 'moment-recur';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../utils/money';
@@ -54,6 +56,14 @@ class ScheduledTransaction {
 		this.amount = new Money();
 	}
 
+	@computed get interval() {
+		return (moment(this.startDate) as any)
+			.recur()
+			.every(
+				this.repeatValue,
+				RepeatUnits[this.repeatUnit].toLowerCase(),
+			);
+	}
 	get startDateString() {
 		return this._startDate;
 	}
@@ -76,7 +86,12 @@ class ScheduledTransaction {
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
 	}
-
+	public affectsAccount(accountId: number) {
+		return (
+			(this.fromAccount && this.fromAccount.id === accountId) ||
+			(this.towardAccount && this.towardAccount.id === accountId)
+		);
+	}
 	public generateTransaction(date: Date) {
 		return new Transaction({
 			amount: this.amount,
@@ -87,6 +102,29 @@ class ScheduledTransaction {
 			towardAccount: this.towardAccount,
 			type: this.type,
 		});
+	}
+	public occursOn(date: Date | Moment) {
+		return this.interval.matches(date);
+	}
+	public occuranceCountInRange(fromDate: Date, toDate: Date) {
+		const from = moment(fromDate);
+		const to = moment(toDate);
+		const rangeSize = to.diff(from, 'days');
+		let occurances = 0;
+
+		for(let x = 0; x <= rangeSize; x++) {
+			if(this.interval.matches(from)) {
+				occurances++;
+			}
+			from.add(1, 'day');
+		}
+
+		return occurances;
+	}
+	public impactInRange(fromDate: Date, toDate: Date) {
+		return this.amount.val *
+			this.occuranceCountInRange(fromDate, toDate) *
+			(this.type === TransactionType.Income ? 1 : -1);
 	}
 };
 
