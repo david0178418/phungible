@@ -1,9 +1,7 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
@@ -14,13 +12,14 @@ import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
+import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
 	store: AppStore;
 };
 type ListProps = {
 	transactions: Transaction[];
-	onEdit: (transactionId: number) => void;
+	onEdit: (transaction: Transaction) => void;
 	onRemove: (transaction: Transaction) => void;
 };
 
@@ -63,22 +62,15 @@ class TransactionsStore {
 const TransactionsList = observer(function({transactions, onEdit, onRemove}: ListProps) {
 	return (
 		<List>
-			{transactions.map((transaction) => {
-				const iconButton = (
-					<IconButton
-						onTouchTap={() => onRemove(transaction)}
-					><ContentRemove/></IconButton>
-				);
-				return (
-					<ListItem
-						key={transaction.id}
-						primaryText={`${transaction.amount.valFormatted}`}
-						secondaryText={`${transaction.name}`}
-						onTouchTap={() => onEdit(transaction.id)}
-						rightIconButton={iconButton}
-					/>
-				);
-			})}
+			{transactions.map((transaction) => (
+				<ListItem
+					key={transaction.id}
+					primaryText={`${transaction.amount.valFormatted}`}
+					secondaryText={`${transaction.name}`}
+					onTouchTap={() => onEdit(transaction)}
+					rightIconButton={EditRemoveMenu<Transaction>(transaction, onEdit, onRemove)}
+				/>
+			))}
 		</List>
 	);
 });
@@ -102,12 +94,11 @@ class Transactions extends Component<Props, any> {
 				<TransactionsList
 					transactions={store.transactions}
 					onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
-					onEdit={(transactionId: number) => this.handleEditTransaction(transactionId)}
+					onEdit={(transaction: Transaction) => this.handleEditTransaction(transaction)}
 				/>
 				<FloatingActionButton
 					containerElement={<Link to="/transaction-edit" />}
 					style={Styles.floatingActionButton}
-					zDepth={2}
 				>
 					<ContentAdd />
 				</FloatingActionButton>
@@ -115,7 +106,7 @@ class Transactions extends Component<Props, any> {
 		);
 	}
 
-	private handleEditTransaction(transactionId: number) {
-		browserHistory.push(`/transaction-edit/${transactionId}`);
+	private handleEditTransaction(transaction: Transaction) {
+		browserHistory.push(`/transaction-edit/${transaction.id}`);
 	}
 }

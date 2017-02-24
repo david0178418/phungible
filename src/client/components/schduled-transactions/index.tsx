@@ -1,10 +1,8 @@
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
 import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import {action, computed, observable} from 'mobx';
@@ -18,6 +16,7 @@ import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
+import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
 type Props = {
@@ -69,23 +68,16 @@ class ScheduledTransactionsStore {
 const ScheduledTransactionList = observer(function({scheduledTransactions, onEdit, onRemove}: ListProps) {
 	return (
 		<List>
-			{scheduledTransactions.map((scheduledTransaction) => {
-				const iconButton = (
-					<IconButton
-						onTouchTap={() => onRemove(scheduledTransaction)}
-					><ContentRemove/></IconButton>
-				);
-				return (
-					<ListItem
-						key={scheduledTransaction.id}
-						primaryText={`${scheduledTransaction.name}`}
-						secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
-						leftIcon={scheduledTransaction.type === TransactionType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
-						onTouchTap={() => onEdit(scheduledTransaction)}
-						rightIconButton={iconButton}
-					/>
-				);
-			})}
+			{scheduledTransactions.map((scheduledTransaction) => (
+				<ListItem
+					key={scheduledTransaction.id}
+					primaryText={`${scheduledTransaction.name}`}
+					secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
+					leftIcon={scheduledTransaction.type === TransactionType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
+					onTouchTap={() => onEdit(scheduledTransaction)}
+					rightIconButton={EditRemoveMenu<ScheduledTransaction>(scheduledTransaction, onEdit, onRemove)}
+				/>
+			))}
 		</List>
 	);
 });

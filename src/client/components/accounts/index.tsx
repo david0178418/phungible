@@ -1,10 +1,8 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -16,13 +14,14 @@ import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import Styles from '../../shared/styles';
+import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
 	store: AppStore;
 };
 type ListProps = {
 	accounts: Account[];
-	onEdit: (accountId: number) => void;
+	onEdit: (account: Account) => void;
 	onRemove: (account: Account) => void;
 };
 
@@ -69,23 +68,16 @@ class AcountsStore {
 const AccountsList = observer(function({accounts, onEdit, onRemove}: ListProps) {
 	return (
 		<List>
-			{accounts.map((account) => {
-				const iconButton = (
-					<IconButton
-						onTouchTap={() => onRemove(account)}
-					><ContentRemove/></IconButton>
-				);
-				return (
-					<ListItem
-						key={account.id}
-						primaryText={`${account.name}`}
-						secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
-						leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
-						onTouchTap={() => onEdit(account.id)}
-						rightIconButton={iconButton}
-					/>
-				);
-			})}
+			{accounts.map((account) => (
+				<ListItem
+					key={account.id}
+					primaryText={`${account.name}`}
+					secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
+					leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
+					onTouchTap={() => onEdit(account)}
+					rightIconButton={EditRemoveMenu<Account>(account, onEdit, onRemove)}
+				/>
+			))}
 		</List>
 	);
 });
@@ -116,7 +108,7 @@ class Accounts extends Component<any, any> {
 				<AccountsList
 					accounts={store.accounts}
 					onRemove={(account: Account) => this.props.store.removeAccount(account)}
-					onEdit={(accountId: number) => this.handleEditAccount(accountId)}
+					onEdit={(account: Account) => this.handleEditAccount(account)}
 				/>
 				<FloatingActionButton
 					containerElement={<Link to="/account-edit" />}
@@ -129,7 +121,7 @@ class Accounts extends Component<any, any> {
 		);
 	}
 
-	private handleEditAccount(accountId: number) {
-		browserHistory.push(`/account-edit/${accountId}`);
+	private handleEditAccount(account: Account) {
+		browserHistory.push(`/account-edit/${account.id}`);
 	}
 }
