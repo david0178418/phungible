@@ -6,7 +6,7 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {browserHistory} from 'react-router';
+import {withRouter} from 'react-router';
 
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
@@ -53,7 +53,6 @@ type Props = {
 };
 
 @observer
-export default
 class TransactionEdit extends Component<Props, any> {
 	private store: TransactionEditStore;
 
@@ -73,7 +72,7 @@ class TransactionEdit extends Component<Props, any> {
 			<div>
 				<AppBar
 					className="app-title"
-					onLeftIconButtonTouchTap={() => browserHistory.goBack()}
+					onLeftIconButtonTouchTap={() => (this.props as any).router.goBack()}
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -97,7 +96,9 @@ class TransactionEdit extends Component<Props, any> {
 	private handleSaveTransaction() {
 		setTimeout(() => {
 			this.store.saveTransaction();
-			browserHistory.push('/transactions');
+			(this.props as any).router.push('/transactions');
 		}, 100);
 	}
 }
+
+export default withRouter(TransactionEdit);

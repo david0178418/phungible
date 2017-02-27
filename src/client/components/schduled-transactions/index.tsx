@@ -9,7 +9,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {browserHistory, Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
@@ -24,7 +24,6 @@ type Props = {
 };
 type ListProps = {
 	scheduledTransactions: ScheduledTransaction[];
-	onEdit: Handler;
 	onRemove: Handler;
 };
 
@@ -65,7 +64,7 @@ class ScheduledTransactionsStore {
 	}
 }
 
-const ScheduledTransactionList = observer(function({scheduledTransactions, onEdit, onRemove}: ListProps) {
+const ScheduledTransactionList = observer(function({scheduledTransactions, onRemove}: ListProps) {
 	return (
 		<List>
 			{scheduledTransactions.map((scheduledTransaction) => (
@@ -74,8 +73,7 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onEdi
 					primaryText={`${scheduledTransaction.name}`}
 					secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
 					leftIcon={scheduledTransaction.type === TransactionType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
-					onTouchTap={() => onEdit(scheduledTransaction)}
-					rightIconButton={EditRemoveMenu<ScheduledTransaction>(scheduledTransaction, onEdit, onRemove)}
+					rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 				/>
 			))}
 		</List>
@@ -83,7 +81,6 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onEdi
 });
 
 @observer
-export default
 class ScheduledTransactions extends Component<Props, any> {
 	private store: ScheduledTransactionsStore;
 
@@ -110,12 +107,9 @@ class ScheduledTransactions extends Component<Props, any> {
 					onRemove={
 						(scheduledTransaction: ScheduledTransaction) => this.props.store.removeScheduledTransaction(scheduledTransaction)
 					}
-					onEdit={
-						(scheduledTransaction: ScheduledTransaction) => this.handleEditScheduledTransaction(scheduledTransaction.id)
-					}
 				/>
 				<FloatingActionButton
-					containerElement={<Link to="/create-scheduled-transaction" />}
+					containerElement={<Link to="/scheduled-transaction/edit" />}
 					style={Styles.floatingActionButton}
 					zDepth={2}
 				>
@@ -124,8 +118,6 @@ class ScheduledTransactions extends Component<Props, any> {
 			</div>
 		);
 	}
-
-	private handleEditScheduledTransaction(scheduledTransactionId: number) {
-		browserHistory.push(`/create-scheduled-transaction/${scheduledTransactionId}`);
-	}
 }
+
+export default withRouter(ScheduledTransactions);

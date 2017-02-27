@@ -8,7 +8,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {browserHistory, Link} from 'react-router';
+import {Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import Account, {AccountType} from '../../shared/stores/account';
@@ -21,7 +21,6 @@ type Props = {
 };
 type ListProps = {
 	accounts: Account[];
-	onEdit: (account: Account) => void;
 	onRemove: (account: Account) => void;
 };
 
@@ -65,7 +64,7 @@ class AcountsStore {
 	}
 }
 
-const AccountsList = observer(function({accounts, onEdit, onRemove}: ListProps) {
+const AccountsList = observer(function({accounts, onRemove}: ListProps) {
 	return (
 		<List>
 			{accounts.map((account) => (
@@ -74,8 +73,7 @@ const AccountsList = observer(function({accounts, onEdit, onRemove}: ListProps) 
 					primaryText={`${account.name}`}
 					secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
 					leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
-					onTouchTap={() => onEdit(account)}
-					rightIconButton={EditRemoveMenu<Account>(account, onEdit, onRemove)}
+					rightIconButton={EditRemoveMenu<Account>('account', account, onRemove)}
 				/>
 			))}
 		</List>
@@ -108,10 +106,9 @@ class Accounts extends Component<any, any> {
 				<AccountsList
 					accounts={store.accounts}
 					onRemove={(account: Account) => this.props.store.removeAccount(account)}
-					onEdit={(account: Account) => this.handleEditAccount(account)}
 				/>
 				<FloatingActionButton
-					containerElement={<Link to="/account-edit" />}
+					containerElement={<Link to="/account/edit" />}
 					style={Styles.floatingActionButton}
 					zDepth={2}
 				>
@@ -119,9 +116,5 @@ class Accounts extends Component<any, any> {
 				</FloatingActionButton>
 			</div>
 		);
-	}
-
-	private handleEditAccount(account: Account) {
-		browserHistory.push(`/account-edit/${account.id}`);
 	}
 }

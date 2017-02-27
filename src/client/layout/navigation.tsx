@@ -2,7 +2,7 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
-import {browserHistory} from 'react-router';
+import {Link} from 'react-router';
 
 type Props = {
 	title: string;
@@ -30,26 +30,21 @@ class Navigation extends React.Component<Props, any> {
 					open={this.state.isOpen}
 					onRequestChange={() => this.handleDrawerToggle()}
 				>
-					<MenuItem onTouchTap={() => this.handleNavigateTo('/')}>
+					<MenuItem containerElement={<Link to="/" />}>
 						Trends
 					</MenuItem>
-					<MenuItem onTouchTap={() => this.handleNavigateTo('/accounts')}>
+					<MenuItem containerElement={<Link to="/accounts" />}>
 						Accounts
 					</MenuItem>
-					<MenuItem onTouchTap={() => this.handleNavigateTo('/schduled-transactions')}>
+					<MenuItem containerElement={<Link to="/scheduled-transactions" />}>
 						Budget
 					</MenuItem>
-					<MenuItem onTouchTap={() => this.handleNavigateTo('/transactions')}>
+					<MenuItem containerElement={<Link to="/transactions" />}>
 						Transactions
 					</MenuItem>
 				</Drawer>
 			</AppBar>
 		);
-	}
-
-	private handleNavigateTo(location: string) {
-		browserHistory.push(location);
-		this.handleDrawerToggle();
 	}
 
 	private handleDrawerToggle() {

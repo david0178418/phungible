@@ -6,7 +6,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {browserHistory, Link} from 'react-router';
+import {Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
@@ -19,7 +19,6 @@ type Props = {
 };
 type ListProps = {
 	transactions: Transaction[];
-	onEdit: (transaction: Transaction) => void;
 	onRemove: (transaction: Transaction) => void;
 };
 
@@ -59,7 +58,7 @@ class TransactionsStore {
 	}
 }
 
-const TransactionsList = observer(function({transactions, onEdit, onRemove}: ListProps) {
+const TransactionsList = observer(function({transactions, onRemove}: ListProps) {
 	return (
 		<List>
 			{transactions.map((transaction) => (
@@ -67,8 +66,7 @@ const TransactionsList = observer(function({transactions, onEdit, onRemove}: Lis
 					key={transaction.id}
 					primaryText={`${transaction.amount.valFormatted}`}
 					secondaryText={`${transaction.name}`}
-					onTouchTap={() => onEdit(transaction)}
-					rightIconButton={EditRemoveMenu<Transaction>(transaction, onEdit, onRemove)}
+					rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
 				/>
 			))}
 		</List>
@@ -94,7 +92,6 @@ class Transactions extends Component<Props, any> {
 				<TransactionsList
 					transactions={store.transactions}
 					onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
-					onEdit={(transaction: Transaction) => this.handleEditTransaction(transaction)}
 				/>
 				<FloatingActionButton
 					containerElement={<Link to="/transaction-edit" />}
@@ -104,9 +101,5 @@ class Transactions extends Component<Props, any> {
 				</FloatingActionButton>
 			</div>
 		);
-	}
-
-	private handleEditTransaction(transaction: Transaction) {
-		browserHistory.push(`/transaction-edit/${transaction.id}`);
 	}
 }
