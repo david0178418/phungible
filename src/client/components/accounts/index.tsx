@@ -11,6 +11,7 @@ import * as React from 'react';
 import {Link} from 'react-router';
 
 import Navigation from '../../layout/navigation';
+import Colors from '../../shared/colors';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import Styles from '../../shared/styles';
@@ -72,7 +73,11 @@ const AccountsList = observer(function({accounts, onRemove}: ListProps) {
 					key={account.id}
 					primaryText={`${account.name}`}
 					secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
-					leftIcon={account.type === AccountType.Savings ? <EditorMoneyOn/> : <ActionCreditCard/>}
+					leftIcon={
+						account.type === AccountType.Savings ?
+							<EditorMoneyOn color={Colors.Money}/> :
+							<ActionCreditCard color={Colors.Debt}/>
+					}
 					rightIconButton={EditRemoveMenu<Account>('account', account, onRemove)}
 				/>
 			))}

@@ -2,6 +2,10 @@ import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
+import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
+import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
+import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
 import {Link} from 'react-router';
 
@@ -15,6 +19,7 @@ type Props = {
 type MenuItemProps = {
 	containerElement?: React.ReactElement<any>;
 	disabled?: boolean;
+	leftIcon: React.ReactElement<any>;
 	rightIcon: React.ReactElement<any>;
 };
 
@@ -24,7 +29,8 @@ function accountTarget(accountsCount: number) {
 
 function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
 	const props: MenuItemProps = {
-		rightIcon: <Badge badgeContent={scheduledTransactionsCount} primary={true} />,
+		leftIcon: <AccountBalanceWalletIcon />,
+		rightIcon: <Badge badgeContent={scheduledTransactionsCount} primary />,
 	};
 
 	if(accountCount) {
@@ -40,7 +46,8 @@ function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
 
 function transactionProps(transactionsCount: number, accountsCount: number) {
 	const props: MenuItemProps = {
-		rightIcon: <Badge badgeContent={transactionsCount} primary={true} />,
+		leftIcon: <CompareIcon />,
+		rightIcon: <Badge badgeContent={transactionsCount} primary />,
 	};
 
 	if(accountsCount) {
@@ -77,12 +84,16 @@ class Navigation extends React.Component<Props, any> {
 					open={this.state.isOpen}
 					onRequestChange={() => this.handleDrawerToggle()}
 				>
-					<MenuItem containerElement={<Link to="/" />}>
+					<MenuItem
+						containerElement={<Link to="/" />}
+						leftIcon={<TrendingUpIcon />}
+					>
 						Trends
 					</MenuItem>
 					<MenuItem
 						containerElement={<Link to={accountTarget(accounts.length)} />}
-						rightIcon={<Badge badgeContent={accounts.length} primary={true} />}
+						leftIcon={<AccountBalanceIcon />}
+						rightIcon={<Badge badgeContent={accounts.length} primary />}
 					>
 						Accounts
 					</MenuItem>

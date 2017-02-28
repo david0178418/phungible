@@ -12,6 +12,7 @@ import {Component} from 'react';
 import {Link, withRouter} from 'react-router';
 
 import Navigation from '../../layout/navigation';
+import Colors from '../../shared/colors';
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
@@ -72,7 +73,11 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 					key={scheduledTransaction.id}
 					primaryText={`${scheduledTransaction.name}`}
 					secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
-					leftIcon={scheduledTransaction.type === TransactionType.Income ? <ActionTrendingUp/> : <ActionTrendingDown/>}
+					leftIcon={
+						scheduledTransaction.type === TransactionType.Income ?
+							<ActionTrendingUp color={Colors.Money} /> :
+							<ActionTrendingDown color={Colors.Debt} />
+					}
 					rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 				/>
 			))}
