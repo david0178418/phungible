@@ -1,11 +1,15 @@
 import AppBar from 'material-ui/AppBar';
+import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
 import {Link} from 'react-router';
 
+import AppStore from '../shared/stores/app';
+
 type Props = {
 	title: string;
+	store: AppStore;
 };
 
 export default
@@ -18,6 +22,7 @@ class Navigation extends React.Component<Props, any> {
 	}
 
 	public render() {
+		const store = this.props.store;
 		return (
 			<AppBar
 				className="app-title"
@@ -33,13 +38,22 @@ class Navigation extends React.Component<Props, any> {
 					<MenuItem containerElement={<Link to="/" />}>
 						Trends
 					</MenuItem>
-					<MenuItem containerElement={<Link to="/accounts" />}>
+					<MenuItem
+						containerElement={<Link to="/accounts" />}
+						rightIcon={<Badge badgeContent={store.accounts.length} primary={true} />}
+					>
 						Accounts
 					</MenuItem>
-					<MenuItem containerElement={<Link to="/scheduled-transactions" />}>
+					<MenuItem
+						containerElement={<Link to="/scheduled-transactions" />}
+						rightIcon={<Badge badgeContent={store.scheduledTransactions.length} primary={true} />}
+					>
 						Budget
 					</MenuItem>
-					<MenuItem containerElement={<Link to="/transactions" />}>
+					<MenuItem
+						containerElement={<Link to="/transactions" />}
+						rightIcon={<Badge badgeContent={store.transactions.length} primary={true} />}
+					>
 						Transactions
 					</MenuItem>
 				</Drawer>

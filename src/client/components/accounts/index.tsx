@@ -102,6 +102,7 @@ class Accounts extends Component<any, any> {
 			<div>
 				<Navigation
 					title="Accounts"
+					store={store.appStore}
 				/>
 				<AccountsList
 					accounts={store.accounts}

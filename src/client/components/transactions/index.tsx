@@ -23,9 +23,9 @@ type ListProps = {
 };
 
 class TransactionsStore {
-	@observable private _openTransaction: Transaction;
+	public appStore: AppStore;
 
-	private appStore: AppStore;
+	@observable private _openTransaction: Transaction;
 
 	constructor(appStore: AppStore) {
 		this.appStore = appStore;
@@ -88,6 +88,7 @@ class Transactions extends Component<Props, any> {
 			<div>
 				<Navigation
 					title="Transactions"
+					store={store.appStore}
 				/>
 				<TransactionsList
 					transactions={store.transactions}

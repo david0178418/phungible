@@ -14,6 +14,7 @@ function Index({store}: Props) {
 		<div>
 			<Navigation
 				title="Trends"
+				store={store}
 			/>
 			<Trends
 				accounts={store.accounts}
