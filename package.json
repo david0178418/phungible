@@ -29,6 +29,7 @@
     "@types/react-tap-event-plugin": "^0.0.30",
     "awesome-typescript-loader": "^3.0.7",
     "gulp": "^3.9.1",
+    "gulp-cache-bust": "^1.1.0",
     "gulp-develop-server": "^0.5.2",
     "gulp-sequence": "^0.4.6",
     "gulp-tslint": "^7.1.0",

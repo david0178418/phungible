@@ -1,11 +1,13 @@
 const gulp = require('gulp');
 const gulpSequence = require('gulp-sequence');
+const gulpCacheBust = require('gulp-cache-bust');
+const path = require('path');
 const server = require('gulp-develop-server');
+const ts = require('gulp-typescript');
+const tsProject = ts.createProject('./src/server/tsconfig.json');
 const webpack = require('gulp-webpack');
 const webpackConfig = require('./webpack.config');
 const webpackProdConfig = require('./webpack.config.prod');
-const ts = require('gulp-typescript');
-const tsProject = ts.createProject('./src/server/tsconfig.json');
 
 
 gulp.task('build:client', buildClientTask);
@@ -13,17 +15,15 @@ gulp.task('build:client:watch', buildClientWatchTask);
 gulp.task('build:server', buildServerTask);
 gulp.task('build:server:watch', buildServerWatchTask);
 gulp.task('build:prod:client', buildProdClientTask);
-gulp.task('copy:static:html', copyStaticHtmlTask);
-gulp.task('copy:static', ['copy:static:html']);
-gulp.task('copy:static:watch', copyStaticWatchTask);
+gulp.task('generate:html', generateHtmlTask);
+gulp.task('generate:html:watch', generateHtmlWatchTask);
 gulp.task('server:listen', serverTask);
 gulp.task('server:watch', serverWatchTask);
 gulp.task('build', ['build:client', 'build:server']);
 gulp.task('build:watch', ['build:client:watch', 'build:server:watch']);
-gulp.task('copy', ['copy:static', 'copy:static:watch']);
 gulp.task('server', ['server:listen', 'server:watch']);
-gulp.task('build:prod', ['build:prod:client', 'build:server', 'copy:static']);
-gulp.task('default', gulpSequence('build', 'copy', ['build:watch', 'server']));
+gulp.task('build:prod', gulpSequence(['build:prod:client', 'build:server'], 'generate:html'));
+gulp.task('default', gulpSequence('build', 'generate:html', ['build:watch', 'server', 'generate:html:watch']));
 
 function buildClientTask() {
 	return gulp.src('./src/client/index.ts')
@@ -56,15 +56,16 @@ function buildServerTask() {
 		.js.pipe(gulp.dest('build/server'));
 }
 
-function copyStaticHtmlTask() {
-	return gulp.src([
-			'./src/client/index.html',
-		])
-		.pipe(gulp.dest('./build/client/'));
+function generateHtmlTask() {
+	return gulp.src('./src/client/index.html')
+		.pipe(gulpCacheBust({
+			basePath: path.join(__dirname, './build/client/'),
+		}))
+		.pipe(gulp.dest('./build/client'));
 }
 
-function copyStaticWatchTask() {
-	return gulp.watch('./src/client/index.html', copyStaticHtmlTask);
+function generateHtmlWatchTask() {
+	return gulp.watch('./build/client/js/app.js', generateHtmlTask);
 }
 
 function serverTask() {
