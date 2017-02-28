@@ -95,7 +95,7 @@ class Transactions extends Component<Props, any> {
 					onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
 				/>
 				<FloatingActionButton
-					containerElement={<Link to="/transaction-edit" />}
+					containerElement={<Link to="/transaction/edit" />}
 					style={Styles.floatingActionButton}
 				>
 					<ContentAdd />

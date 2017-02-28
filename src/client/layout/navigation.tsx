@@ -12,6 +12,48 @@ type Props = {
 	store: AppStore;
 };
 
+type MenuItemProps = {
+	containerElement?: React.ReactElement<any>;
+	disabled?: boolean;
+	rightIcon: React.ReactElement<any>;
+};
+
+function accountTarget(accountsCount: number) {
+	return accountsCount ? '/accounts' : '/account/edit';
+}
+
+function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
+	const props: MenuItemProps = {
+		rightIcon: <Badge badgeContent={scheduledTransactionsCount} primary={true} />,
+	};
+
+	if(accountCount) {
+		props.containerElement = <Link to={
+			scheduledTransactionsCount ? '/scheduled-transactions' : '/scheduled-transaction/edit'
+		} />;
+	} else {
+		props.disabled = true;
+	}
+
+	return props;
+}
+
+function transactionProps(transactionsCount: number, accountsCount: number) {
+	const props: MenuItemProps = {
+		rightIcon: <Badge badgeContent={transactionsCount} primary={true} />,
+	};
+
+	if(accountsCount) {
+		props.containerElement = <Link to={
+			transactionsCount ? '/transactions' : '/transaction/edit'
+		} />;
+	} else {
+		props.disabled = true;
+	}
+
+	return props;
+}
+
 export default
 class Navigation extends React.Component<Props, any> {
 	constructor(props: Props) {
@@ -22,7 +64,7 @@ class Navigation extends React.Component<Props, any> {
 	}
 
 	public render() {
-		const store = this.props.store;
+		const {accounts, scheduledTransactions, transactions} = this.props.store;
 		return (
 			<AppBar
 				className="app-title"
@@ -39,21 +81,15 @@ class Navigation extends React.Component<Props, any> {
 						Trends
 					</MenuItem>
 					<MenuItem
-						containerElement={<Link to="/accounts" />}
-						rightIcon={<Badge badgeContent={store.accounts.length} primary={true} />}
+						containerElement={<Link to={accountTarget(accounts.length)} />}
+						rightIcon={<Badge badgeContent={accounts.length} primary={true} />}
 					>
 						Accounts
 					</MenuItem>
-					<MenuItem
-						containerElement={<Link to="/scheduled-transactions" />}
-						rightIcon={<Badge badgeContent={store.scheduledTransactions.length} primary={true} />}
-					>
+					<MenuItem {...budgetProps(scheduledTransactions.length, accounts.length)}>
 						Budget
 					</MenuItem>
-					<MenuItem
-						containerElement={<Link to="/transactions" />}
-						rightIcon={<Badge badgeContent={store.transactions.length} primary={true} />}
-					>
+					<MenuItem {...transactionProps(transactions.length, accounts.length)}>
 						Transactions
 					</MenuItem>
 				</Drawer>
