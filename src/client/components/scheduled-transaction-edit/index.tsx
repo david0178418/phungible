@@ -23,7 +23,7 @@ type Props = {
 export default
 observer(function ScheduledTransactionEdit({accounts, scheduledTransaction, onSubmit}: Props) {
 	return (
-		<form className="create-scheduled-transaction" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
+		<form className="create-scheduled-transaction content" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<div>
 				<TextField
 					fullWidth

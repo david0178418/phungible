@@ -17,7 +17,7 @@ type Props = {
 export default
 observer(function AccountForm({account, onSubmit}: Props) {
 	return (
-		<form className="edit-account" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
+		<form className="edit-account content" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<div>
 				<TextField
 					fullWidth

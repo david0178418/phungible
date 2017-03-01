@@ -21,7 +21,7 @@ type Props = {
 export default
 observer(function TransactionForm({accounts, transaction, onSubmit}: Props) {
 	return (
-		<form className="edit-transaction" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
+		<form className="edit-transaction content" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<div>
 				<TextField
 					fullWidth
