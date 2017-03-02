@@ -3,6 +3,7 @@ import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Subheader from 'material-ui/Subheader';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -78,7 +79,13 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 								key={balanceUpdate.id}
 								primaryText={`${balanceUpdate.balance.valFormatted}`}
 								secondaryText={`as of ${balanceUpdate.formattedStartDate}`}
-								onTouchTap={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
+								rightIconButton={(
+									<IconButton
+										onTouchTap={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
+									>
+										<ActionDelete />
+									</IconButton>
+								)}
 							/>
 						);
 					})}
