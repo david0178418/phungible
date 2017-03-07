@@ -94,11 +94,12 @@ observer(function ScheduledTransactionEdit({accounts, scheduledTransaction, onSu
 				<div>
 					<div style={{display: 'flex'}}>
 						<TextField
-							onChange={((ev: any, value: any) => handleUpdateRepeatValue(value, scheduledTransaction)) as any}
-							type="number"
-							style={{width: 30}}
-							value={scheduledTransaction.repeatValue}
 							floatingLabelText="Every"
+							style={{width: 30}}
+							type="number"
+							value={scheduledTransaction.repeatValue}
+							onChange={((ev: any, value: any) => handleUpdateRepeatValue(value, scheduledTransaction)) as any}
+							onFocus={(e) => (e.target as any).select()}
 						/>
 						<SelectField
 							value={scheduledTransaction.repeatUnit}

@@ -23,20 +23,22 @@ class MoneyEdit extends Component<Props, any> {
 			<span>
 				$
 				<TextField
-					name="dollars"
-					onChange={((ev: any, value: any) => this.handleUpdateDollarAmount(value))}
 					inputStyle={{ textAlign: 'right'}}
+					name="dollars"
 					style={{width: 75}}
 					type="number"
 					value={money.dollars}
+					onChange={((ev: any, value: any) => this.handleUpdateDollarAmount(value))}
+					onFocus={(e) => (e.target as any).select()}
 				/>
 				.
 				<TextField
 					name="cents"
-					onChange={((ev: any, value: string) => this.handleUpdateCentsAmount(value))}
 					style={{width: 40}}
 					type="number"
 					value={money.cents}
+					onChange={((ev: any, value: string) => this.handleUpdateCentsAmount(value))}
+					onFocus={(e) => (e.target as any).select()}
 				/>
 			</span>
 		);
