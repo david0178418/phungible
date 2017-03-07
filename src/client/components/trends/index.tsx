@@ -36,7 +36,7 @@ class Trends extends Component<Props, State> {
 	public render() {
 		const store = this.store;
 		return (
-			<div>
+			<div className="content">
 				<div>
 					<DatePicker
 						autoOk
