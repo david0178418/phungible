@@ -8,6 +8,7 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
+import RepeatField from './repeat-field';
 import Account from '../../shared/stores/account';
 import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
@@ -97,31 +98,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						type="checkbox"
 					/>
 				</div>
-				{scheduledTransaction.repeats && (
-					<div>
-						<div style={{display: 'flex'}}>
-							<TextField
-								floatingLabelText="Every"
-								style={{width: 30}}
-								type="number"
-								value={scheduledTransaction.repeatValue}
-								onChange={((ev: any, value: any) => this.handleUpdateRepeatValue(value, scheduledTransaction)) as any}
-								onFocus={(e) => (e.target as any).select()}
-							/>
-							<SelectField
-								value={scheduledTransaction.repeatUnit}
-								onChange={(ev, index, value) => this.handleUpdateRepeatUnit(value, scheduledTransaction)}
-								floatingLabelText=" "
-								style={{width: 'calc(100% - 30px)'}}
-							>
-								<MenuItem value={RepeatUnits.Day} primaryText="Day"/>
-								<MenuItem value={RepeatUnits.Week} primaryText="Week"/>
-								<MenuItem value={RepeatUnits.Month} primaryText="Month"/>
-								<MenuItem value={RepeatUnits.Year} primaryText="Year"/>
-							</SelectField>
-						</div>
-					</div>
-				)}
+				{scheduledTransaction.repeats && <RepeatField scheduledTransaction={scheduledTransaction} />}
 			</form>
 		);
 	}
@@ -145,14 +122,6 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	}
 	@action private handleUpdateDescription(newDescription: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.description = newDescription;
-	}
-	@action private handleUpdateRepeatUnit(newRepeatUnit: RepeatUnits, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.repeatUnit = newRepeatUnit;
-	}
-	@action private handleUpdateRepeatValue(newRepeatValue: number, scheduledTransaction: ScheduledTransaction) {
-		if(newRepeatValue > 0) {
-			scheduledTransaction.repeatValue = newRepeatValue | 0;
-		}
 	}
 	@action private handleUpdateName(newName: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.name = newName;
