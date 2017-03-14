@@ -8,12 +8,12 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
-import RepeatField from './repeat-field';
 import Account from '../../shared/stores/account';
 import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
+import RepeatField from './repeat-field';
 
 type Props = {
 	accounts: Account[];
@@ -90,10 +90,10 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						/>
 					</div>
 				)}
-				<div>
+				<div style={{display: 'inline-block'}}>
 					<Checkbox
-						checked={!scheduledTransaction.repeats}
-						label="One-time entry"
+						checked={scheduledTransaction.repeats}
+						label="Repeats"
 						onClick={() => this.handleToggleRepeats(scheduledTransaction)}
 						type="checkbox"
 					/>
