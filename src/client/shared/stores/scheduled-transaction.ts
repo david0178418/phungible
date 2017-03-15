@@ -42,7 +42,6 @@ class ScheduledTransaction {
 	@action public static clone(originalEntry: ScheduledTransaction) {
 		return ScheduledTransaction.deserialize(serialize(originalEntry));
 	}
-	@serializable
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Account))
@@ -62,7 +61,7 @@ class ScheduledTransaction {
 	@serializable
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.Week;
 	@serializable(list(primitive()))
-	@observable public repeatValues: number[];
+	@observable public _repeatValues: number[];
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
 	@serializable
@@ -74,7 +73,7 @@ class ScheduledTransaction {
 		this.exceptions = [];
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
-		this.repeatValues = [];
+		this._repeatValues = [];
 		this.amount = new Money();
 		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
@@ -83,7 +82,7 @@ class ScheduledTransaction {
 		return (moment(this.startDate) as any)
 			.recur()
 			.every(
-				this.repeatValues,
+				this._repeatValues,
 				RepeatUnits[this.repeatUnit].toLowerCase(),
 			);
 	}
@@ -93,13 +92,16 @@ class ScheduledTransaction {
 	set repeatType(val: number) {
 		// TODO Change implementation to allow changing of repeat type
 		// without losing the entered information
-		this.repeatValues = [];
+		this._repeatValues = [];
 
 		if(val === RepeatTypes.Interval) {
-			this.repeatValues.push(1);
+			this._repeatValues.push(1);
 		}
 
 		this._repeatType = val;
+	}
+	get repeatValues() {
+		return this._repeatValues.slice(0);
 	}
 	get startDateString() {
 		return this._startDate;
@@ -123,6 +125,13 @@ class ScheduledTransaction {
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
 	}
+	@action public addRepeatValue(val: number) {
+		this._repeatValues.push(val);
+		(this._repeatValues as any).replace(this._repeatValues.sort((a, b) => a - b));
+	};
+	@action public removeRepeatValue(removeVal: number) {
+		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal === currentVal));
+	};
 	public affectsAccount(accountId: number) {
 		return (
 			(this.fromAccount && this.fromAccount.id === accountId) ||

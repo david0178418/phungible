@@ -1,15 +1,20 @@
 import Checkbox from 'material-ui/Checkbox';
 import {GridList, GridTile} from 'material-ui/GridList';
 import DoneIcon from 'material-ui/svg-icons/action/done';
+import {observer} from 'mobx-react';
 import * as moment from 'moment';
-import {Component} from 'react';
+import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
+import ScheduledTransaction, {RepeatDays} from '../../shared/stores/scheduled-transaction';
+
 type Props = {
+	scheduledTransaction: ScheduledTransaction;
 };
 
 const DaysOfWeek = moment.weekdaysMin();
 
+@observer
 export default
 class DaySelection extends Component<Props, any> {
 	constructor(props: Props) {
@@ -17,6 +22,8 @@ class DaySelection extends Component<Props, any> {
 	}
 
 	public render() {
+		const selectedDays = this.props.scheduledTransaction.repeatValues;
+
 		return (
 			<div>
 				<GridList
@@ -45,7 +52,9 @@ class DaySelection extends Component<Props, any> {
 									width: '100%',
 								}}
 								uncheckedIcon={<span/>}
-								value={day}
+								value={RepeatDays[day as any]}
+								onCheck={(e, v) => this.handleValueChange(e, v)}
+								checked={selectedDays.indexOf(RepeatDays[day as any] as any) !== -1}
 							/>
 						</GridTile>
 					))}
@@ -53,5 +62,13 @@ class DaySelection extends Component<Props, any> {
 				<small><em>Note: If the selected date doesn't exist in a given month, the last day will be used.</em></small>
 			</div>
 		);
+	}
+
+	public handleValueChange(e: MouseEvent<{}>, checked: boolean) {
+		if(checked) {
+			this.props.scheduledTransaction.addRepeatValue(+(e.target as any).value);
+		} else {
+			this.props.scheduledTransaction.removeRepeatValue(+(e.target as any).value);
+		}
 	}
 }

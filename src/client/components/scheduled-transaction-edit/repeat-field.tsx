@@ -32,20 +32,26 @@ class RepeatField extends Component<Props, any> {
 		return (
 			<div>
 				<Tabs
-					onChange={(newType) => this.handleTabChange(newType)}
+					onChange={(newType) => {
+						setTimeout(() => this.handleTabChange(newType), 100);
+					}}
 					value={scheduledTransaction.repeatType}
 				>
 					<Tab
 						label="Date"
 						value={RepeatTypes.Dates}
 					>
-						<DateSelection />
+						<DateSelection
+							scheduledTransaction={scheduledTransaction}
+						/>
 					</Tab>
 					<Tab
 						label="Day"
 						value={RepeatTypes.Days}
 					>
-						<DaySelection />
+						<DaySelection
+							scheduledTransaction={scheduledTransaction}
+						/>
 					</Tab>
 					<Tab
 						label="Interval"
