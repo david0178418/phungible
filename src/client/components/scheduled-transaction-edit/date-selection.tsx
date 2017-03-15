@@ -20,7 +20,10 @@ class DateSelection extends Component<Props, any> {
 			dates.push(
 				<GridTile
 					key={date}
-					style={{border: '1px solid black', position: 'relative'}}
+					style={{
+						backgroundColor: 'white',
+						position: 'relative',
+					}}
 				>
 					<div style={{fontSize: 32, textAlign: 'center'}}>{date}</div>
 					<Checkbox
@@ -49,7 +52,10 @@ class DateSelection extends Component<Props, any> {
 				<GridList
 					cellHeight={60}
 					cols={7}
-					padding={0}
+					padding={1}
+					style={{
+						backgroundColor: 'black',
+					}}
 				>
 					{dates}
 				</GridList>
