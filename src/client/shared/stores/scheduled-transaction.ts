@@ -8,6 +8,24 @@ import Money from '../utils/money';
 import Account from './account';
 
 export
+enum RepeatTypes {
+	Days,
+	Dates,
+	Interval,
+};
+
+export
+enum RepeatDays {
+	Su,
+	Mo,
+	Tu,
+	We,
+	Th,
+	Fr,
+	Sa,
+};
+
+export
 enum RepeatUnits {
 	Day,
 	Week,
@@ -24,6 +42,7 @@ class ScheduledTransaction {
 	@action public static clone(originalEntry: ScheduledTransaction) {
 		return ScheduledTransaction.deserialize(serialize(originalEntry));
 	}
+	@serializable
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Account))
@@ -42,10 +61,12 @@ class ScheduledTransaction {
 	@observable public name = '';
 	@serializable
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.Week;
-	@serializable
-	@observable public repeatValue = 1;
+	@serializable(list(primitive()))
+	@observable public repeatValues: number[];
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
+	@serializable
+	@observable private _repeatType: RepeatTypes = RepeatTypes.Dates;
 	@serializable
 	@observable private _startDate: string;
 
@@ -53,16 +74,32 @@ class ScheduledTransaction {
 		this.exceptions = [];
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
+		this.repeatValues = [];
 		this.amount = new Money();
+		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
 
 	@computed get interval() {
 		return (moment(this.startDate) as any)
 			.recur()
 			.every(
-				this.repeatValue,
+				this.repeatValues,
 				RepeatUnits[this.repeatUnit].toLowerCase(),
 			);
+	}
+	get repeatType() {
+		return this._repeatType;
+	}
+	set repeatType(val: number) {
+		// TODO Change implementation to allow changing of repeat type
+		// without losing the entered information
+		this.repeatValues = [];
+
+		if(val === RepeatTypes.Interval) {
+			this.repeatValues.push(1);
+		}
+
+		this._repeatType = val;
 	}
 	get startDateString() {
 		return this._startDate;

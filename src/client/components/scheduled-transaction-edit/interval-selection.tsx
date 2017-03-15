@@ -28,7 +28,7 @@ class IntervalSelection extends Component<Props, any> {
 					onFocus={(e) => (e.target as any).select()}
 					style={{width: 30}}
 					type="number"
-					value={scheduledTransaction.repeatValue}
+					value={scheduledTransaction.repeatValues[0]}
 				/>
 				<SelectField
 					value={scheduledTransaction.repeatUnit}
@@ -50,7 +50,7 @@ class IntervalSelection extends Component<Props, any> {
 	}
 	@action private handleUpdateRepeatValue(newRepeatValue: number, scheduledTransaction: ScheduledTransaction) {
 		if(newRepeatValue > 0) {
-			scheduledTransaction.repeatValue = newRepeatValue | 0;
+			scheduledTransaction.repeatValues[0] = newRepeatValue | 0;
 		}
 	}
 }

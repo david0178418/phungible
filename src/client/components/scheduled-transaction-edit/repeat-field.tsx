@@ -1,9 +1,10 @@
 import {Tab, Tabs} from 'material-ui/Tabs';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatTypes} from '../../shared/stores/scheduled-transaction';
 import DateSelection from './date-selection';
 import DaySelection from './day-selection';
 import IntervalSelection from './interval-selection';
@@ -30,18 +31,40 @@ class RepeatField extends Component<Props, any> {
 
 		return (
 			<div>
-				<Tabs>
-					<Tab label="Date">
+				<Tabs
+					onChange={(newType) => this.handleTabChange(newType)}
+					value={scheduledTransaction.repeatType}
+				>
+					<Tab
+						label="Date"
+						value={RepeatTypes.Dates}
+					>
 						<DateSelection />
 					</Tab>
-					<Tab label="Day">
+					<Tab
+						label="Day"
+						value={RepeatTypes.Days}
+					>
 						<DaySelection />
 					</Tab>
-					<Tab label="Interval">
-						<IntervalSelection scheduledTransaction={scheduledTransaction}  />
+					<Tab
+						label="Interval"
+						value={RepeatTypes.Interval}
+					>
+						{/*
+							Delayed rendering since repeateValue needs to be
+							populated with exactly 1 number for the input.
+						*/}
+						{scheduledTransaction.repeatType === RepeatTypes.Interval &&
+							<IntervalSelection scheduledTransaction={scheduledTransaction}  />
+						}
 					</Tab>
 				</Tabs>
 			</div>
 		);
+	}
+
+	@action private handleTabChange(newType: number) {
+		this.props.scheduledTransaction.repeatType = newType;
 	}
 }
