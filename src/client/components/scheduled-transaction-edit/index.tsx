@@ -30,6 +30,9 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 
 	public render() {
 		const {accounts, scheduledTransaction, onSubmit} = this.props;
+		const selectedTowardAccountId = scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id || null;
+		const selectedFromAccountId = scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id || null;
+
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
@@ -80,13 +83,13 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							accounts={accounts}
 							label="From Account"
 							onChange={(value) => this.handleUpdateFromAccount(value, scheduledTransaction)}
-							selectedAccount={scheduledTransaction.fromAccount || null}
+							selectedAccountId={selectedFromAccountId}
 						/>
 						<AccountSelector
 							accounts={accounts}
 							label="Towards Account"
 							onChange={(value) => this.handleUpdateTowardAccount(value, scheduledTransaction)}
-							selectedAccount={scheduledTransaction.towardAccount || null}
+							selectedAccountId={selectedTowardAccountId}
 						/>
 					</div>
 				)}
@@ -114,11 +117,11 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 			scheduledTransaction.repeatUnit = RepeatUnits.Week;
 		}
 	}
-	@action private handleUpdateFromAccount(account: Account, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.fromAccount = account;
+	@action private handleUpdateFromAccount(accountId: number, scheduledTransaction: ScheduledTransaction) {
+		scheduledTransaction.fromAccount = this.findAccount(accountId);
 	}
-	@action private handleUpdateTowardAccount(account: Account, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.towardAccount = account || null;
+	@action private handleUpdateTowardAccount(accountId: number, scheduledTransaction: ScheduledTransaction) {
+		scheduledTransaction.towardAccount = this.findAccount(accountId);
 	}
 	@action private handleUpdateDescription(newDescription: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.description = newDescription;
@@ -131,5 +134,9 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	}
 	@action private handleUpdateType(newType: TransactionType, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.type = newType;
+	}
+
+	private findAccount(id: number) {
+		return this.props.accounts.find((account) => account.id === id) || null;
 	}
 }

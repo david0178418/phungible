@@ -1,7 +1,6 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import 'moment-recur';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../utils/money';
@@ -78,13 +77,8 @@ class ScheduledTransaction {
 		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
 
-	@computed get interval() {
-		return (moment(this.startDate) as any)
-			.recur()
-			.every(
-				this._repeatValues,
-				RepeatUnits[this.repeatUnit].toLowerCase(),
-			);
+	@computed get recurrence() {
+		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
 	}
 	get repeatType() {
 		return this._repeatType;
@@ -150,7 +144,7 @@ class ScheduledTransaction {
 		});
 	}
 	public occursOn(date: Date | Moment) {
-		return this.interval.matches(date);
+		return this.recurrence.matches(date);
 	}
 	public occuranceCountInRange(fromDate: Date, toDate: Date) {
 		const from = moment(fromDate);
@@ -159,7 +153,7 @@ class ScheduledTransaction {
 		let occurances = 0;
 
 		for(let x = 0; x <= rangeSize; x++) {
-			if(this.interval.matches(from)) {
+			if(this.recurrence.matches(from)) {
 				occurances++;
 			}
 			from.add(1, 'day');
@@ -175,4 +169,5 @@ class ScheduledTransaction {
 };
 
 // Moved to resolve circular dependency issue.
+import RecurTypes from '../utils/recur-types';
 import Transaction, {TransactionType} from './transaction';
