@@ -111,7 +111,7 @@ class ScheduledTransaction {
 	@computed get isValid() {
 		const {Expense, Income} = TransactionType;
 
-		return !!(this.amount && this.name && (
+		return !!(this.amount && this.name && this._repeatValues.length && (
 			this.type === Expense && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));

@@ -147,10 +147,8 @@ class TrendsStore {
 						balance = change + prevBalance;
 					}
 
-					if(balance) {
-						accountBalances[`${account.name} (projection)`] = balance;
-						accountBalances['Total (projection)'] += balance;
-					}
+					accountBalances[`${account.name} (projection)`] = balance;
+					accountBalances['Total (projection)'] += balance;
 				}
 			});
 
