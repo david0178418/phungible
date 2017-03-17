@@ -25,9 +25,6 @@ const LineColors = [
 	'#a65628',
 	'#f781bf',
 ];
-const style = {
-	height: 400,
-};
 
 type DayBalances = any & {
 	name: string;
@@ -36,8 +33,8 @@ type Props = {
 	allTrendNames: string[];
 	animate: boolean;
 	data: DayBalances[];
-	onAnimationEnd(): void;
 	trendNames: string[];
+	onAnimationEnd(): void;
 };
 type State = {
 	assignedColors: {
@@ -65,11 +62,12 @@ class TrendsChart extends Component<Props, State> {
 		} = this.props;
 
 		return (
-			<div style={style}>
+			<div style={{
+				height: 400,
+				margin: '10px 0 0 -50px', // Style hack to make better use of mobile space
+			}}>
 				<ResponsiveContainer width="100%" height="100%">
-					<LineChart
-						data={data}
-					>
+					<LineChart data={data}>
 						<XAxis dataKey="date"/>
 						<YAxis
 							width={70}
