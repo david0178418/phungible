@@ -94,7 +94,6 @@ class TrendsChart extends Component<Props, State> {
 									onAnimationEnd={onAnimationEnd}
 									stroke={color}
 									strokeDasharray={isProjection ? `${DASH_SIZE} ${BREAK_SIZE}` : ''}
-									type="natural"
 								/>
 							);
 						})}

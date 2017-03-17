@@ -1,11 +1,28 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import 'moment-recur';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../utils/money';
 import Account from './account';
+
+export
+enum RepeatTypes {
+	Days,
+	Dates,
+	Interval,
+};
+
+export
+enum RepeatDays {
+	Su,
+	Mo,
+	Tu,
+	We,
+	Th,
+	Fr,
+	Sa,
+};
 
 export
 enum RepeatUnits {
@@ -42,10 +59,12 @@ class ScheduledTransaction {
 	@observable public name = '';
 	@serializable
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.Week;
-	@serializable
-	@observable public repeatValue = 1;
+	@serializable(list(primitive()))
+	@observable public _repeatValues: number[];
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
+	@serializable
+	@observable private _repeatType: RepeatTypes = RepeatTypes.Dates;
 	@serializable
 	@observable private _startDate: string;
 
@@ -53,16 +72,30 @@ class ScheduledTransaction {
 		this.exceptions = [];
 		this.labels = [];
 		this._startDate = moment().format('MM/DD/YYYY');
+		this._repeatValues = [];
 		this.amount = new Money();
+		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
 
-	@computed get interval() {
-		return (moment(this.startDate) as any)
-			.recur()
-			.every(
-				this.repeatValue,
-				RepeatUnits[this.repeatUnit].toLowerCase(),
-			);
+	@computed get recurrence() {
+		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
+	}
+	get repeatType() {
+		return this._repeatType;
+	}
+	set repeatType(val: number) {
+		// TODO Change implementation to allow changing of repeat type
+		// without losing the entered information
+		this._repeatValues = [];
+
+		if(val === RepeatTypes.Interval) {
+			this._repeatValues.push(1);
+		}
+
+		this._repeatType = val;
+	}
+	get repeatValues() {
+		return this._repeatValues.slice(0);
 	}
 	get startDateString() {
 		return this._startDate;
@@ -86,6 +119,13 @@ class ScheduledTransaction {
 	@computed get repeats() {
 		return this.repeatUnit !== RepeatUnits.None;
 	}
+	@action public addRepeatValue(val: number) {
+		this._repeatValues.push(val);
+		(this._repeatValues as any).replace(this._repeatValues.sort((a, b) => a - b));
+	};
+	@action public removeRepeatValue(removeVal: number) {
+		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal === currentVal));
+	};
 	public affectsAccount(accountId: number) {
 		return (
 			(this.fromAccount && this.fromAccount.id === accountId) ||
@@ -104,7 +144,7 @@ class ScheduledTransaction {
 		});
 	}
 	public occursOn(date: Date | Moment) {
-		return this.interval.matches(date);
+		return this.recurrence.matches(date);
 	}
 	public occuranceCountInRange(fromDate: Date, toDate: Date) {
 		const from = moment(fromDate);
@@ -113,7 +153,7 @@ class ScheduledTransaction {
 		let occurances = 0;
 
 		for(let x = 0; x <= rangeSize; x++) {
-			if(this.interval.matches(from)) {
+			if(this.recurrence.matches(from)) {
 				occurances++;
 			}
 			from.add(1, 'day');
@@ -129,4 +169,5 @@ class ScheduledTransaction {
 };
 
 // Moved to resolve circular dependency issue.
+import RecurTypes from '../utils/recur-types';
 import Transaction, {TransactionType} from './transaction';

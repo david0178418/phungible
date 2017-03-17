@@ -7,18 +7,18 @@ import Account from '../../shared/stores/account';
 type AccountSelectorProps = {
 	accounts: Account[];
 	label: string;
-	selectedAccount: Account | false;
+	selectedAccountId: number | null;
 	style?: {}
-	onChange(value: Account, index?: number): void;
+	onChange(value: number, index?: number): void;
 };
 
 export default
-function AccountsSelector({accounts, label, onChange, selectedAccount}: AccountSelectorProps) {
+function AccountsSelector({accounts, label, onChange, selectedAccountId}: AccountSelectorProps) {
 	return (
 		<SelectField
 			fullWidth
 			floatingLabelText={label}
-			value={selectedAccount}
+			value={selectedAccountId || null}
 			onChange={(ev, index, value) => onChange(value, index)}
 		>
 			<MenuItem value={false} primaryText="None" />
@@ -26,7 +26,7 @@ function AccountsSelector({accounts, label, onChange, selectedAccount}: AccountS
 				return (
 					<MenuItem
 						key={account.id}
-						value={account}
+						value={account.id}
 						primaryText={account.name}
 					/>
 				);
