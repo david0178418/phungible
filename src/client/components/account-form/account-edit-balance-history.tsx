@@ -77,6 +77,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						return (
 							<ListItem
 								key={balanceUpdate.id}
+								type="number"
 								primaryText={`${balanceUpdate.balance.valFormatted}`}
 								secondaryText={`as of ${balanceUpdate.formattedStartDate}`}
 								rightIconButton={(
