@@ -208,6 +208,10 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 		this.transactionPartials.push(new ScheduledTransactionPartial());
 	}
 
+	@action public removePartial(id: number) {
+		(this.transactionPartials as any).replace(this.transactionPartials.filter((tp) => tp.id !== id));
+	}
+
 	public createScheduledTransactions() {
 		return this.transactionPartials.map((transaction) => {
 			return ScheduledTransaction.deserialize(this.serialize(transaction));

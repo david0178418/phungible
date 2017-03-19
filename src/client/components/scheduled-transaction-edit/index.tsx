@@ -35,13 +35,15 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		const selectedTowardAccountId = scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id || null;
 		const selectedFromAccountId = scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id || null;
 
+		// TODO Simplify this to always use the facade
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
 					{isFacade && <NameAmountPartial
 						transactionPartials={(scheduledTransaction as ScheduledTransactionFacade).transactionPartials}
-						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
 						onAddEntry={() => (scheduledTransaction as ScheduledTransactionFacade).addPartial()}
+						onRemoveEntry={(id) => (scheduledTransaction as ScheduledTransactionFacade).removePartial(id)}
+						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
 					/> || (
 						<span>
 							<TextField
