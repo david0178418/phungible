@@ -168,6 +168,15 @@ class ScheduledTransaction {
 	}
 };
 
+class ScheduledTransactionPartial {
+	@observable public name = '';
+	public amount: Money;
+
+	constructor() {
+		this.amount = new Money();
+	}
+}
+
 export
 class ScheduledTransactionFacade extends ScheduledTransaction {
 	@observable public transactionFacades: Array<{ name: string, amount: Money}>;
@@ -192,19 +201,18 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	public addTransaction() {
-		this.transactionFacades.push({
-			amount: new Money(),
-			name: '',
-		});
+		this.transactionFacades.push(new ScheduledTransactionPartial());
 	}
 
 	public createScheduledTransactions() {
 		return this.transactionFacades.map((transaction) => {
-			const props = Object.assign({
-				amount: transaction.amount,
-				name: transaction.name,
-			}, this) as ScheduledTransaction;
-			return ScheduledTransaction.deserialize(props);
+			return ScheduledTransaction.deserialize(this.serialize(transaction));
+		});
+	}
+	public serialize(transaction: ScheduledTransactionPartial) {
+		return Object.assign({}, serialize(this), {
+			amount: transaction.amount,
+			name: transaction.name,
 		});
 	}
 }

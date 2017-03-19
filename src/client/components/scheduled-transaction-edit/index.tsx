@@ -37,8 +37,8 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
-					{isFacade && (scheduledTransaction as ScheduledTransactionFacade).transactionFacades.map((transaction) => (
-						<span key={transaction.name}>
+					{isFacade && (scheduledTransaction as ScheduledTransactionFacade).transactionFacades.map((transaction, index) => (
+						<span key={index}>
 							<TextField
 								fullWidth
 								floatingLabelText="Transaction Name"
@@ -141,7 +141,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	@action private handleUpdateDescription(newDescription: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.description = newDescription;
 	}
-	@action private handleUpdateName(newName: string, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateName(newName: string, scheduledTransaction: {name: string}) {
 		scheduledTransaction.name = newName;
 	}
 	@action private handleUpdateStartDate(newDate: Date, scheduledTransaction: ScheduledTransaction) {
