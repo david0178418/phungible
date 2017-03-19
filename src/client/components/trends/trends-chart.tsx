@@ -14,7 +14,7 @@ import {
 import Money from '../../shared/utils/money';
 
 const BREAK_SIZE = 6;
-const DASH_SIZE = 3;
+const DASH_SIZE = 6;
 const LineColors = [
 	'#e41a1c',
 	'#377eb8',
@@ -94,6 +94,7 @@ class TrendsChart extends Component<Props, State> {
 									onAnimationEnd={onAnimationEnd}
 									stroke={color}
 									strokeDasharray={isProjection ? `${DASH_SIZE} ${BREAK_SIZE}` : ''}
+									strokeWidth="3"
 								/>
 							);
 						})}
