@@ -13,6 +13,7 @@ import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../
 import {TransactionType} from '../../shared/stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
+import NameAmountPartial from './name-amount-partial';
 import RepeatField from './repeat-field';
 
 type Props = {
@@ -37,18 +38,11 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
-					{isFacade && (scheduledTransaction as ScheduledTransactionFacade).transactionFacades.map((transaction, index) => (
-						<span key={index}>
-							<TextField
-								fullWidth
-								floatingLabelText="Transaction Name"
-								style={{width: 200}}
-								value={transaction.name}
-								onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
-							/>
-							<MoneyEdit money={transaction.amount} />
-						</span>
-					)) || !isFacade && (
+					{isFacade && <NameAmountPartial
+						transactionPartials={(scheduledTransaction as ScheduledTransactionFacade).transactionPartials}
+						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
+						onAddEntry={() => (scheduledTransaction as ScheduledTransactionFacade).addPartial()}
+					/> || (
 						<span>
 							<TextField
 								fullWidth

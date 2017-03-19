@@ -168,23 +168,27 @@ class ScheduledTransaction {
 	}
 };
 
+export
 class ScheduledTransactionPartial {
+	public static nextId = 1;
+	public id: number;
 	@observable public name = '';
 	public amount: Money;
 
 	constructor() {
+		this.id = ScheduledTransactionPartial.nextId++;
 		this.amount = new Money();
 	}
 }
 
 export
 class ScheduledTransactionFacade extends ScheduledTransaction {
-	@observable public transactionFacades: Array<{ name: string, amount: Money}>;
+	@observable public transactionPartials: ScheduledTransactionPartial[];
 
 	constructor() {
 		super();
-		this.transactionFacades = [];
-		this.addTransaction();
+		this.transactionPartials = [];
+		this.addPartial();
 	}
 
 	@computed get isValid() {
@@ -197,15 +201,15 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	public transactionsPopulated() {
-		return this.transactionFacades.every((transaction) => !!transaction.name.trim());
+		return this.transactionPartials.every((transaction) => !!transaction.name.trim());
 	}
 
-	public addTransaction() {
-		this.transactionFacades.push(new ScheduledTransactionPartial());
+	@action public addPartial() {
+		this.transactionPartials.push(new ScheduledTransactionPartial());
 	}
 
 	public createScheduledTransactions() {
-		return this.transactionFacades.map((transaction) => {
+		return this.transactionPartials.map((transaction) => {
 			return ScheduledTransaction.deserialize(this.serialize(transaction));
 		});
 	}
