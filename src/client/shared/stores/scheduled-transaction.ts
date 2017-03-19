@@ -124,7 +124,7 @@ class ScheduledTransaction {
 		(this._repeatValues as any).replace(this._repeatValues.sort((a, b) => a - b));
 	};
 	@action public removeRepeatValue(removeVal: number) {
-		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal === currentVal));
+		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal !== currentVal));
 	};
 	public affectsAccount(accountId: number) {
 		return (
