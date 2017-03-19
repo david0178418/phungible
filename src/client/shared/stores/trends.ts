@@ -118,7 +118,10 @@ class TrendsStore {
 					fromDate.isSameOrBefore(today, 'day') &&
 					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
-					accountBalances['Total'] = accountBalances['Total'] || 0;
+					if(accountBalances['Total'] === undefined) {
+						accountBalances['Total'] = 0;
+					}
+
 					balance = account.applyTransactions(this.transactions, fromDate.toDate());
 
 					if(balance) {
@@ -129,9 +132,11 @@ class TrendsStore {
 
 				if(
 					fromDate.isSameOrAfter(today, 'day') &&
-					fromDate.isAfter(account.firstBalanceUpdate.date)
+					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
-					accountBalances['Total (projection)'] = accountBalances['Total (projection)'] || 0;
+					if(accountBalances['Total (projection)'] === undefined) {
+						accountBalances['Total (projection)'] = accountBalances['Total'] || 0;
+					}
 
 					if(fromDate.isSame(today, 'day')) {
 						balance = account.applyTransactions(this.transactions, fromDate.toDate());
