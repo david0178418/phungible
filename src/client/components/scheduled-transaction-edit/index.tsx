@@ -9,7 +9,7 @@ import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
 import Account from '../../shared/stores/account';
-import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
@@ -17,7 +17,7 @@ import RepeatField from './repeat-field';
 
 type Props = {
 	accounts: Account[];
-	scheduledTransaction: ScheduledTransaction;
+	scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
 	onSubmit(): void;
 };
 
@@ -30,21 +30,36 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 
 	public render() {
 		const {accounts, scheduledTransaction, onSubmit} = this.props;
+		const isFacade = scheduledTransaction instanceof ScheduledTransactionFacade;
 		const selectedTowardAccountId = scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id || null;
 		const selectedFromAccountId = scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id || null;
 
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
-					<TextField
-						fullWidth
-						floatingLabelText="Transaction Name"
-						value={scheduledTransaction.name}
-						onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
-					/>
-				</div>
-				<div>
-					<MoneyEdit money={scheduledTransaction.amount} />
+					{isFacade && (scheduledTransaction as ScheduledTransactionFacade).transactionFacades.map((transaction) => (
+						<span key={transaction.name}>
+							<TextField
+								fullWidth
+								floatingLabelText="Transaction Name"
+								style={{width: 200}}
+								value={transaction.name}
+								onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
+							/>
+							<MoneyEdit money={transaction.amount} />
+						</span>
+					)) || !isFacade && (
+						<span>
+							<TextField
+								fullWidth
+								floatingLabelText="Transaction Name"
+								style={{width: 200}}
+								value={scheduledTransaction.name}
+								onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
+							/>
+							<MoneyEdit money={scheduledTransaction.amount} />
+						</span>
+					)}
 				</div>
 				<div>
 					<SelectField

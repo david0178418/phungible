@@ -168,6 +168,47 @@ class ScheduledTransaction {
 	}
 };
 
+export
+class ScheduledTransactionFacade extends ScheduledTransaction {
+	@observable public transactionFacades: Array<{ name: string, amount: Money}>;
+
+	constructor() {
+		super();
+		this.transactionFacades = [];
+		this.addTransaction();
+	}
+
+	@computed get isValid() {
+		const {Expense, Income} = TransactionType;
+
+		return !!(this.transactionsPopulated() && this._repeatValues.length && (
+			this.type === Expense && this.fromAccount ||
+			this.type === Income && this.towardAccount
+		));
+	}
+
+	public transactionsPopulated() {
+		return this.transactionFacades.every((transaction) => !!transaction.name.trim());
+	}
+
+	public addTransaction() {
+		this.transactionFacades.push({
+			amount: new Money(),
+			name: '',
+		});
+	}
+
+	public createScheduledTransactions() {
+		return this.transactionFacades.map((transaction) => {
+			const props = Object.assign({
+				amount: transaction.amount,
+				name: transaction.name,
+			}, this) as ScheduledTransaction;
+			return ScheduledTransaction.deserialize(props);
+		});
+	}
+}
+
 // Moved to resolve circular dependency issue.
 import RecurTypes from '../utils/recur-types';
 import Transaction, {TransactionType} from './transaction';
