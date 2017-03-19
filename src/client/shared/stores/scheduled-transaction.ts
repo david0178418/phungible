@@ -168,6 +168,63 @@ class ScheduledTransaction {
 	}
 };
 
+export
+class ScheduledTransactionPartial {
+	public static nextId = 1;
+	public id: number;
+	@observable public name = '';
+	public amount: Money;
+
+	constructor() {
+		this.id = ScheduledTransactionPartial.nextId++;
+		this.amount = new Money();
+	}
+}
+
+export
+class ScheduledTransactionFacade extends ScheduledTransaction {
+	@observable public transactionPartials: ScheduledTransactionPartial[];
+
+	constructor() {
+		super();
+		this.transactionPartials = [];
+		this.addPartial();
+	}
+
+	@computed get isValid() {
+		const {Expense, Income} = TransactionType;
+
+		return !!(this.transactionsPopulated() && this._repeatValues.length && (
+			this.type === Expense && this.fromAccount ||
+			this.type === Income && this.towardAccount
+		));
+	}
+
+	public transactionsPopulated() {
+		return this.transactionPartials.every((transaction) => !!transaction.name.trim());
+	}
+
+	@action public addPartial() {
+		this.transactionPartials.push(new ScheduledTransactionPartial());
+	}
+
+	@action public removePartial(id: number) {
+		(this.transactionPartials as any).replace(this.transactionPartials.filter((tp) => tp.id !== id));
+	}
+
+	public createScheduledTransactions() {
+		return this.transactionPartials.map((transaction) => {
+			return ScheduledTransaction.deserialize(this.serialize(transaction));
+		});
+	}
+	public serialize(transaction: ScheduledTransactionPartial) {
+		return Object.assign({}, serialize(this), {
+			amount: transaction.amount,
+			name: transaction.name,
+		});
+	}
+}
+
 // Moved to resolve circular dependency issue.
 import RecurTypes from '../utils/recur-types';
 import Transaction, {TransactionType} from './transaction';

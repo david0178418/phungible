@@ -9,12 +9,12 @@ import * as React from 'react';
 import {withRouter} from 'react-router';
 
 import AppStore from '../../shared/stores/app';
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
 import Styles from '../../shared/styles';
 import ScheduledTransactionEdit from '../scheduled-transaction-edit';
 
 class CreateScheduledTransactionStore {
-	public scheduledTransaction: ScheduledTransaction;
+	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
 	private appStore: AppStore;
 
 	constructor(appStore: AppStore, scheduledTransactionId?: number) {
@@ -23,14 +23,21 @@ class CreateScheduledTransactionStore {
 		if(scheduledTransactionId) {
 			this.scheduledTransaction = appStore.findScheduledTransaction(scheduledTransactionId);
 		} else {
-			this.scheduledTransaction = new ScheduledTransaction();
+			this.scheduledTransaction = new ScheduledTransactionFacade();
 		}
 	}
 
-	public saveScheduledTransaction() {
+	public saveScheduledTransactions() {
 		if(this.scheduledTransaction.isValid) {
-			this.appStore.saveScheduledTransaction(this.scheduledTransaction);
-			this.scheduledTransaction = new ScheduledTransaction();
+			if(this.scheduledTransaction instanceof ScheduledTransactionFacade) {
+				this.scheduledTransaction.createScheduledTransactions().map((transaction) => {
+					this.appStore.saveScheduledTransaction(transaction);
+					this.scheduledTransaction = new ScheduledTransactionFacade();
+				});
+			} else {
+				this.appStore.saveScheduledTransaction(this.scheduledTransaction);
+				this.scheduledTransaction = new ScheduledTransactionFacade();
+			}
 			return true;
 		} else {
 			return false;
@@ -41,6 +48,7 @@ class CreateScheduledTransactionStore {
 		return this.appStore.accounts;
 	}
 }
+
 type Props = {
 	store: AppStore;
 	params: {
@@ -61,7 +69,8 @@ class CreateScheduledTransaction extends Component<Props, any> {
 		const {
 			scheduledTransaction,
 		} = this.store;
-		const action = scheduledTransaction.id ? 'Edit' : 'Create';
+		const transactionsValid = this.store.scheduledTransaction.isValid;
+		const action = (scheduledTransaction instanceof ScheduledTransaction && scheduledTransaction.id) ? 'Edit' : 'Create';
 
 		return (
 			<div>
@@ -77,7 +86,7 @@ class CreateScheduledTransaction extends Component<Props, any> {
 					onSubmit={() => this.handleSaveScheduledTransaction()}
 				/>
 				<FloatingActionButton
-					disabled={!scheduledTransaction.isValid}
+					disabled={!transactionsValid}
 					onTouchTap={() => this.handleSaveScheduledTransaction()}
 					style={Styles.floatingActionButton}
 					zDepth={2}
@@ -90,7 +99,7 @@ class CreateScheduledTransaction extends Component<Props, any> {
 
 	private handleSaveScheduledTransaction() {
 		setTimeout(() => {
-			this.store.saveScheduledTransaction();
+			this.store.saveScheduledTransactions();
 			(this.props as any).router.push('/scheduled-transactions');
 		}, 100);
 	}
