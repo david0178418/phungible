@@ -64,7 +64,7 @@ class TrendsChart extends Component<Props, State> {
 		return (
 			<div style={{
 				height: 400,
-				margin: '10px 0 0 -50px', // Style hack to make better use of mobile space
+				margin: '10px 0 0 -15px', // Style hack to make better use of mobile space
 			}}>
 				<ResponsiveContainer width="100%" height="100%">
 					<LineChart data={data}>
