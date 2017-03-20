@@ -60,7 +60,31 @@ class AppStore {
 			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
 		});
 	}
+	@action public removeAccountFromScheduledTransactions(account: Account) {
+		this.scheduledTransactions.forEach((scheduledTransaction) => {
+			if(scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id === account.id) {
+				scheduledTransaction.fromAccount = null;
+			}
+
+			if(scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id === account.id) {
+				scheduledTransaction.towardAccount = null;
+			}
+		});
+	}
+	@action public removeAccountFromTransactions(account: Account) {
+		this.transactions.forEach((transaction) => {
+			if(transaction.fromAccount && transaction.fromAccount.id === account.id) {
+				transaction.fromAccount = null;
+			}
+
+			if(transaction.towardAccount && transaction.towardAccount.id === account.id) {
+				transaction.towardAccount = null;
+			}
+		});
+	}
 	@action public removeAccount(account: Account) {
+		this.removeAccountFromTransactions(account);
+		this.removeAccountFromScheduledTransactions(account);
 		(this.accounts as any).remove(account);
 		this.save();
 	}
