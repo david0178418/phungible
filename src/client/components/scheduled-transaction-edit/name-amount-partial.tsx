@@ -25,9 +25,9 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 
 	public render() {
 		return (
-			<span>
+			<div>
 				{(this.props.transactionPartials.map((schedTranspartial) => (
-					<span key={schedTranspartial.id}>
+					<div key={schedTranspartial.id}>
 						<TextField
 							floatingLabelText="Transaction Name"
 							style={{width: 150}}
@@ -40,14 +40,14 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						>
 							<ActionDelete/>
 						</IconButton>}
-					</span>
+					</div>
 				)))}
 				<FlatButton
 					primary={true}
 					onTouchTap={() => this.props.onAddEntry()}
 					label="Add another budget entry"
 				/>
-			</span>
+			</div>
 		);
 	}
 
