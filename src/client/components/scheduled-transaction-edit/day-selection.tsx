@@ -59,7 +59,6 @@ class DaySelection extends Component<Props, any> {
 						</GridTile>
 					))}
 				</GridList>
-				<small><em>Note: If the selected date doesn't exist in a given month, the last day will be used.</em></small>
 			</div>
 		);
 	}

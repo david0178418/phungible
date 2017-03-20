@@ -19,6 +19,13 @@ class App extends Component<any, any> {
 		} else {
 			this.store = new AppStore();
 		}
+
+		this.store.runTransactionSinceLastUpdate();
+
+		// Check every 5 minutes.  Runs transactions when day rolls over
+		setTimeout(() => {
+			this.store.runTransactionSinceLastUpdate();
+		}, 1000 * 60 * 5);
 	}
 
 	public render() {

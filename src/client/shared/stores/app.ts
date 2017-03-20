@@ -102,7 +102,7 @@ class AppStore {
 			newScheduledTransaction.id = Date.now();
 			this.scheduledTransactions.push(newScheduledTransaction);
 
-			if(moment().diff(newScheduledTransaction.startDate, 'days') > 0) {
+			if(moment().isSameOrBefore(newScheduledTransaction.startDate, 'days')) {
 				if(newScheduledTransaction.repeats) {
 					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString);
 				} else {
