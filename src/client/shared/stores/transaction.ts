@@ -63,6 +63,10 @@ class Transaction {
 		return moment(this._dateString, 'MM/DD/YYYY').toDate();
 	}
 	@computed get isValid() {
-		return !!(this.name && this.amount.val && this.fromAccount);
+		const {Expense, Income} = TransactionType;
+		return !!(this.name && this.amount.val && (
+			this.type === Expense && this.fromAccount ||
+			this.type === Income && this.towardAccount
+		));
 	}
 }
