@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/accounting": "^0.3.31",
     "@types/classnames": "^0.0.32",
-    "@types/hapi": "^13.0.37",
+    "@types/hapi": "^16.0.0",
     "@types/inert": "^4.0.0",
     "@types/material-ui": "^0.16.51",
     "@types/react": "^15.0.12",
@@ -57,7 +57,7 @@
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",
     "react-tap-event-plugin": "^2.0.1",
-    "recharts": "^0.20.8",
+    "recharts": "^0.21.2",
     "serializr": "^1.1.9"
   }
 }
