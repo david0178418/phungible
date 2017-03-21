@@ -47,9 +47,13 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 					/> || (
 						<span>
 							<TextField
-								fullWidth
 								floatingLabelText="Transaction Name"
-								style={{width: 200}}
+								style={{
+									marginRight: 15,
+								}}
+								textareaStyle={{
+									width: 200,
+								}}
 								value={scheduledTransaction.name}
 								onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
 							/>

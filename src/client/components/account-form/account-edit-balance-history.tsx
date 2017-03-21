@@ -1,10 +1,11 @@
 import DatePicker from 'material-ui/DatePicker';
+import Divider from 'material-ui/Divider';
+import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Subheader from 'material-ui/Subheader';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
@@ -57,22 +58,31 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 			<div>
 				<Subheader>Balance History</Subheader>
 				<div>
-					<MoneyEdit money={newBalanceUpdate.balance} />
 					<DatePicker
 						autoOk
-						style={{display: 'inline-block'}}
+						style={{
+							display: 'inline-block',
+							marginRight: 15,
+						}}
+						textFieldStyle={{
+							width: 150,
+						}}
 						floatingLabelText="As of"
 						locale="en-US"
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}
 					/>
-					<IconButton
-						onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
-					>
-						<ContentAdd />
-					</IconButton>
+					<div style={{display: 'inline-block'}}>
+						<MoneyEdit money={newBalanceUpdate.balance} />
+						<FlatButton
+							label="Add Balance"
+							onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
+							primary
+						/>
+					</div>
 				</div>
 				<List>
+					<Divider/>
 					{account.balanceUpdateHistory.map((balanceUpdate) => {
 						return (
 							<ListItem
@@ -89,6 +99,11 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							/>
 						);
 					})}
+					{!account.balanceUpdateHistory.length && (
+						<ListItem
+							primaryText="No account balance history"
+						/>
+					)}
 				</List>
 			</div>
 		);

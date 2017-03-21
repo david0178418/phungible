@@ -21,11 +21,14 @@ class MoneyEdit extends Component<Props, any> {
 		const {money} = this.props;
 		return (
 			<span>
-				$
 				<TextField
 					inputStyle={{ textAlign: 'right'}}
 					name="dollars"
-					style={{width: 75}}
+					floatingLabelFixed
+					floatingLabelText="$"
+					style={{
+						width: 75,
+					}}
 					type="number"
 					value={money.dollars}
 					onChange={((ev: any, value: any) => this.handleUpdateDollarAmount(value))}
@@ -34,6 +37,8 @@ class MoneyEdit extends Component<Props, any> {
 				.
 				<TextField
 					name="cents"
+					floatingLabelFixed
+					floatingLabelText=" "
 					style={{width: 40}}
 					type="number"
 					value={money.cents}
