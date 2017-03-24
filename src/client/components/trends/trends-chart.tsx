@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 
 import Money from '../../shared/utils/money';
+import CustomLegend from './custom-legend';
 
 const BREAK_SIZE = 6;
 const DASH_SIZE = 6;
@@ -77,8 +78,8 @@ class TrendsChart extends Component<Props, State> {
 							animationDuration={100}
 							formatter={(val: number) => Money.formatMoney(val / 100)}
 						/>
-						<CartesianGrid strokeDasharray="3 3"/>
-						<Legend />
+						<CartesianGrid strokeDasharray="3 3" />
+						<Legend content={<CustomLegend />} />
 						{trendNames.map((name, index) => {
 							const colorKey = name.split(' (projection)')[0];
 							const color = this.state.assignedColors[colorKey];
