@@ -8,6 +8,7 @@ import Money from '../../shared/utils/money';
 
 type Props = {
 	money: Money;
+	style?: object;
 };
 
 @observer
@@ -18,9 +19,9 @@ class MoneyEdit extends Component<Props, any> {
 	}
 
 	public render() {
-		const {money} = this.props;
+		const {money, style} = this.props;
 		return (
-			<span>
+			<div style={style}>
 				<TextField
 					inputStyle={{ textAlign: 'right'}}
 					name="dollars"
@@ -45,7 +46,7 @@ class MoneyEdit extends Component<Props, any> {
 					onChange={((ev: any, value: string) => this.handleUpdateCentsAmount(value))}
 					onFocus={(e) => (e.target as any).select()}
 				/>
-			</span>
+			</div>
 		);
 	}
 

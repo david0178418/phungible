@@ -42,7 +42,9 @@ class Account {
 	public addBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		this.balanceUpdateHistory.push(balanceUpdate);
 		// Keep sorted with oldest balace at 0
-		this.balanceUpdateHistory.sort((a, b) => a.date.getTime() - b.date.getTime());
+		(this.balanceUpdateHistory as any).replace(
+			this.balanceUpdateHistory.sort((a, b) => b.date.getTime() - a.date.getTime()),
+		);
 	}
 	public lastBalanceUpdateAsOf(date: Date) {
 		const dateMoment = moment(date);

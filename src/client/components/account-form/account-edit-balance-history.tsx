@@ -1,5 +1,4 @@
 import DatePicker from 'material-ui/DatePicker';
-import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
@@ -56,8 +55,9 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 		} = this.store;
 		return (
 			<div>
-				<Subheader>Balance History</Subheader>
-				<div>
+				<div style={{
+					textAlign: 'right',
+				}}>
 					<DatePicker
 						autoOk
 						style={{
@@ -72,17 +72,23 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}
 					/>
-					<div style={{display: 'inline-block'}}>
-						<MoneyEdit money={newBalanceUpdate.balance} />
-						<FlatButton
-							label="Add Balance"
-							onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
-							primary
-						/>
-					</div>
+					<MoneyEdit
+						money={newBalanceUpdate.balance}
+						style={{
+							display: 'inline-block',
+						}}
+					/>
+					<FlatButton
+						label="Add Balance"
+						style={{
+							marginLeft: 10,
+						}}
+						onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
+						primary
+					/>
 				</div>
 				<List>
-					<Divider/>
+					<Subheader>Account Balance History</Subheader>
 					{account.balanceUpdateHistory.map((balanceUpdate) => {
 						return (
 							<ListItem
