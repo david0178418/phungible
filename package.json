@@ -37,7 +37,7 @@
     "gulp-webpack": "^1.5.0",
     "http-server": "^0.9.0",
     "source-map-loader": "^0.1.5",
-    "tslint": "^4.4.2",
+    "tslint": "^5.0.0",
     "typescript": "^2.2.1",
     "webpack": "^1.14.0"
   },
