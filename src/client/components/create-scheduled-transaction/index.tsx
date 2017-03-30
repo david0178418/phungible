@@ -6,7 +6,6 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {withRouter} from 'react-router';
 
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
@@ -51,18 +50,17 @@ class CreateScheduledTransactionStore {
 
 type Props = {
 	store: AppStore;
-	params: {
-		id: number;
-	};
+	id: number;
 };
 
 @observer
+export default
 class CreateScheduledTransaction extends Component<Props, any> {
 	private store: CreateScheduledTransactionStore;
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new CreateScheduledTransactionStore(props.store, +props.params.id);
+		this.store = new CreateScheduledTransactionStore(props.store, +props.id);
 	}
 
 	public render() {
@@ -76,7 +74,11 @@ class CreateScheduledTransaction extends Component<Props, any> {
 			<div>
 				<AppBar
 					className="app-title"
-					onLeftIconButtonTouchTap={() => (this.props as any).router.goBack()}
+					onLeftIconButtonTouchTap={() => {
+						// TODO FIX for React Router 4
+						// (this.props as any).router.goBack();
+						window.history.back();
+					}}
 					title={`${action} Budget Entry`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -100,9 +102,9 @@ class CreateScheduledTransaction extends Component<Props, any> {
 	private handleSaveScheduledTransaction() {
 		setTimeout(() => {
 			this.store.saveScheduledTransactions();
-			(this.props as any).router.push('/scheduled-transactions');
+			// TODO FIX to use React Router 4
+			// (this.props as any).router.push('/scheduled-transactions');
+			window.location.hash = '/scheduled-transactions';
 		}, 100);
 	}
 }
-
-export default withRouter(CreateScheduledTransaction);

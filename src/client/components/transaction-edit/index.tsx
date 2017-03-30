@@ -6,7 +6,6 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {withRouter} from 'react-router';
 
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
@@ -47,18 +46,17 @@ class TransactionEditStore {
 }
 type Props = {
 	store: AppStore;
-	params: {
-		id: number;
-	};
+	id: number;
 };
 
 @observer
+export default
 class TransactionEdit extends Component<Props, any> {
 	private store: TransactionEditStore;
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new TransactionEditStore(props.store, +props.params.id);
+		this.store = new TransactionEditStore(props.store, +props.id);
 	}
 
 	public render() {
@@ -72,7 +70,11 @@ class TransactionEdit extends Component<Props, any> {
 			<div>
 				<AppBar
 					className="app-title"
-					onLeftIconButtonTouchTap={() => (this.props as any).router.goBack()}
+					onLeftIconButtonTouchTap={() => {
+						// TODO FIX for React Router 4
+						// (this.props as any).router.goBack();
+						window.history.back();
+					}}
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -96,9 +98,9 @@ class TransactionEdit extends Component<Props, any> {
 	private handleSaveTransaction() {
 		setTimeout(() => {
 			this.store.saveTransaction();
-			(this.props as any).router.push('/transactions');
+			// TODO FIX to use React Router 4
+			// (this.props as any).router.push('/transactions');
+			window.location.hash = '/transactions';
 		}, 100);
 	}
 }
-
-export default withRouter(TransactionEdit);

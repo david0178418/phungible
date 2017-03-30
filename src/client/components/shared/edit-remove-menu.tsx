@@ -5,7 +5,7 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MoreHorizontal from 'material-ui/svg-icons/navigation/more-horiz';
 import * as React from 'react';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 // Explicitly called as a function vs TSX due to rendering issue in the latter
 export default

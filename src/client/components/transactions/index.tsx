@@ -6,7 +6,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';

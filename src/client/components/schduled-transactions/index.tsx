@@ -9,7 +9,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {Link, withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
@@ -86,6 +86,7 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 });
 
 @observer
+export default
 class ScheduledTransactions extends Component<Props, any> {
 	private store: ScheduledTransactionsStore;
 
@@ -125,5 +126,3 @@ class ScheduledTransactions extends Component<Props, any> {
 		);
 	}
 }
-
-export default withRouter(ScheduledTransactions);

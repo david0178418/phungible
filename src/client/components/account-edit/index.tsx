@@ -6,7 +6,6 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {withRouter} from 'react-router';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
@@ -43,18 +42,17 @@ class AccountEditStore {
 }
 type Props = {
 	store: AppStore;
-	params: {
-		id: number;
-	};
+	id: number;
 };
 
 @observer
+export default
 class AccountEdit extends Component<Props, any> {
 	private store: AccountEditStore;
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new AccountEditStore(props.store, +props.params.id);
+		this.store = new AccountEditStore(props.store, +props.id);
 	}
 
 	public render() {
@@ -67,7 +65,11 @@ class AccountEdit extends Component<Props, any> {
 			<div>
 				<AppBar
 					className="app-title"
-					onLeftIconButtonTouchTap={() => (this.props as any).router.goBack()}
+					onLeftIconButtonTouchTap={() => {
+						// TODO FIX for React Router 4
+						// (this.props as any).router.goBack();
+						window.history.back();
+					}}
 					title={`${action} Account`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -90,9 +92,9 @@ class AccountEdit extends Component<Props, any> {
 	private handleSaveAccount() {
 		setTimeout(() => {
 			this.store.saveAccount();
-			(this.props as any).router.push('/accounts');
+			// TODO FIX to use React Router 4
+			// (this.props as any).router.push('/accounts');
+			window.location.hash = '/accounts';
 		}, 100);
 	}
 }
-
-export default withRouter(AccountEdit);

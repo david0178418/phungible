@@ -7,7 +7,7 @@ import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balan
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 import AppStore from '../shared/stores/app';
 

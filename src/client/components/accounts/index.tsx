@@ -8,7 +8,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
