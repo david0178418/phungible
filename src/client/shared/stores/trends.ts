@@ -26,7 +26,7 @@ class TrendsStore {
 	constructor(params?: Partial<TrendsStore>) {
 		this.fromDate = moment().subtract(DAY_OFFSET, 'days').startOf('month').toDate();
 		this.toDate = moment().subtract(DAY_OFFSET, 'days').endOf('month').toDate();
-		this.selectedTrends = ['Total', 'Total (projection)'];
+		this.selectedTrends = ['Total'];
 		(window as any).trendsStore = this; // TODO remove debug
 
 		if(params) {
@@ -88,7 +88,6 @@ class TrendsStore {
 
 	public selectTrend(trend: string) {
 		this.selectedTrends.push(trend);
-		this.selectedTrends.push(`${trend} (projection)`);
 	}
 
 	public trendIsSelected(trend: string) {
@@ -134,8 +133,8 @@ class TrendsStore {
 					fromDate.isSameOrAfter(today, 'day') &&
 					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
 				) {
-					if(accountBalances['Total (projection)'] === undefined) {
-						accountBalances['Total (projection)'] = accountBalances['Total'] || 0;
+					if(accountBalances['Total'] === undefined) {
+						accountBalances['Total'] = 0;
 					}
 
 					if(fromDate.isSame(today, 'day')) {
@@ -143,8 +142,8 @@ class TrendsStore {
 					} else {
 						let prevBalance = 0;
 
-						if(prevBalances[`${account.name} (projection)`]) {
-							prevBalance = prevBalances[`${account.name} (projection)`];
+						if(prevBalances[`${account.name}`]) {
+							prevBalance = prevBalances[`${account.name}`];
 						} else if(prevBalances[`${account.name}`]) {
 							prevBalance = prevBalances[`${account.name}`];
 						}
@@ -152,8 +151,8 @@ class TrendsStore {
 						balance = change + prevBalance;
 					}
 
-					accountBalances[`${account.name} (projection)`] = balance;
-					accountBalances['Total (projection)'] += balance;
+					accountBalances[`${account.name}`] = balance;
+					accountBalances['Total'] += balance;
 				}
 			});
 
