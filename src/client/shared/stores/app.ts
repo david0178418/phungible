@@ -162,4 +162,4 @@ class AppStore {
 			return a.date.getTime() - b.date.getTime();
 		}));
 	}
-};
+}
