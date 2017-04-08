@@ -6,7 +6,7 @@ export
 enum Unit {
 	Dollars,
 	Cents,
-};
+}
 
 export default
 class Money {
@@ -22,12 +22,20 @@ class Money {
 	@serializable
 	@observable private totalValCents: number;
 
+	@computed get cents() {
+		return Money.roundNearest(this.totalValCents % 100);
+	}
+
+	set cents(val) {
+		this.totalValCents = this.dollars * 100 + Money.roundNearest(val);
+	}
+
 	@computed get dollars() {
 		return (this.totalValCents / 100) | 0;
 	}
 
-	@computed get cents() {
-		return Money.roundNearest(this.totalValCents % 100);
+	set dollars(val) {
+		this.totalValCents = (val * 100) + this.cents;
 	}
 
 	@computed get val() {
@@ -40,14 +48,6 @@ class Money {
 
 	@computed get valFormatted() {
 		return Money.formatMoney(this.val);
-	}
-
-	set cents(val) {
-		this.totalValCents = this.dollars * 100 + Money.roundNearest(val);
-	}
-
-	set dollars(val) {
-		this.totalValCents = (val * 100) + this.cents;
 	}
 
 	constructor(val?: number) {

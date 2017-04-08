@@ -3,27 +3,20 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
-import TrendsContent from './trends-content';
+import HomeContent from './home-content';
 
 type Props = {
 	store: AppStore;
 };
 
 export default
-class Trends extends Component<Props, any> {
+class Index extends Component<Props, any> {
 	public render() {
 		const {store} = this.props;
 		return (
 			<div>
-				<Navigation
-					title="Trends"
-					store={store}
-				/>
-				<TrendsContent
-					accounts={store.accounts}
-					transactions={store.transactions}
-					scheduledTransactions={store.scheduledTransactions}
-				/>
+				<Navigation title="Trends" store={store} />
+				<HomeContent store={store} />
 			</div>
 		);
 	}

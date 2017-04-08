@@ -7,10 +7,11 @@ import {getItem} from '../client/shared/storage';
 import AccountEdit from './components/account-edit';
 import Accounts from './components/accounts';
 import CreateScheduledTransaction from './components/create-scheduled-transaction';
-import Index from './components/index';
+import Home from './components/home';
 import ScheduledTransactions from './components/schduled-transactions';
 import TransactionEdit from './components/transaction-edit/';
 import Transaction from './components/transactions';
+import Trends from './components/trends';
 import Layout from './layout';
 import AppStore from './shared/stores/app';
 
@@ -50,7 +51,10 @@ class App extends Component<Props, any> {
 			<MuiThemeProvider>
 				<Layout>
 					<Route exact path="/" render={(props) => {
-						return <Index store={store}/>;
+						return <Home store={store}/>;
+					}} />
+					<Route path="/trends" render={(props) => {
+						return <Trends store={store}/>;
 					}} />
 					<Route path="/account/edit/:id?" render={(props) => {
 						return <AccountEdit store={store} id={props.match.params.id} />;

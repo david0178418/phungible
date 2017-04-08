@@ -11,7 +11,7 @@ export
 enum AccountType {
 	Debt,
 	Savings,
-};
+}
 
 export default
 class Account {

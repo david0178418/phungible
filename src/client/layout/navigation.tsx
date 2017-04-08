@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
+import HomeIcon from 'material-ui/svg-icons/action/home';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
@@ -86,6 +87,12 @@ class Navigation extends React.Component<Props, any> {
 				>
 					<MenuItem
 						containerElement={<Link to="/" />}
+						leftIcon={<HomeIcon />}
+					>
+						Home
+					</MenuItem>
+					<MenuItem
+						containerElement={<Link to="/trends" />}
 						leftIcon={<TrendingUpIcon />}
 					>
 						Trends

@@ -11,7 +11,7 @@ enum RepeatTypes {
 	Days,
 	Dates,
 	Interval,
-};
+}
 
 export
 enum RepeatDays {
@@ -22,7 +22,7 @@ enum RepeatDays {
 	Th,
 	Fr,
 	Sa,
-};
+}
 
 export
 enum RepeatUnits {
@@ -31,7 +31,7 @@ enum RepeatUnits {
 	Month,
 	Year,
 	None,
-};
+}
 
 export default
 class ScheduledTransaction {
@@ -122,10 +122,10 @@ class ScheduledTransaction {
 	@action public addRepeatValue(val: number) {
 		this._repeatValues.push(val);
 		(this._repeatValues as any).replace(this._repeatValues.sort((a, b) => a - b));
-	};
+	}
 	@action public removeRepeatValue(removeVal: number) {
 		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal !== currentVal));
-	};
+	}
 	public affectsAccount(accountId: number) {
 		return (
 			(this.fromAccount && this.fromAccount.id === accountId) ||
@@ -166,7 +166,7 @@ class ScheduledTransaction {
 			this.occuranceCountInRange(fromDate, toDate) *
 			(this.type === TransactionType.Income ? 1 : -1);
 	}
-};
+}
 
 export
 class ScheduledTransactionPartial {
