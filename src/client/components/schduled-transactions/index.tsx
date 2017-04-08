@@ -72,7 +72,7 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 				<ListItem
 					key={scheduledTransaction.id}
 					primaryText={`${scheduledTransaction.name}`}
-					secondaryText={`Current Balance: ${scheduledTransaction.amount.valFormatted}`}
+					secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
 					leftIcon={
 						scheduledTransaction.type === TransactionType.Income ?
 							<ActionTrendingUp color={Colors.Money} /> :
