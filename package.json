@@ -8,6 +8,7 @@
   "main": "src/server/index.js",
   "scripts": {
     "start": "gulp",
+    "clean": "rm -Rf build",
     "test": "npm run test:lint",
     "test:lint": "tslint --project tslint.json src/**/*.ts*",
     "build:dev": "webpack --config webpack.config.js",
