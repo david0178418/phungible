@@ -34,7 +34,13 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							value={schedTranspartial.name}
 							onChange={((ev: any, value: any) => this.props.onUpdateName(value, schedTranspartial)) as any}
 						/>
-						<MoneyEdit money={schedTranspartial.amount} />
+						{' '}
+						<MoneyEdit
+							style={{
+								display: 'inline-block',
+							}}
+							money={schedTranspartial.amount}
+						/>
 						{this.props.transactionPartials.length > 1 && <IconButton
 							onTouchTap={() => this.handleRemoveEntry(schedTranspartial.id)}
 						>

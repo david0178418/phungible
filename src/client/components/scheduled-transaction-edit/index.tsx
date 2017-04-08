@@ -57,7 +57,13 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 								value={scheduledTransaction.name}
 								onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
 							/>
-							<MoneyEdit money={scheduledTransaction.amount} />
+							{' '}
+							<MoneyEdit
+								style={{
+									display: 'inline-block',
+								}}
+								money={scheduledTransaction.amount}
+							/>
 						</span>
 					)}
 				</div>
