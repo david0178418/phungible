@@ -7,14 +7,14 @@
   },
   "main": "src/server/index.js",
   "scripts": {
-    "start": "gulp",
-    "clean": "rm -Rf build",
-    "test": "npm run test:lint",
-    "test:lint": "tslint --project tslint.json src/**/*.ts*",
     "build:dev": "webpack --config webpack.config.js",
     "build:prod": "gulp build:prod",
+    "clean": "rm -Rf build",
     "server:node": "node ./build/server/index.js",
-    "server:static": "http-server ./build/client/"
+    "server:static": "http-server ./build/client/",
+    "start": "gulp",
+    "test": "npm run test:lint",
+    "test:lint": "tslint --project tslint.json src/**/*.ts*"
   },
   "author": "David Granado",
   "license": "ISC",
