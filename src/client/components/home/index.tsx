@@ -15,7 +15,7 @@ class Index extends Component<Props, any> {
 		const {store} = this.props;
 		return (
 			<div>
-				<Navigation title="Trends" store={store} />
+				<Navigation title="Home" store={store} />
 				<HomeContent store={store} />
 			</div>
 		);
