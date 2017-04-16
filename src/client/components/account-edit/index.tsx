@@ -65,7 +65,6 @@ class AccountEdit extends Component<Props, any> {
 		return (
 			<div>
 				<AppBar
-					className="app-title"
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
 						// (this.props as any).router.goBack();
