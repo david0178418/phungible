@@ -50,18 +50,23 @@ class CreateScheduledTransactionStore {
 }
 
 type Props = {
-	store: AppStore;
 	id: number;
+};
+type Context = {
+	store: AppStore;
 };
 
 @observer
 export default
-class CreateScheduledTransaction extends Component<Props, any> {
+class CreateScheduledTransaction extends Component<Props, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
 	private store: CreateScheduledTransactionStore;
 
-	constructor(props: Props) {
-		super(props);
-		this.store = new CreateScheduledTransactionStore(props.store, +props.id);
+	public componentWillMount() {
+		this.store = new CreateScheduledTransactionStore(this.context.store, +this.props.id);
 	}
 
 	public render() {

@@ -6,14 +6,19 @@ import AppStore from '../../shared/stores/app';
 import ContentArea from '../shared/content-area';
 import TrendsContent from './trends-content';
 
-type Props = {
+type Context = {
 	store: AppStore;
 };
 
 export default
-class Trends extends Component<Props, any> {
+class Trends extends Component<{}, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
+
 	public render() {
-		const {store} = this.props;
+		const {store} = this.context;
 		return (
 			<div>
 				<Navigation

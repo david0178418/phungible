@@ -21,7 +21,8 @@ import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
-type Props = {
+type Props = {};
+type Context = {
 	store: AppStore;
 };
 type ListProps = {
@@ -88,17 +89,19 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 
 @observer
 export default
-class ScheduledTransactions extends Component<Props, any> {
+class ScheduledTransactions extends Component<Props, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
 	private store: ScheduledTransactionsStore;
 
-	constructor(props: Props) {
-		super(props);
-
-		this.store = new ScheduledTransactionsStore(props.store);
+	public componentWillMount() {
+		this.store = new ScheduledTransactionsStore(this.context.store);
 	}
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this.props.store.removeScheduledTransaction(scheduledTransaction);
+		this.context.store.removeScheduledTransaction(scheduledTransaction);
 	}
 
 	public render() {
@@ -114,7 +117,8 @@ class ScheduledTransactions extends Component<Props, any> {
 					<ScheduledTransactionList
 						scheduledTransactions={store.scheduledTransactions}
 						onRemove={
-							(scheduledTransaction: ScheduledTransaction) => this.props.store.removeScheduledTransaction(scheduledTransaction)
+							(scheduledTransaction: ScheduledTransaction) =>
+								this.context.store.removeScheduledTransaction(scheduledTransaction)
 						}
 					/>
 					<FloatingActionButton

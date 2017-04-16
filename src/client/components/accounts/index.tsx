@@ -18,7 +18,8 @@ import Styles from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
-type Props = {
+type Props = {};
+type Context = {
 	store: AppStore;
 };
 type ListProps = {
@@ -88,17 +89,23 @@ const AccountsList = observer(function({accounts, onRemove}: ListProps) {
 
 @observer
 export default
-class Accounts extends Component<any, any> {
+class Accounts extends Component<Props, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
 	private store: AcountsStore;
 
 	constructor(props: Props) {
 		super(props);
+	}
 
-		this.store = new AcountsStore(props.store);
+	public componentWillMount() {
+		this.store = new AcountsStore(this.context.store);
 	}
 
 	public removeAccount(account: Account) {
-		this.props.store.removeAccount(account);
+		this.context.store.removeAccount(account);
 	}
 
 	public render() {
@@ -113,7 +120,7 @@ class Accounts extends Component<any, any> {
 				<ContentArea>
 					<AccountsList
 						accounts={store.accounts}
-						onRemove={(account: Account) => this.props.store.removeAccount(account)}
+						onRemove={(account: Account) => this.context.store.removeAccount(account)}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/account/edit" />}

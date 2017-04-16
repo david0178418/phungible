@@ -46,18 +46,23 @@ class TransactionEditStore {
 	}
 }
 type Props = {
-	store: AppStore;
 	id: number;
+};
+type Context = {
+	store: AppStore;
 };
 
 @observer
 export default
-class TransactionEdit extends Component<Props, any> {
+class TransactionEdit extends Component<Props, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
 	private store: TransactionEditStore;
 
-	constructor(props: Props) {
-		super(props);
-		this.store = new TransactionEditStore(props.store, +props.id);
+	public componentWillMount() {
+		this.store = new TransactionEditStore(this.context.store, +this.props.id);
 	}
 
 	public render() {

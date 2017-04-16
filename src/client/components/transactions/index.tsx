@@ -15,7 +15,8 @@ import Styles from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
-type Props = {
+type Props = {};
+type Context = {
 	store: AppStore;
 };
 type ListProps = {
@@ -75,12 +76,15 @@ const TransactionsList = observer(function({transactions, onRemove}: ListProps) 
 });
 
 export default
-class Transactions extends Component<Props, any> {
+class Transactions extends Component<Props, {}> {
+	public static contextTypes = {
+		store: () => false,
+	};
+	public context: Context;
 	private store: TransactionsStore;
 
-	constructor(props: Props) {
-		super(props);
-		this.store = new TransactionsStore(props.store);
+	public componentWillMount() {
+		this.store = new TransactionsStore(this.context.store);
 	}
 
 	public render() {
@@ -94,7 +98,7 @@ class Transactions extends Component<Props, any> {
 				<ContentArea>
 					<TransactionsList
 						transactions={store.transactions}
-						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.context.store.removeTransaction(transaction)}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/transaction/edit" />}
