@@ -10,6 +10,7 @@ import * as React from 'react';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
+import ContentArea from '../shared/content-area';
 import TransactionForm from '../transaction-form';
 
 class TransactionEditStore {
@@ -78,19 +79,21 @@ class TransactionEdit extends Component<Props, any> {
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
-				<TransactionForm
-					accounts={accounts}
-					transaction={transaction}
-					onSubmit={() => this.handleSaveTransaction()}
-				/>
-				<FloatingActionButton
-					disabled={!transaction.isValid}
-					onTouchTap={() => this.handleSaveTransaction()}
-					style={Styles.floatingActionButton}
-					zDepth={2}
-				>
-					<ActionDone />
-				</FloatingActionButton>
+				<ContentArea>
+					<TransactionForm
+						accounts={accounts}
+						transaction={transaction}
+						onSubmit={() => this.handleSaveTransaction()}
+					/>
+					<FloatingActionButton
+						disabled={!transaction.isValid}
+						onTouchTap={() => this.handleSaveTransaction()}
+						style={Styles.floatingActionButton}
+						zDepth={2}
+					>
+						<ActionDone />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}

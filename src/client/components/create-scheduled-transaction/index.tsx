@@ -11,6 +11,7 @@ import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
 import Styles from '../../shared/styles';
 import ScheduledTransactionEdit from '../scheduled-transaction-edit';
+import ContentArea from '../shared/content-area';
 
 class CreateScheduledTransactionStore {
 	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
@@ -82,19 +83,21 @@ class CreateScheduledTransaction extends Component<Props, any> {
 					title={`${action} Budget Entry`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
-				<ScheduledTransactionEdit
-					accounts={this.store.accounts}
-					scheduledTransaction={this.store.scheduledTransaction}
-					onSubmit={() => this.handleSaveScheduledTransaction()}
-				/>
-				<FloatingActionButton
-					disabled={!transactionsValid}
-					onTouchTap={() => this.handleSaveScheduledTransaction()}
-					style={Styles.floatingActionButton}
-					zDepth={2}
-				>
-					<ActionDone />
-				</FloatingActionButton>
+				<ContentArea>
+					<ScheduledTransactionEdit
+						accounts={this.store.accounts}
+						scheduledTransaction={this.store.scheduledTransaction}
+						onSubmit={() => this.handleSaveScheduledTransaction()}
+					/>
+					<FloatingActionButton
+						disabled={!transactionsValid}
+						onTouchTap={() => this.handleSaveScheduledTransaction()}
+						style={Styles.floatingActionButton}
+						zDepth={2}
+					>
+						<ActionDone />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}

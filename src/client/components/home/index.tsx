@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
+import ContentArea from '../shared/content-area';
 import HomeContent from './home-content';
 
 type Props = {
@@ -16,7 +17,9 @@ class Index extends Component<Props, any> {
 		return (
 			<div>
 				<Navigation title="Home" store={store} />
-				<HomeContent store={store} />
+				<ContentArea>
+					<HomeContent store={store} />
+				</ContentArea>
 			</div>
 		);
 	}

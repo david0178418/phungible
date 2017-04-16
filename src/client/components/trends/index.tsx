@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
+import ContentArea from '../shared/content-area';
 import TrendsContent from './trends-content';
 
 type Props = {
@@ -19,11 +20,13 @@ class Trends extends Component<Props, any> {
 					title="Trends"
 					store={store}
 				/>
-				<TrendsContent
-					accounts={store.accounts}
-					transactions={store.transactions}
-					scheduledTransactions={store.scheduledTransactions}
-				/>
+				<ContentArea>
+					<TrendsContent
+						accounts={store.accounts}
+						transactions={store.transactions}
+						scheduledTransactions={store.scheduledTransactions}
+					/>
+				</ContentArea>
 			</div>
 		);
 	}

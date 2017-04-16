@@ -15,6 +15,7 @@ import Colors from '../../shared/colors';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import Styles from '../../shared/styles';
+import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
@@ -109,17 +110,19 @@ class Accounts extends Component<any, any> {
 					title="Accounts"
 					store={store.appStore}
 				/>
-				<AccountsList
-					accounts={store.accounts}
-					onRemove={(account: Account) => this.props.store.removeAccount(account)}
-				/>
-				<FloatingActionButton
-					containerElement={<Link to="/account/edit" />}
-					style={Styles.floatingActionButton}
-					zDepth={2}
-				>
-					<ContentAdd />
-				</FloatingActionButton>
+				<ContentArea>
+					<AccountsList
+						accounts={store.accounts}
+						onRemove={(account: Account) => this.props.store.removeAccount(account)}
+					/>
+					<FloatingActionButton
+						containerElement={<Link to="/account/edit" />}
+						style={Styles.floatingActionButton}
+						zDepth={2}
+					>
+						<ContentAdd />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}

@@ -12,6 +12,7 @@ import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
+import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
@@ -90,16 +91,18 @@ class Transactions extends Component<Props, any> {
 					title="Transactions"
 					store={store.appStore}
 				/>
-				<TransactionsList
-					transactions={store.transactions}
-					onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
-				/>
-				<FloatingActionButton
-					containerElement={<Link to="/transaction/edit" />}
-					style={Styles.floatingActionButton}
-				>
-					<ContentAdd />
-				</FloatingActionButton>
+				<ContentArea>
+					<TransactionsList
+						transactions={store.transactions}
+						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
+					/>
+					<FloatingActionButton
+						containerElement={<Link to="/transaction/edit" />}
+						style={Styles.floatingActionButton}
+					>
+						<ContentAdd />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}

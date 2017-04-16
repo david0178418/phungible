@@ -17,6 +17,7 @@ import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
+import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
@@ -109,19 +110,21 @@ class ScheduledTransactions extends Component<Props, any> {
 					title="Budget"
 					store={store.appStore}
 				/>
-				<ScheduledTransactionList
-					scheduledTransactions={store.scheduledTransactions}
-					onRemove={
-						(scheduledTransaction: ScheduledTransaction) => this.props.store.removeScheduledTransaction(scheduledTransaction)
-					}
-				/>
-				<FloatingActionButton
-					containerElement={<Link to="/scheduled-transaction/edit" />}
-					style={Styles.floatingActionButton}
-					zDepth={2}
-				>
-					<ContentAdd />
-				</FloatingActionButton>
+				<ContentArea>
+					<ScheduledTransactionList
+						scheduledTransactions={store.scheduledTransactions}
+						onRemove={
+							(scheduledTransaction: ScheduledTransaction) => this.props.store.removeScheduledTransaction(scheduledTransaction)
+						}
+					/>
+					<FloatingActionButton
+						containerElement={<Link to="/scheduled-transaction/edit" />}
+						style={Styles.floatingActionButton}
+						zDepth={2}
+					>
+						<ContentAdd />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}

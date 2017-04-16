@@ -11,6 +11,7 @@ import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import Styles from '../../shared/styles';
 import AccountForm from '../account-form';
+import ContentArea from '../shared/content-area';
 
 class AccountEditStore {
 	public account: Account;
@@ -73,18 +74,20 @@ class AccountEdit extends Component<Props, any> {
 					title={`${action} Account`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
-				<AccountForm
-					account={account}
-					onSubmit={() => this.handleSaveAccount()}
-				/>
-				<FloatingActionButton
-					disabled={!account.isValid}
-					onTouchTap={() => this.handleSaveAccount()}
-					style={Styles.floatingActionButton}
-					zDepth={2}
-				>
-					<ActionDone />
-				</FloatingActionButton>
+				<ContentArea>
+					<AccountForm
+						account={account}
+						onSubmit={() => this.handleSaveAccount()}
+					/>
+					<FloatingActionButton
+						disabled={!account.isValid}
+						onTouchTap={() => this.handleSaveAccount()}
+						style={Styles.floatingActionButton}
+						zDepth={2}
+					>
+						<ActionDone />
+					</FloatingActionButton>
+				</ContentArea>
 			</div>
 		);
 	}
