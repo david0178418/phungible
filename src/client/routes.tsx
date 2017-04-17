@@ -19,6 +19,19 @@ type State = {
 	params: any;
 };
 
+function getCurrengtHash() {
+	let hash = window.location.hash;
+
+	if(!hash) {
+		window.location.hash = hash = Home.path;
+	} else {
+		// remove leading "#"
+		hash = hash.substr(1);
+	}
+
+	return hash;
+}
+
 export default
 class Routes extends Component<Props, State> {
 	private router: Navigo;
@@ -27,27 +40,26 @@ class Routes extends Component<Props, State> {
 		super(props);
 
 		this.state = {
-			page: 'home',
+			page: getCurrengtHash(),
 			params: {},
 		};
 
 		this.router = new N(null, true);
-		(window as any).router = this;
 	}
 
 	public componentDidMount() {
 		this.router.on({
-			'/': () => this.setPage('home'),
-			'/account/edit/': () => this.setPage('account-edit'),
-			'/account/edit/:id': (params) => this.setPage('account-edit', params),
-			'/accounts/': () => this.setPage('accounts'),
-			'/scheduled-transaction/edit/': () => this.setPage('scheduled-transaction-edit'),
-			'/scheduled-transaction/edit/:id': (params) => this.setPage('scheduled-transaction-edit', params),
-			'/scheduled-transactions/': () => this.setPage('scheduled-transactions'),
-			'/transaction/edit/': () => this.setPage('transaction-edit'),
-			'/transaction/edit/:id': (params) => this.setPage('transaction-edit', params),
-			'/transactions/': () => this.setPage('transactions'),
-			'/trends': () => this.setPage('trends'),
+			[Home.path]: () => this.setPage(Home.path),
+			[AccountEdit.path]: () => this.setPage(AccountEdit.path),
+			[AccountEdit.pathParams]: (params) => this.setPage(AccountEdit.path, params),
+			[Accounts.path]: () => this.setPage(Accounts.path),
+			[CreateScheduledTransaction.path]: () => this.setPage(CreateScheduledTransaction.path),
+			[CreateScheduledTransaction.pathParams]: (params) => this.setPage(CreateScheduledTransaction.path, params),
+			[ScheduledTransactions.path]: () => this.setPage(ScheduledTransactions.path),
+			[TransactionEdit.path]: () => this.setPage(TransactionEdit.path),
+			[TransactionEdit.pathParams]: (params) => this.setPage(TransactionEdit.path, params),
+			[Transactions.path]: () => this.setPage(Transactions.path),
+			[Trends.path]: () => this.setPage(Trends.path),
 		})
 		.resolve();
 	}
@@ -64,14 +76,14 @@ class Routes extends Component<Props, State> {
 		return (
 			<div>
 				<App>
-					{page === 'home' && <Home key="home" />}
-					{page === 'trends' && <Trends key="trends" />}
-					{page === 'accounts' && <Accounts />}
-					{page === 'account-edit' && <AccountEdit  key="account-edit" id={params.id} />}
-					{page === 'transactions' && <Transactions />}
-					{page === 'transaction-edit' && <TransactionEdit key="transaction-edit" id={params.id} />}
-					{page === 'scheduled-transactions' && <ScheduledTransactions />}
-					{page === 'scheduled-transaction-edit' &&
+					{page === Home.path && <Home key={Home.path} />}
+					{page === Trends.path && <Trends key={Trends.path} />}
+					{page === Accounts.path && <Accounts key={Accounts.path}/>}
+					{page === AccountEdit.path && <AccountEdit  key={AccountEdit.path} id={params.id} />}
+					{page === Transactions.path && <Transactions key={Transactions.path}/>}
+					{page === TransactionEdit.path && <TransactionEdit key={TransactionEdit.path} id={params.id} />}
+					{page === ScheduledTransactions.path && <ScheduledTransactions key={ScheduledTransactions.path}/>}
+					{page === CreateScheduledTransaction.path &&
 						<CreateScheduledTransaction key="scheduled-transaction-edit" id={params.id} />}
 
 				</App>

@@ -13,7 +13,7 @@ import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 import Link from '../shared/link';
@@ -90,6 +90,7 @@ const AccountsList = observer(function({accounts, onRemove}: ListProps) {
 @observer
 export default
 class Accounts extends Component<Props, {}> {
+	public static path = '/accounts/';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -124,7 +125,7 @@ class Accounts extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/account/edit" />}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ContentAdd />

@@ -15,7 +15,7 @@ import Colors from '../../shared/colors';
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 import Link from '../shared/link';
@@ -90,6 +90,7 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 @observer
 export default
 class ScheduledTransactions extends Component<Props, {}> {
+	public static path = '/scheduled-transactions/';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -123,7 +124,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/scheduled-transaction/edit" />}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ContentAdd />

@@ -10,7 +10,7 @@ import {Component} from 'react';
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 import Link from '../shared/link';
@@ -77,6 +77,7 @@ const TransactionsList = observer(function({transactions, onRemove}: ListProps) 
 
 export default
 class Transactions extends Component<Props, {}> {
+	public static path = '/transactions';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -102,7 +103,7 @@ class Transactions extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/transaction/edit" />}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 					>
 						<ContentAdd />
 					</FloatingActionButton>

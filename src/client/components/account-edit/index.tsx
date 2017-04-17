@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import AccountForm from '../account-form';
 import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
@@ -52,6 +52,8 @@ type Context = {
 @observer
 export default
 class AccountEdit extends Component<Props, {}> {
+	public static path = '/account/edit/:id';
+	public static pathParams = '/account/edit/';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -87,7 +89,7 @@ class AccountEdit extends Component<Props, {}> {
 					<FloatingActionButton
 						disabled={!account.isValid}
 						onTouchTap={() => this.handleSaveAccount()}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ActionDone />

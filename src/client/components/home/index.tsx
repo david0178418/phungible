@@ -16,6 +16,7 @@ class Index extends Component<{}, {}> {
 	public static contextTypes = {
 		store: () => false,
 	};
+	public static path = '/';
 	public context: Context;
 
 	public render() {

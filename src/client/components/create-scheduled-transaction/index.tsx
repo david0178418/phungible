@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import ScheduledTransactionEdit from '../scheduled-transaction-edit';
 import ContentArea from '../shared/content-area';
 
@@ -59,6 +59,8 @@ type Context = {
 @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
+	public static path = '/scheduled-transaction/edit/';
+	public static pathParams = '/scheduled-transaction/edit/:id';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -96,7 +98,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 					<FloatingActionButton
 						disabled={!transactionsValid}
 						onTouchTap={() => this.handleSaveScheduledTransaction()}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ActionDone />

@@ -13,6 +13,7 @@ type Context = {
 
 export default
 class Trends extends Component<{}, {}> {
+	public static path = '/trends/';
 	public static contextTypes = {
 		store: () => false,
 	};
