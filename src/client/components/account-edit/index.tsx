@@ -11,6 +11,7 @@ import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import Styles from '../../shared/styles';
 import AccountForm from '../account-form';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 
 class AccountEditStore {
@@ -68,7 +69,7 @@ class AccountEdit extends Component<Props, {}> {
 		const action = account.id ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page>
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -92,7 +93,7 @@ class AccountEdit extends Component<Props, {}> {
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 

@@ -6,7 +6,6 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
@@ -14,6 +13,7 @@ import Transaction from '../../shared/stores/transaction';
 import Styles from '../../shared/styles';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
+import Link from '../shared/link';
 
 type Props = {};
 type Context = {

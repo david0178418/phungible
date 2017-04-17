@@ -8,8 +8,8 @@ import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
-import {Link} from 'react-router-dom';
 
+import Link from '../components/shared/link';
 import AppStore from '../shared/stores/app';
 
 type Props = {

@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import HomeContent from './home-content';
 
@@ -20,12 +21,12 @@ class Index extends Component<{}, {}> {
 	public render() {
 		const {store} = this.context;
 		return (
-			<div>
+			<Page>
 				<Navigation title="Home" store={store} />
 				<ContentArea>
 					<HomeContent store={store} />
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

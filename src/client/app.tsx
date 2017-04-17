@@ -1,6 +1,7 @@
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Component} from 'react';
 import * as React from 'react';
+import * as CSSTransitionGroup from 'react-addons-css-transition-group';
 import {getItem} from '../client/shared/storage';
 
 import Layout from './layout';
@@ -46,7 +47,36 @@ class App extends Component<Props, any> {
 		return (
 			<MuiThemeProvider>
 				<Layout>
-					{this.props.children}
+					<style>{`
+						.page-appear {
+							margin-top: 100vh;
+						}
+
+						.page-appear-active {
+							margin-top: 0;
+							transition: margin-top 300ms;
+						}
+
+						.page-leave {
+							position: absolute;
+							top: 0;
+						}
+						.page-leave-active {
+							top: -100wh;
+							transition: margin-top 300ms;
+						}
+					`}</style>
+					<CSSTransitionGroup
+						component="div"
+						transitionName="page"
+						transitionEnterTimeout={300}
+						transitionAppearTimeout={300}
+						transitionLeaveTimeout={300}
+						transitionLeave={true}
+						transitionAppear={true}
+					>
+						{this.props.children}
+					</CSSTransitionGroup>
 				</Layout>
 			</MuiThemeProvider>
 		);

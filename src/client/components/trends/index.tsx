@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import TrendsContent from './trends-content';
 
@@ -20,7 +21,7 @@ class Trends extends Component<{}, {}> {
 	public render() {
 		const {store} = this.context;
 		return (
-			<div>
+			<Page>
 				<Navigation
 					title="Trends"
 					store={store}
@@ -32,7 +33,7 @@ class Trends extends Component<{}, {}> {
 						scheduledTransactions={store.scheduledTransactions}
 					/>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }
