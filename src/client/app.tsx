@@ -48,6 +48,9 @@ class App extends Component<Props, any> {
 			<MuiThemeProvider>
 				<Layout>
 					<style>{`
+						body {
+							overflow: hidden;
+						}
 						.page {
 							z-index: 1;
 						}
