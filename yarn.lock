@@ -22,9 +22,9 @@
   dependencies:
     "@types/hapi" "*"
 
-"@types/material-ui@^0.16.51":
-  version "0.16.60"
-  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.16.60.tgz#1231f24d6181aa19ad59772d53db965e9fb7132d"
+"@types/material-ui@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@types/material-ui/-/material-ui-0.17.1.tgz#3c8cde0741e745409c8d4808ec2b4859ef25f7bf"
   dependencies:
     "@types/react" "*"
     "@types/react-addons-linked-state-mixin" "*"
@@ -52,9 +52,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^0.14.23":
-  version "0.14.23"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.23.tgz#cecfcfad754b4c2765fe5d29b81b301889ad6c2e"
+"@types/react-dom@^15.5.0":
+  version "15.5.0"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-15.5.0.tgz#7f4fb9613d4051141773242f7b6b5f1a46b34bd9"
   dependencies:
     "@types/react" "*"
 
@@ -1238,7 +1238,7 @@ gulp-typescript@^3.1.5:
     through2 "~2.0.1"
     vinyl-fs "~2.4.3"
 
-gulp-util@3.0.7, gulp-util@>=3.0.0, gulp-util@^3.0.0, gulp-util@~3.0.7:
+gulp-util@3.0.7, gulp-util@>=3.0.0, gulp-util@^3.0.0, gulp-util@^3.0.3:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/gulp-util/-/gulp-util-3.0.7.tgz#78925c4b8f8b49005ac01a011c557e6218941cbb"
   dependencies:
@@ -1261,7 +1261,7 @@ gulp-util@3.0.7, gulp-util@>=3.0.0, gulp-util@^3.0.0, gulp-util@~3.0.7:
     through2 "^2.0.0"
     vinyl "^0.5.0"
 
-"gulp-util@>=3.0.0 <3.1.0-0", gulp-util@^3.0.3, gulp-util@~3.0.8:
+"gulp-util@>=3.0.0 <3.1.0-0", gulp-util@~3.0.7, gulp-util@~3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/gulp-util/-/gulp-util-3.0.8.tgz#0054e1e744502e27c04c187c3ecc505dd54bbb4f"
   dependencies:
@@ -2154,9 +2154,9 @@ natives@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/natives/-/natives-1.1.0.tgz#e9ff841418a6b2ec7a495e939984f78f163e6e31"
 
-navigo@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/navigo/-/navigo-4.5.2.tgz#d27191a1625ee887de39540b734429efbeae4d78"
+navigo@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/navigo/-/navigo-4.6.0.tgz#212cf08e1658874243a4acaea041aee42c30480a"
 
 nigel@2.x.x:
   version "2.0.2"
@@ -2670,9 +2670,9 @@ recharts-scale@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/recharts-scale/-/recharts-scale-0.3.0.tgz#d17e8c4055dbbeb0d65435c9142ee0fb9054758a"
 
-recharts@^0.22.0:
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/recharts/-/recharts-0.22.1.tgz#6698131b118418b37a4d83c486f73a4c555bbbed"
+recharts@^0.22.2:
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/recharts/-/recharts-0.22.2.tgz#36d96284907a662969215763aef76939127e1edf"
   dependencies:
     classnames "2.2.5"
     core-js "2.4.1"
