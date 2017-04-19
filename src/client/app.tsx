@@ -53,8 +53,7 @@ class App extends Component<Props, any> {
 						}
 						.page-enter,
 						.page-leave {
-							border-left: 1px solid black;
-							border-right: 1px solid black;
+							box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
 							box-sizing: border-box;
 						}
 
@@ -65,15 +64,8 @@ class App extends Component<Props, any> {
 
 						.page-enter-active.slide-vertical {
 							top: 0;
-							transition: top 300ms;
-						}
-
-						.page-leave.slide-vertical {
-							top: 0;
-						}
-						.page-leave-active.slide-vertical {
-							top: -100vh;
-							transition: top 300ms;
+							transition: top 350ms;
+							z-index: 2;
 						}
 
 						/* Horizontal Slide */
@@ -86,7 +78,7 @@ class App extends Component<Props, any> {
 
 						.page-enter-active.slide-horizontal {
 							left: 0;
-							transition: left 300ms;
+							transition: left 350ms;
 						}
 
 						.page-leave.slide-horizontal {
@@ -95,14 +87,14 @@ class App extends Component<Props, any> {
 						}
 						.page-leave-active.slide-horizontal {
 							left: 100vw;
-							transition: left 300ms;
+							transition: left 350ms;
 						}
 					`}</style>
 					<CSSTransitionGroup
 						component="div"
 						transitionName="page"
-						transitionEnterTimeout={300}
-						transitionLeaveTimeout={300}
+						transitionEnterTimeout={350}
+						transitionLeaveTimeout={350}
 					>
 						{this.props.children}
 					</CSSTransitionGroup>
