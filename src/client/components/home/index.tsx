@@ -22,7 +22,7 @@ class Index extends Component<{}, {}> {
 	public render() {
 		const {store} = this.context;
 		return (
-			<Page>
+			<Page className="slide-vertical">
 				<Navigation title="Home" store={store} />
 				<ContentArea>
 					<HomeContent store={store} />

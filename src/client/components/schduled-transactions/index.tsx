@@ -16,12 +16,15 @@ import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
 import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 import Link from '../shared/link';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
-type Props = {};
+type Props = {
+	disableAnimation: boolean;
+};
 type Context = {
 	store: AppStore;
 };
@@ -109,7 +112,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 		const store = this.store;
 
 		return (
-			<div>
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Budget"
 					store={store.appStore}
@@ -130,7 +133,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 						<ContentAdd />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

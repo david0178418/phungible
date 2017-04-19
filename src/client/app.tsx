@@ -48,32 +48,61 @@ class App extends Component<Props, any> {
 			<MuiThemeProvider>
 				<Layout>
 					<style>{`
-						.page-appear {
-							margin-top: 100vh;
+						.page {
+							z-index: 1;
 						}
-
-						.page-appear-active {
-							margin-top: 0;
-							transition: margin-top 300ms;
-						}
-
+						.page-enter,
 						.page-leave {
-							position: absolute;
+							border-left: 1px solid black;
+							border-right: 1px solid black;
+							box-sizing: border-box;
+						}
+
+						/* Vertical slide */
+						.page-enter.slide-vertical {
+							top: 100vh;
+						}
+
+						.page-enter-active.slide-vertical {
+							top: 0;
+							transition: top 300ms;
+						}
+
+						.page-leave.slide-vertical {
 							top: 0;
 						}
-						.page-leave-active {
-							top: -100wh;
-							transition: margin-top 300ms;
+						.page-leave-active.slide-vertical {
+							top: -100vh;
+							transition: top 300ms;
+						}
+
+						/* Horizontal Slide */
+						.slide-horizontal {
+							z-index: 3;
+						}
+						.page-enter.slide-horizontal {
+							left: 100vw;
+						}
+
+						.page-enter-active.slide-horizontal {
+							left: 0;
+							transition: left 300ms;
+						}
+
+						.page-leave.slide-horizontal {
+							left: 0;
+							top: 0;
+						}
+						.page-leave-active.slide-horizontal {
+							left: 100vw;
+							transition: left 300ms;
 						}
 					`}</style>
 					<CSSTransitionGroup
 						component="div"
 						transitionName="page"
 						transitionEnterTimeout={300}
-						transitionAppearTimeout={300}
 						transitionLeaveTimeout={300}
-						transitionLeave={true}
-						transitionAppear={true}
 					>
 						{this.props.children}
 					</CSSTransitionGroup>

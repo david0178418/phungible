@@ -14,11 +14,14 @@ import Colors from '../../shared/colors';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
 import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 import Link from '../shared/link';
 
-type Props = {};
+type Props = {
+	disableAnimation: boolean;
+};
 type Context = {
 	store: AppStore;
 };
@@ -113,7 +116,7 @@ class Accounts extends Component<Props, {}> {
 		const store = this.store;
 
 		return (
-			<div>
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Accounts"
 					store={store.appStore}
@@ -131,7 +134,7 @@ class Accounts extends Component<Props, {}> {
 						<ContentAdd />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

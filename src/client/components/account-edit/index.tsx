@@ -71,7 +71,7 @@ class AccountEdit extends Component<Props, {}> {
 		const action = account.id ? 'Edit' : 'Create';
 
 		return (
-			<Page>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4

@@ -10,6 +10,7 @@ import * as React from 'react';
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
 import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ScheduledTransactionEdit from '../scheduled-transaction-edit';
 import ContentArea from '../shared/content-area';
 
@@ -79,7 +80,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		const action = (scheduledTransaction instanceof ScheduledTransaction && scheduledTransaction.id) ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -104,7 +105,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 

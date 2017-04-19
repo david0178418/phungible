@@ -22,7 +22,7 @@ class Trends extends Component<{}, {}> {
 	public render() {
 		const {store} = this.context;
 		return (
-			<Page>
+			<Page className="slide-vertical">
 				<Navigation
 					title="Trends"
 					store={store}

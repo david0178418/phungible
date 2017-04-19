@@ -15,6 +15,7 @@ import Trends from './components/trends';
 
 type Props = {};
 type State = {
+	disableNextPageAnimation: boolean;
 	page: string;
 	params: any;
 };
@@ -35,19 +36,27 @@ function getCurrengtHash() {
 export default
 class Routes extends Component<Props, State> {
 	private router: Navigo;
+	private horizontalSlidePages: string[];
 
 	constructor(props: Props) {
 		super(props);
 
 		this.state = {
+			disableNextPageAnimation: false,
 			page: getCurrengtHash(),
 			params: {},
 		};
 
+		this.horizontalSlidePages = [
+			AccountEdit.path,
+			CreateScheduledTransaction.path,
+			TransactionEdit.path,
+		];
+
 		this.router = new N(null, true);
 	}
 
-	public componentDidMount() {
+	public componentWillMount() {
 		this.router.on({
 			[Home.path]: () => this.setPage(Home.path),
 			[AccountEdit.path]: () => this.setPage(AccountEdit.path),
@@ -66,28 +75,42 @@ class Routes extends Component<Props, State> {
 
 	public setPage(page: string, params: object = {}) {
 		this.setState({
+			disableNextPageAnimation: this.currentPageIsHorizontalSlide(),
 			page,
 			params,
 		});
 	}
 
 	public render() {
-		const {page, params} = this.state;
+		const {
+			disableNextPageAnimation,
+			page,
+			params,
+		} = this.state;
+
+		const id = params && params.id;
+
 		return (
 			<div>
 				<App>
 					{page === Home.path && <Home key={Home.path} />}
-					{page === Trends.path && <Trends key={Trends.path} />}
-					{page === Accounts.path && <Accounts key={Accounts.path}/>}
-					{page === AccountEdit.path && <AccountEdit  key={AccountEdit.path} id={params.id} />}
-					{page === Transactions.path && <Transactions key={Transactions.path}/>}
-					{page === TransactionEdit.path && <TransactionEdit key={TransactionEdit.path} id={params.id} />}
-					{page === ScheduledTransactions.path && <ScheduledTransactions key={ScheduledTransactions.path}/>}
+					{page === Trends.path && <Trends key={Trends.path}/>}
+					{page === Accounts.path && <Accounts key={Accounts.path} disableAnimation={disableNextPageAnimation} />}
+					{page === AccountEdit.path && <AccountEdit  key={AccountEdit.path} id={id} />}
+					{page === Transactions.path &&
+						<Transactions key={Transactions.path} disableAnimation={disableNextPageAnimation} />}
+					{page === TransactionEdit.path && <TransactionEdit key={TransactionEdit.path} id={id} />}
+					{page === ScheduledTransactions.path &&
+						<ScheduledTransactions key={ScheduledTransactions.path} disableAnimation={disableNextPageAnimation} />}
 					{page === CreateScheduledTransaction.path &&
-						<CreateScheduledTransaction key="scheduled-transaction-edit" id={params.id} />}
+						<CreateScheduledTransaction key={CreateScheduledTransaction.path} id={id} />}
 
 				</App>
 			</div>
 		);
+	}
+
+	private currentPageIsHorizontalSlide() {
+		return this.horizontalSlidePages.indexOf(this.state.page) !== -1;
 	}
 }

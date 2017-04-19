@@ -10,6 +10,7 @@ import * as React from 'react';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
 import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import TransactionForm from '../transaction-form';
 
@@ -55,8 +56,8 @@ type Context = {
 @observer
 export default
 class TransactionEdit extends Component<Props, {}> {
-	public static path = '/transaction-edit/';
-	public static pathParams = '/transaction-edit/:id';
+	public static path = '/transaction/edit/';
+	public static pathParams = '/transaction/edit/:id';
 	public static contextTypes = {
 		store: () => false,
 	};
@@ -75,7 +76,7 @@ class TransactionEdit extends Component<Props, {}> {
 		const action = transaction.id ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -100,7 +101,7 @@ class TransactionEdit extends Component<Props, {}> {
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 
