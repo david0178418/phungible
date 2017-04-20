@@ -3,24 +3,23 @@ import {Component} from 'react';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import TrendsContent from './trends-content';
 
-type Context = {
-	store: AppStore;
+type Props = {
+	disableAnimation: boolean;
+	store?: AppStore;
 };
 
 export default
-class Trends extends Component<{}, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+class Trends extends Component<Props, {}> {
+	public static path = '/trends/';
 
 	public render() {
-		const {store} = this.context;
+		const {store} = this.props;
 		return (
-			<div>
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Trends"
 					store={store}
@@ -32,7 +31,7 @@ class Trends extends Component<{}, {}> {
 						scheduledTransactions={store.scheduledTransactions}
 					/>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

@@ -1,31 +1,33 @@
 import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
-import {Link} from 'react-router-dom';
 
+import AccountEdit from '../components/account-edit';
+import Accounts from '../components/accounts';
+import CreateScheduledTransaction from '../components/create-scheduled-transaction';
+import Home from '../components/home';
+import ScheduledTransactions from '../components/schduled-transactions';
+import TransactionEdit from '../components/transaction-edit/';
+import Transactions from '../components/transactions';
+import Trends from '../components/trends';
 import AppStore from '../shared/stores/app';
+import NavItem from './nav-item';
 
 type Props = {
+	store?: AppStore;
 	title: string;
-	store: AppStore;
 };
 
-type MenuItemProps = {
-	containerElement?: React.ReactElement<any>;
-	disabled?: boolean;
-	leftIcon: React.ReactElement<any>;
-	rightIcon: React.ReactElement<any>;
-};
+type MenuItemProps = any;
 
 function accountTarget(accountsCount: number) {
-	return accountsCount ? '/accounts' : '/account/edit';
+	return accountsCount ? Accounts.path : AccountEdit.path;
 }
 
 function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
@@ -35,9 +37,7 @@ function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
 	};
 
 	if(accountCount) {
-		props.containerElement = <Link to={
-			scheduledTransactionsCount ? '/scheduled-transactions' : '/scheduled-transaction/edit'
-		} />;
+		props.href = scheduledTransactionsCount ? ScheduledTransactions.path : CreateScheduledTransaction.path;
 	} else {
 		props.disabled = true;
 	}
@@ -52,9 +52,21 @@ function transactionProps(transactionsCount: number, accountsCount: number) {
 	};
 
 	if(accountsCount) {
-		props.containerElement = <Link to={
-			transactionsCount ? '/transactions' : '/transaction/edit'
-		} />;
+		props.href = transactionsCount ? Transactions.path : TransactionEdit.path;
+	} else {
+		props.disabled = true;
+	}
+
+	return props;
+}
+
+function trendsProps(accountsCount: number) {
+	const props: MenuItemProps = {
+		leftIcon: <TrendingUpIcon />,
+	};
+
+	if(accountsCount) {
+		props.href = Trends.path;
 	} else {
 		props.disabled = true;
 	}
@@ -76,48 +88,56 @@ class Navigation extends React.Component<Props, any> {
 		return (
 			<AppBar
 				className="app-title"
-				onLeftIconButtonTouchTap={() => this.handleDrawerToggle()}
+				onLeftIconButtonTouchTap={() => this.handleDrawerStateUpdate(true)}
 				title={this.props.title}
 			>
 				<Drawer
 					containerClassName="app-title"
 					docked={false}
 					open={this.state.isOpen}
-					onRequestChange={() => this.handleDrawerToggle()}
+					onRequestChange={(open) => this.handleDrawerStateUpdate(open)}
 				>
-					<MenuItem
-						containerElement={<Link to="/" />}
+					<NavItem
 						leftIcon={<HomeIcon />}
+						href={`${Home.path}`}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Home
-					</MenuItem>
-					<MenuItem
-						containerElement={<Link to="/trends" />}
-						leftIcon={<TrendingUpIcon />}
+					</NavItem>
+					<NavItem
+						{...trendsProps(accounts.length)}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Trends
-					</MenuItem>
-					<MenuItem
-						containerElement={<Link to={accountTarget(accounts.length)} />}
+					</NavItem>
+					<NavItem
+						href={accountTarget(accounts.length)}
 						leftIcon={<AccountBalanceIcon />}
 						rightIcon={<Badge badgeContent={accounts.length} primary />}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Accounts
-					</MenuItem>
-					<MenuItem {...budgetProps(scheduledTransactions.length, accounts.length)}>
+					</NavItem>
+					<NavItem
+						{...budgetProps(scheduledTransactions.length, accounts.length)}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
 						Budget
-					</MenuItem>
-					<MenuItem {...transactionProps(transactions.length, accounts.length)}>
+					</NavItem>
+					<NavItem
+						{...transactionProps(transactions.length, accounts.length)}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
 						Transactions
-					</MenuItem>
+					</NavItem>
 				</Drawer>
 			</AppBar>
 		);
 	}
 
-	private handleDrawerToggle() {
+	private handleDrawerStateUpdate(isOpen: boolean) {
 		this.setState({
-			isOpen: !this.state.isOpen,
+			isOpen,
 		});
 	}
 }

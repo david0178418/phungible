@@ -9,8 +9,9 @@ import * as React from 'react';
 
 import Account from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
 import AccountForm from '../account-form';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 
 class AccountEditStore {
@@ -43,22 +44,19 @@ class AccountEditStore {
 }
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
 export default
 class AccountEdit extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+	public static path = '/account/edit/';
+	public static pathParams = '/account/edit/:id';
 	private store: AccountEditStore;
 
-	public componentWillMount() {
-		this.store = new AccountEditStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new AccountEditStore(props.store, +this.props.id);
 	}
 
 	public render() {
@@ -68,7 +66,7 @@ class AccountEdit extends Component<Props, {}> {
 		const action = account.id ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -86,13 +84,13 @@ class AccountEdit extends Component<Props, {}> {
 					<FloatingActionButton
 						disabled={!account.isValid}
 						onTouchTap={() => this.handleSaveAccount()}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 

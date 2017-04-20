@@ -9,7 +9,8 @@ import * as React from 'react';
 
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ScheduledTransactionEdit from '../scheduled-transaction-edit';
 import ContentArea from '../shared/content-area';
 
@@ -51,22 +52,19 @@ class CreateScheduledTransactionStore {
 
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+	public static path = '/scheduled-transaction/edit/';
+	public static pathParams = '/scheduled-transaction/edit/:id';
 	private store: CreateScheduledTransactionStore;
 
-	public componentWillMount() {
-		this.store = new CreateScheduledTransactionStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new CreateScheduledTransactionStore(props.store, +props.id);
 	}
 
 	public render() {
@@ -77,7 +75,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		const action = (scheduledTransaction instanceof ScheduledTransaction && scheduledTransaction.id) ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -96,13 +94,13 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 					<FloatingActionButton
 						disabled={!transactionsValid}
 						onTouchTap={() => this.handleSaveScheduledTransaction()}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 

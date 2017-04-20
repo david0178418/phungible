@@ -9,7 +9,8 @@ import * as React from 'react';
 
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import TransactionForm from '../transaction-form';
 
@@ -47,22 +48,19 @@ class TransactionEditStore {
 }
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
 export default
 class TransactionEdit extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+	public static path = '/transaction/edit/';
+	public static pathParams = '/transaction/edit/:id';
 	private store: TransactionEditStore;
 
-	public componentWillMount() {
-		this.store = new TransactionEditStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new TransactionEditStore(props.store, +props.id);
 	}
 
 	public render() {
@@ -73,7 +71,7 @@ class TransactionEdit extends Component<Props, {}> {
 		const action = transaction.id ? 'Edit' : 'Create';
 
 		return (
-			<div>
+			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => {
 						// TODO FIX for React Router 4
@@ -92,13 +90,13 @@ class TransactionEdit extends Component<Props, {}> {
 					<FloatingActionButton
 						disabled={!transaction.isValid}
 						onTouchTap={() => this.handleSaveTransaction()}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ActionDone />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 

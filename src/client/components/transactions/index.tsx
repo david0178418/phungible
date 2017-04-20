@@ -6,18 +6,19 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import AppStore from '../../shared/stores/app';
 import Transaction from '../../shared/stores/transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
+import Link from '../shared/link';
 
-type Props = {};
-type Context = {
-	store: AppStore;
+type Props = {
+	disableAnimation: boolean;
+	store?: AppStore;
 };
 type ListProps = {
 	transactions: Transaction[];
@@ -77,20 +78,18 @@ const TransactionsList = observer(function({transactions, onRemove}: ListProps) 
 
 export default
 class Transactions extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+	public static path = '/transactions';
 	private store: TransactionsStore;
 
-	public componentWillMount() {
-		this.store = new TransactionsStore(this.context.store);
+	constructor(props: Props) {
+		super(props);
+		this.store = new TransactionsStore(props.store);
 	}
 
 	public render() {
 		const store = this.store;
 		return (
-			<div>
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Transactions"
 					store={store.appStore}
@@ -98,16 +97,16 @@ class Transactions extends Component<Props, {}> {
 				<ContentArea>
 					<TransactionsList
 						transactions={store.transactions}
-						onRemove={(transaction: Transaction) => this.context.store.removeTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/transaction/edit" />}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 					>
 						<ContentAdd />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

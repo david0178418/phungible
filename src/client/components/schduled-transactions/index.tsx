@@ -9,21 +9,22 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
-import {Link} from 'react-router-dom';
 
 import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
-import Styles from '../../shared/styles';
+import {floatingActionButtonStyle} from '../../shared/styles';
+import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
+import Link from '../shared/link';
 
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
-type Props = {};
-type Context = {
-	store: AppStore;
+type Props = {
+	disableAnimation: boolean;
+	store?: AppStore;
 };
 type ListProps = {
 	scheduledTransactions: ScheduledTransaction[];
@@ -90,25 +91,23 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 @observer
 export default
 class ScheduledTransactions extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
+	public static path = '/scheduled-transactions/';
 	private store: ScheduledTransactionsStore;
 
-	public componentWillMount() {
-		this.store = new ScheduledTransactionsStore(this.context.store);
+	constructor(props: Props) {
+		super(props);
+		this.store = new ScheduledTransactionsStore(props.store);
 	}
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this.context.store.removeScheduledTransaction(scheduledTransaction);
+		this.props.store.removeScheduledTransaction(scheduledTransaction);
 	}
 
 	public render() {
 		const store = this.store;
 
 		return (
-			<div>
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Budget"
 					store={store.appStore}
@@ -118,18 +117,18 @@ class ScheduledTransactions extends Component<Props, {}> {
 						scheduledTransactions={store.scheduledTransactions}
 						onRemove={
 							(scheduledTransaction: ScheduledTransaction) =>
-								this.context.store.removeScheduledTransaction(scheduledTransaction)
+								this.props.store.removeScheduledTransaction(scheduledTransaction)
 						}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/scheduled-transaction/edit" />}
-						style={Styles.floatingActionButton}
+						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
 						<ContentAdd />
 					</FloatingActionButton>
 				</ContentArea>
-			</div>
+			</Page>
 		);
 	}
 }

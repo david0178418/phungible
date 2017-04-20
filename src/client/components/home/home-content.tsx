@@ -6,7 +6,7 @@ import AppStore from '../../shared/stores/app';
 import Money from '../../shared/utils/money';
 
 type Props = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 export default
