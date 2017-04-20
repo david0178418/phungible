@@ -52,8 +52,8 @@ type Context = {
 @observer
 export default
 class AccountEdit extends Component<Props, {}> {
-	public static path = '/account/edit/:id';
-	public static pathParams = '/account/edit/';
+	public static path = '/account/edit/';
+	public static pathParams = '/account/edit/:id';
 	public static contextTypes = {
 		store: () => false,
 	};
