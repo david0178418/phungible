@@ -20,8 +20,8 @@ import AppStore from '../shared/stores/app';
 import NavItem from './nav-item';
 
 type Props = {
+	store?: AppStore;
 	title: string;
-	store: AppStore;
 };
 
 type MenuItemProps = any;

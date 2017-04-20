@@ -7,24 +7,21 @@ import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import HomeContent from './home-content';
 
-type Context = {
-	store: AppStore;
-};
-
 type Props = {
 	disableAnimation: boolean;
+	store?: AppStore;
 };
 
 export default
 class Index extends Component<Props, {}> {
-	public static contextTypes = {
-		store: () => false,
-	};
 	public static path = '/';
-	public context: Context;
+
+	constructor(props: Props) {
+		super(props);
+	}
 
 	public render() {
-		const {store} = this.context;
+		const {store} = this.props;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation title="Home" store={store} />

@@ -11,12 +11,14 @@ type Props = {
 	children?: any;
 };
 
+function ChildWithStore(child: any, store: AppStore) {
+	return child ? React.cloneElement(child, {
+		store,
+	}) : child;
+}
+
 export default
 class App extends Component<Props, any> {
-	public static childContextTypes = {
-		store: AppStore,
-	};
-
 	public store: AppStore;
 
 	constructor(props: Props) {
@@ -35,12 +37,6 @@ class App extends Component<Props, any> {
 		setTimeout(() => {
 			this.store.runTransactionSinceLastUpdate();
 		}, 1000 * 60 * 5);
-	}
-
-	public getChildContext() {
-		return {
-			store: this.store,
-		};
 	}
 
 	public render() {
@@ -99,7 +95,10 @@ class App extends Component<Props, any> {
 						transitionEnterTimeout={350}
 						transitionLeaveTimeout={350}
 					>
-						{this.props.children}
+						{React.Children.map(
+							this.props.children,
+							(child) => ChildWithStore(child, this.store),
+						)}
 					</CSSTransitionGroup>
 				</Layout>
 			</MuiThemeProvider>

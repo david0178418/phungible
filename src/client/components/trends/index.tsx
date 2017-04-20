@@ -7,24 +7,17 @@ import Page from '../pages/page';
 import ContentArea from '../shared/content-area';
 import TrendsContent from './trends-content';
 
-type Context = {
-	store: AppStore;
-};
-
 type Props = {
 	disableAnimation: boolean;
+	store?: AppStore;
 };
 
 export default
 class Trends extends Component<Props, {}> {
 	public static path = '/trends/';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 
 	public render() {
-		const {store} = this.context;
+		const {store} = this.props;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation

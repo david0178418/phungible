@@ -44,9 +44,7 @@ class AccountEditStore {
 }
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
@@ -54,14 +52,11 @@ export default
 class AccountEdit extends Component<Props, {}> {
 	public static path = '/account/edit/';
 	public static pathParams = '/account/edit/:id';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: AccountEditStore;
 
-	public componentWillMount() {
-		this.store = new AccountEditStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new AccountEditStore(props.store, +this.props.id);
 	}
 
 	public render() {

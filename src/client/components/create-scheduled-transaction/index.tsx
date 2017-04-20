@@ -52,9 +52,7 @@ class CreateScheduledTransactionStore {
 
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
@@ -62,14 +60,11 @@ export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
 	public static pathParams = '/scheduled-transaction/edit/:id';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: CreateScheduledTransactionStore;
 
-	public componentWillMount() {
-		this.store = new CreateScheduledTransactionStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new CreateScheduledTransactionStore(props.store, +props.id);
 	}
 
 	public render() {

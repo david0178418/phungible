@@ -21,10 +21,9 @@ import Link from '../shared/link';
 
 type Props = {
 	disableAnimation: boolean;
+	store?: AppStore;
 };
-type Context = {
-	store: AppStore;
-};
+
 type ListProps = {
 	accounts: Account[];
 	onRemove: (account: Account) => void;
@@ -94,22 +93,15 @@ const AccountsList = observer(function({accounts, onRemove}: ListProps) {
 export default
 class Accounts extends Component<Props, {}> {
 	public static path = '/accounts/';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: AcountsStore;
 
 	constructor(props: Props) {
 		super(props);
-	}
-
-	public componentWillMount() {
-		this.store = new AcountsStore(this.context.store);
+		this.store = new AcountsStore(props.store);
 	}
 
 	public removeAccount(account: Account) {
-		this.context.store.removeAccount(account);
+		this.props.store.removeAccount(account);
 	}
 
 	public render() {
@@ -124,7 +116,7 @@ class Accounts extends Component<Props, {}> {
 				<ContentArea>
 					<AccountsList
 						accounts={store.accounts}
-						onRemove={(account: Account) => this.context.store.removeAccount(account)}
+						onRemove={(account: Account) => this.props.store.removeAccount(account)}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/account/edit" />}

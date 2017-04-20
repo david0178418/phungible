@@ -18,9 +18,7 @@ import Link from '../shared/link';
 
 type Props = {
 	disableAnimation: boolean;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 type ListProps = {
 	transactions: Transaction[];
@@ -81,14 +79,11 @@ const TransactionsList = observer(function({transactions, onRemove}: ListProps) 
 export default
 class Transactions extends Component<Props, {}> {
 	public static path = '/transactions';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: TransactionsStore;
 
-	public componentWillMount() {
-		this.store = new TransactionsStore(this.context.store);
+	constructor(props: Props) {
+		super(props);
+		this.store = new TransactionsStore(props.store);
 	}
 
 	public render() {
@@ -102,7 +97,7 @@ class Transactions extends Component<Props, {}> {
 				<ContentArea>
 					<TransactionsList
 						transactions={store.transactions}
-						onRemove={(transaction: Transaction) => this.context.store.removeTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
 					/>
 					<FloatingActionButton
 						containerElement={<Link to="/transaction/edit" />}

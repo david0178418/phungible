@@ -24,9 +24,7 @@ import Link from '../shared/link';
 type Handler = (scheduledTransaction: ScheduledTransaction) => void;
 type Props = {
 	disableAnimation: boolean;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 type ListProps = {
 	scheduledTransactions: ScheduledTransaction[];
@@ -94,18 +92,15 @@ const ScheduledTransactionList = observer(function({scheduledTransactions, onRem
 export default
 class ScheduledTransactions extends Component<Props, {}> {
 	public static path = '/scheduled-transactions/';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: ScheduledTransactionsStore;
 
-	public componentWillMount() {
-		this.store = new ScheduledTransactionsStore(this.context.store);
+	constructor(props: Props) {
+		super(props);
+		this.store = new ScheduledTransactionsStore(props.store);
 	}
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this.context.store.removeScheduledTransaction(scheduledTransaction);
+		this.props.store.removeScheduledTransaction(scheduledTransaction);
 	}
 
 	public render() {
@@ -122,7 +117,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 						scheduledTransactions={store.scheduledTransactions}
 						onRemove={
 							(scheduledTransaction: ScheduledTransaction) =>
-								this.context.store.removeScheduledTransaction(scheduledTransaction)
+								this.props.store.removeScheduledTransaction(scheduledTransaction)
 						}
 					/>
 					<FloatingActionButton

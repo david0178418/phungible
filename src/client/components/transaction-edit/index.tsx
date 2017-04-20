@@ -48,9 +48,7 @@ class TransactionEditStore {
 }
 type Props = {
 	id: number;
-};
-type Context = {
-	store: AppStore;
+	store?: AppStore;
 };
 
 @observer
@@ -58,14 +56,11 @@ export default
 class TransactionEdit extends Component<Props, {}> {
 	public static path = '/transaction/edit/';
 	public static pathParams = '/transaction/edit/:id';
-	public static contextTypes = {
-		store: () => false,
-	};
-	public context: Context;
 	private store: TransactionEditStore;
 
-	public componentWillMount() {
-		this.store = new TransactionEditStore(this.context.store, +this.props.id);
+	constructor(props: Props) {
+		super(props);
+		this.store = new TransactionEditStore(props.store, +props.id);
 	}
 
 	public render() {
