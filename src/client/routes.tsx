@@ -93,8 +93,8 @@ class Routes extends Component<Props, State> {
 		return (
 			<div>
 				<App>
-					{page === Home.path && <Home key={Home.path} />}
-					{page === Trends.path && <Trends key={Trends.path}/>}
+					{page === Home.path && <Home key={Home.path} disableAnimation={disableNextPageAnimation} />}
+					{page === Trends.path && <Trends key={Trends.path} disableAnimation={disableNextPageAnimation} />}
 					{page === Accounts.path && <Accounts key={Accounts.path} disableAnimation={disableNextPageAnimation} />}
 					{page === AccountEdit.path && <AccountEdit  key={AccountEdit.path} id={id} />}
 					{page === Transactions.path &&

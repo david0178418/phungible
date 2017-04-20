@@ -60,6 +60,20 @@ function transactionProps(transactionsCount: number, accountsCount: number) {
 	return props;
 }
 
+function trendsProps(accountsCount: number) {
+	const props: MenuItemProps = {
+		leftIcon: <TrendingUpIcon />,
+	};
+
+	if(accountsCount) {
+		props.href = Trends.path;
+	} else {
+		props.disabled = true;
+	}
+
+	return props;
+}
+
 export default
 class Navigation extends React.Component<Props, any> {
 	constructor(props: Props) {
@@ -91,8 +105,7 @@ class Navigation extends React.Component<Props, any> {
 						Home
 					</NavItem>
 					<NavItem
-						href={Trends.path}
-						leftIcon={<TrendingUpIcon />}
+						{...trendsProps(accounts.length)}
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Trends

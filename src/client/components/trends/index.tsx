@@ -11,8 +11,12 @@ type Context = {
 	store: AppStore;
 };
 
+type Props = {
+	disableAnimation: boolean;
+};
+
 export default
-class Trends extends Component<{}, {}> {
+class Trends extends Component<Props, {}> {
 	public static path = '/trends/';
 	public static contextTypes = {
 		store: () => false,
@@ -22,7 +26,7 @@ class Trends extends Component<{}, {}> {
 	public render() {
 		const {store} = this.context;
 		return (
-			<Page className="slide-vertical">
+			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Trends"
 					store={store}
