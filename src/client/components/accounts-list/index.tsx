@@ -1,32 +1,21 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
 import Account, {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
-import Link from '../shared/link';
 
 type Props = {
-	disableAnimation: boolean;
-	store?: AppStore;
-};
-
-type ListProps = {
 	accounts: Account[];
 	onRemove: (account: Account) => void;
+	store: AppStore;
 };
 
 class AcountsStore {
@@ -69,29 +58,9 @@ class AcountsStore {
 	}
 }
 
-const AccountsList = observer(function({accounts, onRemove}: ListProps) {
-	return (
-		<List>
-			{accounts.map((account) => (
-				<ListItem
-					key={account.id}
-					primaryText={`${account.name}`}
-					secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
-					leftIcon={
-						account.type === AccountType.Savings ?
-							<EditorMoneyOn color={Colors.Money}/> :
-							<ActionCreditCard color={Colors.Debt}/>
-					}
-					rightIconButton={EditRemoveMenu<Account>('account', account, onRemove)}
-				/>
-			))}
-		</List>
-	);
-});
-
 @observer
 export default
-class Accounts extends Component<Props, {}> {
+class AccountsList extends Component<Props, {}> {
 	public static path = '/accounts/';
 	private store: AcountsStore;
 
@@ -105,28 +74,24 @@ class Accounts extends Component<Props, {}> {
 	}
 
 	public render() {
-		const store = this.store;
+		const {accounts, onRemove} = this.props;
 
 		return (
-			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation
-					title="Accounts"
-					store={store.appStore}
-				/>
-				<ContentArea>
-					<AccountsList
-						accounts={store.accounts}
-						onRemove={(account: Account) => this.props.store.removeAccount(account)}
+			<List>
+				{accounts.map((account) => (
+					<ListItem
+						key={account.id}
+						primaryText={`${account.name}`}
+						secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
+						leftIcon={
+							account.type === AccountType.Savings ?
+								<EditorMoneyOn color={Colors.Money}/> :
+								<ActionCreditCard color={Colors.Debt}/>
+						}
+						rightIconButton={EditRemoveMenu<Account>('account', account, onRemove)}
 					/>
-					<FloatingActionButton
-						containerElement={<Link to="/account/edit" />}
-						style={floatingActionButtonStyle}
-						zDepth={2}
-					>
-						<ContentAdd />
-					</FloatingActionButton>
-				</ContentArea>
-			</Page>
+				))}
+			</List>
 		);
 	}
 }

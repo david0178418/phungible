@@ -1,111 +1,119 @@
-import AppBar from 'material-ui/AppBar';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import IconButton from 'material-ui/IconButton';
-import ActionDone from 'material-ui/svg-icons/action/done';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import DatePicker from 'material-ui/DatePicker';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
+import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
-import AppStore from '../../shared/stores/app';
-import Transaction from '../../shared/stores/transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
-import TransactionForm from '../transaction-form';
+import Account from '../../shared/stores/account';
+import Transaction, {TransactionType} from '../../shared/stores/transaction';
+import AccountSelector from '../account-selector';
+import MoneyEdit from '../shared/money-edit';
 
-class TransactionEditStore {
-	public transaction: Transaction;
-	private appStore: AppStore;
-
-	constructor(appStore: AppStore, scheduledTransaction?: number) {
-		this.appStore = appStore;
-
-		if(scheduledTransaction) {
-			this.transaction = appStore.findTransaction(scheduledTransaction);
-		} else {
-			this.transaction = new Transaction();
-		}
-	}
-
-	public saveTransaction() {
-		if(this.transaction.isValid) {
-			this.appStore.saveTransaction(this.transaction);
-			this.transaction = new Transaction();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	get accounts() {
-		return this.appStore.accounts;
-	}
-
-	get transactions() {
-		return this.appStore.transactions;
-	}
-}
 type Props = {
-	id: number;
-	store?: AppStore;
+	accounts: Account[];
+	transaction: Transaction;
+	onSubmit(): void;
 };
 
 @observer
 export default
-class TransactionEdit extends Component<Props, {}> {
-	public static path = '/transaction/edit/';
-	public static pathParams = '/transaction/edit/:id';
-	private store: TransactionEditStore;
-
+class TransactionForm extends Component<Props, any> {
 	constructor(props: Props) {
 		super(props);
-		this.store = new TransactionEditStore(props.store, +props.id);
 	}
-
 	public render() {
-		const {
-			accounts,
-			transaction,
-		} = this.store;
-		const action = transaction.id ? 'Edit' : 'Create';
-
+		const {accounts, transaction, onSubmit} = this.props;
+		const selectedTowardAccountId = transaction.towardAccount && transaction.towardAccount.id || null;
+		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
-			<Page className="slide-horizontal">
-				<AppBar
-					onLeftIconButtonTouchTap={() => {
-						// TODO FIX for React Router 4
-						// (this.props as any).router.goBack();
-						window.history.back();
-					}}
-					title={`${action} Transaction`}
-					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
-				/>
-				<ContentArea>
-					<TransactionForm
-						accounts={accounts}
-						transaction={transaction}
-						onSubmit={() => this.handleSaveTransaction()}
+			<form className="edit-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
+				<div>
+					<TextField
+						fullWidth
+						floatingLabelText="Transaction Name"
+						onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
+						value={transaction.name}
 					/>
-					<FloatingActionButton
-						disabled={!transaction.isValid}
-						onTouchTap={() => this.handleSaveTransaction()}
-						style={floatingActionButtonStyle}
-						zDepth={2}
+				</div>
+				<div>
+					<MoneyEdit money={transaction.amount} />
+				</div>
+				<div>
+					<SelectField
+						fullWidth
+						floatingLabelText="Type"
+						value={transaction.type}
+						onChange={(ev, index, value) => this.handleUpdateType(value, transaction)}
 					>
-						<ActionDone />
-					</FloatingActionButton>
-				</ContentArea>
-			</Page>
+						<MenuItem value={TransactionType.Expense} primaryText="Expense" />
+						<MenuItem value={TransactionType.Income} primaryText="Income" />
+					</SelectField>
+				</div>
+				{!!accounts.length && (
+					<div>
+						<AccountSelector
+							accounts={accounts}
+							label="From Account"
+							onChange={(value, index) => this.handleUpdateFromAccount(value, transaction)}
+							selectedAccountId={selectedFromAccountId}
+						/>
+						<AccountSelector
+							accounts={accounts}
+							label="Towards Account"
+							onChange={(value, index) => this.handleUpdateTowardAccount(value, transaction)}
+							selectedAccountId={selectedTowardAccountId}
+						/>
+					</div>
+				)}
+				<div>
+					<DatePicker
+						autoOk
+						fullWidth
+						floatingLabelText="Date"
+						hintText="Portrait Dialog"
+						locale="en-US"
+						onChange={(ev, date) => this.handleUpdateDate(date, transaction)}
+						value={transaction.date}
+					/>
+				</div>
+				<div>
+					<TextField
+						fullWidth
+						floatingLabelText="Notes"
+						value={transaction.notes}
+						onChange={((ev: any, value: any) => this.handleUpdateNotes(value, transaction)) as any}
+					/>
+				</div>
+			</form>
 		);
 	}
 
-	private handleSaveTransaction() {
-		setTimeout(() => {
-			this.store.saveTransaction();
-			// TODO FIX to use React Router 4
-			// (this.props as any).router.push('/transactions');
-			window.location.hash = '/transactions';
-		}, 100);
+	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
+		e.preventDefault();
+		onSubmit();
+	}
+	@action private handleUpdateFromAccount(accountId: number, transaction: Transaction) {
+		transaction.fromAccount = this.findAccount(accountId);
+	}
+	@action private handleUpdateTowardAccount(accountId: number, transaction: Transaction) {
+		transaction.towardAccount = this.findAccount(accountId);
+	}
+	@action private handleUpdateNotes(newNote: string, transaction: Transaction) {
+		transaction.notes = newNote;
+	}
+	@action private handleUpdateName(newName: string, transaction: Transaction) {
+		transaction.name = newName;
+	}
+	@action private handleUpdateDate(newDate: Date, transaction: Transaction) {
+		transaction.date = newDate;
+	}
+	@action private handleUpdateType(newType: TransactionType, transaction: Transaction) {
+		transaction.type = newType;
+	}
+	private findAccount = (id: number) => {
+		return this.props.accounts.find((account) => account.id === id) || null;
 	}
 }

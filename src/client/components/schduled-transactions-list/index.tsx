@@ -1,8 +1,6 @@
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
 import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import {action, computed, observable} from 'mobx';
@@ -10,25 +8,16 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
-import Navigation from '../../layout/navigation';
 import Colors from '../../shared/colors';
 import AppStore from '../../shared/stores/app';
 import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
 import {TransactionType} from '../../shared/stores/transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
 import EditRemoveMenu from '../shared/edit-remove-menu';
-import Link from '../shared/link';
 
-type Handler = (scheduledTransaction: ScheduledTransaction) => void;
 type Props = {
-	disableAnimation: boolean;
-	store?: AppStore;
-};
-type ListProps = {
+	store: AppStore;
 	scheduledTransactions: ScheduledTransaction[];
-	onRemove: Handler;
+	onRemove: (scheduledTransaction: ScheduledTransaction) => void;
 };
 
 class ScheduledTransactionsStore {
@@ -68,26 +57,6 @@ class ScheduledTransactionsStore {
 	}
 }
 
-const ScheduledTransactionList = observer(function({scheduledTransactions, onRemove}: ListProps) {
-	return (
-		<List>
-			{scheduledTransactions.map((scheduledTransaction) => (
-				<ListItem
-					key={scheduledTransaction.id}
-					primaryText={`${scheduledTransaction.name}`}
-					secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
-					leftIcon={
-						scheduledTransaction.type === TransactionType.Income ?
-							<ActionTrendingUp color={Colors.Money} /> :
-							<ActionTrendingDown color={Colors.Debt} />
-					}
-					rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
-				/>
-			))}
-		</List>
-	);
-});
-
 @observer
 export default
 class ScheduledTransactions extends Component<Props, {}> {
@@ -104,31 +73,24 @@ class ScheduledTransactions extends Component<Props, {}> {
 	}
 
 	public render() {
-		const store = this.store;
+		const {onRemove, scheduledTransactions} = this.props;
 
 		return (
-			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation
-					title="Budget"
-					store={store.appStore}
-				/>
-				<ContentArea>
-					<ScheduledTransactionList
-						scheduledTransactions={store.scheduledTransactions}
-						onRemove={
-							(scheduledTransaction: ScheduledTransaction) =>
-								this.props.store.removeScheduledTransaction(scheduledTransaction)
+			<List>
+				{scheduledTransactions.map((scheduledTransaction) => (
+					<ListItem
+						key={scheduledTransaction.id}
+						primaryText={`${scheduledTransaction.name}`}
+						secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
+						leftIcon={
+							scheduledTransaction.type === TransactionType.Income ?
+								<ActionTrendingUp color={Colors.Money} /> :
+								<ActionTrendingDown color={Colors.Debt} />
 						}
+						rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 					/>
-					<FloatingActionButton
-						containerElement={<Link to="/scheduled-transaction/edit" />}
-						style={floatingActionButtonStyle}
-						zDepth={2}
-					>
-						<ContentAdd />
-					</FloatingActionButton>
-				</ContentArea>
-			</Page>
+				))}
+			</List>
 		);
 	}
 }

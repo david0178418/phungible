@@ -7,15 +7,16 @@ import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
-
-import AccountEdit from '../components/account-edit';
-import Accounts from '../components/accounts';
-import CreateScheduledTransaction from '../components/create-scheduled-transaction';
-import Home from '../components/home';
-import ScheduledTransactions from '../components/schduled-transactions';
-import TransactionEdit from '../components/transaction-edit/';
-import Transactions from '../components/transactions';
-import Trends from '../components/trends';
+import {
+	AccountEditPage,
+	AccountsPage,
+	HomePage,
+	ScheduledTransactionEditPage,
+	ScheduledTransactionsPage,
+	TransactionEditPage,
+	TransactionsPage,
+	TrendsPage,
+} from '../components/pages';
 import AppStore from '../shared/stores/app';
 import NavItem from './nav-item';
 
@@ -27,7 +28,7 @@ type Props = {
 type MenuItemProps = any;
 
 function accountTarget(accountsCount: number) {
-	return accountsCount ? Accounts.path : AccountEdit.path;
+	return accountsCount ? AccountsPage.path : AccountEditPage.path;
 }
 
 function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
@@ -37,7 +38,7 @@ function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
 	};
 
 	if(accountCount) {
-		props.href = scheduledTransactionsCount ? ScheduledTransactions.path : CreateScheduledTransaction.path;
+		props.href = scheduledTransactionsCount ? ScheduledTransactionsPage.path : ScheduledTransactionEditPage.path;
 	} else {
 		props.disabled = true;
 	}
@@ -52,7 +53,7 @@ function transactionProps(transactionsCount: number, accountsCount: number) {
 	};
 
 	if(accountsCount) {
-		props.href = transactionsCount ? Transactions.path : TransactionEdit.path;
+		props.href = transactionsCount ? TransactionsPage.path : TransactionEditPage.path;
 	} else {
 		props.disabled = true;
 	}
@@ -66,7 +67,7 @@ function trendsProps(accountsCount: number) {
 	};
 
 	if(accountsCount) {
-		props.href = Trends.path;
+		props.href = TrendsPage.path;
 	} else {
 		props.disabled = true;
 	}
@@ -99,7 +100,7 @@ class Navigation extends React.Component<Props, any> {
 				>
 					<NavItem
 						leftIcon={<HomeIcon />}
-						href={`${Home.path}`}
+						href={`${HomePage.path}`}
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Home

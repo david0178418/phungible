@@ -1,34 +1,29 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import Navigation from '../../layout/navigation';
+import {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
-import HomeContent from './home-content';
+import Money from '../../shared/utils/money';
 
 type Props = {
-	disableAnimation: boolean;
 	store?: AppStore;
 };
 
 export default
-class Index extends Component<Props, {}> {
-	public static path = '/';
-
-	constructor(props: Props) {
-		super(props);
-	}
-
+class Index extends Component<Props, any> {
 	public render() {
-		const {store} = this.props;
+		const {
+			accounts,
+		} = this.props.store;
 		return (
-			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation title="Home" store={store} />
-				<ContentArea>
-					<HomeContent store={store} />
-				</ContentArea>
-			</Page>
+			<div>
+				<h1>Welcome back</h1>
+				<p>
+					Today's Balance is {Money.formatMoney(accounts.reduce((total, account) => {
+						return total += account.latestBalanceUpdate.balance.val * (account.type === AccountType.Savings ? 1 : -1);
+					}, 0))}
+				</p>
+			</div>
 		);
 	}
 }

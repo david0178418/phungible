@@ -4,14 +4,16 @@ import {Component} from 'react';
 
 import App from './app';
 
-import AccountEdit from './components/account-edit';
-import Accounts from './components/accounts';
-import CreateScheduledTransaction from './components/create-scheduled-transaction';
-import Home from './components/home';
-import ScheduledTransactions from './components/schduled-transactions';
-import TransactionEdit from './components/transaction-edit/';
-import Transactions from './components/transactions';
-import Trends from './components/trends';
+import {
+	AccountEditPage,
+	AccountsPage,
+	HomePage,
+	ScheduledTransactionEditPage,
+	ScheduledTransactionsPage,
+	TransactionEditPage,
+	TransactionsPage,
+	TrendsPage,
+} from './components/pages';
 
 type Props = {};
 type State = {
@@ -24,7 +26,7 @@ function getCurrengtHash() {
 	let hash = window.location.hash;
 
 	if(!hash) {
-		window.location.hash = hash = Home.path;
+		window.location.hash = hash = HomePage.path;
 	} else {
 		// remove leading "#"
 		hash = hash.substr(1);
@@ -48,9 +50,9 @@ class Routes extends Component<Props, State> {
 		};
 
 		this.horizontalSlidePages = [
-			AccountEdit.path,
-			CreateScheduledTransaction.path,
-			TransactionEdit.path,
+			AccountEditPage.path,
+			ScheduledTransactionEditPage.path,
+			TransactionEditPage.path,
 		];
 
 		this.router = new N(null, true);
@@ -58,17 +60,17 @@ class Routes extends Component<Props, State> {
 
 	public componentWillMount() {
 		this.router.on({
-			[Home.path]: () => this.setPage(Home.path),
-			[AccountEdit.path]: () => this.setPage(AccountEdit.path),
-			[AccountEdit.pathParams]: (params) => this.setPage(AccountEdit.path, params),
-			[Accounts.path]: () => this.setPage(Accounts.path),
-			[CreateScheduledTransaction.path]: () => this.setPage(CreateScheduledTransaction.path),
-			[CreateScheduledTransaction.pathParams]: (params) => this.setPage(CreateScheduledTransaction.path, params),
-			[ScheduledTransactions.path]: () => this.setPage(ScheduledTransactions.path),
-			[TransactionEdit.path]: () => this.setPage(TransactionEdit.path),
-			[TransactionEdit.pathParams]: (params) => this.setPage(TransactionEdit.path, params),
-			[Transactions.path]: () => this.setPage(Transactions.path),
-			[Trends.path]: () => this.setPage(Trends.path),
+			[HomePage.path]: () => this.setPage(HomePage.path),
+			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
+			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
+			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
+			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage.path),
+			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage.path, params),
+			[ScheduledTransactionsPage.path]: () => this.setPage(ScheduledTransactionsPage.path),
+			[TransactionEditPage.path]: () => this.setPage(TransactionEditPage.path),
+			[TransactionEditPage.pathParams]: (params) => this.setPage(TransactionEditPage.path, params),
+			[TransactionsPage.path]: () => this.setPage(TransactionsPage.path),
+			[TrendsPage.path]: () => this.setPage(TrendsPage.path),
 		})
 		.resolve();
 	}
@@ -93,17 +95,18 @@ class Routes extends Component<Props, State> {
 		return (
 			<div>
 				<App>
-					{page === Home.path && <Home key={Home.path} disableAnimation={disableNextPageAnimation} />}
-					{page === Trends.path && <Trends key={Trends.path} disableAnimation={disableNextPageAnimation} />}
-					{page === Accounts.path && <Accounts key={Accounts.path} disableAnimation={disableNextPageAnimation} />}
-					{page === AccountEdit.path && <AccountEdit  key={AccountEdit.path} id={id} />}
-					{page === Transactions.path &&
-						<Transactions key={Transactions.path} disableAnimation={disableNextPageAnimation} />}
-					{page === TransactionEdit.path && <TransactionEdit key={TransactionEdit.path} id={id} />}
-					{page === ScheduledTransactions.path &&
-						<ScheduledTransactions key={ScheduledTransactions.path} disableAnimation={disableNextPageAnimation} />}
-					{page === CreateScheduledTransaction.path &&
-						<CreateScheduledTransaction key={CreateScheduledTransaction.path} id={id} />}
+					{page === HomePage.path && <HomePage key={HomePage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === TrendsPage.path && <TrendsPage key={TrendsPage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === AccountsPage.path &&
+						<AccountsPage key={AccountsPage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === AccountEditPage.path && <AccountEditPage  key={AccountEditPage.path} id={id} />}
+					{page === TransactionsPage.path &&
+						<TransactionsPage key={TransactionsPage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === TransactionEditPage.path && <TransactionEditPage key={TransactionEditPage.path} id={id} />}
+					{page === ScheduledTransactionsPage.path &&
+						<ScheduledTransactionsPage key={ScheduledTransactionsPage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === ScheduledTransactionEditPage.path &&
+						<ScheduledTransactionEditPage key={ScheduledTransactionEditPage.path} id={id} />}
 
 				</App>
 			</div>

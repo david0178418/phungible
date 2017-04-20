@@ -33,4 +33,4 @@ function AccountsSelector({accounts, label, onChange, selectedAccountId}: Accoun
 			})}
 		</SelectField>
 	);
-};
+}
