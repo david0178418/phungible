@@ -88,6 +88,25 @@ class App extends Component<Props, any> {
 							left: 100vw;
 							transition: left 350ms;
 						}
+
+						/* CONTENT */
+						.content-enter {
+							opacity: 0;
+							transition: opacity 200ms;
+						}
+
+						.content-enter-active {
+							opacity: 1;
+						}
+
+						.content-leave {
+							opacity: 1;
+							transition: opacity 200ms;
+						}
+
+						.content-leave-active {
+							opacity: 0;
+						}
 					`}</style>
 					<CSSTransitionGroup
 						component="div"
