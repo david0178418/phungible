@@ -16,21 +16,16 @@ type Props = {
 	transactions: Transaction[];
 	scheduledTransactions: ScheduledTransaction[];
 };
-type State = {
-	animateChart: boolean;
-};
 
 @observer
 export default
-class Trends extends Component<Props, State> {
+class Trends extends Component<Props, {}> {
+	private animateChart = true;
 	private store: TrendsStore;
 
 	constructor(props: Props) {
 		super(props);
 		this.store = new TrendsStore(props);
-		this.state = {
-			animateChart: true,
-		};
 	}
 
 	public render() {
@@ -68,7 +63,7 @@ class Trends extends Component<Props, State> {
 					))}
 				</div>
 				<TrendsChart
-					animate={this.state.animateChart}
+					animate={this.animateChart}
 					data={store.selectedTrendData}
 					onAnimationEnd={() => this.handleAnimationEnd()}
 					trendNames={store.selectedTrendOptions}
@@ -95,10 +90,6 @@ class Trends extends Component<Props, State> {
 	}
 
 	private handleAnimationEnd() {
-		if(this.state.animateChart) {
-			this.setState({
-				animateChart: false,
-			});
-		}
+		this.animateChart = false;
 	}
 }
