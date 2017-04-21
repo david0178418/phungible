@@ -57,7 +57,7 @@ class TrendsPage extends Component<Props, State> {
 				<ContentArea>
 					<CSSTransitionGroup
 						component="div"
-						transitionName="content"
+						transitionName="page-content"
 						transitionEnterTimeout={400}
 						transitionLeaveTimeout={400}
 					>

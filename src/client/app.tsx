@@ -90,21 +90,21 @@ class App extends Component<Props, any> {
 						}
 
 						/* CONTENT */
-						.content-enter {
+						.page-content-enter {
 							opacity: 0;
-							transition: opacity 200ms;
 						}
 
-						.content-enter-active {
+						.page-content-enter-active {
 							opacity: 1;
+							transition: opacity 400ms;
 						}
 
-						.content-leave {
+						.page-content-leave {
 							opacity: 1;
-							transition: opacity 200ms;
+							transition: opacity 400ms;
 						}
 
-						.content-leave-active {
+						.page-content-leave-active {
 							opacity: 0;
 						}
 					`}</style>
