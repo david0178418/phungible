@@ -98,6 +98,7 @@ class Navigation extends React.Component<Props, any> {
 					open={this.state.isOpen}
 					onRequestChange={(open) => this.handleDrawerStateUpdate(open)}
 				>
+					<AppBar iconElementLeft={<span/>} title="Phungible"/>
 					<NavItem
 						leftIcon={<HomeIcon />}
 						href={`${HomePage.path}`}

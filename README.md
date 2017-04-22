@@ -1,4 +1,4 @@
-# Budget Tracker
+# Phungible
 
 ## Requires
 * node v6.9.0+
