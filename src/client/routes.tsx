@@ -13,7 +13,7 @@ import {
 	TransactionEditPage,
 	TransactionsPage,
 	TrendsPage,
-} from './components/pages';
+} from './pages';
 
 type Props = {};
 type State = {

@@ -8,12 +8,12 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import Account from '../../shared/stores/account';
-import AppStore from '../../shared/stores/app';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import AccountEdit from '../account-edit';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
+import AccountEdit from '../components/account-edit';
+import ContentArea from '../components/shared/content-area';
+import Account from '../shared/stores/account';
+import AppStore from '../shared/stores/app';
+import {floatingActionButtonStyle} from '../shared/styles';
+import Page from './page';
 
 class AccountEditStore {
 	public account: Account;

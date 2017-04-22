@@ -3,14 +3,14 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import * as React from 'react';
 import {Component} from 'react';
 
-import Navigation from '../../layout/navigation';
-import AppStore from '../../shared/stores/app';
-import Transaction from '../../shared/stores/transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
-import Link from '../shared/link';
-import TransactionsList from '../transactions-list';
+import ContentArea from '../components/shared/content-area';
+import Link from '../components/shared/link';
+import TransactionsList from '../components/transactions-list';
+import Navigation from '../layout/navigation';
+import AppStore from '../shared/stores/app';
+import Transaction from '../shared/stores/transaction';
+import {floatingActionButtonStyle} from '../shared/styles';
+import Page from './page';
 
 type Props = {
 	disableAnimation: boolean;

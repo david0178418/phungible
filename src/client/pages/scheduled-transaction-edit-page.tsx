@@ -7,12 +7,12 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import AppStore from '../../shared/stores/app';
-import ScheduledTransaction, {ScheduledTransactionFacade} from '../../shared/stores/scheduled-transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ScheduledTransactionEdit from '../scheduled-transaction-edit';
-import ContentArea from '../shared/content-area';
+import ScheduledTransactionEdit from '../components/scheduled-transaction-edit';
+import ContentArea from '../components/shared/content-area';
+import AppStore from '../shared/stores/app';
+import ScheduledTransaction, {ScheduledTransactionFacade} from '../shared/stores/scheduled-transaction';
+import {floatingActionButtonStyle} from '../shared/styles';
+import Page from './page';
 
 class CreateScheduledTransactionStore {
 	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;

@@ -16,7 +16,7 @@ import {
 	TransactionEditPage,
 	TransactionsPage,
 	TrendsPage,
-} from '../components/pages';
+} from '../pages';
 import AppStore from '../shared/stores/app';
 import NavItem from './nav-item';
 

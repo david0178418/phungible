@@ -3,11 +3,11 @@ import * as React from 'react';
 import {Component} from 'react';
 import * as CSSTransitionGroup from 'react-addons-css-transition-group';
 
-import Navigation from '../../layout/navigation';
-import AppStore from '../../shared/stores/app';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
-import Trends from '../trends';
+import ContentArea from '../components/shared/content-area';
+import Trends from '../components/trends';
+import Navigation from '../layout/navigation';
+import AppStore from '../shared/stores/app';
+import Page from './page';
 
 const loaderStyle = {
 	left: 'calc(50% - 75px)',

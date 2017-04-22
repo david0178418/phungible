@@ -5,14 +5,14 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
-import Navigation from '../../layout/navigation';
-import AppStore from '../../shared/stores/app';
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ScheduledTransactionList from '../schduled-transactions-list';
-import ContentArea from '../shared/content-area';
-import Link from '../shared/link';
+import ScheduledTransactionList from '../components/schduled-transactions-list';
+import ContentArea from '../components/shared/content-area';
+import Link from '../components/shared/link';
+import Navigation from '../layout/navigation';
+import AppStore from '../shared/stores/app';
+import ScheduledTransaction from '../shared/stores/scheduled-transaction';
+import {floatingActionButtonStyle} from '../shared/styles';
+import Page from './page';
 
 type Props = {
 	disableAnimation: boolean;

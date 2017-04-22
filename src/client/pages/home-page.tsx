@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import Navigation from '../../layout/navigation';
-import AppStore from '../../shared/stores/app';
-import Home from '../home';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
+import Home from '../components/home';
+import ContentArea from '../components/shared/content-area';
+import Navigation from '../layout/navigation';
+import AppStore from '../shared/stores/app';
+import Page from './page';
 
 type Props = {
 	disableAnimation: boolean;

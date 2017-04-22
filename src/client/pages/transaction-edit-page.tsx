@@ -7,12 +7,12 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import AppStore from '../../shared/stores/app';
-import Transaction from '../../shared/stores/transaction';
-import {floatingActionButtonStyle} from '../../shared/styles';
-import Page from '../pages/page';
-import ContentArea from '../shared/content-area';
-import TransactionEdit from '../transaction-edit';
+import ContentArea from '../components/shared/content-area';
+import TransactionEdit from '../components/transaction-edit';
+import AppStore from '../shared/stores/app';
+import Transaction from '../shared/stores/transaction';
+import {floatingActionButtonStyle} from '../shared/styles';
+import Page from './page';
 
 class TransactionEditStore {
 	public transaction: Transaction;
