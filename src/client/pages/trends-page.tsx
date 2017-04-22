@@ -1,7 +1,7 @@
 import CircularProgress from 'material-ui/CircularProgress';
 import * as React from 'react';
 import {Component} from 'react';
-import * as CSSTransitionGroup from 'react-addons-css-transition-group';
+import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import ContentArea from '../components/shared/content-area';
 import Trends from '../components/trends';

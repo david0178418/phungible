@@ -54,10 +54,10 @@
     "moment-recur": "^1.0.5",
     "navigo": "^4.6.0",
     "react": "^15.4.2",
-    "react-addons-css-transition-group": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-tap-event-plugin": "^2.0.1",
+    "react-transition-group": "^1.1.2",
     "recharts": "^0.22.3",
     "serializr": "^1.1.9"
   }
