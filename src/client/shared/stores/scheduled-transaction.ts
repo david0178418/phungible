@@ -64,7 +64,7 @@ class ScheduledTransaction {
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
 	@serializable
-	@observable private _repeatType: RepeatTypes = RepeatTypes.Dates;
+	@observable private _repeatType: RepeatTypes = RepeatTypes.Days;
 	@serializable
 	@observable private _startDate: string;
 

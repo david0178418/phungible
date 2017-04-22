@@ -38,19 +38,19 @@ class RepeatField extends Component<Props, any> {
 					value={scheduledTransaction.repeatType}
 				>
 					<Tab
-						label="Date"
-						value={RepeatTypes.Dates}
-					>
-						{scheduledTransaction.repeatType === RepeatTypes.Dates &&
-							<DateSelection scheduledTransaction={scheduledTransaction} />
-						}
-					</Tab>
-					<Tab
 						label="Day"
 						value={RepeatTypes.Days}
 					>
 						{scheduledTransaction.repeatType === RepeatTypes.Days &&
 							<DaySelection scheduledTransaction={scheduledTransaction} />
+						}
+					</Tab>
+					<Tab
+						label="Date"
+						value={RepeatTypes.Dates}
+					>
+						{scheduledTransaction.repeatType === RepeatTypes.Dates &&
+							<DateSelection scheduledTransaction={scheduledTransaction} />
 						}
 					</Tab>
 					<Tab
