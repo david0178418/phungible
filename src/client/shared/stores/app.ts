@@ -50,6 +50,9 @@ class AppStore {
 	public findTransaction(id: number) {
 		return this.transactions.find((transaction) => transaction.id === id);
 	}
+	public findTransactionsOnDate(date: Date) {
+		return this.transactions.filter((transaction) => moment(transaction.date).isSame(date, 'days'));
+	}
 	public save() {
 		setItem('store', serialize(this));
 	}

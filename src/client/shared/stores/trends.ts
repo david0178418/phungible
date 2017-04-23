@@ -67,7 +67,7 @@ class TrendsStore {
 		const formattedData = this.formattedData;
 		const returnVal: any[] = [];
 
-		// For-loop erformance optimization
+		// For-loop performance optimization
 		for(let x = 0; x < formattedData.length; x++) {
 			const dateData = formattedData[x];
 			const newDateData: any = {

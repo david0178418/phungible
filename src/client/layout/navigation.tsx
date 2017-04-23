@@ -4,12 +4,14 @@ import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
+import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
 import {
 	AccountEditPage,
 	AccountsPage,
+	DailyActivityPage,
 	HomePage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -105,6 +107,13 @@ class Navigation extends React.Component<Props, any> {
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Home
+					</NavItem>
+					<NavItem
+						leftIcon={<DateRangeIcon />}
+						href={`${DailyActivityPage.path}`}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
+						Daily Activity
 					</NavItem>
 					<NavItem
 						{...trendsProps(accounts.length)}

@@ -1,11 +1,10 @@
-
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
-import ScheduledTransactionList from '../components/schduled-transactions-list';
+import ScheduledTransactionList from '../components/scheduled-transactions-list';
 import ContentArea from '../components/shared/content-area';
 import Link from '../components/shared/link';
 import Navigation from '../layout/navigation';

@@ -5,3 +5,7 @@ export const floatingActionButtonStyle = {
 	zIndex: 2,
 } as any;
 // TODO Why is "any" needed here?
+
+export const pageStyling = {
+	padding: 15,
+} as any;

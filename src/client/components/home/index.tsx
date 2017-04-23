@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import {AccountType} from '../../shared/stores/account';
 import AppStore from '../../shared/stores/app';
+import {pageStyling} from '../../shared/styles';
 import Money from '../../shared/utils/money';
 
 type Props = {
@@ -16,7 +17,7 @@ class Index extends Component<Props, any> {
 			accounts,
 		} = this.props.store;
 		return (
-			<div>
+			<div style={pageStyling}>
 				<h1>Welcome back</h1>
 				<p>
 					Today's Balance is {Money.formatMoney(accounts.reduce((total, account) => {

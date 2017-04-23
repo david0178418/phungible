@@ -7,6 +7,7 @@ import App from './app';
 import {
 	AccountEditPage,
 	AccountsPage,
+	DailyActivityPage,
 	HomePage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -64,6 +65,7 @@ class Routes extends Component<Props, State> {
 			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
 			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
 			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
+			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage.path),
 			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage.path),
 			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage.path, params),
 			[ScheduledTransactionsPage.path]: () => this.setPage(ScheduledTransactionsPage.path),
@@ -100,6 +102,8 @@ class Routes extends Component<Props, State> {
 					{page === AccountsPage.path &&
 						<AccountsPage key={AccountsPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === AccountEditPage.path && <AccountEditPage  key={AccountEditPage.path} id={id} />}
+					{page === DailyActivityPage.path &&
+						<DailyActivityPage key={DailyActivityPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === TransactionsPage.path &&
 						<TransactionsPage key={TransactionsPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === TransactionEditPage.path && <TransactionEditPage key={TransactionEditPage.path} id={id} />}
