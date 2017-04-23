@@ -18,7 +18,6 @@ class Index extends Component<Props, any> {
 		} = this.props.store;
 		return (
 			<div style={pageStyling}>
-				<h1>Welcome back</h1>
 				<p>
 					Today's Balance is {Money.formatMoney(accounts.reduce((total, account) => {
 						return total += account.latestBalanceUpdate.balance.val * (account.type === AccountType.Savings ? 1 : -1);

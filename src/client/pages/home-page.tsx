@@ -24,7 +24,7 @@ class HomePage extends Component<Props, {}> {
 		const {store} = this.props;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation title="Home" store={store} />
+				<Navigation title="Phungible - Welcome Back!" store={store} />
 				<ContentArea>
 					<Home store={store} />
 				</ContentArea>
