@@ -44,7 +44,7 @@ class TrendsPage extends Component<Props, State> {
 				renderBody: true,
 			});
 			setTimeout(() => console.profileEnd(), 100);
-		}, 400);
+		}, 1);
 	}
 
 	public render() {
