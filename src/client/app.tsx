@@ -49,6 +49,7 @@ class App extends Component<Props, any> {
 						}
 						.page {
 							z-index: 1;
+							transform: translateZ(0);
 						}
 						.page-enter,
 						.page-leave {
