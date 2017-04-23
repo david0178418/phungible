@@ -75,6 +75,7 @@
           false
         ],
         "object-literal-sort-keys": true,
+        "prefer-for-of": false,
         "quotemark": [
             true,
             "single",

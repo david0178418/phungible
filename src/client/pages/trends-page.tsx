@@ -39,9 +39,11 @@ class TrendsPage extends Component<Props, State> {
 
 	public componentDidMount() {
 		setTimeout(() => {
+			console.profile('test');
 			this.setState({
 				renderBody: true,
 			});
+			setTimeout(() => console.profileEnd(), 100);
 		}, 400);
 	}
 

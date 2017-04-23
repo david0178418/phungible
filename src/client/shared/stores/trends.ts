@@ -64,20 +64,27 @@ class TrendsStore {
 
 	@computed get selectedTrendData() {
 		const selectedTrends = this.selectedTrendOptions;
+		const formattedData = this.formattedData;
+		const returnVal: any[] = [];
 
-		return this.formattedData.map((dateData) => {
+		// For-loop erformance optimization
+		for(let x = 0; x < formattedData.length; x++) {
+			const dateData = formattedData[x];
 			const newDateData: any = {
 				date: dateData.date,
 			};
 
-			selectedTrends.forEach((trendName) => {
+			for(let y = 0; y < selectedTrends.length; y++) {
+				const trendName = selectedTrends[y];
+
 				if(dateData[trendName] || dateData[trendName] === 0) {
 					newDateData[trendName] = dateData[trendName];
 				}
-			});
+			}
+			returnVal.push(newDateData);
+		}
 
-			return newDateData;
-		});
+		return returnVal;
 	}
 
 	public removeSelectedTrend(removedTrend: string) {
