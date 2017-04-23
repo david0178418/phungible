@@ -56,14 +56,18 @@ class App extends Component<Props, any> {
 							box-sizing: border-box;
 						}
 
+						.page-leave {
+							top: 0;
+						}
+
 						/* Vertical slide */
 						.page-enter.slide-vertical {
-							top: 100vh;
+							transform: translate(0, 100vh);
 						}
 
 						.page-enter-active.slide-vertical {
-							top: 0;
-							transition: top 350ms;
+							transform: translate(0, 0);
+							transition: transform 350ms;
 							z-index: 2;
 						}
 
@@ -72,21 +76,20 @@ class App extends Component<Props, any> {
 							z-index: 3;
 						}
 						.page-enter.slide-horizontal {
-							left: 100vw;
+							transform: translate(100vw, 0);
 						}
 
 						.page-enter-active.slide-horizontal {
-							left: 0;
-							transition: left 350ms;
+							transform: translate(0, 0);
+							transition: transform 350ms;
 						}
 
 						.page-leave.slide-horizontal {
-							left: 0;
-							top: 0;
+							transform: translate(0, 0);
 						}
 						.page-leave-active.slide-horizontal {
-							left: 100vw;
-							transition: left 350ms;
+							transform: translate(100vw, 0);
+							transition: transform 350ms;
 						}
 
 						/* CONTENT */
