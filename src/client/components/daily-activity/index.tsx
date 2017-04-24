@@ -8,10 +8,10 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import Colors from '../../shared/colors';
-import AppStore from '../../shared/stores/app';
-import {TransactionType} from '../../shared/stores/transaction';
-import Transaction from '../../shared/stores/transaction';
 import {pageStyling} from '../../shared/styles';
+import AppStore from '../../stores/app';
+import {TransactionType} from '../../stores/transaction';
+import Transaction from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {

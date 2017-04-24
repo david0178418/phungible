@@ -8,8 +8,8 @@ import {Component} from 'react';
 import * as React from 'react';
 
 import Colors from '../../shared/colors';
-import Account, {AccountType} from '../../shared/stores/account';
-import AppStore from '../../shared/stores/app';
+import Account, {AccountType} from '../../stores/account';
+import AppStore from '../../stores/app';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {

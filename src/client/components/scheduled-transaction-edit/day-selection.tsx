@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
-import ScheduledTransaction, {RepeatDays} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatDays} from '../../stores/scheduled-transaction';
 
 type Props = {
 	scheduledTransaction: ScheduledTransaction;

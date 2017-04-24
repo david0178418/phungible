@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {AccountType} from '../../shared/stores/account';
-import AppStore from '../../shared/stores/app';
 import {pageStyling} from '../../shared/styles';
 import Money from '../../shared/utils/money';
+import {AccountType} from '../../stores/account';
+import AppStore from '../../stores/app';
 
 type Props = {
 	store?: AppStore;

@@ -2,7 +2,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import * as React from 'react';
 
-import Account from '../../shared/stores/account';
+import Account from '../../stores/account';
 
 type AccountSelectorProps = {
 	accounts: Account[];

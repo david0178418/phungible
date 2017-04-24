@@ -7,8 +7,8 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
-import Account from '../../shared/stores/account';
-import Transaction, {TransactionType} from '../../shared/stores/transaction';
+import Account from '../../stores/account';
+import Transaction, {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 

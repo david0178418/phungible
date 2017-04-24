@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction from '../../stores/scheduled-transaction';
 
 type Props = {
 	scheduledTransaction: ScheduledTransaction;

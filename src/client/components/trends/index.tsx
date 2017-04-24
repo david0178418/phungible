@@ -5,10 +5,10 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
-import Account from '../../shared/stores/account';
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
-import Transaction from '../../shared/stores/transaction';
-import TrendsStore from '../../shared/stores/trends';
+import Account from '../../stores/account';
+import ScheduledTransaction from '../../stores/scheduled-transaction';
+import Transaction from '../../stores/transaction';
+import TrendsStore from '../../stores/trends';
 import TrendsChart from './trends-chart';
 
 type Props = {

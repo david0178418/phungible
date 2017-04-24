@@ -19,7 +19,7 @@ import {
 	TransactionsPage,
 	TrendsPage,
 } from '../pages';
-import AppStore from '../shared/stores/app';
+import AppStore from '../stores/app';
 import NavItem from './nav-item';
 
 type Props = {

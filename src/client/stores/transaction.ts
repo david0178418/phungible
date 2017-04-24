@@ -2,7 +2,7 @@ import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
-import Money from '../utils/money';
+import Money from '../shared/utils/money';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
 
@@ -10,7 +10,7 @@ export
 enum TransactionType {
 	Expense,
 	Income,
-};
+}
 
 export default
 class Transaction {

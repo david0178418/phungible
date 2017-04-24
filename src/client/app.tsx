@@ -5,7 +5,7 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import {getItem} from '../client/shared/storage';
 
 import Layout from './layout';
-import AppStore from './shared/stores/app';
+import AppStore from './stores/app';
 
 type Props = {
 	children?: any;

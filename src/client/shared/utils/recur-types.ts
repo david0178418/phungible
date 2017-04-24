@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import 'moment-recur';
 
-import {RepeatDays, RepeatTypes, RepeatUnits} from '../stores/scheduled-transaction';
+import {RepeatDays, RepeatTypes, RepeatUnits} from '../../stores/scheduled-transaction';
 
 export default
 class RecurTypes {

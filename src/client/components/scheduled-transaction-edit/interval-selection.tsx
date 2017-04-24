@@ -5,7 +5,7 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
-import ScheduledTransaction, {RepeatUnits} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatUnits} from '../../stores/scheduled-transaction';
 
 type Props = {
 	scheduledTransaction: ScheduledTransaction;

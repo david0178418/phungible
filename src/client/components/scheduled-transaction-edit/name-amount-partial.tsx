@@ -7,7 +7,7 @@ import {Component} from 'react';
 import * as React from 'react';
 import MoneyEdit from '../shared/money-edit';
 
-import {ScheduledTransactionPartial} from '../../shared/stores/scheduled-transaction';
+import {ScheduledTransactionPartial} from '../../stores/scheduled-transaction';
 
 type Props = {
 	transactionPartials: ScheduledTransactionPartial[];

@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import ScheduledTransaction, {RepeatTypes} from '../../shared/stores/scheduled-transaction';
+import ScheduledTransaction, {RepeatTypes} from '../../stores/scheduled-transaction';
 import DateSelection from './date-selection';
 import DaySelection from './day-selection';
 import IntervalSelection from './interval-selection';

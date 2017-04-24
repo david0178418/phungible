@@ -10,9 +10,9 @@ import * as React from 'react';
 
 import AccountEdit from '../components/account-edit';
 import ContentArea from '../components/shared/content-area';
-import Account from '../shared/stores/account';
-import AppStore from '../shared/stores/app';
 import {floatingActionButtonStyle} from '../shared/styles';
+import Account from '../stores/account';
+import AppStore from '../stores/app';
 import Page from './page';
 
 class AccountEditStore {

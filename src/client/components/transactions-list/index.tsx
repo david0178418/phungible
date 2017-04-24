@@ -4,8 +4,8 @@ import {action, computed, observable} from 'mobx';
 import * as React from 'react';
 import {Component} from 'react';
 
-import AppStore from '../../shared/stores/app';
-import Transaction from '../../shared/stores/transaction';
+import AppStore from '../../stores/app';
+import Transaction from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {

@@ -1,7 +1,7 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 
-import Account from '../../shared/stores/account';
+import Account from '../stores/account';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 

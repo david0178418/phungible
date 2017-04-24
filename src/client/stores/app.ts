@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
-import {setItem} from '../storage';
+import {setItem} from '../shared/storage';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';

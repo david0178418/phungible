@@ -7,9 +7,9 @@ import ContentArea from '../components/shared/content-area';
 import Link from '../components/shared/link';
 import TransactionsList from '../components/transactions-list';
 import Navigation from '../layout/navigation';
-import AppStore from '../shared/stores/app';
-import Transaction from '../shared/stores/transaction';
 import {floatingActionButtonStyle} from '../shared/styles';
+import AppStore from '../stores/app';
+import Transaction from '../stores/transaction';
 import Page from './page';
 
 type Props = {

@@ -8,9 +8,9 @@ import ScheduledTransactionList from '../components/scheduled-transactions-list'
 import ContentArea from '../components/shared/content-area';
 import Link from '../components/shared/link';
 import Navigation from '../layout/navigation';
-import AppStore from '../shared/stores/app';
-import ScheduledTransaction from '../shared/stores/scheduled-transaction';
 import {floatingActionButtonStyle} from '../shared/styles';
+import AppStore from '../stores/app';
+import ScheduledTransaction from '../stores/scheduled-transaction';
 import Page from './page';
 
 type Props = {

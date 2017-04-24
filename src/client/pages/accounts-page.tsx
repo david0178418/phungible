@@ -8,9 +8,9 @@ import AccountsList from '../components/accounts-list';
 import ContentArea from '../components/shared/content-area';
 import Link from '../components/shared/link';
 import Navigation from '../layout/navigation';
-import Account from '../shared/stores/account';
-import AppStore from '../shared/stores/app';
 import {floatingActionButtonStyle} from '../shared/styles';
+import Account from '../stores/account';
+import AppStore from '../stores/app';
 import Page from './page';
 
 type Props = {

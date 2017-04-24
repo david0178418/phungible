@@ -2,7 +2,7 @@ import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {identifier, object, serializable} from 'serializr';
 
-import Money from '../utils/money';
+import Money from '../shared/utils/money';
 
 export default
 class BalanceUpdate {

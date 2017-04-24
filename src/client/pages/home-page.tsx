@@ -4,7 +4,7 @@ import {Component} from 'react';
 import Home from '../components/home';
 import ContentArea from '../components/shared/content-area';
 import Navigation from '../layout/navigation';
-import AppStore from '../shared/stores/app';
+import AppStore from '../stores/app';
 import Page from './page';
 
 type Props = {

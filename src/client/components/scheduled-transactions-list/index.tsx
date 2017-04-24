@@ -9,9 +9,9 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import Colors from '../../shared/colors';
-import AppStore from '../../shared/stores/app';
-import ScheduledTransaction from '../../shared/stores/scheduled-transaction';
-import {TransactionType} from '../../shared/stores/transaction';
+import AppStore from '../../stores/app';
+import ScheduledTransaction from '../../stores/scheduled-transaction';
+import {TransactionType} from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {

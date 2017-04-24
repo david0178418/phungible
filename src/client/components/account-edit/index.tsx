@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
 
-import Account, {AccountType} from '../../shared/stores/account';
+import Account, {AccountType} from '../../stores/account';
 import AccountEditBalanceHistory from './account-edit-balance-history';
 
 type Props = {

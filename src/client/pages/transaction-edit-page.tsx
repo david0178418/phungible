@@ -9,9 +9,9 @@ import * as React from 'react';
 
 import ContentArea from '../components/shared/content-area';
 import TransactionEdit from '../components/transaction-edit';
-import AppStore from '../shared/stores/app';
-import Transaction from '../shared/stores/transaction';
 import {floatingActionButtonStyle} from '../shared/styles';
+import AppStore from '../stores/app';
+import Transaction from '../stores/transaction';
 import Page from './page';
 
 class TransactionEditStore {

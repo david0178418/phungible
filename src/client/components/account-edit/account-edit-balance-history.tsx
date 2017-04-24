@@ -10,8 +10,8 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import Account from '../../shared/stores/account';
-import BalanceUpdate from '../../shared/stores/balance-update';
+import Account from '../../stores/account';
+import BalanceUpdate from '../../stores/balance-update';
 import MoneyEdit from '../shared/money-edit';
 
 type Props = {
@@ -117,11 +117,11 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 
 	@action private handleUpdateAddBalanceUpdate() {
 		this.store.addBalanceUpdate();
-	};
+	}
 	@action private handleUpdateRemoveBalanceUpdate(balanceUpdate: BalanceUpdate) {
 		this.store.removeBalanceUpdate(balanceUpdate);
-	};
+	}
 	@action private handleUpdateBalanceDate(newDate: Date, balanceUpdate: BalanceUpdate) {
 		balanceUpdate.date = newDate;
-	};
+	}
 }

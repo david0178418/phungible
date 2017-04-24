@@ -6,7 +6,7 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import ContentArea from '../components/shared/content-area';
 import Trends from '../components/trends';
 import Navigation from '../layout/navigation';
-import AppStore from '../shared/stores/app';
+import AppStore from '../stores/app';
 import Page from './page';
 
 const loaderStyle = {

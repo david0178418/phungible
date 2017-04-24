@@ -9,9 +9,9 @@ import * as React from 'react';
 
 import ScheduledTransactionEdit from '../components/scheduled-transaction-edit';
 import ContentArea from '../components/shared/content-area';
-import AppStore from '../shared/stores/app';
-import ScheduledTransaction, {ScheduledTransactionFacade} from '../shared/stores/scheduled-transaction';
 import {floatingActionButtonStyle} from '../shared/styles';
+import AppStore from '../stores/app';
+import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
 import Page from './page';
 
 class CreateScheduledTransactionStore {

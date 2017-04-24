@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import {Moment} from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
-import Money from '../utils/money';
+import Money from '../shared/utils/money';
 import Account from './account';
 
 export
@@ -226,5 +226,5 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 }
 
 // Moved to resolve circular dependency issue.
-import RecurTypes from '../utils/recur-types';
+import RecurTypes from '../shared/utils/recur-types';
 import Transaction, {TransactionType} from './transaction';
