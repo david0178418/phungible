@@ -23,6 +23,35 @@ type State = {
 	date: Date,
 };
 
+type ActivityItemProps = {
+	transaction: Transaction;
+	onRemove: (transaction: Transaction) => void;
+};
+
+function ActivityItem({transaction, onRemove}: ActivityItemProps) {
+	let rightIconButton;
+	let secondaryText = transaction.name;
+
+	if(transaction.id) {
+		rightIconButton = EditRemoveMenu<Transaction>('transaction', transaction, onRemove);
+	} else {
+		secondaryText += ' (pending)';
+	}
+
+	return (
+		<ListItem
+			primaryText={`${transaction.amount.valFormatted}`}
+			secondaryText={secondaryText}
+			rightIconButton={rightIconButton}
+			leftIcon={
+				transaction.type === TransactionType.Income ?
+					<ActionTrendingUp color={Colors.Money} /> :
+					<ActionTrendingDown color={Colors.Debt} />
+			}
+		/>
+	);
+}
+
 export default
 class DailyActivity extends Component<Props, State> {
 	constructor(props: Props) {
@@ -49,7 +78,6 @@ class DailyActivity extends Component<Props, State> {
 					floatingLabelText="Date"
 					hintText="Activity Date"
 					locale="en-US"
-					maxDate={moment().toDate()}
 					onChange={(ev, newDate) => this.handleUpdateDate(newDate)}
 					value={date}
 				/>
@@ -57,19 +85,16 @@ class DailyActivity extends Component<Props, State> {
 					<Subheader>
 						Transactions for {moment(date).format('MMMM Do YYYY')}
 					</Subheader>
-					{!!transactions.length && transactions.map((transaction) => (
-						<ListItem
-							key={transaction.id}
-							primaryText={`${transaction.amount.valFormatted}`}
-							secondaryText={`${transaction.name}`}
-							rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
-							leftIcon={
-								transaction.type === TransactionType.Income ?
-									<ActionTrendingUp color={Colors.Money} /> :
-									<ActionTrendingDown color={Colors.Debt} />
-							}
-						/>
-					))}
+					{!!transactions.length && transactions.map((transaction) => {
+						const id = transaction.id ? transaction.id.toString() : transaction.name;
+						return (
+							<ActivityItem
+								key={id}
+								transaction={transaction}
+								onRemove={onRemove}
+							/>
+						);
+					})}
 					{!transactions.length && <ListItem primaryText="No Activity" />}
 				</List>
 			</div>

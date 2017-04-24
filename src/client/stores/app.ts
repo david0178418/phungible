@@ -51,7 +51,14 @@ class AppStore {
 		return this.transactions.find((transaction) => transaction.id === id);
 	}
 	public findTransactionsOnDate(date: Date) {
-		return this.transactions.filter((transaction) => moment(transaction.date).isSame(date, 'days'));
+		const targetDate = moment(date);
+		const transactions = this.transactions.filter((transaction) => moment(transaction.date).isSame(targetDate, 'days'));
+
+		if(targetDate.isAfter(moment(), 'days')) {
+			return transactions.concat(this.findFutureTransactionsOnDate(date));
+		}
+
+		return transactions;
 	}
 	public save() {
 		setItem('store', serialize(this));
@@ -164,5 +171,12 @@ class AppStore {
 		(this.transactions as any).replace(this.transactions.sort((a, b) => {
 			return a.date.getTime() - b.date.getTime();
 		}));
+	}
+
+	private findFutureTransactionsOnDate(date: Date) {
+		const scheduledTransactions =
+			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));
+
+		return scheduledTransactions.map((scheduledTransaction) => scheduledTransaction.generateTransaction(date));
 	}
 }
