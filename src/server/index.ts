@@ -19,7 +19,14 @@ server.register(inert, function(err) {
 			file: path.normalize(__dirname + '/../../build/client/index.html'),
 		},
 		method: 'GET',
-		path: '/{page*}',
+		path: '/',
+	});
+	server.route({
+		handler: {
+			file: path.normalize(__dirname + '/../../build/client/service-worker.js'),
+		},
+		method: 'GET',
+		path: '/service-worker.js',
 	});
 });
 

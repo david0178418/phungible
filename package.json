@@ -12,7 +12,7 @@
     "clean": "rm -Rf build",
     "server:node": "node ./build/server/index.js",
     "server:static": "http-server ./build/client/",
-    "start": "gulp",
+    "start": "npm run server:static | gulp",
     "test": "npm run test:lint",
     "test:lint": "tslint --project tslint.json src/**/*.ts*"
   },

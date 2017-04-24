@@ -15,15 +15,16 @@ gulp.task('build:client:watch', buildClientWatchTask);
 gulp.task('build:server', buildServerTask);
 gulp.task('build:server:watch', buildServerWatchTask);
 gulp.task('build:prod:client', buildProdClientTask);
+gulp.task('copy', copyStaticAssets);
 gulp.task('generate:html', generateHtmlTask);
 gulp.task('generate:html:watch', generateHtmlWatchTask);
 gulp.task('server:listen', serverTask);
 gulp.task('server:watch', serverWatchTask);
-gulp.task('build', ['build:client', 'build:server']);
-gulp.task('build:watch', ['build:client:watch', 'build:server:watch']);
+gulp.task('build', ['build:client', 'build:server', 'copy']);
+gulp.task('build:watch', ['build:client:watch', 'build:server:watch', 'copy']);
 gulp.task('server', ['server:listen', 'server:watch']);
-gulp.task('build:prod', gulpSequence(['build:prod:client', 'build:server'], 'generate:html'));
-gulp.task('default', gulpSequence('build', 'generate:html', ['build:watch', 'server', 'generate:html:watch']));
+gulp.task('build:prod', gulpSequence(['build:prod:client', 'build:server', 'copy'], 'generate:html'));
+gulp.task('default', gulpSequence('build', 'generate:html', ['build:watch', 'copy', 'generate:html:watch']));
 
 function buildClientTask() {
 	return gulp.src('./src/client/index.ts')
@@ -61,6 +62,11 @@ function generateHtmlTask() {
 		.pipe(gulpCacheBust({
 			basePath: path.join(__dirname, './build/client/'),
 		}))
+		.pipe(gulp.dest('./build/client'));
+}
+
+function copyStaticAssets() {
+	 return gulp.src('./src/client/static/**/*')
 		.pipe(gulp.dest('./build/client'));
 }
 
