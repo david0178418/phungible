@@ -1,18 +1,14 @@
 import DatePicker from 'material-ui/DatePicker';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
-import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
 
-import Colors from '../../shared/colors';
 import {pageStyling} from '../../shared/styles';
 import AppStore from '../../stores/app';
-import {TransactionType} from '../../stores/transaction';
 import Transaction from '../../stores/transaction';
-import EditRemoveMenu from '../shared/edit-remove-menu';
+import ActivityItem from './activity-item';
 
 type Props = {
 	store?: AppStore;
@@ -22,35 +18,6 @@ type Props = {
 type State = {
 	date: Date,
 };
-
-type ActivityItemProps = {
-	transaction: Transaction;
-	onRemove: (transaction: Transaction) => void;
-};
-
-function ActivityItem({transaction, onRemove}: ActivityItemProps) {
-	let rightIconButton;
-	let secondaryText = transaction.name;
-
-	if(transaction.id) {
-		rightIconButton = EditRemoveMenu<Transaction>('transaction', transaction, onRemove);
-	} else {
-		secondaryText += ' (pending)';
-	}
-
-	return (
-		<ListItem
-			primaryText={`${transaction.amount.valFormatted}`}
-			secondaryText={secondaryText}
-			rightIconButton={rightIconButton}
-			leftIcon={
-				transaction.type === TransactionType.Income ?
-					<ActionTrendingUp color={Colors.Money} /> :
-					<ActionTrendingDown color={Colors.Debt} />
-			}
-		/>
-	);
-}
 
 export default
 class DailyActivity extends Component<Props, State> {
@@ -85,16 +52,13 @@ class DailyActivity extends Component<Props, State> {
 					<Subheader>
 						Transactions for {moment(date).format('MMMM Do YYYY')}
 					</Subheader>
-					{!!transactions.length && transactions.map((transaction) => {
-						const id = transaction.id ? transaction.id.toString() : transaction.name;
-						return (
-							<ActivityItem
-								key={id}
-								transaction={transaction}
-								onRemove={onRemove}
-							/>
-						);
-					})}
+					{!!transactions.length && transactions.map((transaction) => (
+						<ActivityItem
+							key={transaction.id ? transaction.id.toString() : transaction.name}
+							transaction={transaction}
+							onRemove={onRemove}
+						/>
+					))}
 					{!transactions.length && <ListItem primaryText="No Activity" />}
 				</List>
 			</div>
