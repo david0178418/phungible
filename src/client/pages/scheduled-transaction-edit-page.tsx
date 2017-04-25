@@ -77,11 +77,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => {
-						// TODO FIX for React Router 4
-						// (this.props as any).router.goBack();
-						window.history.back();
-					}}
+					onLeftIconButtonTouchTap={() => window.history.back()}
 					title={`${action} Budget Entry`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -107,9 +103,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 	private handleSaveScheduledTransaction() {
 		setTimeout(() => {
 			this.store.saveScheduledTransactions();
-			// TODO FIX to use React Router 4
-			// (this.props as any).router.push('/scheduled-transactions');
-			window.location.hash = '/scheduled-transactions';
+			window.history.back();
 		}, 100);
 	}
 }

@@ -69,11 +69,7 @@ class AccountEditPage extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => {
-						// TODO FIX for React Router 4
-						// (this.props as any).router.goBack();
-						window.history.back();
-					}}
+					onLeftIconButtonTouchTap={() => window.history.back()}
 					title={`${action} Account`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -98,9 +94,7 @@ class AccountEditPage extends Component<Props, {}> {
 	private handleSaveAccount() {
 		setTimeout(() => {
 			this.store.saveAccount();
-			// TODO FIX to use React Router 4
-			// (this.props as any).router.push('/accounts');
-			window.location.hash = '/accounts';
+			window.history.back();
 		}, 100);
 	}
 }

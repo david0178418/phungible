@@ -73,11 +73,7 @@ class TransactionEditPage extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => {
-						// TODO FIX for React Router 4
-						// (this.props as any).router.goBack();
-						window.history.back();
-					}}
+					onLeftIconButtonTouchTap={() => window.history.back()}
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -103,9 +99,7 @@ class TransactionEditPage extends Component<Props, {}> {
 	private handleSaveTransaction() {
 		setTimeout(() => {
 			this.store.saveTransaction();
-			// TODO FIX to use React Router 4
-			// (this.props as any).router.push('/transactions');
-			window.location.hash = '/transactions';
+			window.history.back();
 		}, 100);
 	}
 }
