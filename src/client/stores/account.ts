@@ -24,7 +24,7 @@ class Account {
 	@serializable(identifier())
 	@observable public id: number;
 	@serializable
-	@observable public description = '';
+	@observable public notes = '';
 	@serializable(list(primitive()))
 	@observable public labels: string[];
 	@serializable

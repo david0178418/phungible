@@ -40,9 +40,9 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 			<div>
 				<TextField
 					fullWidth
-					floatingLabelText="Description"
-					value={account.description}
-					onChange={((ev: any, value: any) => handleUpdateDescription(value, account)) as any}
+					floatingLabelText="Notes"
+					value={account.notes}
+					onChange={((ev: any, value: any) => handleUpdateNotes(value, account)) as any}
 				/>
 			</div>
 			<AccountEditBalanceHistory
@@ -56,8 +56,8 @@ const handleSubmit = action(function(e: FormEvent<HTMLFormElement>, onSubmit: ()
 	e.preventDefault();
 	onSubmit();
 });
-const handleUpdateDescription = action(function(newDescription: string, account: Account) {
-	account.description = newDescription;
+const handleUpdateNotes = action(function(newNote: string, account: Account) {
+	account.notes = newNote;
 });
 const handleUpdateName = action(function(newName: string, account: Account) {
 	account.name = newName;

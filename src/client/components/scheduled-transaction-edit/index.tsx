@@ -92,10 +92,10 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				<div>
 					<TextField
 						fullWidth
-						floatingLabelText="Description"
+						floatingLabelText="Notes"
 						multiLine
-						onChange={(ev: any) => this.handleUpdateDescription((ev.target as HTMLInputElement).value, scheduledTransaction)}
-						value={scheduledTransaction.description}
+						onChange={(ev: any) => this.handleUpdateNotes((ev.target as HTMLInputElement).value, scheduledTransaction)}
+						value={scheduledTransaction.notes}
 					/>
 				</div>
 				{!!accounts.length && (
@@ -144,8 +144,8 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	@action private handleUpdateTowardAccount(accountId: number, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.towardAccount = this.findAccount(accountId);
 	}
-	@action private handleUpdateDescription(newDescription: string, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.description = newDescription;
+	@action private handleUpdateNotes(newNote: string, scheduledTransaction: ScheduledTransaction) {
+		scheduledTransaction.notes = newNote;
 	}
 	@action private handleUpdateName(newName: string, scheduledTransaction: {name: string}) {
 		scheduledTransaction.name = newName;

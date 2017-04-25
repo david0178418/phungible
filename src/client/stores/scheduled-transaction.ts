@@ -48,7 +48,7 @@ class ScheduledTransaction {
 	@serializable(object(Money))
 	public amount: Money;
 	@serializable
-	@observable public description: string;
+	@observable public notes: string;
 	@serializable(list(primitive()))
 	@observable public exceptions: string[];
 	@serializable(identifier())
