@@ -1,6 +1,7 @@
 import DatePicker from 'material-ui/DatePicker';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
+import {observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
@@ -19,6 +20,7 @@ type State = {
 	date: Date,
 };
 
+@observer
 export default
 class DailyActivity extends Component<Props, State> {
 	constructor(props: Props) {

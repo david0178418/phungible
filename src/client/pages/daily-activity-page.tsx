@@ -1,5 +1,6 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -18,6 +19,7 @@ type Props = {
 	store?: AppStore;
 };
 
+@observer
 export default
 class DailyActivityPage extends Component<Props, {}> {
 	public static path = '/daily-activity/';

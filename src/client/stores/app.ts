@@ -69,6 +69,7 @@ class AppStore {
 			lastUpdate.add(1, 'day');
 			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
 		});
+		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 	}
 	@action public removeAccountFromScheduledTransactions(account: Account) {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
