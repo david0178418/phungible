@@ -42,10 +42,11 @@ class DailyActivity extends Component<Props, State> {
 			quickTransaction,
 		} = this.state;
 		const {
+			store,
 			onAdd,
 			onRemove,
 		} = this.props;
-		const transactions = this.props.store.findTransactionsOnDate(date);
+		const transactions = store.findTransactionsOnDate(date);
 
 		return (
 			<div style={pageStyling}>
@@ -89,7 +90,7 @@ class DailyActivity extends Component<Props, State> {
 							hideNotes
 							hideTowardsAccount
 							hideType
-							accounts={this.props.store.accounts}
+							accounts={store.accounts}
 							transaction={quickTransaction}
 							onSubmit={() => onAdd(quickTransaction)}
 						/>
@@ -118,6 +119,7 @@ class DailyActivity extends Component<Props, State> {
 				)}
 				{!quickTransaction && (
 					<RaisedButton
+						disabled={!store.accounts.length}
 						label="Add Quick Expense"
 						primary
 						style={{

@@ -42,7 +42,7 @@ class TrendsPage extends Component<Props, State> {
 			this.setState({
 				renderBody: true,
 			});
-		}, 50);
+		}, 150);
 	}
 
 	public render() {
