@@ -1,4 +1,4 @@
-import CircularProgress from 'material-ui/CircularProgress';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import * as React from 'react';
 import {Component} from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
@@ -8,14 +8,6 @@ import Trends from '../components/trends';
 import Navigation from '../layout/navigation';
 import AppStore from '../stores/app';
 import Page from './page';
-
-const loaderStyle = {
-	left: 'calc(50% - 75px)',
-	marginLeft: 'auto',
-	marginRight: 'auto',
-	position: 'absolute',
-	top: 'calc(50% - 75px)',
-} as any;
 
 type Props = {
 	disableAnimation: boolean;
@@ -69,10 +61,14 @@ class TrendsPage extends Component<Props, State> {
 							/>
 						)}
 						{!renderBody && (
-							<CircularProgress
-								style={loaderStyle}
-								size={150}
-								thickness={10}
+							<RefreshIndicator
+								left={-35}
+								top={150}
+								size={70}
+								status="loading"
+								style={{
+									marginLeft: '50%',
+								}}
 							/>
 						)}
 					</CSSTransitionGroup>
