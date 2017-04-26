@@ -3,7 +3,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
-import MoreHorizontal from 'material-ui/svg-icons/navigation/more-horiz';
+import MoreVertical from 'material-ui/svg-icons/navigation/more-vert';
 import * as React from 'react';
 
 // Explicitly called as a function vs TSX due to rendering issue in the latter
@@ -15,8 +15,8 @@ function EditRemoveMenu<T extends {id: number}>(
 ) {
 	return (
 		<IconMenu
-			anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-			iconButtonElement={<IconButton><MoreHorizontal/></IconButton>}
+			anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+			iconButtonElement={<IconButton><MoreVertical/></IconButton>}
 			targetOrigin={{horizontal: 'right', vertical: 'top'}}
 		>
 			<MenuItem
