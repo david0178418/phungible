@@ -22,6 +22,7 @@ type Props = {
 export default
 class ScheduledTransactions extends Component<Props, {}> {
 	public static path = '/scheduled-transactions/';
+	public static title= 'Planning';
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		this.props.store.removeScheduledTransaction(scheduledTransaction);
@@ -33,7 +34,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
-					title="Budget"
+					title={ScheduledTransactions.title}
 					store={store}
 				/>
 				<ContentArea>

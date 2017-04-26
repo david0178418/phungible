@@ -124,7 +124,7 @@ class Navigation extends React.Component<Props, any> {
 						{...budgetProps(scheduledTransactions.length, accounts.length)}
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
-						Budget
+						{ScheduledTransactionsPage.title}
 					</NavItem>
 					<NavItem
 						{...transactionProps(transactions.length, accounts.length)}

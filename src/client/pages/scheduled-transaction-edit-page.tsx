@@ -60,6 +60,7 @@ export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
 	public static pathParams = '/scheduled-transaction/edit/:id';
+	public static title = 'Plan Entry';
 	private store: CreateScheduledTransactionStore;
 
 	constructor(props: Props) {
@@ -78,7 +79,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 			<Page className="slide-horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => window.history.back()}
-					title={`${action} Budget Entry`}
+					title={`${action} ${CreateScheduledTransaction.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ContentArea>

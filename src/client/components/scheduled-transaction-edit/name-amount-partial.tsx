@@ -1,5 +1,5 @@
-import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import TextField from 'material-ui/TextField';
 import {observer} from 'mobx-react';
@@ -48,10 +48,10 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						</IconButton>}
 					</div>
 				)))}
-				<FlatButton
+				<RaisedButton
 					primary={true}
 					onTouchTap={() => this.props.onAddEntry()}
-					label="Add another budget entry"
+					label="Add another plan entry"
 				/>
 			</div>
 		);
