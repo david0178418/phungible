@@ -13,8 +13,8 @@ type Props = {
 };
 
 export default
-class HomePage extends Component<Props, {}> {
-	public static path = '/';
+class SummaryPage extends Component<Props, {}> {
+	public static path = '/summary';
 
 	constructor(props: Props) {
 		super(props);

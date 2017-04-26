@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default
-class Index extends Component<Props, any> {
+class Summary extends Component<Props, any> {
 	public render() {
 		const {
 			accounts,

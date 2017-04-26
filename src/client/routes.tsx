@@ -8,9 +8,9 @@ import {
 	AccountEditPage,
 	AccountsPage,
 	DailyActivityPage,
-	HomePage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
+	SummaryPage,
 	TransactionEditPage,
 	TransactionsPage,
 	TrendsPage,
@@ -27,7 +27,7 @@ function getCurrengtHash() {
 	let hash = window.location.hash;
 
 	if(!hash) {
-		window.location.hash = hash = HomePage.path;
+		window.location.hash = hash = DailyActivityPage.path;
 	} else {
 		// remove leading "#"
 		hash = hash.substr(1);
@@ -61,7 +61,7 @@ class Routes extends Component<Props, State> {
 
 	public componentWillMount() {
 		this.router.on({
-			[HomePage.path]: () => this.setPage(HomePage.path),
+			[SummaryPage.path]: () => this.setPage(SummaryPage.path),
 			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
 			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
 			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
@@ -97,7 +97,7 @@ class Routes extends Component<Props, State> {
 		return (
 			<div>
 				<App>
-					{page === HomePage.path && <HomePage key={HomePage.path} disableAnimation={disableNextPageAnimation} />}
+					{page === SummaryPage.path && <SummaryPage key={SummaryPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === TrendsPage.path && <TrendsPage key={TrendsPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === AccountsPage.path &&
 						<AccountsPage key={AccountsPage.path} disableAnimation={disableNextPageAnimation} />}

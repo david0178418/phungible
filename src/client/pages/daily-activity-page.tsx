@@ -17,7 +17,7 @@ type Props = {
 @observer
 export default
 class DailyActivityPage extends Component<Props, {}> {
-	public static path = '/daily-activity/';
+	public static path = '/';
 
 	constructor(props: Props) {
 		super(props);
