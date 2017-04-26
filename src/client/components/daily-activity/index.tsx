@@ -6,6 +6,7 @@ import {observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
+import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import {pageStyling} from '../../shared/styles';
 import AppStore from '../../stores/app';
@@ -57,27 +58,43 @@ class DailyActivity extends Component<Props, State> {
 					onChange={(ev, newDate) => this.handleUpdateDate(newDate)}
 					value={date}
 				/>
-				{quickTransaction && (
-					<TransactionEdit
-						hideDate
-						hideNotes
-						hideTowardsAccount
-						hideType
-						accounts={this.props.store.accounts}
-						transaction={quickTransaction}
-						onSubmit={() => onAdd(quickTransaction)}
-					/>
-				)}
-				{!quickTransaction && (
-					<RaisedButton
-						label="Add Quick Expense"
-						primary
-						style={{
-							width: '100%',
-						}}
-						onTouchTap={() => this.handleToggleQuickTransaction()}
-					/>
-				)}
+				<style>{`
+					.quick-transaction-enter,
+					.quick-transaction-leave {
+						overflow: hidden;
+						transition: max-height 500ms;
+					}
+					.quick-transaction-enter {
+						max-height: 0;
+					}
+					.quick-transaction-enter-active {
+						max-height: 1000px;
+					}
+					.quick-transaction-leave {
+						max-height: 1000px;
+					}
+					.quick-transaction-leave-active {
+						max-height: 0;
+					}
+				`}</style>
+				<CSSTransitionGroup
+					component="div"
+					transitionName="quick-transaction"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={500}
+				>
+					{quickTransaction && (
+						<TransactionEdit
+							hideDate
+							hideNotes
+							hideTowardsAccount
+							hideType
+							accounts={this.props.store.accounts}
+							transaction={quickTransaction}
+							onSubmit={() => onAdd(quickTransaction)}
+						/>
+					)}
+				</CSSTransitionGroup>
 				{quickTransaction && (
 					<div>
 						<RaisedButton
@@ -98,6 +115,16 @@ class DailyActivity extends Component<Props, State> {
 							onTouchTap={() => this.handleToggleQuickTransaction()}
 						/>
 					</div>
+				)}
+				{!quickTransaction && (
+					<RaisedButton
+						label="Add Quick Expense"
+						primary
+						style={{
+							width: '100%',
+						}}
+						onTouchTap={() => this.handleToggleQuickTransaction()}
+					/>
 				)}
 				<List>
 					<Subheader>
