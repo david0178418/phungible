@@ -1,4 +1,4 @@
-var CACHE_NAME = 'phungible-v5';
+var CACHE_NAME = 'phungible-v6';
 var urlsToCache = [
 	'/',
 	'/index.html',
