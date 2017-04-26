@@ -37,7 +37,7 @@ class Trends extends Component<Props, {}> {
 						autoOk
 						floatingLabelText="From"
 						minDate={store.minDate}
-						locale="en-US"
+						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateFromDate(value)}
 						style={{display: 'inline-block'}}
 						value={store.fromDate}
@@ -46,7 +46,7 @@ class Trends extends Component<Props, {}> {
 					<DatePicker
 						autoOk
 						floatingLabelText="To"
-						locale="en-US"
+						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateToDate(value)}
 						style={{display: 'inline-block'}}
 						value={store.toDate}

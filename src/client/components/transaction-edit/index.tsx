@@ -14,6 +14,10 @@ import MoneyEdit from '../shared/money-edit';
 
 type Props = {
 	accounts: Account[];
+	hideDate?: boolean;
+	hideNotes?: boolean;
+	hideTowardsAccount?: boolean;
+	hideType?: boolean;
 	transaction: Transaction;
 	onSubmit(): void;
 };
@@ -25,7 +29,15 @@ class TransactionForm extends Component<Props, any> {
 		super(props);
 	}
 	public render() {
-		const {accounts, transaction, onSubmit} = this.props;
+		const {
+			accounts,
+			hideDate,
+			hideNotes,
+			hideTowardsAccount,
+			hideType,
+			transaction,
+			onSubmit,
+		} = this.props;
 		const selectedTowardAccountId = transaction.towardAccount && transaction.towardAccount.id || null;
 		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
@@ -41,17 +53,19 @@ class TransactionForm extends Component<Props, any> {
 				<div>
 					<MoneyEdit money={transaction.amount} />
 				</div>
-				<div>
-					<SelectField
-						fullWidth
-						floatingLabelText="Type"
-						value={transaction.type}
-						onChange={(ev, index, value) => this.handleUpdateType(value, transaction)}
-					>
-						<MenuItem value={TransactionType.Expense} primaryText="Expense" />
-						<MenuItem value={TransactionType.Income} primaryText="Income" />
-					</SelectField>
-				</div>
+				{!hideType && (
+					<div>
+						<SelectField
+							fullWidth
+							floatingLabelText="Type"
+							value={transaction.type}
+							onChange={(ev, index, value) => this.handleUpdateType(value, transaction)}
+						>
+							<MenuItem value={TransactionType.Expense} primaryText="Expense" />
+							<MenuItem value={TransactionType.Income} primaryText="Income" />
+						</SelectField>
+					</div>
+				)}
 				{!!accounts.length && (
 					<div>
 						<AccountSelector
@@ -60,33 +74,39 @@ class TransactionForm extends Component<Props, any> {
 							onChange={(value, index) => this.handleUpdateFromAccount(value, transaction)}
 							selectedAccountId={selectedFromAccountId}
 						/>
-						<AccountSelector
-							accounts={accounts}
-							label="Towards Account"
-							onChange={(value, index) => this.handleUpdateTowardAccount(value, transaction)}
-							selectedAccountId={selectedTowardAccountId}
+						{!hideTowardsAccount && (
+							<AccountSelector
+								accounts={accounts}
+								label="Towards Account"
+								onChange={(value, index) => this.handleUpdateTowardAccount(value, transaction)}
+								selectedAccountId={selectedTowardAccountId}
+							/>
+						)}
+					</div>
+				)}
+				{!hideDate && (
+					<div>
+						<DatePicker
+							autoOk
+							fullWidth
+							floatingLabelText="Date"
+							hintText="Portrait Dialog"
+						firstDayOfWeek={0}
+							onChange={(ev, date) => this.handleUpdateDate(date, transaction)}
+							value={transaction.date}
 						/>
 					</div>
 				)}
-				<div>
-					<DatePicker
-						autoOk
-						fullWidth
-						floatingLabelText="Date"
-						hintText="Portrait Dialog"
-						locale="en-US"
-						onChange={(ev, date) => this.handleUpdateDate(date, transaction)}
-						value={transaction.date}
-					/>
-				</div>
-				<div>
-					<TextField
-						fullWidth
-						floatingLabelText="Notes"
-						value={transaction.notes}
-						onChange={((ev: any, value: any) => this.handleUpdateNotes(value, transaction)) as any}
-					/>
-				</div>
+				{!hideNotes && (
+					<div>
+						<TextField
+							fullWidth
+							floatingLabelText="Notes"
+							value={transaction.notes}
+							onChange={((ev: any, value: any) => this.handleUpdateNotes(value, transaction)) as any}
+						/>
+					</div>
+				)}
 			</form>
 		);
 	}

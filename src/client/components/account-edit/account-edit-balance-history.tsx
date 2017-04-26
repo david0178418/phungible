@@ -68,7 +68,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							width: 150,
 						}}
 						floatingLabelText="As of"
-						locale="en-US"
+						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 						value={newBalanceUpdate.date}
 					/>

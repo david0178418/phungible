@@ -50,8 +50,8 @@ class Money {
 		return Money.formatMoney(this.val);
 	}
 
-	constructor(val?: number) {
-		this.totalValCents = val || 0;
+	constructor(val = 0) {
+		this.totalValCents = val;
 	}
 
 	public addCents(addedCentVal: number) {

@@ -1,18 +1,13 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
 import DailyActivity from '../components/daily-activity';
 import ContentArea from '../components/shared/content-area';
-import Link from '../components/shared/link';
 import Navigation from '../layout/navigation';
-import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import Transaction from '../stores/transaction';
 import Page from './page';
-import TransactionEditPage from './transaction-edit-page';
 
 type Props = {
 	disableAnimation: boolean;
@@ -36,14 +31,9 @@ class DailyActivityPage extends Component<Props, {}> {
 				<ContentArea>
 					<DailyActivity
 						store={store}
+						onAdd={(transaction: Transaction) => this.props.store.saveTransaction(transaction)}
 						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
 					/>
-					<FloatingActionButton
-						containerElement={<Link to={TransactionEditPage.path} />}
-						style={floatingActionButtonStyle}
-					>
-						<ContentAdd />
-					</FloatingActionButton>
 				</ContentArea>
 			</Page>
 		);

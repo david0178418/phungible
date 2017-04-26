@@ -43,8 +43,9 @@ class Transaction {
 
 	constructor(params?: Partial<Transaction>) {
 		if(params) {
+			const amount = params.amount ? params.amount.valCents : 0;
 			return Object.assign(this, {
-				amount: new Money(params.amount.valCents),
+				amount: new Money(amount),
 				labels: [],
 			}, params);
 		} else {

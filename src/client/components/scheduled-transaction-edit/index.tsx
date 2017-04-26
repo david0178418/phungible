@@ -84,7 +84,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						fullWidth
 						floatingLabelText="Starts"
 						hintText="Portrait Dialog"
-						locale="en-US"
+						firstDayOfWeek={0}
 						onChange={(ev, date) => this.handleUpdateStartDate(date, scheduledTransaction)}
 						value={scheduledTransaction.startDate}
 					/>
