@@ -7,9 +7,11 @@ import App from './app';
 import {
 	AccountEditPage,
 	AccountsPage,
+	ClearDataPage,
 	DailyActivityPage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
+	SettingsPage,
 	SummaryPage,
 	TransactionEditPage,
 	TransactionsPage,
@@ -50,8 +52,10 @@ class Routes extends Component<Props, State> {
 			params: {},
 		};
 
+		// TODO Refactor this
 		this.horizontalSlidePages = [
 			AccountEditPage.path,
+			ClearDataPage.path,
 			ScheduledTransactionEditPage.path,
 			TransactionEditPage.path,
 		];
@@ -65,10 +69,12 @@ class Routes extends Component<Props, State> {
 			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
 			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
 			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
+			[ClearDataPage.path]: () => this.setPage(ClearDataPage.path),
 			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage.path),
 			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage.path),
 			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage.path, params),
 			[ScheduledTransactionsPage.path]: () => this.setPage(ScheduledTransactionsPage.path),
+			[SettingsPage.path]: () => this.setPage(SettingsPage.path),
 			[TransactionEditPage.path]: () => this.setPage(TransactionEditPage.path),
 			[TransactionEditPage.pathParams]: (params) => this.setPage(TransactionEditPage.path, params),
 			[TransactionsPage.path]: () => this.setPage(TransactionsPage.path),
@@ -97,21 +103,71 @@ class Routes extends Component<Props, State> {
 		return (
 			<div>
 				<App>
-					{page === SummaryPage.path && <SummaryPage key={SummaryPage.path} disableAnimation={disableNextPageAnimation} />}
-					{page === TrendsPage.path && <TrendsPage key={TrendsPage.path} disableAnimation={disableNextPageAnimation} />}
 					{page === AccountsPage.path &&
-						<AccountsPage key={AccountsPage.path} disableAnimation={disableNextPageAnimation} />}
-					{page === AccountEditPage.path && <AccountEditPage  key={AccountEditPage.path} id={id} />}
+						<AccountsPage
+							disableAnimation={disableNextPageAnimation}
+							key={AccountsPage.path}
+						/>
+					}
+					{page === AccountEditPage.path &&
+						<AccountEditPage
+							id={id}
+							key={AccountEditPage.path}
+						/>
+					}
+					{page === ClearDataPage.path &&
+						<ClearDataPage
+							key={ClearDataPage.path}
+						/>
+					}
 					{page === DailyActivityPage.path &&
-						<DailyActivityPage key={DailyActivityPage.path} disableAnimation={disableNextPageAnimation} />}
+						<DailyActivityPage
+							disableAnimation={disableNextPageAnimation}
+							key={DailyActivityPage.path}
+						/>
+					}
 					{page === TransactionsPage.path &&
-						<TransactionsPage key={TransactionsPage.path} disableAnimation={disableNextPageAnimation} />}
-					{page === TransactionEditPage.path && <TransactionEditPage key={TransactionEditPage.path} id={id} />}
+						<TransactionsPage
+							disableAnimation={disableNextPageAnimation}
+							key={TransactionsPage.path}
+						/>
+					}
+					{page === TransactionEditPage.path &&
+						<TransactionEditPage
+							id={id}
+							key={TransactionEditPage.path}
+						/>
+					}
 					{page === ScheduledTransactionsPage.path &&
-						<ScheduledTransactionsPage key={ScheduledTransactionsPage.path} disableAnimation={disableNextPageAnimation} />}
+						<ScheduledTransactionsPage
+							disableAnimation={disableNextPageAnimation}
+							key={ScheduledTransactionsPage.path}
+						/>
+					}
 					{page === ScheduledTransactionEditPage.path &&
-						<ScheduledTransactionEditPage key={ScheduledTransactionEditPage.path} id={id} />}
-
+						<ScheduledTransactionEditPage
+							id={id}
+							key={ScheduledTransactionEditPage.path}
+						/>
+					}
+					{page === SettingsPage.path &&
+						<SettingsPage
+							disableAnimation={disableNextPageAnimation}
+							key={SettingsPage.path}
+						/>
+					}
+					{page === SummaryPage.path &&
+						<SummaryPage
+							disableAnimation={disableNextPageAnimation}
+							key={SummaryPage.path}
+						/>
+					}
+					{page === TrendsPage.path &&
+						<TrendsPage
+							disableAnimation={disableNextPageAnimation}
+							key={TrendsPage.path}
+						/>
+					}
 				</App>
 			</div>
 		);

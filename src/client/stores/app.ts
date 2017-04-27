@@ -71,6 +71,12 @@ class AppStore {
 		});
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 	}
+	@action public clearAllData() {
+		(this.accounts as any).clear();
+		(this.scheduledTransactions as any).clear();
+		(this.transactions as any).clear();
+		this.save();
+	}
 	@action public removeAccountFromScheduledTransactions(account: Account) {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
 			if(scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id === account.id) {

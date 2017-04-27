@@ -5,6 +5,7 @@ import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import * as React from 'react';
 import {
@@ -13,6 +14,7 @@ import {
 	DailyActivityPage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
+	SettingsPage,
 	TransactionEditPage,
 	TransactionsPage,
 	TrendsPage,
@@ -131,6 +133,13 @@ class Navigation extends React.Component<Props, any> {
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						Transactions
+					</NavItem>
+					<NavItem
+						href={SettingsPage.path}
+						leftIcon={<SettingsIcon/>}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
+						{SettingsPage.title}
 					</NavItem>
 				</Drawer>
 			</AppBar>
