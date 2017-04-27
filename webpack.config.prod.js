@@ -26,5 +26,5 @@ module.exports = Object.assign({
 			sourceMap: false,
 			warnings: false,
 		})
-	],
+	].concat(webpack.plugins),
 }, baseConfig)

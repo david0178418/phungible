@@ -1,3 +1,4 @@
+const OfflinePlugin = require('offline-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -37,4 +38,9 @@ module.exports = {
 			'.tsx',
 		],
 	},
+	plugins: [
+		new OfflinePlugin({
+			publicPath: '/js/'
+		})
+	]
 };
