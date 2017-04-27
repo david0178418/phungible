@@ -40,7 +40,9 @@ module.exports = {
 	},
 	plugins: [
 		new OfflinePlugin({
-			publicPath: '/js/'
+			ServiceWorker: {
+				output: '../service-worker.js',
+			}
 		})
 	]
 };
