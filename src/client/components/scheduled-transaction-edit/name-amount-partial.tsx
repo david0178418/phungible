@@ -49,9 +49,10 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 					</div>
 				)))}
 				<RaisedButton
-					primary={true}
+					fullWidth
+					label="Add another transaction"
 					onTouchTap={() => this.props.onAddEntry()}
-					label="Add another plan entry"
+					primary
 				/>
 			</div>
 		);

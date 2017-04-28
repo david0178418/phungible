@@ -1,6 +1,12 @@
 import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
 
+const iconProps = {
+	style: {
+		margin: '12px 5px',
+	},
+};
+
 type Props = {
 	children?: any;
 	disabled?: boolean;
@@ -23,9 +29,12 @@ function NavItem({
 		<MenuItem
 			disabled={disabled}
 			href={`#${href}`}
-			leftIcon={leftIcon}
+			leftIcon={React.cloneElement(leftIcon, iconProps)}
 			onTouchTap={onTouchTap}
-			rightIcon={rightIcon}
+			innerDivStyle={{
+				padding: '0 42px',
+			}}
+			rightIcon={rightIcon && React.cloneElement(rightIcon, iconProps)}
 		>
 			{children}
 		</MenuItem>

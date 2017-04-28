@@ -2,11 +2,11 @@ import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
-import AccountBalanceWalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
+import RepeatIcon from 'material-ui/svg-icons/av/repeat';
 import * as React from 'react';
 import {
 	AccountEditPage,
@@ -35,7 +35,7 @@ function accountTarget(accountsCount: number) {
 
 function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
 	const props: MenuItemProps = {
-		leftIcon: <AccountBalanceWalletIcon />,
+		leftIcon: <RepeatIcon />,
 		rightIcon: <Badge badgeContent={scheduledTransactionsCount} primary />,
 	};
 

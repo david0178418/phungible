@@ -60,7 +60,7 @@ export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
 	public static pathParams = '/scheduled-transaction/edit/:id';
-	public static title = 'Plan Entry';
+	public static title = 'Recurring Transaction';
 	private store: CreateScheduledTransactionStore;
 
 	constructor(props: Props) {
