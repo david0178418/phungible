@@ -52,7 +52,6 @@ class TransactionsStore {
 
 export default
 class TransactionsList extends Component<Props, {}> {
-	public static path = '/transactions';
 	private store: TransactionsStore;
 
 	constructor(props: Props) {
