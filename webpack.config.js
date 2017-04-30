@@ -42,6 +42,8 @@ module.exports = {
 		new OfflinePlugin({
 			externals: [
 				'/',
+				'/manifest.json',
+				'/images/icons/favicon.ico',
 			],
 			ServiceWorker: {
 				output: '../service-worker.js',
