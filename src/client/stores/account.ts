@@ -78,10 +78,10 @@ class Account {
 		(this.balanceUpdateHistory as any).remove(balanceUpdate);
 	}
 	@computed get firstBalanceUpdate() {
-		return this.balanceUpdateHistory[0] || null;
+		return this.balanceUpdateHistory[this.balanceUpdateHistory.length - 1] || null;
 	}
 	@computed get latestBalanceUpdate() {
-		return this.balanceUpdateHistory[this.balanceUpdateHistory.length - 1] || null;
+		return this.balanceUpdateHistory[0] || null;
 	}
 	@computed get isValid() {
 		return !!(this.name && this.balanceUpdateHistory.length);
