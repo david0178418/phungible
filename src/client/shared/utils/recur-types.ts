@@ -6,7 +6,7 @@ import {RepeatDays, RepeatTypes, RepeatUnits} from '../../stores/scheduled-trans
 export default
 class RecurTypes {
 	public static getRecurrence(startDate: string, interval: RepeatTypes, values: number[], unit?: RepeatUnits) {
-		const recur = (moment(startDate) as any).recur();
+		const recur = (moment(new Date(startDate)) as any).recur();
 		const rawValues = (values as any).toJS();
 
 		// TODO Un-uglify if time permits
