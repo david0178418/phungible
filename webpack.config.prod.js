@@ -1,7 +1,7 @@
 const baseConfig = require('./webpack.config');
 const webpack = require('webpack');
 
-module.exports = Object.assign({
+module.exports = Object.assign({}, baseConfig, {
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env': {
@@ -26,5 +26,5 @@ module.exports = Object.assign({
 			sourceMap: false,
 			warnings: false,
 		})
-	].concat(webpack.plugins),
-}, baseConfig)
+	].concat(baseConfig.plugins),
+});
