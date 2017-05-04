@@ -21,7 +21,7 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 			<div>
 				<TextField
 					fullWidth
-					floatingLabelText="Account Name"
+					floatingLabelText="Name"
 					value={account.name}
 					onChange={((ev: any, value: any) => handleUpdateName(value, account)) as any}
 				/>

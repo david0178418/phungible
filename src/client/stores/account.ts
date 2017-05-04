@@ -22,7 +22,7 @@ class Account {
 		return Account.deserialize(serialize(originalEntry));
 	}
 	@serializable(identifier())
-	@observable public id: number;
+	@observable public id: string;
 	@serializable
 	@observable public notes = '';
 	@serializable(list(primitive()))
@@ -85,6 +85,15 @@ class Account {
 	}
 	@computed get isValid() {
 		return !!(this.name && this.balanceUpdateHistory.length);
+	}
+	@computed get fromBalanceDirection() {
+		return this.type === AccountType.Debt ? 1 : -1;
+	}
+	@computed get globalBalanceDirection() {
+		return this.type === AccountType.Savings ? 1 : -1;
+	}
+	@computed get towardBalanceDirection() {
+		return this.type === AccountType.Savings ? 1 : -1;
 	}
 
 	public applyTransactions(transactions: Transaction[], date: Date) {

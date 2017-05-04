@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import {Moment} from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
+import {generateUuid} from '../shared/utils';
 import Money from '../shared/utils/money';
 import Account from './account';
 
@@ -52,7 +53,7 @@ class ScheduledTransaction {
 	@serializable(list(primitive()))
 	@observable public exceptions: string[];
 	@serializable(identifier())
-	public id: number;
+	public id: string;
 	@serializable(list(primitive()))
 	@observable public labels: string[];
 	@serializable
@@ -77,6 +78,19 @@ class ScheduledTransaction {
 		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
 
+	@computed get lastOccurance() {
+		const dateMoment = moment();
+
+		while(true) {
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
+				return null;
+			}
+
+			dateMoment.subtract(1, 'day');
+		}
+	}
 	@computed get recurrence() {
 		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
 	}
@@ -109,10 +123,11 @@ class ScheduledTransaction {
 		return moment(this._startDate, 'MM/DD/YYYY').toDate();
 	}
 	@computed get isValid() {
-		const {Expense, Income} = TransactionType;
+		const {BudgetedExpense, Expense, Income} = TransactionType;
 
 		return !!(this.amount && this.name && this._repeatValues.length && (
 			this.type === Expense && this.fromAccount ||
+			this.type === BudgetedExpense && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
 	}
@@ -126,7 +141,7 @@ class ScheduledTransaction {
 	@action public removeRepeatValue(removeVal: number) {
 		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal !== currentVal));
 	}
-	public affectsAccount(accountId: number) {
+	public affectsAccount(accountId: string) {
 		return (
 			(this.fromAccount && this.fromAccount.id === accountId) ||
 			(this.towardAccount && this.towardAccount.id === accountId)
@@ -170,13 +185,12 @@ class ScheduledTransaction {
 
 export
 class ScheduledTransactionPartial {
-	public static nextId = 1;
-	public id: number;
+	public id: string;
 	@observable public name = '';
 	public amount: Money;
 
 	constructor() {
-		this.id = ScheduledTransactionPartial.nextId++;
+		this.id = generateUuid();
 		this.amount = new Money();
 	}
 }
@@ -192,10 +206,11 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	@computed get isValid() {
-		const {Expense, Income} = TransactionType;
+		const {BudgetedExpense, Expense, Income} = TransactionType;
 
 		return !!(this.transactionsPopulated() && this._repeatValues.length && (
 			this.type === Expense && this.fromAccount ||
+			this.type === BudgetedExpense && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
 	}
@@ -208,7 +223,7 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 		this.transactionPartials.push(new ScheduledTransactionPartial());
 	}
 
-	@action public removePartial(id: number) {
+	@action public removePartial(id: string) {
 		(this.transactionPartials as any).replace(this.transactionPartials.filter((tp) => tp.id !== id));
 	}
 

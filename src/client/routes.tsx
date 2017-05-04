@@ -7,6 +7,8 @@ import App from './app';
 import {
 	AccountEditPage,
 	AccountsPage,
+	BudgetEditPage,
+	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
 	ScheduledTransactionEditPage,
@@ -55,6 +57,7 @@ class Routes extends Component<Props, State> {
 		// TODO Refactor this
 		this.horizontalSlidePages = [
 			AccountEditPage.path,
+			BudgetEditPage.path,
 			ClearDataPage.path,
 			ScheduledTransactionEditPage.path,
 			TransactionEditPage.path,
@@ -63,12 +66,16 @@ class Routes extends Component<Props, State> {
 		this.router = new N(null, true);
 	}
 
+	// TODO dry this up
 	public componentWillMount() {
 		this.router.on({
 			[SummaryPage.path]: () => this.setPage(SummaryPage.path),
 			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
 			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
 			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
+			[BudgetsPage.path]: () => this.setPage(BudgetsPage.path),
+			[BudgetEditPage.path]: () => this.setPage(BudgetEditPage.path),
+			[BudgetEditPage.pathParams]: (params) => this.setPage(BudgetEditPage.path, params),
 			[ClearDataPage.path]: () => this.setPage(ClearDataPage.path),
 			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage.path),
 			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage.path),
@@ -100,6 +107,7 @@ class Routes extends Component<Props, State> {
 
 		const id = params && params.id;
 
+		// TODO dry this up
 		return (
 			<div>
 				<App>
@@ -113,6 +121,18 @@ class Routes extends Component<Props, State> {
 						<AccountEditPage
 							id={id}
 							key={AccountEditPage.path}
+						/>
+					}
+					{page === BudgetsPage.path &&
+						<BudgetsPage
+							disableAnimation={disableNextPageAnimation}
+							key={BudgetsPage.path}
+						/>
+					}
+					{page === BudgetEditPage.path &&
+						<BudgetEditPage
+							id={id}
+							key={BudgetEditPage.path}
 						/>
 					}
 					{page === ClearDataPage.path &&

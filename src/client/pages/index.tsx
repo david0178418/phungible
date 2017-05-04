@@ -1,5 +1,7 @@
 import AccountEditPage from './account-edit-page';
 import AccountsPage from './accounts-page';
+import BudgetEditPage from './budget-edit-page';
+import BudgetsPage from './budgets-page';
 import ClearDataPage from './clear-data-page';
 import DailyActivityPage from './daily-activity-page';
 import ScheduledTransactionEditPage from './scheduled-transaction-edit-page';
@@ -10,9 +12,12 @@ import TransactionEditPage from './transaction-edit-page';
 import TransactionsPage from './transactions-page';
 import TrendsPage from './trends-page';
 
+// TODO dry these pages up, if possible
 export {
 	AccountEditPage,
 	AccountsPage,
+	BudgetEditPage,
+	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
 	SummaryPage,

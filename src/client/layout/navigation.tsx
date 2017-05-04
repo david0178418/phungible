@@ -2,6 +2,7 @@ import AppBar from 'material-ui/AppBar';
 import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
+import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
@@ -11,6 +12,8 @@ import * as React from 'react';
 import {
 	AccountEditPage,
 	AccountsPage,
+	BudgetEditPage,
+	BudgetsPage,
 	DailyActivityPage,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -33,7 +36,22 @@ function accountTarget(accountsCount: number) {
 	return accountsCount ? AccountsPage.path : AccountEditPage.path;
 }
 
-function budgetProps(scheduledTransactionsCount: number, accountCount: number) {
+function budgetProps(budgetsCount: number, accountCount: number) {
+	const props: MenuItemProps = {
+		leftIcon: <WalletIcon />,
+		rightIcon: <Badge badgeContent={budgetsCount} primary />,
+	};
+
+	if(accountCount) {
+		props.href = budgetsCount ? BudgetsPage.path : BudgetEditPage.path;
+	} else {
+		props.disabled = true;
+	}
+
+	return props;
+}
+
+function scheduledTransactionProps(scheduledTransactionsCount: number, accountCount: number) {
 	const props: MenuItemProps = {
 		leftIcon: <RepeatIcon />,
 		rightIcon: <Badge badgeContent={scheduledTransactionsCount} primary />,
@@ -86,8 +104,14 @@ class Navigation extends React.Component<Props, any> {
 		};
 	}
 
+	// TODO dry this up
 	public render() {
-		const {accounts, scheduledTransactions, transactions} = this.props.store;
+		const {
+			accounts,
+			budgets,
+			scheduledTransactions,
+			transactions,
+		} = this.props.store;
 		return (
 			<AppBar
 				className="app-title"
@@ -123,7 +147,13 @@ class Navigation extends React.Component<Props, any> {
 						Accounts
 					</NavItem>
 					<NavItem
-						{...budgetProps(scheduledTransactions.length, accounts.length)}
+						{...budgetProps(budgets.length, accounts.length)}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
+						{BudgetsPage.title}
+					</NavItem>
+					<NavItem
+						{...scheduledTransactionProps(scheduledTransactions.length, accounts.length)}
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						{ScheduledTransactionsPage.title}

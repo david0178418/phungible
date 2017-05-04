@@ -50,6 +50,10 @@ class Money {
 		return Money.formatMoney(this.val);
 	}
 
+	@computed get valFormattedNearestDollar() {
+		return Money.formatMoney(this.val, 0);
+	}
+
 	constructor(val = 0) {
 		this.totalValCents = val;
 	}

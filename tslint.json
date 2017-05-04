@@ -62,6 +62,7 @@
         "no-bitwise": false,
         "no-eval": true,
         "no-internal-module": true,
+        "no-object-literal-type-assertion": false,
         "no-string-literal": false,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,

@@ -19,7 +19,7 @@ class AccountEditStore {
 	public account: Account;
 	public appStore: AppStore;
 
-	constructor(appStore: AppStore, scheduledTransaction?: number) {
+	constructor(appStore: AppStore, scheduledTransaction?: string) {
 		this.appStore = appStore;
 
 		if(scheduledTransaction) {
@@ -44,7 +44,7 @@ class AccountEditStore {
 	}
 }
 type Props = {
-	id: number;
+	id: string;
 	store?: AppStore;
 };
 
@@ -57,7 +57,7 @@ class AccountEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new AccountEditStore(props.store, +this.props.id);
+		this.store = new AccountEditStore(props.store, this.props.id);
 	}
 
 	public render() {

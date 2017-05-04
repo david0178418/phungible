@@ -45,7 +45,7 @@ class TransactionForm extends Component<Props, any> {
 				<div>
 					<TextField
 						fullWidth
-						floatingLabelText="Transaction Name"
+						floatingLabelText="Name"
 						onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
 						value={transaction.name}
 					/>
@@ -115,10 +115,10 @@ class TransactionForm extends Component<Props, any> {
 		e.preventDefault();
 		onSubmit();
 	}
-	@action private handleUpdateFromAccount(accountId: number, transaction: Transaction) {
+	@action private handleUpdateFromAccount(accountId: string, transaction: Transaction) {
 		transaction.fromAccount = this.findAccount(accountId);
 	}
-	@action private handleUpdateTowardAccount(accountId: number, transaction: Transaction) {
+	@action private handleUpdateTowardAccount(accountId: string, transaction: Transaction) {
 		transaction.towardAccount = this.findAccount(accountId);
 	}
 	@action private handleUpdateNotes(newNote: string, transaction: Transaction) {
@@ -133,7 +133,7 @@ class TransactionForm extends Component<Props, any> {
 	@action private handleUpdateType(newType: TransactionType, transaction: Transaction) {
 		transaction.type = newType;
 	}
-	private findAccount = (id: number) => {
+	private findAccount = (id: string) => {
 		return this.props.accounts.find((account) => account.id === id) || null;
 	}
 }

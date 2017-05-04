@@ -7,9 +7,9 @@ import Account from '../../stores/account';
 type AccountSelectorProps = {
 	accounts: Account[];
 	label: string;
-	selectedAccountId: number | null;
+	selectedAccountId: string | null;
 	style?: {}
-	onChange(value: number, index?: number): void;
+	onChange(value: string, index?: number): void;
 };
 
 export default

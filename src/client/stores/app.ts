@@ -4,6 +4,7 @@ import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
 import {setItem} from '../shared/storage';
+import {generateUuid, Money} from '../shared/utils';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
@@ -14,40 +15,52 @@ class AppStore {
 		return deserialize(AppStore, data);
 	}
 	@serializable(identifier())
-	public id = 1;
+	public id: string;
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
+	@serializable(list(object(ScheduledTransaction)))
+	@observable public budgets: ScheduledTransaction[];
 	@serializable
 	public lastUpdatedDate: string;
 	@serializable(list(object(ScheduledTransaction)))
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@serializable(list(object(Transaction)))
 	@observable public transactions: Transaction[];
-	@serializable
-	private _nextTransactionId = 1;
-
-	get nextTransactionId() {
-		return this._nextTransactionId++;
-	}
 
 	constructor() {
+		this.id = generateUuid();
 		this.accounts = observable([]);
+		this.budgets = observable([]);
 		this.scheduledTransactions = observable([]);
 		this.transactions = observable([]);
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 		(window as any).store = this;
 	}
 
-	public findAccount(accountId: number) {
+	public findAccount(accountId: string) {
 		return this.accounts.find((account) => accountId === account.id);
 	}
-	public findRelatedScheduledTransactions(accountId: number) {
+	public findBudget(id: string) {
+		return this.budgets.find((budget) => budget.id === id);
+	}
+	public findRemainingBudgetBalance(id: string) {
+		const budget = this.findBudget(id);
+		const lastOccurance = moment(budget.lastOccurance);
+		const totalRemaining = this.transactions
+			.filter((transaction) => lastOccurance.isSameOrBefore(transaction.date, 'day'))
+			.filter((transaction) => transaction.generatedFrom)
+			.filter((transaction) => transaction.generatedFrom.id === budget.id)
+			.reduce((amount, transaction) => amount - transaction.amount.valCents, budget.amount.valCents);
+
+		return new Money(totalRemaining);
+	}
+	public findRelatedScheduledTransactions(accountId: string) {
 		return this.scheduledTransactions.filter((scheduledTrans) => scheduledTrans.affectsAccount(accountId));
 	}
-	public findScheduledTransaction(id: number) {
+	public findScheduledTransaction(id: string) {
 		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
 	}
-	public findTransaction(id: number) {
+	public findTransaction(id: string) {
 		return this.transactions.find((transaction) => transaction.id === id);
 	}
 	public findTransactionsOnDate(date: Date) {
@@ -73,6 +86,7 @@ class AppStore {
 	}
 	@action public clearAllData() {
 		(this.accounts as any).clear();
+		(this.budgets as any).clear();
 		(this.scheduledTransactions as any).clear();
 		(this.transactions as any).clear();
 		this.save();
@@ -105,6 +119,10 @@ class AppStore {
 		(this.accounts as any).remove(account);
 		this.save();
 	}
+	@action public removeBudget(budget: ScheduledTransaction) {
+		(this.budgets as any).remove(budget);
+		this.save();
+	}
 	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		(this.scheduledTransactions as any).remove(scheduledTransaction);
 		this.save();
@@ -120,7 +138,7 @@ class AppStore {
 		for(let x = 0; x <= daysSince; x++) {
 			if(scheduledTransaction.occursOn(lastUpdate)) {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate());
-				transaction.id = this.nextTransactionId;
+				transaction.id = generateUuid();
 				this.transactions.push(transaction);
 			}
 			lastUpdate.add(1, 'day');
@@ -130,7 +148,7 @@ class AppStore {
 	}
 	@action public saveAccount(newAccount: Account) {
 		if(!newAccount.id) {
-			newAccount.id = Date.now();
+			newAccount.id = generateUuid();
 			this.accounts.push(newAccount);
 		} else {
 			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
@@ -138,9 +156,21 @@ class AppStore {
 		}
 		this.save();
 	}
+	@action public saveBudget(newBudget: ScheduledTransaction) {
+		if(!newBudget.id) {
+			newBudget.id = generateUuid();
+			this.budgets.push(newBudget);
+		} else {
+			const index = this.budgets.findIndex(
+				(budget) => budget.id === newBudget.id,
+			);
+			this.budgets[index] = newBudget;
+		}
+		this.save();
+	}
 	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
-			newScheduledTransaction.id = Date.now();
+			newScheduledTransaction.id = generateUuid();
 			this.scheduledTransactions.push(newScheduledTransaction);
 
 			if(moment().isSameOrBefore(newScheduledTransaction.startDate, 'days')) {
@@ -148,7 +178,7 @@ class AppStore {
 					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString);
 				} else {
 					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate);
-					transaction.id = this.nextTransactionId;
+					transaction.id = generateUuid();
 					this.transactions.push(transaction);
 				}
 			}
@@ -165,7 +195,7 @@ class AppStore {
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
-			newTransaction.id = Date.now();
+			newTransaction.id = generateUuid();
 			this.transactions.push(newTransaction);
 		} else {
 			const index = this.transactions.findIndex((transaction) => transaction.id === newTransaction.id);

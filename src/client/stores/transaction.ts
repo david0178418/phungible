@@ -8,8 +8,16 @@ import ScheduledTransaction from './scheduled-transaction';
 
 export
 enum TransactionType {
+	BudgetedExpense,
 	Expense,
 	Income,
+}
+
+export
+interface TransactionEffect {
+	accountId: string;
+	amount: number;
+	date: Date;
 }
 
 export default
@@ -21,7 +29,7 @@ class Transaction {
 		return Transaction.deserialize(serialize(originalTransaction));
 	}
 	@serializable(identifier())
-	@observable public id: number;
+	@observable public id: string;
 	@serializable(object(Money))
 	public amount: Money;
 	@serializable(object(Account))
@@ -69,5 +77,38 @@ class Transaction {
 			this.type === Expense && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
+	}
+
+	public affectsAccount(account: Account) {
+		return (
+			this.fromAccount && (this.fromAccount.id === account.id) ||
+			this.towardAccount && (this.towardAccount.id === account.id)
+		);
+	}
+
+	public affectOnDateRange(from: Date, to: Date): TransactionEffect[] {
+		if(this.date > to) {
+			return null;
+		}
+
+		const affects: TransactionEffect[] = [];
+
+		if(this.fromAccount) {
+			affects.push({
+				accountId: this.fromAccount.id,
+				amount: this.amount.valCents * this.fromAccount.fromBalanceDirection,
+				date: this.date,
+			});
+		}
+
+		if(this.towardAccount) {
+			affects.push({
+				accountId: this.towardAccount.id,
+				amount: this.amount.valCents * this.towardAccount.towardBalanceDirection,
+				date: this.date,
+			});
+		}
+
+		return affects;
 	}
 }

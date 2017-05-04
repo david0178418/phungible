@@ -1,18 +1,14 @@
-import DatePicker from 'material-ui/DatePicker';
-import {List, ListItem} from 'material-ui/List';
-import RaisedButton from 'material-ui/RaisedButton';
-import Subheader from 'material-ui/Subheader';
+import {Tab, Tabs} from 'material-ui/Tabs';
 import {observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
-import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import {pageStyling} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
-import TransactionEdit from '../transaction-edit';
-import ActivityItem from './activity-item';
+import CurrentBudgets from './current-budgets';
+import DailyTransactions from './daily-transactions';
 
 type Props = {
 	store?: AppStore;
@@ -20,14 +16,9 @@ type Props = {
 	onRemove: (transaction: Transaction) => void;
 };
 
-type State = {
-	quickTransaction: Transaction;
-	date: Date;
-};
-
 @observer
 export default
-class DailyActivity extends Component<Props, State> {
+class DailyActivity extends Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
 
@@ -38,137 +29,36 @@ class DailyActivity extends Component<Props, State> {
 	}
 	public render() {
 		const {
-			date,
-			quickTransaction,
-		} = this.state;
-		const {
 			store,
 			onAdd,
 			onRemove,
 		} = this.props;
-		const transactions = store.findTransactionsOnDate(date);
 
 		return (
 			<div style={pageStyling}>
-				<DatePicker
-					autoOk
-					fullWidth
-					floatingLabelText="Date"
-					hintText="Activity Date"
-					firstDayOfWeek={0}
-					onChange={(ev, newDate) => this.handleUpdateDate(newDate)}
-					value={date}
-				/>
-				<style>{`
-					.quick-transaction-enter,
-					.quick-transaction-leave {
-						overflow: hidden;
-						transition: max-height 500ms;
-					}
-					.quick-transaction-enter {
-						max-height: 0;
-					}
-					.quick-transaction-enter-active {
-						max-height: 1000px;
-					}
-					.quick-transaction-leave {
-						max-height: 1000px;
-					}
-					.quick-transaction-leave-active {
-						max-height: 0;
-					}
-				`}</style>
-				<CSSTransitionGroup
-					component="div"
-					transitionName="quick-transaction"
-					transitionEnterTimeout={500}
-					transitionLeaveTimeout={500}
-				>
-					{quickTransaction && (
-						<TransactionEdit
-							hideDate
-							hideNotes
-							hideTowardsAccount
-							hideType
-							accounts={store.accounts}
-							transaction={quickTransaction}
-							onSubmit={() => onAdd(quickTransaction)}
-						/>
-					)}
-				</CSSTransitionGroup>
-				{quickTransaction && (
-					<div>
-						<RaisedButton
-							label="Save Quick Expense"
-							primary
-							style={{
-								marginBottom: 10,
-								width: '100%',
-							}}
-							disabled={!quickTransaction.isValid}
-							onTouchTap={() => this.handleSaveQuickTransaction()}
-						/>
-						<RaisedButton
-							label="Cancel Quick Expense"
-							style={{
-								width: '100%',
-							}}
-							onTouchTap={() => this.handleToggleQuickTransaction()}
-						/>
-					</div>
-				)}
-				{!quickTransaction && (
-					<RaisedButton
-						disabled={!store.accounts.length}
-						label="Add Quick Expense"
-						primary
-						style={{
-							width: '100%',
-						}}
-						onTouchTap={() => this.handleToggleQuickTransaction()}
-					/>
-				)}
-				<List>
-					<Subheader>
-						Transactions for {moment(date).format('MMMM Do YYYY')}
-					</Subheader>
-					{!!transactions.length && transactions.map((transaction) => (
-						<ActivityItem
-							key={transaction.id ? transaction.id.toString() : transaction.name}
-							transaction={transaction}
+				<Tabs contentContainerStyle={{
+					marginTop: 15,
+				}}>
+					<Tab label="Budgets">
+						<CurrentBudgets
+							store={store}
+							budgets={
+								store.budgets
+									.filter((budget) => budget.lastOccurance)
+							}
+							onAdd={onAdd}
 							onRemove={onRemove}
 						/>
-					))}
-					{!transactions.length && <ListItem primaryText="No Activity" />}
-				</List>
+					</Tab>
+					<Tab label="Transactions">
+						<DailyTransactions
+							store={store}
+							onAdd={onAdd}
+							onRemove={onRemove}
+						/>
+					</Tab>
+				</Tabs>
 			</div>
 		);
-	}
-
-	private handleToggleQuickTransaction() {
-		if(this.state.quickTransaction) {
-			this.setState({
-				quickTransaction: null,
-			});
-		} else {
-			this.setState({
-				quickTransaction: new Transaction({
-					date: this.state.date,
-				}),
-			});
-		}
-	}
-
-	private handleSaveQuickTransaction() {
-		this.props.onAdd(this.state.quickTransaction);
-		this.setState({
-			quickTransaction: null,
-		});
-	}
-
-	private handleUpdateDate(date: Date) {
-		this.setState({
-			date,
-		});
 	}
 }

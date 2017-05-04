@@ -1,29 +1,26 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 
+import {dateRange} from '../shared/utils';
 import Account from '../stores/account';
 import ScheduledTransaction from './scheduled-transaction';
-import Transaction from './transaction';
+import Transaction, {TransactionEffect} from './transaction';
 
-type BalanceMap = {
-	[key: string]: number;
-};
-type BalanceData = {
-	date: string;
-} & BalanceMap;
+type Moment = moment.Moment;
 
 export default
 class TrendsStore {
 	@observable public fromDate: Date;
 	@observable public toDate: Date;
 	public accounts: Account[];
+	public budgets: ScheduledTransaction[];
 	public scheduledTransactions: ScheduledTransaction[];
 	public transactions: Transaction[];
 	@observable private selectedTrends: string[];
 
 	constructor(params?: Partial<TrendsStore>) {
-		this.fromDate = moment().subtract(1, 'month').startOf('month').toDate();
-		this.toDate = moment().add(2, 'month').endOf('month').toDate();
+		this.fromDate = this.startOfMonth;
+		this.toDate = moment().add(1, 'week').endOf('week').toDate();
 		this.selectedTrends = ['Total'];
 		(window as any).trendsStore = this; // TODO remove debug
 
@@ -35,9 +32,9 @@ class TrendsStore {
 		}
 	}
 
-	@computed get minDate() {
+	@computed get minFromDate() {
 		if(!this.accounts.length) {
-			return new Date();
+			return this.startOfMonth;
 		}
 
 		const oldestAccount = this.accounts.reduce((a, b) => {
@@ -47,7 +44,18 @@ class TrendsStore {
 			return a.firstBalanceUpdate.date < b.firstBalanceUpdate.date ? a : b;
 		});
 
-		return oldestAccount.firstBalanceUpdate && oldestAccount.firstBalanceUpdate.date;
+		if(
+			!oldestAccount.firstBalanceUpdate ||
+			oldestAccount.firstBalanceUpdate.date > this.startOfMonth
+		) {
+			return this.startOfMonth;
+		} else {
+			return oldestAccount.firstBalanceUpdate.date;
+		}
+	}
+
+	@computed get minToDate() {
+		return moment(this.fromDate).add(1, 'day').toDate();
 	}
 
 	@computed get accountNames() {
@@ -87,6 +95,10 @@ class TrendsStore {
 		return returnVal;
 	}
 
+	@computed get startOfMonth() {
+		return moment().startOf('month').toDate();
+	}
+
 	public removeSelectedTrend(removedTrend: string) {
 		this.selectedTrends = (this.selectedTrends as any).filter((trend: string) => !trend.startsWith(removedTrend));
 	}
@@ -99,73 +111,112 @@ class TrendsStore {
 		return this.selectedTrends.indexOf(trend) !== -1;
 	}
 
+	// TODO refactor the hell out of all this;
 	@computed get formattedData() {
-		const fromDate = moment(this.fromDate);
-		const toDate = moment(this.toDate);
-		const today = moment();
-		const diff = toDate.diff(fromDate, 'days');
-		const data: any[] = [];
-		let prevBalances: any = {};
+		const dateMoments = dateRange(this.fromDate, this.toDate);
+		const accounts = this.accounts;
+		const combinedBudgetsScheduledTransaction = this.budgets.concat(this.scheduledTransactions);
+		const budgets = this.budgets
+			.filter((budget) => budget.lastOccurance)
+			.filter((budget) => !budgetIsExceeded(budget, this.transactions));
 
-		for(let x = 0; x < diff; x++) {
-			const accountBalances: BalanceData = {
-				date: fromDate.format('MMM DD') as any, // TODO Figure out why this is needed
-			};
-			this.accounts.forEach((account) => {
-				let balance;
+		const transactionEffects: TransactionEffect[] = this.transactions
+			.filter((transaction) => (
+				!budgets.some((budget) => budget.id === transaction.generatedFrom.id)
+			))
+			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
+			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
+			.filter((transaction) => transaction)
+			.concat(
+				budgets
+					.map((budget) => ({
+						accountId: budget.fromAccount.id,
+						amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
+						date: budget.lastOccurance,
+					}),
+			)
+			.concat(
+				dateMoments
+					.filter((dateMoment) => dateMoment.isSameOrAfter(new Date(), 'day'))
+					.map((date) => (
+						combinedBudgetsScheduledTransaction
+							.filter((schedTrans) => schedTrans.occursOn(date))
+							.map((schedTrans) => {
+								const effects = [];
 
-				if(!account.firstBalanceUpdate) {
-					return;
-				}
+								if(schedTrans.fromAccount) {
+									effects.push({
+										accountId: schedTrans.fromAccount.id,
+										amount: schedTrans.amount.valCents * schedTrans.fromAccount.fromBalanceDirection,
+										date: date.toDate(),
+									});
+								}
 
-				if(
-					fromDate.isSameOrBefore(today, 'day') &&
-					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
-				) {
-					if(accountBalances['Total'] === undefined) {
-						accountBalances['Total'] = 0;
-					}
+								if(schedTrans.towardAccount) {
+									effects.push({
+										accountId: schedTrans.towardAccount.id,
+										amount: schedTrans.amount.valCents * schedTrans.towardAccount.towardBalanceDirection,
+										date: date.toDate(),
+									});
+								}
 
-					balance = account.applyTransactions(this.transactions, fromDate.toDate());
+								return effects;
+							})
+							.reduce((val, effects) => val.concat(effects), []	)
+					))
+					.reduce((val, effects) => val.concat(effects), []),
+			));
 
-					if(balance) {
-						accountBalances[account.name] = balance;
-						accountBalances['Total'] += balance;
-					}
-				}
+		return dateMoments
+			.map((dateMoment, index, arr) => {
+				const dateBalances: any = {
+					dateMoment,
+				};
 
-				if(
-					fromDate.isSameOrAfter(today, 'day') &&
-					fromDate.isSameOrAfter(account.firstBalanceUpdate.date)
-				) {
-					if(accountBalances['Total'] === undefined) {
-						accountBalances['Total'] = 0;
-					}
+				return accounts
+					.filter((account) => dateMoment.isAfter(account.firstBalanceUpdate.date))
+					.reduce((val, account) => {
+						val[account.id] =
+							transactionEffectsOnAccountDate(account, dateMoment, transactionEffects);
+						return val;
+					}, dateBalances);
+			})
+			.map((dataPoint) => {
+				const dataPointWithNames = {
+					date: dataPoint.dateMoment.format('MMM DD'),
+				} as any;
 
-					if(fromDate.isSame(today, 'day')) {
-						balance = account.applyTransactions(this.transactions, fromDate.toDate());
-					} else {
-						let prevBalance = 0;
+				accounts
+					.filter((account) => dataPoint[account.id] !== undefined)
+					.forEach((account) => {
+						dataPointWithNames[account.name] = dataPoint[account.id];
+						dataPointWithNames.Total = dataPointWithNames.Total || 0;
+						dataPointWithNames.Total += dataPointWithNames[account.name] * account.globalBalanceDirection;
+					});
 
-						if(prevBalances[account.name]) {
-							prevBalance = prevBalances[account.name];
-						} else if(prevBalances[account.name]) {
-							prevBalance = prevBalances[account.name];
-						}
-						const change = account.changeOnDate(this.scheduledTransactions, fromDate.toDate());
-						balance = change + prevBalance;
-					}
-
-					accountBalances[account.name] = balance;
-					accountBalances['Total'] += balance;
-				}
+				return dataPointWithNames;
 			});
-
-			prevBalances = accountBalances;
-			data.push(accountBalances);
-			fromDate.add(1, 'days');
-		}
-
-		return data;
 	}
+}
+
+// TODO Refactor and figure out where these co
+function budgetIsExceeded(budget: ScheduledTransaction, transactions: Transaction[]) {
+	const startDate = moment(budget.lastOccurance);
+
+	return transactions
+		.filter((transaction) => transaction.generatedFrom)
+		.filter((transaction) => transaction.generatedFrom.id === budget.id)
+		.filter((transaction) => startDate.isSameOrBefore(transaction.date, 'day'))
+		.reduce((val, transaction) => val + transaction.amount.valCents, 0) > budget.amount.valCents;
+}
+
+function transactionEffectsOnAccountDate(account: Account, date: Moment, transactionEffects: TransactionEffect[]) {
+	const balance = account.lastBalanceUpdateAsOf(date.toDate()).amount.valCents;
+	const totalChange = transactionEffects
+		.filter((transactionEffect) =>
+			transactionEffect.accountId === account.id && date.isSameOrAfter(transactionEffect.date, 'day'))
+		.map((transactionEffect) => transactionEffect.amount)
+		.reduce((val, amount) => val + amount, 0);
+
+	return balance + totalChange;
 }

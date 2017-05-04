@@ -8,7 +8,7 @@ import * as React from 'react';
 
 // Explicitly called as a function vs TSX due to rendering issue in the latter
 export default
-function EditRemoveMenu<T extends {id: number}>(
+function EditRemoveMenu<T extends {id: string}>(
 	type: string,
 	item: T,
 	onRemove: (item: T) => void,

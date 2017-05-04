@@ -2,19 +2,19 @@ import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {identifier, object, serializable} from 'serializr';
 
-import Money from '../shared/utils/money';
+import {generateUuid, Money} from '../shared/utils';
 
 export default
 class BalanceUpdate {
 	@serializable(identifier())
-	public id: number;
+	public id: string;
 	@serializable(object(Money))
 	public balance: Money;
 	@serializable
 	@observable private _date: string;
 
 	constructor() {
-		this.id = Date.now();
+		this.id = generateUuid();
 		this.date = new Date();
 		this.balance = new Money();
 	}

@@ -56,6 +56,7 @@ class TrendsPage extends Component<Props, State> {
 						{renderBody && (
 							<Trends
 								accounts={store.accounts}
+								budgets={store.budgets}
 								transactions={store.transactions}
 								scheduledTransactions={store.scheduledTransactions}
 							/>

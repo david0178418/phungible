@@ -12,32 +12,34 @@ import ContentArea from '../components/shared/content-area';
 import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
+import {TransactionType} from '../stores/transaction';
 import Page from './page';
 
-class CreateScheduledTransactionStore {
-	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
+class BudgetEditStore {
+	public budget: ScheduledTransaction | ScheduledTransactionFacade;
 	private appStore: AppStore;
 
-	constructor(appStore: AppStore, scheduledTransactionId?: string) {
+	constructor(appStore: AppStore, budgetId?: string) {
 		this.appStore = appStore;
 
-		if(scheduledTransactionId) {
-			this.scheduledTransaction = appStore.findScheduledTransaction(scheduledTransactionId);
+		if(budgetId) {
+			this.budget = appStore.findBudget(budgetId);
 		} else {
-			this.scheduledTransaction = new ScheduledTransactionFacade();
+			this.budget = new ScheduledTransactionFacade();
+			this.budget.type = TransactionType.BudgetedExpense;
 		}
 	}
 
-	public saveScheduledTransactions() {
-		if(this.scheduledTransaction.isValid) {
-			if(this.scheduledTransaction instanceof ScheduledTransactionFacade) {
-				this.scheduledTransaction.createScheduledTransactions().map((transaction) => {
-					this.appStore.saveScheduledTransaction(transaction);
-					this.scheduledTransaction = new ScheduledTransactionFacade();
+	public saveBudget() {
+		if(this.budget.isValid) {
+			if(this.budget instanceof ScheduledTransactionFacade) {
+				this.budget.createScheduledTransactions().map((transaction) => {
+					this.appStore.saveBudget(transaction);
+					this.budget = new ScheduledTransactionFacade();
 				});
 			} else {
-				this.appStore.saveScheduledTransaction(this.scheduledTransaction);
-				this.scheduledTransaction = new ScheduledTransactionFacade();
+				this.appStore.saveBudget(this.budget);
+				this.budget = new ScheduledTransactionFacade();
 			}
 			return true;
 		} else {
@@ -58,22 +60,22 @@ type Props = {
 @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
-	public static path = '/scheduled-transaction/edit/';
-	public static pathParams = '/scheduled-transaction/edit/:id';
-	public static title = 'Recurring Transaction';
-	private store: CreateScheduledTransactionStore;
+	public static path = '/budget/edit/';
+	public static pathParams = '/budget/edit/:id';
+	public static title = 'Budget';
+	private store: BudgetEditStore;
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new CreateScheduledTransactionStore(props.store, props.id);
+		this.store = new BudgetEditStore(props.store, props.id);
 	}
 
 	public render() {
 		const {
-			scheduledTransaction,
+			budget,
 		} = this.store;
-		const transactionsValid = this.store.scheduledTransaction.isValid;
-		const action = (scheduledTransaction instanceof ScheduledTransaction && scheduledTransaction.id) ? 'Edit' : 'Create';
+		const transactionsValid = this.store.budget.isValid;
+		const action = (budget instanceof ScheduledTransaction && budget.id) ? 'Edit' : 'Create';
 
 		return (
 			<Page className="slide-horizontal">
@@ -85,12 +87,13 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 				<ContentArea>
 					<ScheduledTransactionEdit
 						accounts={this.store.accounts}
-						scheduledTransaction={this.store.scheduledTransaction}
-						onSubmit={() => this.handleSaveScheduledTransaction()}
+						isBudget
+						scheduledTransaction={this.store.budget}
+						onSubmit={() => this.handleSaveBudget()}
 					/>
 					<FloatingActionButton
 						disabled={!transactionsValid}
-						onTouchTap={() => this.handleSaveScheduledTransaction()}
+						onTouchTap={() => this.handleSaveBudget()}
 						style={floatingActionButtonStyle}
 						zDepth={2}
 					>
@@ -101,9 +104,9 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		);
 	}
 
-	private handleSaveScheduledTransaction() {
+	private handleSaveBudget() {
 		setTimeout(() => {
-			this.store.saveScheduledTransactions();
+			this.store.saveBudget();
 			window.history.back();
 		}, 100);
 	}

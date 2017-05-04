@@ -12,7 +12,7 @@ import {ScheduledTransactionPartial} from '../../stores/scheduled-transaction';
 type Props = {
 	transactionPartials: ScheduledTransactionPartial[];
 	onAddEntry(): void;
-	onRemoveEntry(id: number): void;
+	onRemoveEntry(id: string): void;
 	onUpdateName(val: string, schScheduledTransaction: {name: string}): void;
 };
 
@@ -29,7 +29,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				{(this.props.transactionPartials.map((schedTranspartial) => (
 					<div key={schedTranspartial.id}>
 						<TextField
-							floatingLabelText="Transaction Name"
+							floatingLabelText="Name"
 							style={{width: 150}}
 							value={schedTranspartial.name}
 							onChange={((ev: any, value: any) => this.props.onUpdateName(value, schedTranspartial)) as any}
@@ -50,7 +50,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				)))}
 				<RaisedButton
 					fullWidth
-					label="Add another transaction"
+					label="Add another"
 					onTouchTap={() => this.props.onAddEntry()}
 					primary
 				/>
@@ -58,7 +58,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		);
 	}
 
-	private handleRemoveEntry(id: number) {
+	private handleRemoveEntry(id: string) {
 		setTimeout(() => {
 			this.props.onRemoveEntry(id);
 		}, 200);

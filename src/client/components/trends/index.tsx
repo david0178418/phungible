@@ -13,6 +13,7 @@ import TrendsChart from './trends-chart';
 
 type Props = {
 	accounts: Account[];
+	budgets: ScheduledTransaction[];
 	transactions: Transaction[];
 	scheduledTransactions: ScheduledTransaction[];
 };
@@ -36,7 +37,7 @@ class Trends extends Component<Props, {}> {
 					<DatePicker
 						autoOk
 						floatingLabelText="From"
-						minDate={store.minDate}
+						minDate={store.minFromDate}
 						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateFromDate(value)}
 						style={{display: 'inline-block'}}
@@ -47,6 +48,7 @@ class Trends extends Component<Props, {}> {
 						autoOk
 						floatingLabelText="To"
 						firstDayOfWeek={0}
+						minDate={store.minToDate}
 						onChange={(ev, value) => this.handleUpdateToDate(value)}
 						style={{display: 'inline-block'}}
 						value={store.toDate}

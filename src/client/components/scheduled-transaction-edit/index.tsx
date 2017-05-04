@@ -18,6 +18,7 @@ import RepeatField from './repeat-field';
 
 type Props = {
 	accounts: Account[];
+	isBudget?: boolean;
 	scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
 	onSubmit(): void;
 };
@@ -30,7 +31,12 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	}
 
 	public render() {
-		const {accounts, scheduledTransaction, onSubmit} = this.props;
+		const {
+			accounts,
+			isBudget,
+			scheduledTransaction,
+			onSubmit,
+		} = this.props;
 		const isFacade = scheduledTransaction instanceof ScheduledTransactionFacade;
 		const selectedTowardAccountId = scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id || null;
 		const selectedFromAccountId = scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id || null;
@@ -47,7 +53,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 					/> || (
 						<span>
 							<TextField
-								floatingLabelText="Transaction Name"
+								floatingLabelText="Name"
 								style={{
 									marginRight: 15,
 								}}
@@ -67,17 +73,19 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						</span>
 					)}
 				</div>
-				<div>
-					<SelectField
-						fullWidth
-						floatingLabelText="Type"
-						value={scheduledTransaction.type}
-						onChange={(ev, index, value) => this.handleUpdateType(value, scheduledTransaction)}
-					>
-						<MenuItem value={TransactionType.Income} primaryText="Income" />
-						<MenuItem value={TransactionType.Expense} primaryText="Expense" />
-					</SelectField>
-				</div>
+				{!isBudget && (
+					<div>
+						<SelectField
+							fullWidth
+							floatingLabelText="Type"
+							value={scheduledTransaction.type}
+							onChange={(ev, index, value) => this.handleUpdateType(value, scheduledTransaction)}
+						>
+							<MenuItem value={TransactionType.Income} primaryText="Income" />
+							<MenuItem value={TransactionType.Expense} primaryText="Expense" />
+						</SelectField>
+					</div>
+				)}
 				<div>
 					<DatePicker
 						autoOk
@@ -89,15 +97,6 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						value={scheduledTransaction.startDate}
 					/>
 				</div>
-				<div>
-					<TextField
-						fullWidth
-						floatingLabelText="Notes"
-						multiLine
-						onChange={(ev: any) => this.handleUpdateNotes((ev.target as HTMLInputElement).value, scheduledTransaction)}
-						value={scheduledTransaction.notes}
-					/>
-				</div>
 				{!!accounts.length && (
 					<div>
 						<AccountSelector
@@ -106,12 +105,14 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							onChange={(value) => this.handleUpdateFromAccount(value, scheduledTransaction)}
 							selectedAccountId={selectedFromAccountId}
 						/>
-						<AccountSelector
-							accounts={accounts}
-							label="Towards Account"
-							onChange={(value) => this.handleUpdateTowardAccount(value, scheduledTransaction)}
-							selectedAccountId={selectedTowardAccountId}
-						/>
+						{!isBudget && (
+							<AccountSelector
+								accounts={accounts}
+								label="Towards Account"
+								onChange={(value) => this.handleUpdateTowardAccount(value, scheduledTransaction)}
+								selectedAccountId={selectedTowardAccountId}
+							/>
+						)}
 					</div>
 				)}
 				<div style={{display: 'inline-block'}}>
@@ -138,14 +139,11 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 			scheduledTransaction.repeatUnit = RepeatUnits.Week;
 		}
 	}
-	@action private handleUpdateFromAccount(accountId: number, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateFromAccount(accountId: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.fromAccount = this.findAccount(accountId);
 	}
-	@action private handleUpdateTowardAccount(accountId: number, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateTowardAccount(accountId: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.towardAccount = this.findAccount(accountId);
-	}
-	@action private handleUpdateNotes(newNote: string, scheduledTransaction: ScheduledTransaction) {
-		scheduledTransaction.notes = newNote;
 	}
 	@action private handleUpdateName(newName: string, scheduledTransaction: {name: string}) {
 		scheduledTransaction.name = newName;
@@ -157,7 +155,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		scheduledTransaction.type = newType;
 	}
 
-	private findAccount(id: number) {
+	private findAccount(id: string) {
 		return this.props.accounts.find((account) => account.id === id) || null;
 	}
 }
