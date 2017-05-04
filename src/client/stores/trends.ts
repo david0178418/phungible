@@ -144,7 +144,10 @@ class TrendsStore {
 							.map((schedTrans) => {
 								const effects = [];
 
-								if(schedTrans.fromAccount) {
+								if(
+									schedTrans.fromAccount &&
+									!schedTrans.occursOn(schedTrans.fromAccount.latestBalanceUpdate.date)
+								) {
 									effects.push({
 										accountId: schedTrans.fromAccount.id,
 										amount: schedTrans.amount.valCents * schedTrans.fromAccount.fromBalanceDirection,
@@ -152,7 +155,10 @@ class TrendsStore {
 									});
 								}
 
-								if(schedTrans.towardAccount) {
+								if(
+									schedTrans.towardAccount &&
+									!schedTrans.occursOn(schedTrans.towardAccount.latestBalanceUpdate.date)
+								) {
 									effects.push({
 										accountId: schedTrans.towardAccount.id,
 										amount: schedTrans.amount.valCents * schedTrans.towardAccount.towardBalanceDirection,
