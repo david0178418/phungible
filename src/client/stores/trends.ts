@@ -20,7 +20,7 @@ class TrendsStore {
 
 	constructor(params?: Partial<TrendsStore>) {
 		this.fromDate = this.startOfMonth;
-		this.toDate = moment().add(1, 'week').endOf('week').toDate();
+		this.toDate = moment().add(6, 'weeks').endOf('week').toDate();
 		this.selectedTrends = ['Total'];
 		(window as any).trendsStore = this; // TODO remove debug
 
