@@ -91,32 +91,63 @@ class AppStore {
 		(this.transactions as any).clear();
 		this.save();
 	}
-	@action public removeAccountFromScheduledTransactions(account: Account) {
-		this.scheduledTransactions.forEach((scheduledTransaction) => {
-			if(scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id === account.id) {
-				scheduledTransaction.fromAccount = null;
-			}
+	@action public cleanScheduledTransactions() {
+		const accountIds = this.accounts.map((account) => account.id);
+		this.scheduledTransactions
+			.forEach((schedTrans) => {
+				if(schedTrans.fromAccount && accountIds.indexOf(schedTrans.fromAccount.id) === -1) {
+					schedTrans.fromAccount = null;
+				}
 
-			if(scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id === account.id) {
-				scheduledTransaction.towardAccount = null;
-			}
-		});
+				if(schedTrans.towardAccount && accountIds.indexOf(schedTrans.towardAccount.id) === -1) {
+					schedTrans.towardAccount = null;
+				}
+			});
+
+		(this.scheduledTransactions as any).replace(
+			this.scheduledTransactions.filter((schedTrans) => schedTrans.isValid),
+		);
 	}
-	@action public removeAccountFromTransactions(account: Account) {
-		this.transactions.forEach((transaction) => {
-			if(transaction.fromAccount && transaction.fromAccount.id === account.id) {
-				transaction.fromAccount = null;
-			}
+	@action public cleanBudgets() {
+		const accountIds = this.accounts.map((account) => account.id);
+		this.budgets
+			.forEach((budget) => {
+				if(budget.fromAccount && accountIds.indexOf(budget.fromAccount.id) === -1) {
+					budget.fromAccount = null;
+				}
 
-			if(transaction.towardAccount && transaction.towardAccount.id === account.id) {
-				transaction.towardAccount = null;
-			}
-		});
+				if(budget.towardAccount && accountIds.indexOf(budget.towardAccount.id) === -1) {
+					budget.towardAccount = null;
+				}
+			});
+
+		(this.budgets as any).replace(
+			this.budgets.filter((budget) => budget.isValid),
+		);
+	}
+	@action public cleanTransactions() {
+		const accountIds = this.accounts.map((account) => account.id);
+		this.transactions
+			.forEach((transaction) => {
+				if(transaction.fromAccount && accountIds.indexOf(transaction.fromAccount.id) === -1) {
+					transaction.fromAccount = null;
+				}
+
+				if(transaction.towardAccount && accountIds.indexOf(transaction.towardAccount.id) === -1) {
+					transaction.towardAccount = null;
+				}
+			});
+
+		(this.transactions as any).replace(
+			this.transactions.filter((schedTrans) => schedTrans.isValid),
+		);
 	}
 	@action public removeAccount(account: Account) {
-		this.removeAccountFromTransactions(account);
-		this.removeAccountFromScheduledTransactions(account);
 		(this.accounts as any).remove(account);
+		this.cleanBudgets();
+		this.cleanScheduledTransactions();
+		this.cleanTransactions();
+
 		this.save();
 	}
 	@action public removeBudget(budget: ScheduledTransaction) {
