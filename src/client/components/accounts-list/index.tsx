@@ -1,3 +1,5 @@
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
@@ -20,6 +22,7 @@ type Props = {
 
 class AcountsStore {
 	public appStore: AppStore;
+	@observable public open: boolean = false;
 	@observable private _openAccount: Account | null;
 
 	constructor(appStore: AppStore) {
@@ -46,6 +49,12 @@ class AcountsStore {
 	}
 	@action public removeAccount(account: Account) {
 		this._openAccount = Account.clone(account);
+	}
+	@action public confirmRemoval() {
+		this.open = true;
+	}
+	@action public closeModal() {
+		this.open = false;
 	}
 	@computed get accounts() {
 		return this.appStore.accounts;
@@ -77,21 +86,44 @@ class AccountsList extends Component<Props, {}> {
 		const {accounts, onRemove} = this.props;
 
 		return (
-			<List>
-				{accounts.map((account) => (
-					<ListItem
-						key={account.id}
-						primaryText={`${account.name}`}
-						secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
-						leftIcon={
-							account.type === AccountType.Savings ?
-								<EditorMoneyOn color={Colors.Money}/> :
-								<ActionCreditCard color={Colors.Debt}/>
-						}
-						rightIconButton={EditRemoveMenu<Account>('account', account, onRemove)}
-					/>
-				))}
-			</List>
+			<div>
+				<List>
+					{accounts.map((account) => (
+						<span key={account.id}>
+							<ListItem
+								primaryText={`${account.name}`}
+								secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
+								leftIcon={
+									account.type === AccountType.Savings ?
+										<EditorMoneyOn color={Colors.Money}/> :
+										<ActionCreditCard color={Colors.Debt}/>
+								}
+								rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval())}
+							/>
+							<Dialog
+								modal
+								open={this.store.open}
+								title={`Deleting '${account.name}' will delete related entries. Delete?`}
+								actions={[
+									<FlatButton
+										primary
+										label="Cancel"
+										onTouchTap={() => this.store.closeModal()}
+									/>,
+									<FlatButton
+										primary
+										label="Delete"
+										onTouchTap={() => {
+											this.store.closeModal();
+											onRemove(account);
+										}}
+									/>,
+								]}
+							/>
+						</span>
+					))}
+				</List>
+			</div>
 		);
 	}
 }
