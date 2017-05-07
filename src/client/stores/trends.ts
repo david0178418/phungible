@@ -180,7 +180,7 @@ class TrendsStore {
 				};
 
 				return accounts
-					.filter((account) => dateMoment.isAfter(account.firstBalanceUpdate.date))
+					.filter((account) => dateMoment.isSameOrAfter(account.firstBalanceUpdate.date, 'day'))
 					.reduce((val, account) => {
 						val[account.id] =
 							transactionEffectsOnAccountDate(account, dateMoment, transactionEffects);
