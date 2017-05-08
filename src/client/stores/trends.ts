@@ -137,7 +137,7 @@ class TrendsStore {
 			)
 			.concat(
 				dateMoments
-					.filter((dateMoment) => dateMoment.isSameOrAfter(new Date(), 'day'))
+					.filter((dateMoment) => dateMoment.isAfter(new Date(), 'day'))
 					.map((date) => (
 						combinedBudgetsScheduledTransaction
 							.filter((schedTrans) => schedTrans.occursOn(date))
