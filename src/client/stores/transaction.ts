@@ -50,17 +50,12 @@ class Transaction {
 	@observable private _dateString: string;
 
 	constructor(params: Partial<Transaction> = {}) {
-		if(params) {
-			const amount = params.amount ? params.amount.valCents : 0;
-			return Object.assign(this, {
-				amount: new Money(amount),
-				labels: [],
-			}, params);
-		} else {
-			this.amount = new Money();
-			this.labels = [];
-			this._dateString = moment().format('MM/DD/YYYY');
-		}
+		const amount = params.amount ? params.amount.valCents : 0;
+		return Object.assign(this, {
+			_dateString: moment().format('MM/DD/YYYY'),
+			amount: new Money(amount),
+			labels: [],
+		}, params);
 	}
 
 	set date(newDate: Date) {

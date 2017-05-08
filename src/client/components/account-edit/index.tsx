@@ -10,7 +10,7 @@ import Account, {AccountType} from '../../stores/account';
 import AccountEditBalanceHistory from './account-edit-balance-history';
 
 type Props = {
-	account?: Account;
+	account: Account;
 	onSubmit(): void;
 };
 

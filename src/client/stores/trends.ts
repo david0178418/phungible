@@ -128,6 +128,7 @@ class TrendsStore {
 			.filter((budget) => !budgetIsExceeded(budget, this.transactions));
 
 		const transactionEffects: TransactionEffect[] = this.transactions
+			.filter((transaction) => !!transaction.generatedFrom)
 			.filter((transaction) => (
 				!budgets.some((budget) => budget.id === transaction.generatedFrom.id)
 			))
