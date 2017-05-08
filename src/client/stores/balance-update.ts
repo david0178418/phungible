@@ -13,10 +13,12 @@ class BalanceUpdate {
 	@serializable
 	@observable private _date: string;
 
-	constructor() {
-		this.id = generateUuid();
-		this.date = new Date();
-		this.balance = new Money();
+	constructor(params: Partial<BalanceUpdate> = {}) {
+		Object.assign(this, {
+			balance: new Money(),
+			date: new Date(),
+			id: generateUuid(),
+		}, params);
 	}
 	@computed get inputFormattedDate() {
 		return moment(this._date, 'MM/DD/YYYY').format('YYYY-MM-DD');

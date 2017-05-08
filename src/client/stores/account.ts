@@ -34,9 +34,11 @@ class Account {
 	@serializable(list(object(BalanceUpdate)))
 	@observable public balanceUpdateHistory: BalanceUpdate[];
 
-	constructor() {
-		this.labels = [];
-		this.balanceUpdateHistory = [];
+	constructor(params: Partial<Account> = {}) {
+		Object.assign(this, {
+			balanceUpdateHistory: [],
+			labels: [],
+		}, params);
 	}
 
 	public addBalanceUpdate(balanceUpdate: BalanceUpdate) {

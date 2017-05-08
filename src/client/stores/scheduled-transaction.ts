@@ -62,6 +62,7 @@ class ScheduledTransaction {
 	@observable public repeatUnit: RepeatUnits = RepeatUnits.Week;
 	@serializable(list(primitive()))
 	@observable public _repeatValues: number[];
+	public today: Date;
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
 	@serializable
@@ -69,17 +70,21 @@ class ScheduledTransaction {
 	@serializable
 	@observable private _startDate: string;
 
-	constructor() {
-		this.exceptions = [];
-		this.labels = [];
-		this._startDate = moment().format('MM/DD/YYYY');
-		this._repeatValues = [];
-		this.amount = new Money();
+	constructor(params: Partial<ScheduledTransaction> = {}) {
+		Object.assign(this, {
+			_repeatValues: [],
+			amount: new Money(),
+			exceptions: [],
+			labels: [],
+			startDate: moment().toDate(),
+			today: moment().toDate(),
+		}, params);
+
 		(window as any).scheduledTransaction = this; // TODO Remove debug
 	}
 
 	@computed get lastOccurance() {
-		const dateMoment = moment();
+		const dateMoment = moment(this.today);
 
 		while(true) {
 			if(this.occursOn(dateMoment)) {

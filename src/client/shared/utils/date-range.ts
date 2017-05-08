@@ -2,8 +2,6 @@ import * as moment from 'moment';
 
 type DateRangeParam = Date | moment.Moment;
 
-(window as any).dateRange = dateRange;
-
 export default
 function dateRange(from: DateRangeParam, to: DateRangeParam) {
 	if(from > to) {

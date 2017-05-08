@@ -49,7 +49,7 @@ class Transaction {
 	@serializable
 	@observable private _dateString: string;
 
-	constructor(params?: Partial<Transaction>) {
+	constructor(params: Partial<Transaction> = {}) {
 		if(params) {
 			const amount = params.amount ? params.amount.valCents : 0;
 			return Object.assign(this, {

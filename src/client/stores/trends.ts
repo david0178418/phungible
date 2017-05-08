@@ -1,5 +1,6 @@
-import {computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
+import {deserialize, list, object, serializable} from 'serializr';
 
 import {dateRange} from '../shared/utils';
 import Account from '../stores/account';
@@ -10,26 +11,32 @@ type Moment = moment.Moment;
 
 export default
 class TrendsStore {
+	@action public static deserialize(data: any) {
+		return deserialize(TrendsStore, data);
+	}
 	@observable public fromDate: Date;
 	@observable public toDate: Date;
+	@serializable(list(object(Account)))
 	public accounts: Account[];
+	@serializable(list(object(ScheduledTransaction)))
 	public budgets: ScheduledTransaction[];
+	@serializable(list(object(ScheduledTransaction)))
 	public scheduledTransactions: ScheduledTransaction[];
+	public today: Date;
+	@serializable(list(object(Transaction)))
 	public transactions: Transaction[];
 	@observable private selectedTrends: string[];
 
-	constructor(params?: Partial<TrendsStore>) {
-		this.fromDate = this.startOfMonth;
-		this.toDate = moment().add(6, 'weeks').endOf('week').toDate();
-		this.selectedTrends = ['Total'];
+	constructor(params: Partial<TrendsStore> = {}) {
+		Object.assign(this, {
+			accounts: [],
+			fromDate: this.startOfMonth,
+			selectedTrends: ['Total'],
+			toDate: moment().add(6, 'weeks').endOf('week').toDate(),
+			today: new Date(),
+			transactions: [],
+		}, params);
 		(window as any).trendsStore = this; // TODO remove debug
-
-		if(params) {
-			Object.assign(this, params);
-		} else {
-			this.accounts = [];
-			this.transactions = [];
-		}
 	}
 
 	@computed get minFromDate() {
@@ -96,7 +103,7 @@ class TrendsStore {
 	}
 
 	@computed get startOfMonth() {
-		return moment().startOf('month').toDate();
+		return moment(this.today).startOf('month').toDate();
 	}
 
 	public removeSelectedTrend(removedTrend: string) {
@@ -137,9 +144,10 @@ class TrendsStore {
 			)
 			.concat(
 				dateMoments
-					.filter((dateMoment) => dateMoment.isAfter(new Date(), 'day'))
+					.filter((dateMoment) => dateMoment.isAfter(this.today, 'day'))
 					.map((date) => (
 						combinedBudgetsScheduledTransaction
+							.filter((schedTrans) => schedTrans)
 							.filter((schedTrans) => schedTrans.occursOn(date))
 							.map((schedTrans) => {
 								const effects = [];
