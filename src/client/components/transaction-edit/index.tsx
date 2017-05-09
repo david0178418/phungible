@@ -24,7 +24,7 @@ type Props = {
 
 @observer
 export default
-class TransactionForm extends Component<Props, any> {
+class TransactionEdit extends Component<Props, any> {
 	constructor(props: Props) {
 		super(props);
 	}
@@ -45,6 +45,7 @@ class TransactionForm extends Component<Props, any> {
 				<div>
 					<TextField
 						fullWidth
+						errorText={transaction.name ? '' : 'Required'}
 						floatingLabelText="Name"
 						onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
 						value={transaction.name}
@@ -69,6 +70,7 @@ class TransactionForm extends Component<Props, any> {
 				{!!accounts.length && (
 					<div>
 						<AccountSelector
+							errorText={this.fromAccountErrText()}
 							accounts={accounts}
 							label="From Account"
 							onChange={(value, index) => this.handleUpdateFromAccount(value, transaction)}
@@ -76,6 +78,7 @@ class TransactionForm extends Component<Props, any> {
 						/>
 						{!hideTowardsAccount && (
 							<AccountSelector
+								errorText={this.towardAccountErrText()}
 								accounts={accounts}
 								label="Towards Account"
 								onChange={(value, index) => this.handleUpdateTowardAccount(value, transaction)}
@@ -109,6 +112,34 @@ class TransactionForm extends Component<Props, any> {
 				)}
 			</form>
 		);
+	}
+
+	private fromAccountErrText() {
+		let errorText = '';
+		const transaction = this.props.transaction;
+
+		if(
+			!transaction.fromAccount &&
+			transaction.type !== TransactionType.Income
+		) {
+			errorText = 'Expenses require an account to draw from';
+		}
+
+		return errorText;
+	}
+
+	private towardAccountErrText() {
+		let errorText = '';
+		const transaction = this.props.transaction;
+
+		if(
+			!transaction.towardAccount &&
+			transaction.type === TransactionType.Income
+		) {
+			errorText = 'Incomes require an account to deposit toward';
+		}
+
+		return errorText;
 	}
 
 	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {

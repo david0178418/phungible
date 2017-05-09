@@ -21,7 +21,9 @@ class MoneyEdit extends Component<Props, any> {
 	public render() {
 		const {money, style} = this.props;
 		return (
-			<div style={style}>
+			<div style={Object.assign({
+				display: 'flex',
+			}, style)}>
 				<TextField
 					inputStyle={{ textAlign: 'right'}}
 					name="dollars"
@@ -35,7 +37,10 @@ class MoneyEdit extends Component<Props, any> {
 					onChange={((ev: any, value: any) => this.handleUpdateDollarAmount(value))}
 					onFocus={(e) => (e.target as any).select()}
 				/>
-				.
+				<div style={{
+					alignSelf: 'flex-end',
+					marginBottom: 13,
+				}}>.</div>
 				<TextField
 					name="cents"
 					floatingLabelFixed

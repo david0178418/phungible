@@ -128,11 +128,10 @@ class ScheduledTransaction {
 		return moment(this._startDate, 'MM/DD/YYYY').toDate();
 	}
 	@computed get isValid() {
-		const {BudgetedExpense, Expense, Income} = TransactionType;
+		const {Income} = TransactionType;
 
-		return !!(this.amount && this.name && this._repeatValues.length && (
-			this.type === Expense && this.fromAccount ||
-			this.type === BudgetedExpense && this.fromAccount ||
+		return !!(this.name && this._repeatValues.length && (
+			this.type !== Income && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
 	}

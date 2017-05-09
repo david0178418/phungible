@@ -10,6 +10,7 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
+import Colors from '../../shared/colors';
 import Account from '../../stores/account';
 import BalanceUpdate from '../../stores/balance-update';
 import MoneyEdit from '../shared/money-edit';
@@ -56,36 +57,42 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 		return (
 			<div>
 				<div style={{
-					textAlign: 'right',
+					display: 'flex',
+					flexDirection: 'column',
 				}}>
-					<DatePicker
-						autoOk
+					<div
 						style={{
-							display: 'inline-block',
-							marginRight: 15,
+							display: 'flex',
 						}}
-						textFieldStyle={{
-							width: 150,
-						}}
-						floatingLabelText="As of"
-						firstDayOfWeek={0}
-						onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
-						value={newBalanceUpdate.date}
-					/>
-					<MoneyEdit
-						money={newBalanceUpdate.balance}
-						style={{
-							display: 'inline-block',
-						}}
-					/>
-					<FlatButton
-						label="Add Balance"
-						style={{
-							marginLeft: 10,
-						}}
-						onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
-						primary
-					/>
+					>
+						<DatePicker
+							autoOk
+							style={{
+								marginRight: 15,
+							}}
+							textFieldStyle={{
+								width: 150,
+							}}
+							locale="en-US"
+							floatingLabelText="As of"
+							firstDayOfWeek={0}
+							onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
+							value={newBalanceUpdate.date}
+						/>
+						<MoneyEdit
+							money={newBalanceUpdate.balance}
+							style={{
+								marginLeft: 10,
+							}}
+						/>
+					</div>
+					<div>
+						<FlatButton
+							label="Add Balance"
+							onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
+							primary
+						/>
+					</div>
 				</div>
 				<List>
 					<Subheader>Account Balance History</Subheader>
@@ -107,7 +114,10 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 					})}
 					{!account.balanceUpdateHistory.length && (
 						<ListItem
-							primaryText="No account balance history"
+							style={{
+								color: Colors.Error,
+							}}
+							primaryText="At least one account balance update required"
 						/>
 					)}
 				</List>

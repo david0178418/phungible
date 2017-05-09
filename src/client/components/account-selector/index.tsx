@@ -6,6 +6,7 @@ import Account from '../../stores/account';
 
 type AccountSelectorProps = {
 	accounts: Account[];
+	errorText?: string;
 	label: string;
 	selectedAccountId: string | null;
 	style?: {}
@@ -13,10 +14,17 @@ type AccountSelectorProps = {
 };
 
 export default
-function AccountsSelector({accounts, label, onChange, selectedAccountId}: AccountSelectorProps) {
+function AccountsSelector({
+	accounts,
+	errorText = '',
+	label,
+	onChange,
+	selectedAccountId,
+}: AccountSelectorProps) {
 	return (
 		<SelectField
 			fullWidth
+			errorText={errorText}
 			floatingLabelText={label}
 			value={selectedAccountId || null}
 			onChange={(ev, index, value) => onChange(value, index)}

@@ -18,9 +18,10 @@ export default
 observer(function AccountEdit({account, onSubmit}: Props) {
 	return (
 		<form className="edit-account content" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
-			<div>
+			<div style={{display: 'flex'}}>
 				<TextField
 					fullWidth
+					errorText={account.name ? '' : 'Name is requied'}
 					floatingLabelText="Name"
 					value={account.name}
 					onChange={((ev: any, value: any) => handleUpdateName(value, account)) as any}

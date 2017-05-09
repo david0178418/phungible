@@ -27,8 +27,14 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		return (
 			<div>
 				{(this.props.transactionPartials.map((schedTranspartial) => (
-					<div key={schedTranspartial.id}>
+					<div
+						key={schedTranspartial.id}
+						style={{
+							display: 'flex',
+						}}
+					>
 						<TextField
+							errorText={schedTranspartial.name ? '' : 'Name is required'}
 							floatingLabelText="Name"
 							style={{width: 150}}
 							value={schedTranspartial.name}
@@ -37,19 +43,27 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						{' '}
 						<MoneyEdit
 							style={{
-								display: 'inline-block',
+								marginLeft: 10,
 							}}
 							money={schedTranspartial.amount}
 						/>
-						{this.props.transactionPartials.length > 1 && <IconButton
-							onTouchTap={() => this.handleRemoveEntry(schedTranspartial.id)}
-						>
-							<ActionDelete/>
-						</IconButton>}
+						{this.props.transactionPartials.length > 1 && (
+							<IconButton
+								style={{
+									alignSelf: 'flex-end',
+								}}
+								onTouchTap={() => this.handleRemoveEntry(schedTranspartial.id)}
+							>
+								<ActionDelete/>
+							</IconButton>
+						)}
 					</div>
 				)))}
 				<RaisedButton
 					fullWidth
+					style={{
+						marginTop: 15,
+					}}
 					label="Add another"
 					onTouchTap={() => this.props.onAddEntry()}
 					primary

@@ -51,12 +51,12 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						onRemoveEntry={(id) => (scheduledTransaction as ScheduledTransactionFacade).removePartial(id)}
 						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
 					/> || (
-						<span>
+						<div style={{
+							display: 'flex',
+						}}>
 							<TextField
+								errorText={scheduledTransaction.name ? '' : 'Name is required'}
 								floatingLabelText="Name"
-								style={{
-									marginRight: 15,
-								}}
 								textareaStyle={{
 									width: 200,
 								}}
@@ -65,12 +65,9 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							/>
 							{' '}
 							<MoneyEdit
-								style={{
-									display: 'inline-block',
-								}}
 								money={scheduledTransaction.amount}
 							/>
-						</span>
+						</div>
 					)}
 				</div>
 				{!isBudget && (
@@ -100,6 +97,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				{!!accounts.length && (
 					<div>
 						<AccountSelector
+							errorText={this.fromAccountErrText()}
 							accounts={accounts}
 							label="From Account"
 							onChange={(value) => this.handleUpdateFromAccount(value, scheduledTransaction)}
@@ -107,6 +105,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						/>
 						{!isBudget && (
 							<AccountSelector
+								errorText={this.towardAccountErrText()}
 								accounts={accounts}
 								label="Towards Account"
 								onChange={(value) => this.handleUpdateTowardAccount(value, scheduledTransaction)}
@@ -126,6 +125,34 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				{scheduledTransaction.repeats && <RepeatField scheduledTransaction={scheduledTransaction} />}
 			</form>
 		);
+	}
+
+	private fromAccountErrText() {
+		let errorText = '';
+		const scheduledTransaction = this.props.scheduledTransaction;
+
+		if(
+			!scheduledTransaction.fromAccount &&
+			scheduledTransaction.type !== TransactionType.Income
+		) {
+			errorText = 'Expenses require an account to draw from';
+		}
+
+		return errorText;
+	}
+
+	private towardAccountErrText() {
+		let errorText = '';
+		const scheduledTransaction = this.props.scheduledTransaction;
+
+		if(
+			!scheduledTransaction.towardAccount &&
+			scheduledTransaction.type === TransactionType.Income
+		) {
+			errorText = 'Incomes require an account to deposit toward';
+		}
+
+		return errorText;
 	}
 
 	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
