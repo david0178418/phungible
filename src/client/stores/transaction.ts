@@ -1,3 +1,4 @@
+import {assign} from 'lodash';
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
@@ -51,7 +52,7 @@ class Transaction {
 
 	constructor(params: Partial<Transaction> = {}) {
 		const amount = params.amount ? params.amount.valCents : 0;
-		return Object.assign(this, {
+		return assign(this, {
 			_dateString: moment().format('MM/DD/YYYY'),
 			amount: new Money(amount),
 			labels: [],

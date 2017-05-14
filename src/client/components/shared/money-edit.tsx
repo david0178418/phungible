@@ -1,3 +1,4 @@
+import {assign} from 'lodash';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
@@ -21,7 +22,7 @@ class MoneyEdit extends Component<Props, any> {
 	public render() {
 		const {money, style} = this.props;
 		return (
-			<div style={Object.assign({
+			<div style={assign({
 				display: 'flex',
 			}, style)}>
 				<TextField

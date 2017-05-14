@@ -1,3 +1,4 @@
+import {assign} from 'lodash';
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {Moment} from 'moment';
@@ -71,7 +72,7 @@ class ScheduledTransaction {
 	@observable private _startDate: string;
 
 	constructor(params: Partial<ScheduledTransaction> = {}) {
-		Object.assign(this, {
+		assign(this, {
 			_repeatValues: [],
 			amount: new Money(),
 			exceptions: [],
@@ -237,7 +238,7 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 		});
 	}
 	public serialize(transaction: ScheduledTransactionPartial) {
-		return Object.assign({}, serialize(this), {
+		return assign({}, serialize(this), {
 			amount: transaction.amount,
 			name: transaction.name,
 		});

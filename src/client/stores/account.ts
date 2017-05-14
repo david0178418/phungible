@@ -1,3 +1,4 @@
+import {assign} from 'lodash';
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
@@ -35,7 +36,7 @@ class Account {
 	@observable public balanceUpdateHistory: BalanceUpdate[];
 
 	constructor(params: Partial<Account> = {}) {
-		Object.assign(this, {
+		assign(this, {
 			balanceUpdateHistory: [],
 			labels: [],
 		}, params);
