@@ -1,5 +1,6 @@
 import MenuItem from 'material-ui/MenuItem';
 import * as React from 'react';
+import Link from '../components/shared/link';
 
 const iconProps = {
 	style: {
@@ -28,7 +29,7 @@ function NavItem({
 	return (
 		<MenuItem
 			disabled={disabled}
-			href={`#${href}`}
+			containerElement={<Link to={`${href}`} />}
 			leftIcon={React.cloneElement(leftIcon, iconProps)}
 			onTouchTap={onTouchTap}
 			innerDivStyle={{

@@ -47,6 +47,9 @@ module.exports = {
 			],
 			ServiceWorker: {
 				output: '../service-worker.js',
+			},
+			AppCache: {
+				directory: '../appcache/'
 			}
 		})
 	]
