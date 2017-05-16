@@ -12,3 +12,31 @@ function getItem(key: string) {
 		return null;
 	}
 }
+
+function shouldPersist() {
+	const storage = (navigator as any).storage;
+
+	if(storage && storage.persisted && storage.persist) {
+		return storage.persisted();
+	} else {
+		return {
+			then(cb: () => void) {
+				cb();
+			},
+		};
+	}
+}
+
+export
+function persist() {
+	shouldPersist().then((persistent: boolean) => {
+		if(persistent) {
+			return;
+		}
+		const storage = (navigator as any).storage;
+
+		if(storage && storage.persist) {
+			storage.persist();
+		}
+	});
+}
