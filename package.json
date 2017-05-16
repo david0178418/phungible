@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/accounting": "^0.3.31",
     "@types/chai": "^3.5.2",
-    "@types/classnames": "^0.0.32",
+    "@types/classnames": "^2.2.0",
     "@types/hapi": "^16.0.0",
     "@types/inert": "^4.0.0",
     "@types/lodash": "^4.14.64",
