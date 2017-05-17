@@ -4,13 +4,18 @@ function setItem(key: string, value: any) {
 }
 
 export
-function getItem(key: string) {
+function getItem(key: string): any {
 	const data = localStorage.getItem(key);
 	if(data) {
 		return JSON.parse(data);
 	} else {
 		return null;
 	}
+}
+
+export
+function clearItem(key: string) {
+	localStorage.removeItem(key);
 }
 
 function shouldPersist() {

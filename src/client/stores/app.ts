@@ -3,9 +3,9 @@ import * as moment from 'moment';
 import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
-import {setItem} from '../shared/storage';
 import {generateUuid, Money} from '../shared/utils';
 import Account from './account';
+import ProfilesStore from './profiles';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
@@ -74,7 +74,7 @@ class AppStore {
 		return transactions;
 	}
 	public save() {
-		setItem('store', serialize(this));
+		ProfilesStore.saveCurrentProfileData(serialize(this));
 	}
 	public runTransactionSinceLastUpdate() {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {

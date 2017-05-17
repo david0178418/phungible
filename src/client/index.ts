@@ -3,9 +3,10 @@ import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import * as React from 'react';
 import {render} from 'react-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
-import {persist} from './shared/storage';
 
 import Routes from './routes';
+import {persist} from './shared/storage';
+import ProfilesStore from './stores/profiles';
 
 persist();
 OfflinePluginRuntime.install();
@@ -13,6 +14,8 @@ OfflinePluginRuntime.install();
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 useStrict(true);
+
+ProfilesStore.TEMPMigrateLegacyStoreToProfile();
 
 render(
 	React.createElement(Routes, {}),

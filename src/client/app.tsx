@@ -2,11 +2,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Component} from 'react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-import {getItem} from '../client/shared/storage';
-import theme from './shared/theme';
 
 import Layout from './layout';
+import theme from './shared/theme';
 import AppStore from './stores/app';
+import ProfilesStore, {Profile} from './stores/profiles';
 
 type Props = {
 	children?: any;
@@ -21,10 +21,12 @@ function ChildWithStore(child: any, store: AppStore) {
 export default
 class App extends Component<Props, any> {
 	public store: AppStore;
+	public currentProfile: Profile;
 
 	constructor(props: Props) {
 		super(props);
-		const data = getItem('store');
+		this.currentProfile = ProfilesStore.getCurrentProfile();
+		const data = ProfilesStore.getProfileData(this.currentProfile.id);
 
 		if(data) {
 			this.store = AppStore.deserialize(data);
