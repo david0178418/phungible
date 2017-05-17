@@ -40,6 +40,7 @@ class Budgets extends Component<Props, {}> {
 						}
 					/>
 					<FloatingActionButton
+						secondary
 						containerElement={<Link to="/budget/edit" />}
 						style={floatingActionButtonStyle}
 					>

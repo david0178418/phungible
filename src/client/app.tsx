@@ -3,6 +3,7 @@ import {Component} from 'react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import {getItem} from '../client/shared/storage';
+import theme from './shared/theme';
 
 import Layout from './layout';
 import AppStore from './stores/app';
@@ -41,7 +42,7 @@ class App extends Component<Props, any> {
 
 	public render() {
 		return (
-			<MuiThemeProvider>
+			<MuiThemeProvider muiTheme={theme}>
 				<Layout>
 					<style>{`
 						body {

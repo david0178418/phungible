@@ -47,6 +47,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 						}
 					/>
 					<FloatingActionButton
+						secondary
 						containerElement={<Link to="/scheduled-transaction/edit" />}
 						style={floatingActionButtonStyle}
 						zDepth={2}

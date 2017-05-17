@@ -36,6 +36,7 @@ class Transactions extends Component<Props, {}> {
 						store={store}
 					/>
 					<FloatingActionButton
+						secondary
 						containerElement={<Link to="/transaction/edit" />}
 						style={floatingActionButtonStyle}
 					>

@@ -39,6 +39,7 @@ class Accounts extends Component<Props, {}> {
 						store={store}
 					/>
 					<FloatingActionButton
+						secondary
 						containerElement={<Link to="/account/edit" />}
 						style={floatingActionButtonStyle}
 						zDepth={2}
