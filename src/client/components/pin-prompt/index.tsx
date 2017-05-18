@@ -148,6 +148,10 @@ class PinPrompt extends Component<Props, {}> {
 
 	private handleUpdatePin(num: string) {
 		setTimeout(() => {
+			if(window.navigator.vibrate) {
+				window.navigator.vibrate(100);
+			}
+
 			this.props.onPinUpdate(this.props.pin + num);
 		}, 4);
 	}
