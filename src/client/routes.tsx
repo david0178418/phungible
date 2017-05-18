@@ -3,6 +3,7 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import App from './app';
+import Analytics from './shared/analytics';
 
 import {
 	AccountEditPage,
@@ -98,6 +99,7 @@ class Routes extends Component<Props, State> {
 			page,
 			params,
 		});
+		Analytics.logScreenView(page);
 	}
 
 	public render() {
