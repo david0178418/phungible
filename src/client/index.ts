@@ -5,10 +5,8 @@ import {render} from 'react-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Routes from './routes';
-import {persist} from './shared/storage';
 import ProfilesStore from './stores/profiles';
 
-persist();
 OfflinePluginRuntime.install();
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

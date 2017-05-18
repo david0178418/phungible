@@ -18,6 +18,11 @@ declare module 'offline-plugin/runtime' {
 	export const install: () => void;
 }
 
+declare module 'secure-ls' {
+	const x: any;
+	export = x;
+}
+
 declare interface Array<T> {
 	find(predicate: (search: T) => boolean): T;
 	findIndex(predicate: (search: T) => boolean): number;

@@ -69,6 +69,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.1.2",
     "recharts": "^0.22.3",
+    "secure-ls": "^1.1.0",
     "serializr": "^1.1.9"
   }
 }

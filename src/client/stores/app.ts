@@ -38,10 +38,12 @@ class AppStore {
 	}
 
 	public findAccount(accountId: string) {
-		return this.accounts.find((account) => accountId === account.id);
+		// tslint:disable-next-line:triple-equals
+		return this.accounts.find((account) => accountId == account.id);
 	}
 	public findBudget(id: string) {
-		return this.budgets.find((budget) => budget.id === id);
+		// tslint:disable-next-line:triple-equals
+		return this.budgets.find((budget) => budget.id == id);
 	}
 	public findRemainingBudgetBalance(id: string) {
 		const budget = this.findBudget(id);
@@ -75,6 +77,11 @@ class AppStore {
 	}
 	public save() {
 		ProfilesStore.saveCurrentProfileData(serialize(this));
+	}
+	public saveAll() {
+		this.save();
+		ProfilesStore.saveCurrentProfile();
+		ProfilesStore.saveProfiles();
 	}
 	public runTransactionSinceLastUpdate() {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {

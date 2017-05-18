@@ -1,4 +1,4 @@
-import {clearItem, getItem, setItem} from '../shared/storage';
+import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
 
 const PROFILE_DATA_PREFIX = 'profile-data-';
@@ -28,7 +28,7 @@ class Profiles {
 			Profiles.saveProfiles();
 			Profiles.saveCurrentProfile();
 		} else {
-			Profiles.currentProfile = Profiles.findProfile(getItem('lastProfileId'));
+			Profiles.currentProfile = Profiles.findProfile(Storage.getItem('lastProfileId'));
 			Profiles.currentProfile = profiles[0];
 			Profiles.saveCurrentProfile();
 		}
@@ -37,7 +37,7 @@ class Profiles {
 	}
 
 	public static getProfileData(id: string) {
-		return getItem(`${PROFILE_DATA_PREFIX}${id}`);
+		return Storage.getItem(`${PROFILE_DATA_PREFIX}${id}`);
 	}
 
 	public static saveCurrentProfileData(data: any) {
@@ -45,7 +45,7 @@ class Profiles {
 	}
 
 	public static setProfileData(id: string, data: any) {
-		setItem(`${PROFILE_DATA_PREFIX}${id}`, data);
+		Storage.setItem(`${PROFILE_DATA_PREFIX}${id}`, data);
 	}
 
 	public static getProfiles() {
@@ -53,7 +53,7 @@ class Profiles {
 			return Profiles.profiles;
 		}
 
-		Profiles.profiles = getItem('profiles');
+		Profiles.profiles = Storage.getItem('profiles');
 
 		if(!(Profiles.profiles && Profiles.profiles.length)) {
 			Profiles.profiles = [];
@@ -63,15 +63,15 @@ class Profiles {
 	}
 
 	public static saveProfiles() {
-		setItem('profiles', Profiles.profiles);
+		Storage.setItem('profiles', Profiles.profiles);
 	}
 
 	public static saveCurrentProfile() {
-		setItem('lastProfileId', Profiles.currentProfile.id);
+		Storage.setItem('lastProfileId', Profiles.currentProfile.id);
 	}
 
 	public static TEMPMigrateLegacyStoreToProfile() {
-		const legacyStoreData = getItem('store');
+		const legacyStoreData = Storage.getItem('store');
 
 		if(!legacyStoreData) {
 			return;
@@ -79,8 +79,8 @@ class Profiles {
 
 		const currentProfile = Profiles.getCurrentProfile();
 
-		setItem(`${PROFILE_DATA_PREFIX}${currentProfile.id}`, legacyStoreData);
-		clearItem('store');
+		Storage.setItem(`${PROFILE_DATA_PREFIX}${currentProfile.id}`, legacyStoreData);
+		Storage.clearItem('store');
 	}
 
 	private static profiles: Profile[] = null;

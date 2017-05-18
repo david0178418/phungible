@@ -1,47 +1,115 @@
-export
-function setItem(key: string, value: any) {
-	localStorage.setItem(key, JSON.stringify(value));
-}
-
-export
-function getItem(key: string): any {
-	const data = localStorage.getItem(key);
-	if(data) {
-		return JSON.parse(data);
-	} else {
-		return null;
+import * as SecureLS from 'secure-ls';
+(window as any).SecureLS = SecureLS;
+export default
+class Storage {
+	public static ls: any;
+	public static isEncrypted() {
+		// read directly since we use this to determine encryption status
+		return !!localStorage.getItem('encrypted');
 	}
-}
 
-export
-function clearItem(key: string) {
-	localStorage.removeItem(key);
-}
+	public static initStorage(callback: (success: boolean) => void, key?: string) {
+		if(Storage.isEncrypted()) {
+			if(!key) {
+				callback(false);
+			}
 
-function shouldPersist() {
-	const storage = (navigator as any).storage;
+			Storage.useEncryption(key);
 
-	if(storage && storage.persisted && storage.persist) {
-		return storage.persisted();
-	} else {
-		return {
-			then(cb: () => void) {
-				cb();
-			},
-		};
+			try {
+				Storage.ls.get('lastProfileId');
+				callback(true);
+			} catch(e) {
+				Storage.ls = null;
+				callback(false);
+			}
+		} else {
+			Storage.useNoEncryption();
+			callback(true);
+		}
+
+		Storage.persist();
+
+		(window as any).Storage = Storage;
 	}
-}
 
-export
-function persist() {
-	shouldPersist().then((persistent: boolean) => {
-		if(persistent) {
+	public static clearItem(key: string) {
+		localStorage.removeItem(key);
+	}
+
+	public static disableEncryption() {
+		Storage.useNoEncryption();
+		localStorage.removeItem('encrypted');
+	}
+
+	public static enableEncryption(key: string) {
+		Storage.useEncryption(key);
+		localStorage.setItem('encrypted', 'true');
+	}
+
+	public static getItem(key: string): any {
+		let data;
+
+		try {
+			data = Storage.ls.get(key);
+		} catch(e) {
+			return null;
+		}
+
+		if(data) {
+			return data;
+		} else {
+			return null;
+		}
+	}
+
+	public static persist() {
+		Storage.shouldPersist().then((persistent: boolean) => {
+			if(persistent) {
+				return;
+			}
+			const storage = (navigator as any).storage;
+
+			if(storage && storage.persist) {
+				storage.persist();
+			}
+		});
+	}
+
+	public static setItem(key: string, value: any) {
+		try {
+			Storage.ls.set(key, value);
+		} catch(e) {
 			return;
 		}
+	}
+
+	private static shouldPersist() {
 		const storage = (navigator as any).storage;
 
-		if(storage && storage.persist) {
-			storage.persist();
+		if(storage && storage.persisted && storage.persist) {
+			return storage.persisted();
+		} else {
+			return {
+				then(cb: () => void) {
+					cb();
+				},
+			};
 		}
-	});
+	}
+
+	private static useEncryption(key: string) {
+		Storage.ls = new SecureLS({
+			encodingType: 'aes',
+			encryptionSecret: key,
+			isCompression: true,
+		});
+	}
+
+	private static useNoEncryption() {
+		Storage.ls = new SecureLS({
+			encodingType: '',
+			isCompression: false,
+		});
+	}
 }

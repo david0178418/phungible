@@ -183,6 +183,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 	}
 
 	private findAccount(id: string) {
-		return this.props.accounts.find((account) => account.id === id) || null;
+		// tslint:disable-next-line:triple-equals
+		return this.props.accounts.find((account) => account.id == id) || null;
 	}
 }
