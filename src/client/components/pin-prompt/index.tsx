@@ -34,7 +34,12 @@ class Pin extends Component<PinProps, {}> {
 				textAlign: 'center',
 			}}>
 				{!length && (
-					<div>&nbsp;</div>
+					<div style={{
+						fontSize: 20,
+						fontWeight: 'lighter',
+					}}>
+						<em>4 digit pin</em>
+					</div>
 				)}
 				{digits}
 			</div>
