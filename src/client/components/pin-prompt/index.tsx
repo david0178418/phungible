@@ -31,12 +31,14 @@ class Pin extends Component<PinProps, {}> {
 				flexDirection: 'row',
 				fontSize: '26px',
 				fontWeight: 'bold',
+				height: 31,
 				textAlign: 'center',
 			}}>
 				{!length && (
 					<div style={{
 						fontSize: 20,
 						fontWeight: 'lighter',
+						width: '93%',
 					}}>
 						<em>4 digit pin</em>
 					</div>
