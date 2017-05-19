@@ -54,6 +54,7 @@ class Settings extends Component<Props, {}> {
 			<List>
 				<ListItem
 					primaryText="Encryption Enabled"
+					secondaryText="Warning: Pin will not be recocverable if it is lost"
 					rightToggle={<Toggle
 						toggled={this.store.isEncrypted}
 						onToggle={(ev) => this.handleEncryptionToggle()}

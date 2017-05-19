@@ -139,6 +139,10 @@ class PinPrompt extends Component<Props, {}> {
 							buttonStyle={{
 								height: 70,
 							}}
+							overlayStyle={{
+								height: 70,
+								paddingTop: 17,
+							}}
 						/>
 					))}
 				</div>
