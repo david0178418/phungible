@@ -1,4 +1,5 @@
-import Divider from 'material-ui/Divider';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
@@ -20,9 +21,18 @@ interface Props {
 class SettingsStore {
 	@observable public confirmPin = false;
 	@observable public isEncrypted: boolean;
+	@observable private _aboutIsOpen = false;
 
 	constructor() {
 		this.updateEncryption();
+	}
+
+	public getAboutIsOpen() {
+		return this._aboutIsOpen;
+	}
+
+	@action public setAboutIsOpen(val: boolean) {
+		this._aboutIsOpen = val;
 	}
 
 	@action public updateEncryption() {
@@ -60,7 +70,25 @@ class Settings extends Component<Props, {}> {
 						onToggle={(ev) => this.handleEncryptionToggle()}
 					/>}
 				/>
-				<Divider/>
+				<ListItem
+					primaryText="About"
+					onTouchTap={() => this.handleOpenAbout()}
+				>
+					<Dialog
+						open={this.store.getAboutIsOpen()}
+						onRequestClose={() => this.handleCloseAbout()}
+						actions={[
+							<FlatButton
+								label="Close"
+								primary={true}
+								onTouchTap={() => this.handleCloseAbout()}
+							/>,
+						]}
+					>
+						The Phungible logo is modified from "Piggy Bank"
+						icon licensed from <a href="https://www.flaticon.com" target="_blank">www.flaticon.com</a>
+					</Dialog>
+				</ListItem>
 				<ListItem
 					primaryText="Nuke all data"
 					rightIcon={<WarningIcon color="red"/>}
@@ -94,5 +122,13 @@ class Settings extends Component<Props, {}> {
 		this.props.store.saveAll();
 		this.store.updateEncryption();
 		this.store.closeConfirmation();
+	}
+
+	private handleOpenAbout() {
+		this.store.setAboutIsOpen(true);
+	}
+
+	private handleCloseAbout() {
+		this.store.setAboutIsOpen(false);
 	}
 }
