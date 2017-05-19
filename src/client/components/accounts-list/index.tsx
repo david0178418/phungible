@@ -22,7 +22,7 @@ type Props = {
 
 class AcountsStore {
 	public appStore: AppStore;
-	@observable public open: boolean = false;
+	@observable public deletionCandidate: Account | null = null;
 	@observable private _openAccount: Account | null;
 
 	constructor(appStore: AppStore) {
@@ -50,11 +50,11 @@ class AcountsStore {
 	@action public removeAccount(account: Account) {
 		this._openAccount = Account.clone(account);
 	}
-	@action public confirmRemoval() {
-		this.open = true;
+	@action public confirmRemoval(account: Account) {
+		this.deletionCandidate = account;
 	}
-	@action public closeModal() {
-		this.open = false;
+	@action public closeConfirmRemoval() {
+		this.deletionCandidate = null;
 	}
 	@computed get accounts() {
 		return this.appStore.accounts;
@@ -83,7 +83,11 @@ class AccountsList extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {accounts, onRemove} = this.props;
+		const {
+			accounts,
+			onRemove,
+		} = this.props;
+		const {deletionCandidate} = this.store;
 
 		return (
 			<div>
@@ -98,31 +102,31 @@ class AccountsList extends Component<Props, {}> {
 										<EditorMoneyOn color={Colors.Money}/> :
 										<ActionCreditCard color={Colors.Debt}/>
 								}
-								rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval())}
-							/>
-							<Dialog
-								modal
-								open={this.store.open}
-								title={`Deleting '${account.name}' will delete related entries. Delete?`}
-								actions={[
-									<FlatButton
-										primary
-										label="Cancel"
-										onTouchTap={() => this.store.closeModal()}
-									/>,
-									<FlatButton
-										primary
-										label="Delete"
-										onTouchTap={() => {
-											this.store.closeModal();
-											onRemove(account);
-										}}
-									/>,
-								]}
+								rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval(account))}
 							/>
 						</span>
 					))}
 				</List>
+				<Dialog
+					modal
+					open={!!deletionCandidate}
+					title={deletionCandidate && `Deleting '${deletionCandidate.name}' will delete related entries. Delete?`}
+					actions={[
+						<FlatButton
+							primary
+							label="Cancel"
+							onTouchTap={() => this.store.closeConfirmRemoval()}
+						/>,
+						<FlatButton
+							primary
+							label="Delete"
+							onTouchTap={() => {
+								this.store.closeConfirmRemoval();
+								onRemove(deletionCandidate);
+							}}
+						/>,
+					]}
+				/>
 			</div>
 		);
 	}
