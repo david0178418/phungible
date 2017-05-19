@@ -10,7 +10,6 @@ interface State {
 }
 
 const customContentStyle = {
-	maxWidth: 'none',
 	width: '100%',
 };
 
