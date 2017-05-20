@@ -19,6 +19,9 @@ class Money {
 			precision,
 		});
 	}
+	public static toFixed(val: number) {
+		return accounting.toFixed(val, 2);
+	}
 	@serializable
 	@observable private totalValCents: number;
 
@@ -42,8 +45,16 @@ class Money {
 		return this.totalValCents / 100;
 	}
 
+	set val(val) {
+		this.totalValCents = Money.roundNearest(val * 100);
+	}
+
 	@computed get valCents() {
 		return this.totalValCents;
+	}
+
+	@computed get valFixed() {
+		return Money.toFixed(this.val);
 	}
 
 	@computed get valFormatted() {

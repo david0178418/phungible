@@ -7,24 +7,24 @@ import {Component} from 'react';
 
 import Money from '../../shared/utils/money';
 
-type Props = {
+interface State {
+	labelValue: string;
+}
+
+interface Props {
 	money: Money;
 	style?: object;
-};
+}
 
 @observer
 export default
-class MoneyEdit extends Component<Props, any> {
-	constructor(props: Props) {
-		super(props);
-	}
+class MoneyEdit extends Component<Props, State> {
+	private textInput: TextField;
 
 	public render() {
 		const {money, style} = this.props;
 		return (
-			<div style={assign({
-				display: 'flex',
-			}, style)}>
+			<div style={assign({}, style)}>
 				<TextField
 					inputStyle={{ textAlign: 'right'}}
 					name="dollars"
@@ -34,32 +34,19 @@ class MoneyEdit extends Component<Props, any> {
 						width: 75,
 					}}
 					type="number"
-					value={money.dollars}
-					onChange={((ev: any, value: any) => this.handleUpdateDollarAmount(value))}
-					onFocus={(e) => (e.target as any).select()}
-				/>
-				<div style={{
-					alignSelf: 'flex-end',
-					marginBottom: 13,
-				}}>.</div>
-				<TextField
-					name="cents"
-					floatingLabelFixed
-					floatingLabelText=" "
-					style={{width: 40}}
-					type="number"
-					value={money.cents}
-					onChange={((ev: any, value: string) => this.handleUpdateCentsAmount(value))}
+					value={money.valFixed}
+					ref={(input) => this.textInput = input}
+					onBlur={() => this.handleBlur()}
+					onChange={((ev: any, value: any) => this.handleUpdateAmount(value))}
 					onFocus={(e) => (e.target as any).select()}
 				/>
 			</div>
 		);
 	}
-
-	@action private handleUpdateCentsAmount(newAmount: string) {
-		this.props.money.cents = +newAmount % 100;
+	private handleBlur() {
+		this.textInput.getInputNode().value = this.props.money.valFixed;
 	}
-	@action private handleUpdateDollarAmount(newAmount: string) {
-		this.props.money.dollars = +newAmount;
+	@action private handleUpdateAmount(newAmount: string) {
+		this.props.money.val = +newAmount;
 	}
 }
