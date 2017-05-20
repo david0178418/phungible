@@ -40,6 +40,7 @@ module.exports = {
 	},
 	plugins: [
 		new OfflinePlugin({
+			autoUpdate: true,
 			externals: [
 				'/',
 				'/manifest.json',
