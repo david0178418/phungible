@@ -30,6 +30,12 @@ function ChildWithStore(child: any, store: AppStore) {
 	}) : child;
 }
 
+const Layers = {
+	BOTTOM: 0,
+	MIDDLE: 1,
+	TOP: 2,
+};
+
 @observer
 export default
 class App extends Component<Props, any> {
@@ -69,7 +75,7 @@ class App extends Component<Props, any> {
 								overflow: hidden;
 							}
 							.page {
-								z-index: 1;
+								z-index: ${Layers.MIDDLE};
 								transform: translateZ(0);
 							}
 							.page-enter,
@@ -90,13 +96,17 @@ class App extends Component<Props, any> {
 							.page-enter-active.slide-vertical {
 								transform: translate(0, 0);
 								transition: transform 350ms;
-								z-index: 2;
+							}
+
+							.slide-vertical + .slide-vertical {
+								z-index: ${Layers.BOTTOM};
 							}
 
 							/* Horizontal Slide */
 							.slide-horizontal {
-								z-index: 3;
+								z-index: ${Layers.TOP};
 							}
+
 							.page-enter.slide-horizontal {
 								transform: translate(100vw, 0);
 							}
