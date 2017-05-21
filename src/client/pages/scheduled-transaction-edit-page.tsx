@@ -3,7 +3,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
 import Page from './page';
+import ScheduledTransactionsPage from './scheduled-transactions-page';
 
 class CreateScheduledTransactionStore {
 	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
@@ -52,10 +53,11 @@ class CreateScheduledTransactionStore {
 
 type Props = {
 	id: string;
+	router?: Navigo;
 	store?: AppStore;
 };
 
-@observer
+@inject('router') @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
@@ -78,7 +80,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => window.history.back()}
+					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} ${CreateScheduledTransaction.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -104,7 +106,11 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 	private handleSaveScheduledTransaction() {
 		setTimeout(() => {
 			this.store.saveScheduledTransactions();
-			window.history.back();
+			this.routeBack();
 		}, 100);
+	}
+
+	private routeBack() {
+		this.props.router.navigate(ScheduledTransactionsPage.path);
 	}
 }

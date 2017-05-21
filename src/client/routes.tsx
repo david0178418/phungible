@@ -1,3 +1,4 @@
+import {Provider} from 'mobx-react';
 import * as N from 'navigo';
 import * as React from 'react';
 import {Component} from 'react';
@@ -113,7 +114,7 @@ class Routes extends Component<Props, State> {
 
 		// TODO dry this up
 		return (
-			<div>
+			<Provider router={this.router}>
 				<App>
 					{page === AccountsPage.path &&
 						<AccountsPage
@@ -199,7 +200,7 @@ class Routes extends Component<Props, State> {
 						/>
 					}
 				</App>
-			</div>
+			</Provider>
 		);
 	}
 

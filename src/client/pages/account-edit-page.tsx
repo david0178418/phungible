@@ -4,7 +4,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import ContentArea from '../components/shared/content-area';
 import {floatingActionButtonStyle} from '../shared/styles';
 import Account from '../stores/account';
 import AppStore from '../stores/app';
+import AccountsPage from './accounts-page';
 import Page from './page';
 
 class AccountEditStore {
@@ -45,10 +46,11 @@ class AccountEditStore {
 }
 type Props = {
 	id: string;
+	router?: Navigo;
 	store?: AppStore;
 };
 
-@observer
+@inject('router') @observer
 export default
 class AccountEditPage extends Component<Props, {}> {
 	public static path = '/account/edit/';
@@ -69,7 +71,7 @@ class AccountEditPage extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => window.history.back()}
+					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} Account`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -91,10 +93,14 @@ class AccountEditPage extends Component<Props, {}> {
 		);
 	}
 
+	private routeBack() {
+		this.props.router.navigate(AccountsPage.path);
+	}
+
 	private handleSaveAccount() {
 		setTimeout(() => {
 			this.store.saveAccount();
-			window.history.back();
+			this.routeBack();
 		}, 100);
 	}
 }

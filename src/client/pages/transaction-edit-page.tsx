@@ -3,7 +3,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import Transaction from '../stores/transaction';
 import Page from './page';
+import TransactionsPage from './transactions-page';
 
 class TransactionEditStore {
 	public transaction: Transaction;
@@ -48,10 +49,11 @@ class TransactionEditStore {
 }
 type Props = {
 	id: string;
+	router?: Navigo;
 	store?: AppStore;
 };
 
-@observer
+@inject('router') @observer
 export default
 class TransactionEditPage extends Component<Props, {}> {
 	public static path = '/transaction/edit/';
@@ -73,7 +75,7 @@ class TransactionEditPage extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => window.history.back()}
+					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -96,10 +98,14 @@ class TransactionEditPage extends Component<Props, {}> {
 		);
 	}
 
+	private routeBack() {
+		this.props.router.navigate(TransactionsPage.path);
+	}
+
 	private handleSaveTransaction() {
 		setTimeout(() => {
 			this.store.saveTransaction();
-			window.history.back();
+			this.routeBack();
 		}, 100);
 	}
 }

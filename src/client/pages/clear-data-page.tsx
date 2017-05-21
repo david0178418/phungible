@@ -1,6 +1,7 @@
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -8,11 +9,14 @@ import ClearData from '../components/clear-data';
 import ContentArea from '../components/shared/content-area';
 import AppStore from '../stores/app';
 import Page from './page';
+import SettingsPage from './settings-page';
 
 type Props = {
+	router?: Navigo;
 	store?: AppStore;
 };
 
+@inject('router')
 export default
 class ClearDataPage extends Component<Props, {}> {
 	public static path = '/clear-data';
@@ -27,7 +31,7 @@ class ClearDataPage extends Component<Props, {}> {
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => window.history.back()}
+					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title="Nuke All Data"
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
@@ -36,5 +40,9 @@ class ClearDataPage extends Component<Props, {}> {
 				</ContentArea>
 			</Page>
 		);
+	}
+
+	private routeBack() {
+		this.props.router.navigate(SettingsPage.path);
 	}
 }
