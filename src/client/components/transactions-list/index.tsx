@@ -73,6 +73,11 @@ class TransactionsList extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
 					/>
 				))}
+				{!transactions.length && (
+					<ListItem
+						primaryText="No transactions available"
+					/>
+				)}
 			</List>
 		);
 	}

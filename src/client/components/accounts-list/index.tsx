@@ -93,19 +93,23 @@ class AccountsList extends Component<Props, {}> {
 			<div>
 				<List>
 					{accounts.map((account) => (
-						<span key={account.id}>
-							<ListItem
-								primaryText={`${account.name}`}
-								secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
-								leftIcon={
-									account.type === AccountType.Savings ?
-										<EditorMoneyOn color={Colors.Money}/> :
-										<ActionCreditCard color={Colors.Debt}/>
-								}
-								rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval(account))}
-							/>
-						</span>
+						<ListItem
+							key={account.id}
+							primaryText={`${account.name}`}
+							secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
+							leftIcon={
+								account.type === AccountType.Savings ?
+									<EditorMoneyOn color={Colors.Money}/> :
+									<ActionCreditCard color={Colors.Debt}/>
+							}
+							rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval(account))}
+						/>
 					))}
+					{!accounts.length && (
+						<ListItem
+							primaryText="No accounts available"
+						/>
+					)}
 				</List>
 				<Dialog
 					modal

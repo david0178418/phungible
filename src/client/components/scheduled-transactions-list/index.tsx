@@ -90,6 +90,11 @@ class ScheduledTransactions extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 					/>
 				))}
+				{!scheduledTransactions.length && (
+					<ListItem
+						primaryText="No recurring transactions available"
+					/>
+				)}
 			</List>
 		);
 	}
