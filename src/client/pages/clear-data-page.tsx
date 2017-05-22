@@ -16,7 +16,7 @@ type Props = {
 	appStore?: AppStore;
 };
 
-@inject('router')
+@inject('appStore', 'router')
 export default
 class ClearDataPage extends Component<Props, {}> {
 	public static path = '/clear-data';
