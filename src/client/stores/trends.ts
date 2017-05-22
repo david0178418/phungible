@@ -32,11 +32,11 @@ class TrendsStore {
 		assign(this, {
 			accounts: [],
 			fromDate: this.startOfMonth,
-			selectedTrends: ['Total'],
 			toDate: moment().add(6, 'weeks').endOf('week').toDate(),
 			today: new Date(),
 			transactions: [],
 		}, params);
+		this.selectedTrends = this.trendOptions;
 		(window as any).trendsStore = this; // TODO remove debug
 	}
 
