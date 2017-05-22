@@ -12,7 +12,9 @@ import Transaction from './transaction';
 export default
 class AppStore {
 	@action public static deserialize(data: any) {
-		return deserialize(AppStore, data);
+		const temp = deserialize(AppStore, data);
+		temp.tempFixReferencesBug();
+		return temp;
 	}
 	@serializable(identifier())
 	public id: string;
@@ -256,5 +258,16 @@ class AppStore {
 			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));
 
 		return scheduledTransactions.map((scheduledTransaction) => scheduledTransaction.generateTransaction(date));
+	}
+
+	private tempFixReferencesBug() {
+		this.scheduledTransactions.concat(this.budgets).map((schedTrans) => {
+			if(schedTrans.fromAccount) {
+				schedTrans.fromAccount = this.findAccount(schedTrans.fromAccount.id);
+			}
+			if(schedTrans.towardAccount) {
+				schedTrans.towardAccount = this.findAccount(schedTrans.towardAccount.id);
+			}
+		});
 	}
 }
