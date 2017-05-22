@@ -1,5 +1,6 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -13,22 +14,23 @@ import ScheduledTransaction from '../stores/scheduled-transaction';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
+@inject('appStore')
 export default
 class Budgets extends Component<Props, {}> {
 	public static path = '/budgets';
 	public static title = 'Budgets';
 
 	public render() {
-		const store = this.props.store;
+		const store = this.props.appStore;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Budgets"
-					store={store}
+					appStore={store}
 				/>
 				<ContentArea>
 					<BudgetsList
@@ -36,7 +38,7 @@ class Budgets extends Component<Props, {}> {
 						store={store}
 						onRemove={
 							(budget: ScheduledTransaction) =>
-								this.props.store.removeBudget(budget)
+								this.props.appStore.removeBudget(budget)
 						}
 					/>
 					<FloatingActionButton

@@ -1,3 +1,4 @@
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -8,10 +9,11 @@ import AppStore from '../stores/app';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
+@inject('appStore')
 export default
 class SettingsPage extends Component<Props, {}> {
 	public static path = '/settings';
@@ -22,12 +24,12 @@ class SettingsPage extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {store} = this.props;
+		const {appStore} = this.props;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation title={SettingsPage.title} store={store} />
+				<Navigation title={SettingsPage.title} appStore={appStore} />
 				<ContentArea>
-					<Settings store={store} />
+					<Settings appStore={appStore} />
 				</ContentArea>
 			</Page>
 		);

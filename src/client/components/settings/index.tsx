@@ -5,7 +5,7 @@ import ListItem from 'material-ui/List/ListItem';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import Toggle from 'material-ui/Toggle';
 import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -15,7 +15,7 @@ import AppStore from '../../stores/app';
 import PinConfirmation from './pin-confirmation';
 
 interface Props {
-	store?: AppStore;
+	appStore?: AppStore;
 }
 
 class SettingsStore {
@@ -48,7 +48,7 @@ class SettingsStore {
 	}
 }
 
-@observer
+@inject('appStore') @observer
 export default
 class Settings extends Component<Props, {}> {
 	private store: SettingsStore;
@@ -106,7 +106,7 @@ class Settings extends Component<Props, {}> {
 	private handleEncryptionToggle() {
 		if(Storage.isEncrypted()) {
 			Storage.disableEncryption();
-			this.props.store.saveAll();
+			this.props.appStore.saveAll();
 			this.store.updateEncryption();
 		} else {
 			this.store.openConfirmation();
@@ -119,7 +119,7 @@ class Settings extends Component<Props, {}> {
 
 	private handleSetPin(pin: string) {
 		Storage.enableEncryption(pin);
-		this.props.store.saveAll();
+		this.props.appStore.saveAll();
 		this.store.updateEncryption();
 		this.store.closeConfirmation();
 	}

@@ -8,17 +8,13 @@ import SettingsPage from '../../pages/settings-page';
 import AppStore from '../../stores/app';
 
 type Props = {
+	appStore?: AppStore;
 	router?: Navigo;
-	store?: AppStore;
 };
 
-@inject('router')
+@inject('appStore', 'router')
 export default
 class ClearData extends Component<Props, {}> {
-	constructor(props: Props) {
-		super(props);
-	}
-
 	public render() {
 		return (
 			<div
@@ -49,7 +45,7 @@ class ClearData extends Component<Props, {}> {
 	}
 
 	private handleClearData() {
-		this.props.store.clearAllData();
+		this.props.appStore.clearAllData();
 		this.routeBack();
 	}
 }

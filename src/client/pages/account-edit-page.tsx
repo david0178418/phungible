@@ -45,12 +45,12 @@ class AccountEditStore {
 	}
 }
 type Props = {
+	appStore?: AppStore;
 	id: string;
 	router?: Navigo;
-	store?: AppStore;
 };
 
-@inject('router') @observer
+@inject('appStore', 'router') @observer
 export default
 class AccountEditPage extends Component<Props, {}> {
 	public static path = '/account/edit/';
@@ -59,7 +59,7 @@ class AccountEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new AccountEditStore(props.store, this.props.id);
+		this.store = new AccountEditStore(props.appStore, this.props.id);
 	}
 
 	public render() {

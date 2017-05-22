@@ -54,12 +54,12 @@ class BudgetEditStore {
 }
 
 type Props = {
+	appStore?: AppStore;
 	id: string;
 	router?: Navigo;
-	store?: AppStore;
 };
 
-@inject('router') @observer
+@inject('appStore', 'router') @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/budget/edit/';
@@ -69,7 +69,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new BudgetEditStore(props.store, props.id);
+		this.store = new BudgetEditStore(props.appStore, props.id);
 	}
 
 	public render() {

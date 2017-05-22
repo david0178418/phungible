@@ -1,4 +1,4 @@
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -10,11 +10,11 @@ import Transaction from '../stores/transaction';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
-@observer
+@inject('appStore') @observer
 export default
 class DailyActivityPage extends Component<Props, {}> {
 	public static path = '/';
@@ -24,15 +24,15 @@ class DailyActivityPage extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {store} = this.props;
+		const {appStore} = this.props;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
-				<Navigation title="Daily Activity" store={store} />
+				<Navigation title="Daily Activity" appStore={appStore} />
 				<ContentArea>
 					<DailyActivity
-						store={store}
-						onAdd={(transaction: Transaction) => this.props.store.saveTransaction(transaction)}
-						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
+						appStore={appStore}
+						onAdd={(transaction: Transaction) => this.props.appStore.saveTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.props.appStore.removeTransaction(transaction)}
 					/>
 				</ContentArea>
 			</Page>

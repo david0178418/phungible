@@ -13,7 +13,7 @@ import SettingsPage from './settings-page';
 
 type Props = {
 	router?: Navigo;
-	store?: AppStore;
+	appStore?: AppStore;
 };
 
 @inject('router')
@@ -27,7 +27,7 @@ class ClearDataPage extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {store} = this.props;
+		const {appStore} = this.props;
 		return (
 			<Page className="slide-horizontal">
 				<AppBar
@@ -36,7 +36,7 @@ class ClearDataPage extends Component<Props, {}> {
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ContentArea>
-					<ClearData store={store} />
+					<ClearData appStore={appStore} />
 				</ContentArea>
 			</Page>
 		);

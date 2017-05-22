@@ -52,12 +52,12 @@ class CreateScheduledTransactionStore {
 }
 
 type Props = {
+	appStore?: AppStore;
 	id: string;
 	router?: Navigo;
-	store?: AppStore;
 };
 
-@inject('router') @observer
+@inject('appStore', 'router') @observer
 export default
 class CreateScheduledTransaction extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
@@ -67,7 +67,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new CreateScheduledTransactionStore(props.store, props.id);
+		this.store = new CreateScheduledTransactionStore(props.appStore, props.id);
 	}
 
 	public render() {

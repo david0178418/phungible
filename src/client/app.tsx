@@ -1,6 +1,6 @@
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {action, computed, observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {observer, Provider} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
@@ -24,17 +24,84 @@ class AppInitStore {
 	}
 }
 
-function ChildWithStore(child: any, store: AppStore) {
-	return child ? React.cloneElement(child, {
-		store,
-	}) : child;
-}
-
 const Layers = {
 	BOTTOM: 0,
 	MIDDLE: 1,
 	TOP: 2,
 };
+const Styles = `
+	body {
+		overflow: hidden;
+	}
+	.page {
+		z-index: ${Layers.MIDDLE};
+		transform: translateZ(0);
+	}
+	.page-enter,
+	.page-leave {
+		box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+		box-sizing: border-box;
+	}
+
+	.page-leave {
+		top: 0;
+	}
+
+	/* Vertical slide */
+	.page-enter.slide-vertical {
+		transform: translate(0, 100vh);
+	}
+
+	.page-enter-active.slide-vertical {
+		transform: translate(0, 0);
+		transition: transform 350ms;
+	}
+
+	.slide-vertical + .slide-vertical {
+		z-index: ${Layers.BOTTOM};
+	}
+
+	/* Horizontal Slide */
+	.slide-horizontal {
+		z-index: ${Layers.TOP};
+	}
+
+	.page-enter.slide-horizontal {
+		transform: translate(100vw, 0);
+	}
+
+	.page-enter-active.slide-horizontal {
+		transform: translate(0, 0);
+		transition: transform 350ms;
+	}
+
+	.page-leave.slide-horizontal {
+		transform: translate(0, 0);
+	}
+	.page-leave-active.slide-horizontal {
+		transform: translate(100vw, 0);
+		transition: transform 350ms;
+	}
+
+	/* CONTENT */
+	.page-content-enter {
+		opacity: 0;
+	}
+
+	.page-content-enter-active {
+		opacity: 1;
+		transition: opacity 400ms;
+	}
+
+	.page-content-leave {
+		opacity: 1;
+		transition: opacity 400ms;
+	}
+
+	.page-content-leave-active {
+		opacity: 0;
+	}
+`;
 
 @observer
 export default
@@ -70,91 +137,18 @@ class App extends Component<Props, any> {
 							onClearPin={() => this.handleClearPin()}
 							onPinUpdate={(pin: string) => this.handlePinUpdate(pin)}
 						/>
-						<style>{`
-							body {
-								overflow: hidden;
-							}
-							.page {
-								z-index: ${Layers.MIDDLE};
-								transform: translateZ(0);
-							}
-							.page-enter,
-							.page-leave {
-								box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-								box-sizing: border-box;
-							}
-
-							.page-leave {
-								top: 0;
-							}
-
-							/* Vertical slide */
-							.page-enter.slide-vertical {
-								transform: translate(0, 100vh);
-							}
-
-							.page-enter-active.slide-vertical {
-								transform: translate(0, 0);
-								transition: transform 350ms;
-							}
-
-							.slide-vertical + .slide-vertical {
-								z-index: ${Layers.BOTTOM};
-							}
-
-							/* Horizontal Slide */
-							.slide-horizontal {
-								z-index: ${Layers.TOP};
-							}
-
-							.page-enter.slide-horizontal {
-								transform: translate(100vw, 0);
-							}
-
-							.page-enter-active.slide-horizontal {
-								transform: translate(0, 0);
-								transition: transform 350ms;
-							}
-
-							.page-leave.slide-horizontal {
-								transform: translate(0, 0);
-							}
-							.page-leave-active.slide-horizontal {
-								transform: translate(100vw, 0);
-								transition: transform 350ms;
-							}
-
-							/* CONTENT */
-							.page-content-enter {
-								opacity: 0;
-							}
-
-							.page-content-enter-active {
-								opacity: 1;
-								transition: opacity 400ms;
-							}
-
-							.page-content-leave {
-								opacity: 1;
-								transition: opacity 400ms;
-							}
-
-							.page-content-leave-active {
-								opacity: 0;
-							}
-						`}</style>
+						<style>{Styles}</style>
 						{!!this.store && (
-							<CSSTransitionGroup
-								component="div"
-								transitionName="page"
-								transitionEnterTimeout={350}
-								transitionLeaveTimeout={350}
-							>
-								{React.Children.map(
-									this.props.children,
-									(child) => ChildWithStore(child, this.store),
-								)}
-							</CSSTransitionGroup>
+							<Provider appStore={this.store}>
+								<CSSTransitionGroup
+									component="div"
+									transitionName="page"
+									transitionEnterTimeout={350}
+									transitionLeaveTimeout={350}
+								>
+									{this.props.children}
+								</CSSTransitionGroup>
+							</Provider>
 						)}
 					</Layout>
 			</MuiThemeProvider>

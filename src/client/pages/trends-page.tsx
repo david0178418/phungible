@@ -1,4 +1,5 @@
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
@@ -10,14 +11,15 @@ import AppStore from '../stores/app';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
 type State = {
 	renderBody: boolean;
 };
 
+@inject('appStore')
 export default
 class TrendsPage extends Component<Props, State> {
 	public static path = '/trends/';
@@ -38,13 +40,13 @@ class TrendsPage extends Component<Props, State> {
 	}
 
 	public render() {
-		const {store} = this.props;
+		const {appStore} = this.props;
 		const {renderBody} = this.state;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Trends"
-					store={store}
+					appStore={appStore}
 				/>
 				<ContentArea>
 					<CSSTransitionGroup
@@ -55,10 +57,10 @@ class TrendsPage extends Component<Props, State> {
 					>
 						{renderBody && (
 							<Trends
-								accounts={store.accounts}
-								budgets={store.budgets}
-								transactions={store.transactions}
-								scheduledTransactions={store.scheduledTransactions}
+								accounts={appStore.accounts}
+								budgets={appStore.budgets}
+								transactions={appStore.transactions}
+								scheduledTransactions={appStore.scheduledTransactions}
 							/>
 						)}
 						{!renderBody && (

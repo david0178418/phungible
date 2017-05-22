@@ -1,6 +1,6 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
@@ -14,23 +14,24 @@ import AppStore from '../stores/app';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
+@inject('appStore')
 @observer
 export default
 class Accounts extends Component<Props, {}> {
 	public static path = '/accounts/';
 
 	public render() {
-		const store = this.props.store;
+		const store = this.props.appStore;
 
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Accounts"
-					store={store}
+					appStore={store}
 				/>
 				<ContentArea>
 					<AccountsList

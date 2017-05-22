@@ -1,3 +1,4 @@
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -7,15 +8,16 @@ import {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
 
 type Props = {
-	store?: AppStore;
+	appStore?: AppStore;
 };
 
+@inject('appStore')
 export default
 class Summary extends Component<Props, any> {
 	public render() {
 		const {
 			accounts,
-		} = this.props.store;
+		} = this.props.appStore;
 		return (
 			<div style={pageStyling}>
 				<p>

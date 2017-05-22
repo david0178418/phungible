@@ -9,6 +9,7 @@ import HelpIcon from 'material-ui/svg-icons/action/help';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import RepeatIcon from 'material-ui/svg-icons/av/repeat';
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {
 	AccountEditPage,
@@ -28,7 +29,7 @@ import AppStore from '../stores/app';
 import NavItem from './nav-item';
 
 type Props = {
-	store?: AppStore;
+	appStore?: AppStore;
 	title: string;
 };
 
@@ -97,6 +98,7 @@ function trendsProps(accountsCount: number) {
 	return props;
 }
 
+@inject('appStore')
 export default
 class Navigation extends React.Component<Props, any> {
 	constructor(props: Props) {
@@ -113,7 +115,7 @@ class Navigation extends React.Component<Props, any> {
 			budgets,
 			scheduledTransactions,
 			transactions,
-		} = this.props.store;
+		} = this.props.appStore;
 		return (
 			<AppBar
 				className="app-title"

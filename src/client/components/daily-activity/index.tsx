@@ -1,5 +1,5 @@
 import {Tab, Tabs} from 'material-ui/Tabs';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
@@ -11,12 +11,12 @@ import CurrentBudgets from './current-budgets';
 import DailyTransactions from './daily-transactions';
 
 type Props = {
-	store?: AppStore;
+	appStore?: AppStore;
 	onAdd: (transaction: Transaction) => void;
 	onRemove: (transaction: Transaction) => void;
 };
 
-@observer
+@inject('appStore') @observer
 export default
 class DailyActivity extends Component<Props, {}> {
 	constructor(props: Props) {
@@ -29,7 +29,7 @@ class DailyActivity extends Component<Props, {}> {
 	}
 	public render() {
 		const {
-			store,
+			appStore,
 			onAdd,
 			onRemove,
 		} = this.props;
@@ -41,9 +41,9 @@ class DailyActivity extends Component<Props, {}> {
 				}}>
 					<Tab label="Budgets">
 						<CurrentBudgets
-							store={store}
+							store={appStore}
 							budgets={
-								store.budgets
+								appStore.budgets
 									.filter((budget) => budget.lastOccurance)
 							}
 							onAdd={onAdd}
@@ -52,7 +52,7 @@ class DailyActivity extends Component<Props, {}> {
 					</Tab>
 					<Tab label="Transactions">
 						<DailyTransactions
-							store={store}
+							store={appStore}
 							onAdd={onAdd}
 							onRemove={onRemove}
 						/>

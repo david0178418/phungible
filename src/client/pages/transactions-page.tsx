@@ -1,5 +1,6 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import {inject} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
@@ -13,26 +14,27 @@ import Transaction from '../stores/transaction';
 import Page from './page';
 
 type Props = {
+	appStore?: AppStore;
 	disableAnimation: boolean;
-	store?: AppStore;
 };
 
+@inject('appStore')
 export default
 class Transactions extends Component<Props, {}> {
 	public static path = '/transactions';
 
 	public render() {
-		const store = this.props.store;
+		const store = this.props.appStore;
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation
 					title="Transactions"
-					store={store}
+					appStore={store}
 				/>
 				<ContentArea>
 					<TransactionsList
 						transactions={store.transactions}
-						onRemove={(transaction: Transaction) => this.props.store.removeTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.props.appStore.removeTransaction(transaction)}
 						store={store}
 					/>
 					<FloatingActionButton

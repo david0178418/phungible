@@ -48,12 +48,12 @@ class TransactionEditStore {
 	}
 }
 type Props = {
+	appStore?: AppStore;
 	id: string;
 	router?: Navigo;
-	store?: AppStore;
 };
 
-@inject('router') @observer
+@inject('appStore', 'router') @observer
 export default
 class TransactionEditPage extends Component<Props, {}> {
 	public static path = '/transaction/edit/';
@@ -62,7 +62,7 @@ class TransactionEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new TransactionEditStore(props.store, props.id);
+		this.store = new TransactionEditStore(props.appStore, props.id);
 	}
 
 	public render() {
