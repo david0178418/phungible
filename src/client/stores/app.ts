@@ -83,6 +83,9 @@ class AppStore {
 		ProfilesStore.saveCurrentProfile();
 		ProfilesStore.saveProfiles();
 	}
+	public debugString() {
+		return JSON.stringify(serialize(this));
+	}
 	public runTransactionSinceLastUpdate() {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
 			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');

@@ -2,6 +2,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+import BugReport from 'material-ui/svg-icons/action/bug-report';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import Toggle from 'material-ui/Toggle';
 import {action, observable} from 'mobx';
@@ -20,6 +21,7 @@ interface Props {
 
 class SettingsStore {
 	@observable public confirmPin = false;
+	@observable public showDebug = false;
 	@observable public isEncrypted: boolean;
 	@observable private _aboutIsOpen = false;
 
@@ -46,6 +48,14 @@ class SettingsStore {
 	@action public closeConfirmation() {
 		this.confirmPin = false;
 	}
+
+	@action public closeDebug() {
+		this.showDebug = false;
+	}
+
+	@action public openDebug() {
+		this.showDebug = true;
+	}
 }
 
 @inject('appStore') @observer
@@ -60,13 +70,18 @@ class Settings extends Component<Props, {}> {
 	}
 
 	public render() {
+		const {
+			confirmPin,
+			isEncrypted,
+			showDebug,
+		} = this.store;
 		return (
 			<List>
 				<ListItem
 					primaryText="Encryption Enabled"
 					secondaryText="Warning: Pin will not be recocverable if it is lost"
 					rightToggle={<Toggle
-						toggled={this.store.isEncrypted}
+						toggled={isEncrypted}
 						onToggle={(ev) => this.handleEncryptionToggle()}
 					/>}
 				/>
@@ -90,12 +105,42 @@ class Settings extends Component<Props, {}> {
 					</Dialog>
 				</ListItem>
 				<ListItem
+					primaryText="Debug string"
+					onTouchTap={() => this.store.openDebug()}
+					rightIcon={<BugReport/>}
+				>
+					<Dialog
+						autoScrollBodyContent
+						open={showDebug}
+						onRequestClose={() => this.store.closeDebug()}
+						actions={[
+							<FlatButton
+								label="Done"
+								primary
+								onTouchTap={() => this.store.closeDebug()}
+							/>,
+						]}
+					>
+						{showDebug && (
+							<textarea
+								readOnly
+								onFocus={(e) => (e.target as any).select()}
+								defaultValue={this.props.appStore.debugString()}
+								style={{
+									height: 200,
+									width: '100%',
+								}}
+							/>
+						)}
+					</Dialog>
+				</ListItem>
+				<ListItem
 					primaryText="Nuke all data"
 					rightIcon={<WarningIcon color="red"/>}
 					href={`#${ClearDataPage.path}`}
 				/>
 				<PinConfirmation
-					open={this.store.confirmPin}
+					open={confirmPin}
 					onConfirm={(pin) => this.handleSetPin(pin)}
 					onCancel={() => this.handleCancelPinConfirmation()}
 				/>
