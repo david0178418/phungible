@@ -35,7 +35,7 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 					onChange={(ev, index, value) => handleUpdateType(value, account)}
 				>
 					<MenuItem value={AccountType.Debt} primaryText="Debt" />
-					<MenuItem value={AccountType.Savings} primaryText="Savings" />
+					<MenuItem value={AccountType.Savings} primaryText="Availble Money" />
 				</SelectField>
 			</div>
 			<div>

@@ -11,6 +11,7 @@ import {Component} from 'react';
 import * as React from 'react';
 
 import Colors from '../../shared/colors';
+import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import BalanceUpdate from '../../stores/balance-update';
 import MoneyEdit from '../shared/money-edit';
@@ -73,7 +74,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							textFieldStyle={{
 								width: 150,
 							}}
-							locale="en-US"
+							formatDate={(d) => formatDate(d)}
 							floatingLabelText="As of"
 							firstDayOfWeek={0}
 							onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}

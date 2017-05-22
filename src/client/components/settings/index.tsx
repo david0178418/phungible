@@ -128,6 +128,7 @@ class Settings extends Component<Props, {}> {
 								defaultValue={this.props.appStore.debugString()}
 								style={{
 									height: 200,
+									resize: 'none',
 									width: '100%',
 								}}
 							/>

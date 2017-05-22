@@ -7,6 +7,7 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
+import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import Transaction, {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
@@ -42,17 +43,23 @@ class TransactionEdit extends Component<Props, any> {
 		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
 			<form className="edit-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
-				<div>
+				<div
+					style={{
+						display: 'flex',
+					}}
+				>
 					<TextField
-						fullWidth
 						errorText={transaction.name ? '' : 'Required'}
 						floatingLabelText="Name"
 						onChange={((ev: any, value: any) => this.handleUpdateName(value, transaction)) as any}
 						value={transaction.name}
 					/>
-				</div>
-				<div>
-					<MoneyEdit money={transaction.amount} />
+					<MoneyEdit
+						style={{
+							marginLeft: 10,
+						}}
+						money={transaction.amount}
+					/>
 				</div>
 				{!hideType && (
 					<div>
@@ -94,7 +101,8 @@ class TransactionEdit extends Component<Props, any> {
 							fullWidth
 							floatingLabelText="Date"
 							hintText="Portrait Dialog"
-						firstDayOfWeek={0}
+							formatDate={(d) => formatDate(d)}
+							firstDayOfWeek={0}
 							onChange={(ev, date) => this.handleUpdateDate(date, transaction)}
 							value={transaction.date}
 						/>

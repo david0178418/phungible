@@ -72,7 +72,6 @@ function scheduledTransactionProps(scheduledTransactionsCount: number, accountCo
 function transactionProps(transactionsCount: number, accountsCount: number) {
 	const props: MenuItemProps = {
 		leftIcon: <CompareIcon />,
-		rightIcon: <Badge badgeContent={transactionsCount} primary />,
 	};
 
 	if(accountsCount) {

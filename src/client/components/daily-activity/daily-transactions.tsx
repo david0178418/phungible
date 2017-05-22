@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
 
+import formatDate from '../../shared/utils/format-date';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 import TransactionQuickEdit from '../transaction-edit/quick-edit';
@@ -58,7 +59,7 @@ class DailyActivity extends Component<Props, State> {
 					fullWidth
 					firstDayOfWeek={0}
 					floatingLabelText={`Transactions for:`}
-					formatDate={(d) => moment(d).format('MMMM D, YYYY')}
+					formatDate={(d) => formatDate(d)}
 					value={date}
 					style={{
 						boxSizing: 'border-box',

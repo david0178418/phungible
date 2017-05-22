@@ -8,6 +8,7 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
+import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../../stores/scheduled-transaction';
 import {TransactionType} from '../../stores/transaction';
@@ -57,14 +58,14 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							<TextField
 								errorText={scheduledTransaction.name ? '' : 'Name is required'}
 								floatingLabelText="Name"
-								textareaStyle={{
-									width: 200,
-								}}
 								value={scheduledTransaction.name}
 								onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
 							/>
 							{' '}
 							<MoneyEdit
+								style={{
+									marginLeft: 10,
+								}}
 								money={scheduledTransaction.amount}
 							/>
 						</div>
@@ -89,6 +90,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						fullWidth
 						floatingLabelText="Starts"
 						hintText="Portrait Dialog"
+						formatDate={(d) => formatDate(d)}
 						firstDayOfWeek={0}
 						onChange={(ev, date) => this.handleUpdateStartDate(date, scheduledTransaction)}
 						value={scheduledTransaction.startDate}

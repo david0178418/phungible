@@ -5,18 +5,24 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
+import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
 import TrendsStore from '../../stores/trends';
 import TrendsChart from './trends-chart';
 
-type Props = {
+const DatePickerStyle = {
+	display: 'inline-block',
+	width: 150,
+};
+
+interface Props {
 	accounts: Account[];
 	budgets: ScheduledTransaction[];
 	transactions: Transaction[];
 	scheduledTransactions: ScheduledTransaction[];
-};
+}
 
 @observer
 export default
@@ -37,10 +43,11 @@ class Trends extends Component<Props, {}> {
 					<DatePicker
 						autoOk
 						floatingLabelText="From"
+						formatDate={(d) => formatDate(d)}
 						minDate={store.minFromDate}
 						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateFromDate(value)}
-						style={{display: 'inline-block'}}
+						style={DatePickerStyle}
 						value={store.fromDate}
 					/>
 					{' '}
@@ -48,9 +55,10 @@ class Trends extends Component<Props, {}> {
 						autoOk
 						floatingLabelText="To"
 						firstDayOfWeek={0}
+						formatDate={(d) => formatDate(d)}
 						minDate={store.minToDate}
 						onChange={(ev, value) => this.handleUpdateToDate(value)}
-						style={{display: 'inline-block'}}
+						style={DatePickerStyle}
 						value={store.toDate}
 					/>
 				</div>

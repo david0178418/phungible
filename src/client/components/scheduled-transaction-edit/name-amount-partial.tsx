@@ -36,7 +36,6 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						<TextField
 							errorText={schedTranspartial.name ? '' : 'Name is required'}
 							floatingLabelText="Name"
-							style={{width: 150}}
 							value={schedTranspartial.name}
 							onChange={((ev: any, value: any) => this.props.onUpdateName(value, schedTranspartial)) as any}
 						/>
