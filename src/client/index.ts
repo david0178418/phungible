@@ -5,17 +5,31 @@ import {render} from 'react-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 
 import Routes from './routes';
-import ProfilesStore from './stores/profiles';
 
-OfflinePluginRuntime.install();
+OfflinePluginRuntime.install({
+	onUpdateReady: () => {
+		OfflinePluginRuntime.applyUpdate();
+	},
+	onUpdated() {
+		setTimeout(() => {
+			OfflinePluginRuntime.applyUpdate();
+			renderApp(true);
+		}, 5000);
+	},
+});
+
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 useStrict(true);
 
-ProfilesStore.TEMPMigrateLegacyStoreToProfile();
+function renderApp(updateAvailable: boolean) {
+	render(
+		React.createElement(Routes, {
+			updateAvailable,
+		}),
+		document.getElementById('app')
+	);
+}
 
-render(
-	React.createElement(Routes, {}),
-	document.getElementById('app'),
-);
+renderApp(false);

@@ -104,8 +104,9 @@ class Settings extends Component<Props, {}> {
 						icon licensed from <a href="https://www.flaticon.com" target="_blank">www.flaticon.com</a>
 					</Dialog>
 				</ListItem>
+				<ListItem primaryText="Version: 0.1.0"/>
 				<ListItem
-					primaryText="Debug string"
+					primaryText="Debug data"
 					onTouchTap={() => this.store.openDebug()}
 					rightIcon={<BugReport/>}
 				>

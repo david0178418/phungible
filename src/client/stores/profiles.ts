@@ -70,19 +70,6 @@ class Profiles {
 		Storage.setItem('lastProfileId', Profiles.currentProfile.id);
 	}
 
-	public static TEMPMigrateLegacyStoreToProfile() {
-		const legacyStoreData = Storage.getItem('store');
-
-		if(!legacyStoreData) {
-			return;
-		}
-
-		const currentProfile = Profiles.getCurrentProfile();
-
-		Storage.setItem(`${PROFILE_DATA_PREFIX}${currentProfile.id}`, legacyStoreData);
-		Storage.clearItem('store');
-	}
-
 	private static profiles: Profile[] = null;
 	private static currentProfile: Profile = null;
 

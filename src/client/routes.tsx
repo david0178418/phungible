@@ -3,6 +3,7 @@ import * as N from 'navigo';
 import * as React from 'react';
 import {Component} from 'react';
 
+import UpdatePrompt from './components/update-prompt';
 import App from './app';
 import Analytics from './shared/analytics';
 
@@ -23,9 +24,12 @@ import {
 	TrendsPage,
 } from './pages';
 
-type Props = {};
+type Props = {
+	updateAvailable: boolean,
+};
 type State = {
 	disableNextPageAnimation: boolean;
+	ignoreUpdate: boolean;
 	page: string;
 	params: any;
 };
@@ -53,6 +57,7 @@ class Routes extends Component<Props, State> {
 
 		this.state = {
 			disableNextPageAnimation: false,
+			ignoreUpdate: false,
 			page: getCurrengtHash(),
 			params: {},
 		};
@@ -199,6 +204,7 @@ class Routes extends Component<Props, State> {
 							key={TrendsPage.path}
 						/>
 					}
+					<UpdatePrompt updateAvailable={this.props.updateAvailable} />
 				</App>
 			</Provider>
 		);
