@@ -21,11 +21,9 @@
 				-webkit-font-smoothing: antialiased;
 				font-smoothing: antialiased;
 			}
-
 			body {
 				margin: 0;
 			}
-
 			.content {
 				margin: 0 20px;
 			}
@@ -46,17 +44,6 @@
 					transform: scale(1.1);
 				}
 			}
-
-			@keyframes FadeOut {
-				from {
-					opacity: 1;
-				}
-
-				to {
-					opacity: 0;
-				}
-			}
-
 			.app-loading {
 				position: fixed;
 				left: calc(50% - 96px);
@@ -67,15 +54,22 @@
 				position: absolute;
 				z-index: 5;
 			}
-			.app-loading-container.finish {
-				animation: FadeOut .5s 1;
-				animation-fill-mode:forwards;
+			.app-loading-container {
+				opacity: 1;
+			}
+			#app,
+			.app-loading-container {
+				transition: opacity .5s;
+			}
+			.hide {
+				opacity: 0;
 			}
 		</style>
-		<div id="app"></div>
+		<div id="app" class="hide"></div>
 		<div class="app-loading-container">
 			<img class="app-loading" src="/images/icons/icon-192x192.png">
 		</div>
+		<script>var pageLoadTime = Date.now();</script>
 	</body>
 	<script>
 		var WebFontConfig = {

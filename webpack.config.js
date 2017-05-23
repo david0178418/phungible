@@ -44,6 +44,7 @@ module.exports = {
 				'/',
 				'/manifest.json',
 				'/images/icons/favicon.ico',
+				'/images/icons/icon-192x192.png',
 			],
 			ServiceWorker: {
 				events: true,

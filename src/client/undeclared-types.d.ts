@@ -1,3 +1,4 @@
+
 declare module 'recharts' {
 	export const Area: any;
 	export const AreaChart: any;

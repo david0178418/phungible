@@ -27,15 +27,27 @@ function renderApp(updateAvailable: boolean) {
 		React.createElement(Routes, {
 			updateAvailable,
 		}),
-		document.getElementById('app')
+		document.getElementById('app'),
 	);
 }
 
 renderApp(false);
 
-const loadingContainer = document.querySelector('.app-loading-container');
-loadingContainer.className = 'app-loading-container finish'
+beginTransition();
 
-setTimeout(() => {
-	loadingContainer.remove();
-}, 500);
+function beginTransition() {
+	const loadingContainer = document.querySelector('.app-loading-container');
+	const appContainer = document.getElementById('app');
+	const pageLoadTime = (window as any).pageLoadTime;
+	const elapsedTime = Date.now() - pageLoadTime;
+
+	setTimeout(runTrans, 1000 - elapsedTime);
+
+	function runTrans() {
+		loadingContainer.className = 'app-loading-container hide';
+		appContainer.className = '';
+		setTimeout(() => {
+			loadingContainer.remove();
+		}, 500);
+	}
+}
