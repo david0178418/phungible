@@ -32,3 +32,10 @@ function renderApp(updateAvailable: boolean) {
 }
 
 renderApp(false);
+
+const loadingContainer = document.querySelector('.app-loading-container');
+loadingContainer.className = 'app-loading-container finish'
+
+setTimeout(() => {
+	loadingContainer.remove();
+}, 500);

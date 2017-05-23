@@ -29,8 +29,53 @@
 			.content {
 				margin: 0 20px;
 			}
+
+			@keyframes Loading {
+				0% {
+					opacity: 1;
+					transform: scale(1.1);
+				}
+
+				75% {
+					opacity: .5;
+					transform: scale(.8);
+				}
+
+				100% {
+					opacity: 1;
+					transform: scale(1.1);
+				}
+			}
+
+			@keyframes FadeOut {
+				from {
+					opacity: 1;
+				}
+
+				to {
+					opacity: 0;
+				}
+			}
+
+			.app-loading {
+				position: fixed;
+				left: calc(50% - 96px);
+				top: calc(50% - 96px);
+				animation: Loading 1.5s infinite;
+			}
+			.app-loading-container {
+				position: absolute;
+				z-index: 5;
+			}
+			.app-loading-container.finish {
+				animation: FadeOut .5s 1;
+				animation-fill-mode:forwards;
+			}
 		</style>
 		<div id="app"></div>
+		<div class="app-loading-container">
+			<img class="app-loading" src="/images/icons/icon-192x192.png">
+		</div>
 	</body>
 	<script>
 		var WebFontConfig = {
