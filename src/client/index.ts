@@ -7,12 +7,11 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import Routes from './routes';
 
 OfflinePluginRuntime.install({
-	onUpdateReady: () => {
+	onUpdateReady() {
 		OfflinePluginRuntime.applyUpdate();
 	},
 	onUpdated() {
 		setTimeout(() => {
-			OfflinePluginRuntime.applyUpdate();
 			renderApp(true);
 		}, 3000);
 	},

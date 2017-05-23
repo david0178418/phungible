@@ -10,6 +10,7 @@ import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import ClearDataPage from '../../pages/clear-data-page';
 import Storage from '../../shared/storage';
 import AppStore from '../../stores/app';
@@ -105,6 +106,10 @@ class Settings extends Component<Props, {}> {
 					</Dialog>
 				</ListItem>
 				<ListItem primaryText="Version: 0.1.0"/>
+				<ListItem
+					primaryText="Check for update"
+					onTouchTap={() => OfflinePluginRuntime.update()}
+				/>
 				<ListItem
 					primaryText="Debug data"
 					onTouchTap={() => this.store.openDebug()}
