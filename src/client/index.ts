@@ -14,7 +14,7 @@ OfflinePluginRuntime.install({
 		setTimeout(() => {
 			OfflinePluginRuntime.applyUpdate();
 			renderApp(true);
-		}, 5000);
+		}, 3000);
 	},
 });
 
