@@ -155,8 +155,10 @@ class TrendsStore {
 								const effects = [];
 
 								if(
-									schedTrans.fromAccount &&
-									!schedTrans.occursOn(schedTrans.fromAccount.latestBalanceUpdate.date)
+									schedTrans.fromAccount && (
+										!date.isSame(schedTrans.fromAccount.latestBalanceUpdate.date, 'day') ||
+										!schedTrans.occursOn(schedTrans.fromAccount.latestBalanceUpdate.date)
+									)
 								) {
 									effects.push({
 										accountId: schedTrans.fromAccount.id,
@@ -166,8 +168,10 @@ class TrendsStore {
 								}
 
 								if(
-									schedTrans.towardAccount &&
-									!schedTrans.occursOn(schedTrans.towardAccount.latestBalanceUpdate.date)
+									schedTrans.towardAccount && (
+										!date.isSame(schedTrans.towardAccount.latestBalanceUpdate.date, 'day') ||
+										!schedTrans.occursOn(schedTrans.towardAccount.latestBalanceUpdate.date)
+									)
 								) {
 									effects.push({
 										accountId: schedTrans.towardAccount.id,
