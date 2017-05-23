@@ -47,6 +47,7 @@ module.exports = {
 				'/images/icons/favicon.ico',
 			],
 			ServiceWorker: {
+				events: true,
 				output: '../service-worker.js',
 			},
 			AppCache: {

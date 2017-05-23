@@ -14,10 +14,6 @@ declare module 'recharts' {
 	export const YAxis: any;
 }
 
-declare module 'offline-plugin/runtime' {
-	export const install: () => void;
-}
-
 declare module 'secure-ls' {
 	const x: any;
 	export = x;
