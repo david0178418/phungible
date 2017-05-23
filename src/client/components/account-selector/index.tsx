@@ -2,10 +2,13 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import * as React from 'react';
 
-import Account from '../../stores/account';
+interface Selectable {
+	id: string;
+	name: string;
+}
 
 type AccountSelectorProps = {
-	accounts: Account[];
+	accounts: Selectable[];
 	errorText?: string;
 	label: string;
 	selectedAccountId: string | null;

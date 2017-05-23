@@ -10,7 +10,7 @@ import Colors from '../../shared/colors';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
-import TransactionQuickEdit from '../transaction-edit/quick-edit';
+import QuickEdit from '../transaction-edit/quick-edit';
 
 interface Props {
 	store: AppStore;
@@ -46,7 +46,7 @@ class CurrentBudgets extends Component<Props, {}> {
 		} = this.store;
 		return (
 			<div>
-				<TransactionQuickEdit
+				<QuickEdit
 					accounts={store.accounts}
 					date={this.date}
 					openButtonText="Add unplanned expense"

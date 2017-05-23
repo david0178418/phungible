@@ -1,3 +1,4 @@
+import ScheduledTransaction from '../../stores/scheduled-transaction';
 import RaisedButton from 'material-ui/RaisedButton';
 import {observer} from 'mobx-react';
 import * as React from 'react';
@@ -9,6 +10,7 @@ import Transaction from '../../stores/transaction';
 import TransactionEdit from '../transaction-edit';
 interface Props {
 	accounts: Account[];
+	budgets?: ScheduledTransaction[];
 	date: Date;
 	openButtonText: string;
 	transaction: Transaction;
@@ -18,7 +20,7 @@ interface Props {
 
 @observer
 export default
-class DailyActivity extends Component<Props, {}> {
+class QuickEdit extends Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
 
@@ -26,6 +28,7 @@ class DailyActivity extends Component<Props, {}> {
 	public render() {
 		const {
 			accounts,
+			budgets,
 			onAdd,
 			onToggleOpen,
 			openButtonText,
@@ -66,6 +69,7 @@ class DailyActivity extends Component<Props, {}> {
 							hideTowardsAccount
 							hideType
 							accounts={accounts}
+							budgets={budgets}
 							transaction={transaction}
 							onSubmit={onAdd}
 						/>

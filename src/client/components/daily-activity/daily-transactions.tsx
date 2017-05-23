@@ -8,7 +8,7 @@ import {Component} from 'react';
 import formatDate from '../../shared/utils/format-date';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
-import TransactionQuickEdit from '../transaction-edit/quick-edit';
+import QuickEdit from '../transaction-edit/quick-edit';
 import ActivityItem from './activity-item';
 
 interface Props {
@@ -46,8 +46,9 @@ class DailyActivity extends Component<Props, State> {
 
 		return (
 			<div>
-				<TransactionQuickEdit
+				<QuickEdit
 					accounts={store.accounts}
+					budgets={store.budgets}
 					date={date}
 					openButtonText="Add Quick Expense"
 					transaction={quickTransaction}

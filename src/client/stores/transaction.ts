@@ -46,7 +46,7 @@ class Transaction {
 	@serializable
 	@observable public type: TransactionType = TransactionType.Expense;
 	@serializable(object(ScheduledTransaction))
-	public generatedFrom: ScheduledTransaction | null = null;
+	@observable public generatedFrom: ScheduledTransaction | null = null;
 	@serializable
 	@observable private _dateString: string;
 

@@ -38,20 +38,13 @@ class TransactionEditStore {
 			return false;
 		}
 	}
-
-	get accounts() {
-		return this.appStore.accounts;
-	}
-
-	get transactions() {
-		return this.appStore.transactions;
-	}
 }
-type Props = {
+
+interface Props {
 	appStore?: AppStore;
 	id: string;
 	router?: Navigo;
-};
+}
 
 @inject('appStore', 'router') @observer
 export default
@@ -68,6 +61,9 @@ class TransactionEditPage extends Component<Props, {}> {
 	public render() {
 		const {
 			accounts,
+			budgets
+		} = this.props.appStore;
+		const {
 			transaction,
 		} = this.store;
 		const action = transaction.id ? 'Edit' : 'Create';
@@ -82,6 +78,7 @@ class TransactionEditPage extends Component<Props, {}> {
 				<ContentArea>
 					<TransactionEdit
 						accounts={accounts}
+						budgets={budgets}
 						transaction={transaction}
 						onSubmit={() => this.handleSaveTransaction()}
 					/>

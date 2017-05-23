@@ -1,3 +1,4 @@
+import ScheduledTransaction from '../../stores/scheduled-transaction';
 import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
@@ -15,6 +16,7 @@ import MoneyEdit from '../shared/money-edit';
 
 type Props = {
 	accounts: Account[];
+	budgets: ScheduledTransaction[];
 	hideDate?: boolean;
 	hideNotes?: boolean;
 	hideTowardsAccount?: boolean;
@@ -32,6 +34,7 @@ class TransactionEdit extends Component<Props, any> {
 	public render() {
 		const {
 			accounts,
+			budgets,
 			hideDate,
 			hideNotes,
 			hideTowardsAccount,
@@ -39,6 +42,7 @@ class TransactionEdit extends Component<Props, any> {
 			transaction,
 			onSubmit,
 		} = this.props;
+		const budgetId = transaction.generatedFrom && transaction.generatedFrom.id;
 		const selectedTowardAccountId = transaction.towardAccount && transaction.towardAccount.id || null;
 		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
@@ -73,6 +77,14 @@ class TransactionEdit extends Component<Props, any> {
 							<MenuItem value={TransactionType.Income} primaryText="Income" />
 						</SelectField>
 					</div>
+				)}
+				{!!(budgets && budgets.length) && (
+					<AccountSelector
+						accounts={budgets}
+						label="From Budget"
+						onChange={(value, index) => this.handleUpdateFromBudget(value, transaction)}
+						selectedAccountId={budgetId}
+					/>
 				)}
 				{!!accounts.length && (
 					<div>
@@ -150,12 +162,16 @@ class TransactionEdit extends Component<Props, any> {
 		return errorText;
 	}
 
+	// TODO refactor all this
 	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
 		e.preventDefault();
 		onSubmit();
 	}
 	@action private handleUpdateFromAccount(accountId: string, transaction: Transaction) {
 		transaction.fromAccount = this.findAccount(accountId);
+	}
+	@action private handleUpdateFromBudget(budgetId: string, transaction: Transaction) {
+		transaction.generatedFrom = this.findBudget(budgetId);
 	}
 	@action private handleUpdateTowardAccount(accountId: string, transaction: Transaction) {
 		transaction.towardAccount = this.findAccount(accountId);
@@ -172,7 +188,10 @@ class TransactionEdit extends Component<Props, any> {
 	@action private handleUpdateType(newType: TransactionType, transaction: Transaction) {
 		transaction.type = newType;
 	}
-	private findAccount = (id: string) => {
+	private findAccount(id: string) {
 		return this.props.accounts.find((account) => account.id === id) || null;
+	}
+	private findBudget(id: string) {
+		return this.props.budgets.find((budgets) => budgets.id === id) || null;
 	}
 }
