@@ -12,11 +12,6 @@ import Transaction from '../../stores/transaction';
 import TrendsStore from '../../stores/trends';
 import TrendsChart from './trends-chart';
 
-const DatePickerStyle = {
-	display: 'inline-block',
-	width: 150,
-};
-
 interface Props {
 	accounts: Account[];
 	budgets: ScheduledTransaction[];
@@ -47,7 +42,12 @@ class Trends extends Component<Props, {}> {
 						minDate={store.minFromDate}
 						firstDayOfWeek={0}
 						onChange={(ev, value) => this.handleUpdateFromDate(value)}
-						style={DatePickerStyle}
+						style={{
+							display: 'inline-block',
+						}}
+						textFieldStyle={{
+							width: 150,
+						}}
 						value={store.fromDate}
 					/>
 					{' '}
@@ -58,7 +58,12 @@ class Trends extends Component<Props, {}> {
 						formatDate={(d) => formatDate(d)}
 						minDate={store.minToDate}
 						onChange={(ev, value) => this.handleUpdateToDate(value)}
-						style={DatePickerStyle}
+						style={{
+							display: 'inline-block',
+						}}
+						textFieldStyle={{
+							width: 150,
+						}}
 						value={store.toDate}
 					/>
 				</div>
