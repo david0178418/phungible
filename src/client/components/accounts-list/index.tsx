@@ -2,14 +2,12 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import ActionCreditCard from 'material-ui/svg-icons/action/credit-card';
-import EditorMoneyOn from 'material-ui/svg-icons/editor/attach-money';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import Colors from '../../shared/colors';
+import {DebtIcon, SavingsIcon} from '../../shared/shared-components';
 import Account, {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
 import EditRemoveMenu from '../shared/edit-remove-menu';
@@ -99,8 +97,8 @@ class AccountsList extends Component<Props, {}> {
 							secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
 							leftIcon={
 								account.type === AccountType.Savings ?
-									<EditorMoneyOn color={Colors.Money}/> :
-									<ActionCreditCard color={Colors.Debt}/>
+									<SavingsIcon/> :
+									<DebtIcon/>
 							}
 							rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval(account))}
 						/>

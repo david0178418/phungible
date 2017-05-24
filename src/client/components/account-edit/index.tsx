@@ -6,6 +6,7 @@ import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
 import * as React from 'react';
 
+import {DebtIcon, SavingsIcon} from '../../shared/shared-components';
 import Account, {AccountType} from '../../stores/account';
 import AccountEditBalanceHistory from './account-edit-balance-history';
 
@@ -27,15 +28,49 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 					onChange={((ev: any, value: any) => handleUpdateName(value, account)) as any}
 				/>
 			</div>
-			<div>
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'row',
+				}}
+			>
+				<div
+					style={{
+						position: 'relative',
+						width: 40,
+					}}
+				>
+					{account.type === AccountType.Savings ?
+						<SavingsIcon
+							style={{
+								bottom: 13,
+								position: 'absolute',
+							}}
+						/> :
+						<DebtIcon
+							style={{
+								bottom: 13,
+								position: 'absolute',
+							}}
+						/>
+					}
+				</div>
 				<SelectField
 					fullWidth
 					floatingLabelText="Type"
 					value={account.type}
 					onChange={(ev, index, value) => handleUpdateType(value, account)}
 				>
-					<MenuItem value={AccountType.Debt} primaryText="Debt" />
-					<MenuItem value={AccountType.Savings} primaryText="Availble Money" />
+					<MenuItem
+						leftIcon={<SavingsIcon/>}
+						primaryText="Availble Money"
+						value={AccountType.Savings}
+					/>
+					<MenuItem
+						leftIcon={<DebtIcon/>}
+						primaryText="Debt"
+						value={AccountType.Debt}
+					/>
 				</SelectField>
 			</div>
 			<div>
