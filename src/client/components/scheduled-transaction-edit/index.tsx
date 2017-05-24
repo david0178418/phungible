@@ -8,6 +8,7 @@ import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
+import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../../stores/scheduled-transaction';
@@ -72,15 +73,49 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 					)}
 				</div>
 				{!isBudget && (
-					<div>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+						}}
+					>
+						<div
+							style={{
+								position: 'relative',
+								width: 40,
+							}}
+						>
+							{scheduledTransaction.type === TransactionType.Income ?
+								<IncomeIcon
+									style={{
+										bottom: 13,
+										position: 'absolute',
+									}}
+								/> :
+								<ExpenseIcon
+									style={{
+										bottom: 13,
+										position: 'absolute',
+									}}
+								/>
+							}
+						</div>
 						<SelectField
 							fullWidth
 							floatingLabelText="Type"
 							value={scheduledTransaction.type}
 							onChange={(ev, index, value) => this.handleUpdateType(value, scheduledTransaction)}
 						>
-							<MenuItem value={TransactionType.Income} primaryText="Income" />
-							<MenuItem value={TransactionType.Expense} primaryText="Expense" />
+							<MenuItem
+								leftIcon={<IncomeIcon/>}
+								primaryText="Income"
+								value={TransactionType.Income}
+							/>
+							<MenuItem
+								leftIcon={<ExpenseIcon/>}
+								primaryText="Expense"
+								value={TransactionType.Expense}
+							/>
 						</SelectField>
 					</div>
 				)}
@@ -162,11 +197,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		onSubmit();
 	}
 	@action private handleToggleRepeats(scheduledTransaction: ScheduledTransaction) {
-		if(scheduledTransaction.repeats) {
-			scheduledTransaction.repeatUnit = RepeatUnits.None;
-		} else {
-			scheduledTransaction.repeatUnit = RepeatUnits.Week;
-		}
+		scheduledTransaction.repeatUnit = scheduledTransaction.repeats ? RepeatUnits.None : RepeatUnits.Week;
 	}
 	@action private handleUpdateFromAccount(accountId: string, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.fromAccount = this.findAccount(accountId);

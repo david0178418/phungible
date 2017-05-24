@@ -1,14 +1,12 @@
 
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
-import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
-import Colors from '../../shared/colors';
+import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import {TransactionType} from '../../stores/transaction';
@@ -84,8 +82,8 @@ class ScheduledTransactions extends Component<Props, {}> {
 						secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
 						leftIcon={
 							scheduledTransaction.type === TransactionType.Income ?
-								<ActionTrendingUp color={Colors.Money} /> :
-								<ActionTrendingDown color={Colors.Debt} />
+								<IncomeIcon/> :
+								<ExpenseIcon/>
 						}
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 					/>
