@@ -97,6 +97,18 @@ class ScheduledTransaction {
 			dateMoment.subtract(1, 'day');
 		}
 	}
+	@computed get nextOccurance() {
+		const dateMoment = moment(this.today);
+
+		while(true) {
+			dateMoment.add(1, 'day');
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
+				return null;
+			}
+		}
+	}
 	@computed get recurrence() {
 		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
 	}

@@ -65,7 +65,7 @@ class CurrentBudgets extends Component<Props, {}> {
 							<ListItem
 								key={budget.id}
 								primaryText={budget.name}
-								secondaryText={`renews ${moment(budget.lastOccurance).format('MMM D, YYYYY')}`}
+								secondaryText={`renews ${moment(budget.nextOccurance).format('MMM D, YYYYY')}`}
 								onTouchTap={() => this.handleAddExpenseFromBudget(budget)}
 								rightIcon={
 									<span style={{color}}>
