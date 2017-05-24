@@ -159,7 +159,15 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						type="checkbox"
 					/>
 				</div>
-				{scheduledTransaction.repeats && <RepeatField scheduledTransaction={scheduledTransaction} />}
+				{scheduledTransaction.repeats && (
+					<div>
+						Next Occurance: {scheduledTransaction.repeatValues.length ?
+							formatDate(scheduledTransaction.nextOccurance) :
+							'N/A'
+						}
+						<RepeatField scheduledTransaction={scheduledTransaction} />
+					</div>
+				)}
 			</form>
 		);
 	}
