@@ -33,6 +33,7 @@ class DailyActivity extends Component<Props, {}> {
 			onAdd,
 			onRemove,
 		} = this.props;
+		const today = moment();
 
 		return (
 			<div style={pageStyling}>
@@ -44,7 +45,7 @@ class DailyActivity extends Component<Props, {}> {
 							store={appStore}
 							budgets={
 								appStore.budgets
-									.filter((budget) => budget.lastOccurance)
+									.filter((budget) => today.isSameOrAfter(budget.startDate, 'day'))
 							}
 							onAdd={onAdd}
 							onRemove={onRemove}

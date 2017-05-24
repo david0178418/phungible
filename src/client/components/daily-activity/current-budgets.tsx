@@ -62,17 +62,24 @@ class CurrentBudgets extends Component<Props, {}> {
 						const amount = store.findRemainingBudgetBalance(budget.id);
 						const color = amount.valCents > 0 ? Colors.Money : Colors.Debt;
 						return (
-							<ListItem
-								key={budget.id}
-								primaryText={budget.name}
-								secondaryText={`renews ${moment(budget.nextOccurance).format('MMM D, YYYYY')}`}
-								onTouchTap={() => this.handleAddExpenseFromBudget(budget)}
-								rightIcon={
-									<span style={{color}}>
-										{amount.valFormattedNearestDollar}
-									</span>
-								}
-							/>
+							budget.lastOccurance ?
+								<ListItem
+									key={budget.id}
+									primaryText={budget.name}
+									secondaryText={`renews ${moment(budget.nextOccurance).format('MMM D, YYYYY')}`}
+									onTouchTap={() => this.handleAddExpenseFromBudget(budget)}
+									rightIcon={
+										<span style={{color}}>
+											{amount.valFormattedNearestDollar}
+										</span>
+									}
+								/> :
+								<ListItem
+									key={budget.id}
+									primaryText={budget.name}
+									secondaryText={`starts ${moment(budget.nextOccurance).format('MMM D, YYYYY')}`}
+									rightIcon={<span>N/A</span>}
+								/>
 						);
 					})}
 				</List>
