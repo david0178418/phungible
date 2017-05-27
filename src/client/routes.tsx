@@ -3,8 +3,8 @@ import * as N from 'navigo';
 import * as React from 'react';
 import {Component} from 'react';
 
-import UpdatePrompt from './components/update-prompt';
 import App from './app';
+import UpdatePrompt from './components/update-prompt';
 import Analytics from './shared/analytics';
 
 import {
