@@ -68,7 +68,7 @@
     "react-dom": "^15.4.2",
     "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.1.2",
-    "recharts": "^0.22.3",
+    "recharts": "^1.0.0-alpha.0",
     "secure-ls": "^1.1.0",
     "serializr": "^1.1.9"
   }
