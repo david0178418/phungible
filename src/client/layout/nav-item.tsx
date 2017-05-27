@@ -1,6 +1,7 @@
 import MenuItem from 'material-ui/MenuItem';
+import {inject} from 'mobx-react';
 import * as React from 'react';
-import Link from '../components/shared/link';
+import {Component} from 'react';
 
 const iconProps = {
 	style: {
@@ -15,29 +16,37 @@ type Props = {
 	leftIcon: React.ReactElement<any>;
 	rightIcon?: React.ReactElement<any>;
 	onTouchTap: () => any;
+	router?: Navigo;
 };
 
+@inject('router')
 export default
-function NavItem({
-	children,
-	disabled = false,
-	href,
-	leftIcon,
-	onTouchTap,
-	rightIcon,
-}: Props) {
-	return (
-		<MenuItem
-			disabled={disabled}
-			containerElement={<Link to={`${href}`} />}
-			leftIcon={React.cloneElement(leftIcon, iconProps)}
-			onTouchTap={onTouchTap}
-			innerDivStyle={{
-				padding: '0 42px',
-			}}
-			rightIcon={rightIcon && React.cloneElement(rightIcon, iconProps)}
-		>
-			{children}
-		</MenuItem>
-	);
+class NavItem extends Component<Props, {}> {
+	public render() {
+		const {
+			children,
+			disabled = false,
+			href,
+			leftIcon,
+			rightIcon,
+		} = this.props;
+		return (
+			<MenuItem
+				disabled={disabled}
+				leftIcon={React.cloneElement(leftIcon, iconProps)}
+				onTouchTap={() => this.handleRoute(href)}
+				innerDivStyle={{
+					padding: '0 42px',
+				}}
+				rightIcon={rightIcon && React.cloneElement(rightIcon, iconProps)}
+			>
+				{children}
+			</MenuItem>
+		);
+	}
+
+	private handleRoute(route: string) {
+		this.props.onTouchTap();
+		this.props.router.navigate(route);
+	}
 }
