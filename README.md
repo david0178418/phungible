@@ -8,3 +8,7 @@
 
 ## Running
 Run `npm start` from the root.  Then open `http://localhost:8080`
+
+## Scripts
+
+`npm run build:prod` - Breat production build
