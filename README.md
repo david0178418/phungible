@@ -3,7 +3,6 @@
 ## Requires
 * node v6.10.0+
 
-
 ## Setup
 `npm install` from root directory
 
