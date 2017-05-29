@@ -16,6 +16,7 @@ Run `npm start` from the root.  Then open `http://localhost:8080`
 `npm run test:unit` - Run just unit tests
 `npm run test:unit:watch` - Run unit test while watching for changes
 `npm run test:lint` - Run just linter
+`npm run build:dev` - Run development build
 `npm run build:prod` - Run production build
 `npm run server:static` - Run dev server
 `npm run clean` - Delete build artifacts
