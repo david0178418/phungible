@@ -1,7 +1,7 @@
 # Phungible
 
 ## Requires
-* node v6.9.0+
+* node v6.10.0+
 
 ## Setup
 `npm install` from root directory
