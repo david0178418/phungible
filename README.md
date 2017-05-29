@@ -11,6 +11,7 @@ Run `npm start` from the root.  Then open `http://localhost:8080`
 
 ## Scripts
 
+`npm start` - Run development build, server, and source watch task
 `npm run test` - Run test suite
 `npm run test:unit` - Run just unit tests
 `npm run test:unit:watch` - Run unit test while watching for changes
