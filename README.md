@@ -12,3 +12,4 @@ Run `npm start` from the root.  Then open `http://localhost:8080`
 ## Scripts
 
 `npm run build:prod` - Run production build
+`npm run clean` - Remove build artifacts
