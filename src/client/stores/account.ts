@@ -115,7 +115,7 @@ class Account {
 				}}
 		});
 
-		return total * (this.type === Savings ? 1 : -1);
+		return new Money(total);
 	}
 	public changeOnDate(scheduledTransactions: ScheduledTransaction[], date: Date) {
 		let change = 0;

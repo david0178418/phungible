@@ -252,7 +252,27 @@ class AppStore {
 			return a.date.getTime() - b.date.getTime();
 		}));
 	}
+	public getBalanceAsOfDate(account: Account, date: Date) {
+		const lastBalanceUpdate = account.lastBalanceUpdateAsOf(date);
 
+		if(!lastBalanceUpdate) {
+			return null;
+		}
+
+		const today = new Date();
+
+		if(lastBalanceUpdate.date.isSame(today, 'day')) {
+			return lastBalanceUpdate.amount;
+		}
+
+		const transactions = this.transactions
+			.filter((transaction) => (
+				lastBalanceUpdate.date.isBefore(transaction.date, 'day') &&
+				moment(transaction.date).isSameOrBefore(today, 'day')
+			));
+
+		return account.applyTransactions(transactions, today);
+	}
 	private findFutureTransactionsOnDate(date: Date) {
 		const scheduledTransactions =
 			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));

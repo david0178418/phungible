@@ -84,8 +84,10 @@ class AccountsList extends Component<Props, {}> {
 		const {
 			accounts,
 			onRemove,
+			store,
 		} = this.props;
 		const {deletionCandidate} = this.store;
+		const today = new Date();
 
 		return (
 			<div>
@@ -94,7 +96,7 @@ class AccountsList extends Component<Props, {}> {
 						<ListItem
 							key={account.id}
 							primaryText={`${account.name}`}
-							secondaryText={`Current Balance: $${account.latestBalanceUpdate && account.latestBalanceUpdate.balance.val}`}
+							secondaryText={`Current Balance: ${store.getBalanceAsOfDate(account, today).valFormatted}`}
 							leftIcon={
 								account.type === AccountType.Savings ?
 									<SavingsIcon/> :
