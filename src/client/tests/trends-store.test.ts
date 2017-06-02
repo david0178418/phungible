@@ -282,4 +282,31 @@ describe('Trend Store', () => {
 		expect(data[data.length - 1].Foo).to.equal(-150);
 		expect(data[data.length - 1].Total).to.equal(-150);
 	});
+
+	it('should apply unscheduled transactions', () => {
+		const today = new Date('01/03/2015');
+		const trendsStore = TrendsStore.deserialize({
+			accounts: [AccountFoo100],
+			budgets: [],
+			scheduledTransactions: [],
+			transactions: [{
+				amount: {
+					totalValCents: 100,
+				},
+				_dateString: '01/03/2015',
+				type: 0, // BudgetedExpense
+				fromAccount: AccountFoo100,
+			}],
+		});
+
+		trendsStore.today = today;
+
+		trendsStore.fromDate = new Date('01/03/2015');
+		trendsStore.toDate = new Date('02/04/2015');
+
+		const data = trendsStore.formattedData;
+
+		expect(data[0].Foo).to.equal(0);
+		expect(data[0].Total).to.equal(0);
+	});
 });

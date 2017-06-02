@@ -128,64 +128,75 @@ class TrendsStore {
 			.filter((budget) => budget.lastOccurance)
 			.filter((budget) => !budgetIsExceeded(budget, this.transactions));
 
-		const transactionEffects: TransactionEffect[] = this.transactions
+		const unplannedTransactionEffects: TransactionEffect[] = this.transactions
+			.filter((transaction) => !transaction.generatedFrom)
+			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
+			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
+			.filter((transaction) => transaction);
+
+		const budgetedTransactionEffects: TransactionEffect[] = this.transactions
 			.filter((transaction) => !!transaction.generatedFrom)
 			.filter((transaction) => (
 				!budgets.some((budget) => budget.id === transaction.generatedFrom.id)
 			))
 			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
 			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
-			.filter((transaction) => transaction)
-			.concat(
-				budgets
-					.map((budget) => ({
-						accountId: budget.fromAccount.id,
-						amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
-						date: budget.lastOccurance,
-					}),
-			)
-			.concat(
-				dateMoments
-					.filter((dateMoment) => dateMoment.isAfter(this.today, 'day'))
-					.map((date) => (
-						combinedBudgetsScheduledTransaction
-							.filter((schedTrans) => schedTrans)
-							.filter((schedTrans) => schedTrans.occursOn(date))
-							.map((schedTrans) => {
-								const effects = [];
+			.filter((transaction) => transaction);
 
-								if(
-									schedTrans.fromAccount && (
-										!date.isSame(schedTrans.fromAccount.latestBalanceUpdate.date, 'day') ||
-										!schedTrans.occursOn(schedTrans.fromAccount.latestBalanceUpdate.date)
-									)
-								) {
-									effects.push({
-										accountId: schedTrans.fromAccount.id,
-										amount: schedTrans.amount.valCents * schedTrans.fromAccount.fromBalanceDirection,
-										date: date.toDate(),
-									});
-								}
+		const pendingBudgetEffects: TransactionEffect[] = budgets
+				.map((budget) => ({
+				accountId: budget.fromAccount.id,
+				amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
+				date: budget.lastOccurance,
+			}));
 
-								if(
-									schedTrans.towardAccount && (
-										!date.isSame(schedTrans.towardAccount.latestBalanceUpdate.date, 'day') ||
-										!schedTrans.occursOn(schedTrans.towardAccount.latestBalanceUpdate.date)
-									)
-								) {
-									effects.push({
-										accountId: schedTrans.towardAccount.id,
-										amount: schedTrans.amount.valCents * schedTrans.towardAccount.towardBalanceDirection,
-										date: date.toDate(),
-									});
-								}
+		const pendingScheduledTransactionEffects: TransactionEffect[] = dateMoments
+			.filter((dateMoment) => dateMoment.isAfter(this.today, 'day'))
+			.map((date) => (
+				combinedBudgetsScheduledTransaction
+					.filter((schedTrans) => schedTrans)
+					.filter((schedTrans) => schedTrans.occursOn(date))
+					.map((schedTrans) => {
+						const effects = [];
 
-								return effects;
-							})
-							.reduce((val, effects) => val.concat(effects), []	)
-					))
-					.reduce((val, effects) => val.concat(effects), []),
-			));
+						if(
+							schedTrans.fromAccount && (
+								!date.isSame(schedTrans.fromAccount.latestBalanceUpdate.date, 'day') ||
+								!schedTrans.occursOn(schedTrans.fromAccount.latestBalanceUpdate.date)
+							)
+						) {
+							effects.push({
+								accountId: schedTrans.fromAccount.id,
+								amount: schedTrans.amount.valCents * schedTrans.fromAccount.fromBalanceDirection,
+								date: date.toDate(),
+							});
+						}
+
+						if(
+							schedTrans.towardAccount && (
+								!date.isSame(schedTrans.towardAccount.latestBalanceUpdate.date, 'day') ||
+								!schedTrans.occursOn(schedTrans.towardAccount.latestBalanceUpdate.date)
+							)
+						) {
+							effects.push({
+								accountId: schedTrans.towardAccount.id,
+								amount: schedTrans.amount.valCents * schedTrans.towardAccount.towardBalanceDirection,
+								date: date.toDate(),
+							});
+						}
+
+						return effects;
+					})
+					.reduce((val, effects) => val.concat(effects), []	)
+			))
+			.reduce((val, effects) => val.concat(effects), []);
+
+		const transactionEffects = [].concat(
+			unplannedTransactionEffects,
+			budgetedTransactionEffects,
+			pendingBudgetEffects,
+			pendingScheduledTransactionEffects,
+		);
 
 		return dateMoments
 			.map((dateMoment, index, arr) => {
