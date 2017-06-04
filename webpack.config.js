@@ -1,9 +1,75 @@
 const OfflinePlugin = require('offline-plugin');
 const path = require('path');
 const webpack = require('webpack');
+const VERSION = `"${require('./package.json').version}"`;
+
+const isProd = process.env.NODE_ENV === 'production';
+let plugins = [];
+let devtool;
+
+
+if(isProd) {
+	plugins.push(
+		new webpack.DefinePlugin({
+			VERSION,
+			'process.env': {
+				NODE_ENV: '"production"'
+			}
+		})
+	);
+	plugins.push(
+		new webpack.optimize.UglifyJsPlugin({
+			compress: {
+				comparisons: true,
+				dead_code: true,
+				screw_ie8: true,
+				unsafe: true,
+				unsafe_comps: true,
+			},
+			mangle : {
+				screw_ie8 : true,
+			},
+			output: {
+				screw_ie8 : true,
+				comments: false,
+			},
+			sourceMap: false,
+			warnings: false,
+		})
+	);
+} else {
+	devtool = 'source-map'
+	plugins.push(
+		new webpack.DefinePlugin({
+			VERSION,
+			'process.env': {
+				NODE_ENV: '"production"'
+			}
+		})
+	);
+}
+
+plugins.push(
+	new OfflinePlugin({
+		externals: [
+			'/',
+			'/manifest.json',
+			'/images/icons/favicon.ico',
+			'/images/icons/icon-192x192.png',
+		],
+		ServiceWorker: {
+			events: true,
+			output: '../service-worker.js',
+		},
+		AppCache: {
+			directory: '../appcache/'
+		}
+	})
+);
 
 module.exports = {
-	devtool: 'source-map',
+	plugins,
+	devtool,
 	entry: './src/client/index.ts',
 	module: {
 		loaders: [
@@ -38,21 +104,4 @@ module.exports = {
 			'.tsx',
 		],
 	},
-	plugins: [
-		new OfflinePlugin({
-			externals: [
-				'/',
-				'/manifest.json',
-				'/images/icons/favicon.ico',
-				'/images/icons/icon-192x192.png',
-			],
-			ServiceWorker: {
-				events: true,
-				output: '../service-worker.js',
-			},
-			AppCache: {
-				directory: '../appcache/'
-			}
-		})
-	]
 };

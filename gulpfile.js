@@ -7,8 +7,6 @@ const ts = require('gulp-typescript');
 const tsProject = ts.createProject('./src/server/tsconfig.json');
 const webpack = require('gulp-webpack');
 const webpackConfig = require('./webpack.config');
-const webpackProdConfig = require('./webpack.config.prod');
-
 
 gulp.task('build:client', buildClientTask);
 gulp.task('build:client:watch', buildClientWatchTask);
@@ -43,7 +41,7 @@ function buildClientWatchTask() {
 }
 function buildProdClientTask() {
 	return gulp.src('./src/client/index.ts')
-		.pipe(webpack(webpackProdConfig))
+		.pipe(webpack(webpackConfig))
 		.pipe(gulp.dest('build/client/js/'));
 }
 

@@ -1,3 +1,4 @@
+declare const VERSION: string;
 
 declare module 'recharts' {
 	export const Area: any;
