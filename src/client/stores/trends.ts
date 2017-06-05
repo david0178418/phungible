@@ -124,7 +124,7 @@ class TrendsStore {
 		const dateMoments = dateRange(this.fromDate, this.toDate);
 		const accounts = this.accounts;
 		const combinedBudgetsScheduledTransaction = this.budgets.concat(this.scheduledTransactions);
-		const budgets = this.budgets
+		const unbrokenBudgets = this.budgets
 			.filter((budget) => budget.lastOccurance)
 			.filter((budget) => !budgetIsExceeded(budget, this.transactions));
 
@@ -137,13 +137,16 @@ class TrendsStore {
 		const budgetedTransactionEffects: TransactionEffect[] = this.transactions
 			.filter((transaction) => !!transaction.generatedFrom)
 			.filter((transaction) => (
-				!budgets.some((budget) => budget.id === transaction.generatedFrom.id)
+				!unbrokenBudgets.some((budget) => {
+					return budget.id === transaction.generatedFrom.id &&
+						moment(transaction.date).isBetween(budget.lastOccurance, budget.nextOccurance, 'days', '[)');
+				})
 			))
 			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
 			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
 			.filter((transaction) => transaction);
 
-		const pendingBudgetEffects: TransactionEffect[] = budgets
+		const pendingBudgetEffects: TransactionEffect[] = unbrokenBudgets
 				.map((budget) => ({
 				accountId: budget.fromAccount.id,
 				amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
@@ -234,11 +237,13 @@ class TrendsStore {
 function budgetIsExceeded(budget: ScheduledTransaction, transactions: Transaction[]) {
 	const startDate = moment(budget.lastOccurance);
 
-	return transactions
+	const broken = transactions
 		.filter((transaction) => transaction.generatedFrom)
 		.filter((transaction) => transaction.generatedFrom.id === budget.id)
 		.filter((transaction) => startDate.isSameOrBefore(transaction.date, 'day'))
 		.reduce((val, transaction) => val + transaction.amount.valCents, 0) > budget.amount.valCents;
+
+	return broken;
 }
 
 function transactionEffectsOnAccountDate(account: Account, date: Moment, transactionEffects: TransactionEffect[]) {
