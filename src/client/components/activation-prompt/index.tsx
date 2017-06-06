@@ -77,11 +77,18 @@ class ActivationPrompt extends Component<Props, {}> {
 			>
 				<TextField
 					disabled={this.store.busy}
-					hintText="Enter your Phungible beta code"
+					hintText="Enter your beta code"
 					errorText={invalid ? 'Code is not valid' : ''}
 					value={code}
 					onChange={(e, val) => this.handleCodeUpdate(val)}
 					onKeyUp={(e) => this.handleKeyUp(e)}
+					style={{
+						maxWidth: '100%',
+					}}
+					hintStyle={{
+						textAlign: 'center',
+						width: '100%',
+					}}
 					inputStyle={{
 						textAlign: 'center',
 					}}
