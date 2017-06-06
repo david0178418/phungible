@@ -1,6 +1,6 @@
 {
   "name": "phungible",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "description": "Phungible budget app",
   "engines": {
     "node": ">=6.10.0"
@@ -69,6 +69,7 @@
     "react-transition-group": "^1.1.2",
     "recharts": "^1.0.0-alpha.0",
     "secure-ls": "^1.1.0",
-    "serializr": "^1.1.9"
+    "serializr": "^1.1.9",
+    "whatwg-fetch": "^2.0.3"
   }
 }

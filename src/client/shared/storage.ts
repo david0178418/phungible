@@ -8,6 +8,11 @@ class Storage {
 		return !!localStorage.getItem('encrypted');
 	}
 
+	public static isActivated() {
+		// read directly since we use this to determine encryption status
+		return Storage.isEncrypted() || localStorage.getItem('activated');
+	}
+
 	public static initStorage(callback: (success: boolean) => void, key?: string) {
 		if(Storage.isEncrypted()) {
 			if(!key) {
@@ -31,6 +36,10 @@ class Storage {
 		Storage.persist();
 
 		(window as any).Storage = Storage;
+	}
+
+	public static actvate() {
+		localStorage.setItem('activated', 'true');
 	}
 
 	public static clearItem(key: string) {

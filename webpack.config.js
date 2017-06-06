@@ -7,11 +7,11 @@ const isProd = process.env.NODE_ENV === 'production';
 let plugins = [];
 let devtool;
 
-
 if(isProd) {
 	plugins.push(
 		new webpack.DefinePlugin({
 			VERSION,
+			API_URI: '"/api"',
 			'process.env': {
 				NODE_ENV: '"production"'
 			}
@@ -42,6 +42,7 @@ if(isProd) {
 	plugins.push(
 		new webpack.DefinePlugin({
 			VERSION,
+			API_URI: '"http://localhost:8081"',
 			'process.env': {
 				NODE_ENV: '"production"'
 			}

@@ -1,3 +1,4 @@
+declare const API_URI: string;
 declare const VERSION: string;
 
 declare module 'recharts' {
