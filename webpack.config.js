@@ -4,7 +4,9 @@ const webpack = require('webpack');
 const VERSION = `"${require('./package.json').version}"`;
 
 const isProd = process.env.NODE_ENV === 'production';
-let plugins = [];
+let plugins = [
+	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+];
 let devtool;
 
 if(isProd) {
