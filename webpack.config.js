@@ -75,24 +75,22 @@ module.exports = {
 	devtool,
 	entry: './src/client/index.ts',
 	module: {
-		loaders: [
+		rules: [
 			{
-				include: [
-					path.resolve(__dirname, 'src/client/'),
-				],
-				loader: 'awesome-typescript',
-				query: {
-					configFileName: './src/client/tsconfig.json',
-				},
 				test: /\.tsx?$/,
+				use: ['ts-loader'],
+				exclude: /node_modules/
 			},
-		],
-		preLoaders: [
-			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
 			{
-				loader: 'source-map-loader',
-				test: /\.js$/,
+				enforce: 'pre',
+				test: /\.ts$/,
+				loader: 'tslint-loader'
 			},
+			{
+				test: /\.js$/,
+				use: ["source-map-loader"],
+				enforce: "pre"
+			}
 		],
 	},
 	output: {
@@ -101,7 +99,6 @@ module.exports = {
 	},
 	resolve: {
 		extensions: [
-			'',
 			'.js',
 			'.ts',
 			'.tsx',
