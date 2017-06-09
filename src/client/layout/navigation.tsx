@@ -125,6 +125,7 @@ class Navigation extends React.Component<Props, any> {
 					containerClassName="app-title"
 					docked={false}
 					open={this.state.isOpen}
+					onRequestChange={(isOpen) => this.handleDrawerStateUpdate(isOpen)}
 				>
 					<AppBar iconElementLeft={<span/>} title="Phungible"/>
 					<NavItem
