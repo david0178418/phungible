@@ -1,4 +1,5 @@
 import CreditCardIcon from 'material-ui/svg-icons/action/credit-card';
+import AddCricleOutlineIcon from 'material-ui/svg-icons/content/add-circle-outline';
 import MoneyIcon from 'material-ui/svg-icons/editor/attach-money';
 import TrendingDownIcon from 'material-ui/svg-icons/navigation/arrow-downward';
 import TrendingUpIcon from 'material-ui/svg-icons/navigation/arrow-upward';
@@ -19,6 +20,13 @@ function Icon({type}: IconProps) {
 
 interface SvgIconProps {
 	style?: any;
+}
+
+export
+function AddIcon({style}: SvgIconProps) {
+	return (
+		<AddCricleOutlineIcon style={style} />
+	);
 }
 
 export

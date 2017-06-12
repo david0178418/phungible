@@ -7,15 +7,18 @@ import {observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
-import {DebtIcon, SavingsIcon} from '../../shared/shared-components';
+import {AddIcon, DebtIcon, SavingsIcon} from '../../shared/shared-components';
 import Account, {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
 	accounts: Account[];
-	onRemove: (account: Account) => void;
+	showCreate?: boolean;
 	store: AppStore;
+	onEdit?: (account: Account) => void;
+	onOpenCreate?: () => void;
+	onRemove: (account: Account) => void;
 };
 
 class AcountsStore {
@@ -76,14 +79,12 @@ class AccountsList extends Component<Props, {}> {
 		this.store = new AcountsStore(props.store);
 	}
 
-	public removeAccount(account: Account) {
-		this.props.store.removeAccount(account);
-	}
-
 	public render() {
 		const {
 			accounts,
 			onRemove,
+			onOpenCreate,
+			showCreate,
 			store,
 		} = this.props;
 		const {deletionCandidate} = this.store;
@@ -92,6 +93,19 @@ class AccountsList extends Component<Props, {}> {
 		return (
 			<div>
 				<List>
+					{showCreate && (
+						<ListItem
+							rightIcon={
+								<AddIcon/>
+							}
+							onTouchTap={onOpenCreate}
+							primaryText="Create Account"
+						/>
+					) || (
+						<ListItem
+							primaryText="No accounts available"
+						/>
+					)}
 					{accounts.map((account) => (
 						<ListItem
 							key={account.id}
@@ -102,14 +116,14 @@ class AccountsList extends Component<Props, {}> {
 									<SavingsIcon/> :
 									<DebtIcon/>
 							}
-							rightIconButton={EditRemoveMenu<Account>('account', account, () => this.store.confirmRemoval(account))}
+							rightIconButton={EditRemoveMenu<Account>(
+								'account',
+								account,
+								() => this.store.confirmRemoval(account),
+								() => this.props.onEdit(account),
+							)}
 						/>
 					))}
-					{!accounts.length && (
-						<ListItem
-							primaryText="No accounts available"
-						/>
-					)}
 				</List>
 				<Dialog
 					modal
