@@ -60,14 +60,14 @@
     "moment-recur": "^1.0.5",
     "navigo": "^5.2.0",
     "offline-plugin": "^4.7.0",
-    "react": "^15.4.2",
+    "react": "^15.6.0",
     "react-addons-transition-group": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react-dom": "^15.6.0",
     "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.2.0",
     "recharts": "^1.0.0-alpha.0",
     "secure-ls": "^1.1.0",
-    "serializr": "^1.1.9",
+    "serializr": "^1.1.12",
     "whatwg-fetch": "^2.0.3"
   }
 }
