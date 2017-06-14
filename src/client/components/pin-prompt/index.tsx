@@ -5,6 +5,8 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
+import {dialogStyles} from '../../shared/styles';
+
 interface PinProps {
 	length: number;
 }
@@ -103,16 +105,21 @@ class PinPrompt extends Component<Props, {}> {
 			);
 		}
 
+		const customDialogStyles = {
+			className: dialogStyles.className,
+			// tslint:disable-next-line:prefer-object-spread
+			contentStyle: Object.assign({
+				transform: 'none',
+			}, dialogStyles.contentStyle),
+		};
+
 		return (
 			<Dialog
 				modal
+				{...customDialogStyles}
 				open={open}
 				title={title ? title : 'Enter your pin'}
 				actions={actions}
-				contentStyle={{
-					transform: 'none',
-					width: '90%',
-				}}
 				bodyStyle={{
 					minHeight: 330,
 				}}

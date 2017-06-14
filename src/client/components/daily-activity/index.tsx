@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import {Component} from 'react';
 
-import {pageStyling} from '../../shared/styles';
+import {pageStyle} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 import CurrentBudgets from './current-budgets';
@@ -36,7 +36,7 @@ class DailyActivity extends Component<Props, {}> {
 		const today = moment();
 
 		return (
-			<div style={pageStyling}>
+			<div style={pageStyle}>
 				<Tabs contentContainerStyle={{
 					marginTop: 15,
 				}}>

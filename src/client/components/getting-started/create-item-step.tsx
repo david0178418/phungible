@@ -6,6 +6,7 @@ import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 
 import ItemTypeName from 'item-type-name';
+import {dialogStyles} from '../../shared/styles';
 import Account from '../../stores/account';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
@@ -69,13 +70,7 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 					store={appStore}
 				/>
 				<Dialog
-					style={{
-						paddingTop: 0,
-					}}
-					contentStyle={{
-						maxWidth: 750,
-						width: '100%',
-					}}
+					{...dialogStyles}
 					autoScrollBodyContent
 					open={this.store.itemIsOpen}
 					title={`Create ${typeName}`}

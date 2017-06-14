@@ -6,6 +6,14 @@ export const floatingActionButtonStyle = {
 } as any;
 // TODO Why is "any" needed here?
 
-export const pageStyling = {
+export const pageStyle = {
 	padding: 15,
+} as any;
+
+export const dialogStyles = {
+	className: 'dialog-vert-resize-fix',
+	contentStyle: {
+		maxWidth: 750,
+		width: '100%',
+	},
 } as any;

@@ -5,13 +5,11 @@ import ListItem from 'material-ui/List/ListItem';
 import * as React from 'react';
 import {Component} from 'react';
 
+import {dialogStyles} from '../../shared/styles';
+
 interface State {
 	openContent: string;
 }
-
-const customContentStyle = {
-	width: '100%',
-};
 
 export default
 class Help extends Component<{}, State> {
@@ -67,7 +65,7 @@ class Help extends Component<{}, State> {
 				</List>
 				<Dialog
 					autoScrollBodyContent
-					contentStyle={customContentStyle}
+					{...dialogStyles}
 					open={!!this.state.openContent}
 					onRequestClose={() => this.handleClose()}
 					actions={[

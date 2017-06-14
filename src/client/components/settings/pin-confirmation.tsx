@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
+import {dialogStyles} from '../../shared/styles';
 import PinPrompt from '../pin-prompt';
 
 interface Props {
@@ -92,6 +93,7 @@ class PinConfirmation extends Component<Props, {}> {
 				/>
 				<Dialog
 					modal
+					{...dialogStyles}
 					open={this.store.entryFailed && open}
 					title="Error"
 					actions={[

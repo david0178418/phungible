@@ -103,6 +103,10 @@ const Styles = `
 	.page-content-leave-active {
 		opacity: 0;
 	}
+
+	.dialog-vert-resize-fix {
+		padding-top: 0 !important;
+	}
 `;
 
 @observer

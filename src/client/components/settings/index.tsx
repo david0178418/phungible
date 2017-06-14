@@ -13,6 +13,7 @@ import {Component} from 'react';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import ClearDataPage from '../../pages/clear-data-page';
 import Storage from '../../shared/storage';
+import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import PinConfirmation from './pin-confirmation';
 
@@ -91,6 +92,7 @@ class Settings extends Component<Props, {}> {
 					onTouchTap={() => this.handleOpenAbout()}
 				>
 					<Dialog
+						{...dialogStyles}
 						open={this.store.getAboutIsOpen()}
 						onRequestClose={() => this.handleCloseAbout()}
 						actions={[
@@ -116,6 +118,7 @@ class Settings extends Component<Props, {}> {
 					rightIcon={<BugReport/>}
 				>
 					<Dialog
+						{...dialogStyles}
 						autoScrollBodyContent
 						open={showDebug}
 						onRequestClose={() => this.store.closeDebug()}
