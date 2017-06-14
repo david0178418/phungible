@@ -1,29 +1,43 @@
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 
+import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
-
-class State {
-}
+import ScheduledTransactionEdit from '../scheduled-transaction-edit';
+import ScheduledTransactionsList from '../scheduled-transactions-list';
+import CreateItemStep from './create-item-step';
 
 interface Props {
-	scheduledTransactions: ScheduledTransaction[];
+	items: ScheduledTransaction[];
+	appStore?: AppStore;
 }
 
+@inject('appStore') @observer
 export default
-class CreateScheduledTransactionsStep extends React.Component<Props, State> {
-	private store: State;
+class CreateAccountsStep extends React.Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new State();
 	}
 
 	public render() {
 		const {
-		} = this.store;
+			items,
+			appStore,
+		} = this.props;
 		return (
 			<div>
-				Scheduled Transations {this.props.scheduledTransactions.length}
+				<CreateItemStep
+					appStore={appStore}
+					items={items}
+					typeName="Recurring Transaction"
+					modelClass={ScheduledTransaction}
+					listComponent={ScheduledTransactionsList}
+					editComponent={ScheduledTransactionEdit}
+					editComponentProps={{
+						accounts: appStore.accounts,
+					}}
+				/>
 			</div>
 		);
 	}

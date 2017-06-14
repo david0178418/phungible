@@ -7,6 +7,7 @@ import * as React from 'react';
 import {Component} from 'react';
 
 import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
+import {AddIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import {TransactionType} from '../../stores/transaction';
@@ -14,7 +15,11 @@ import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
 	store: AppStore;
-	scheduledTransactions: ScheduledTransaction[];
+	showCreate?: boolean;
+	isBudget?: boolean;
+	items: ScheduledTransaction[];
+	onEdit?: (scheduledTransaction: ScheduledTransaction) => void;
+	onOpenCreate?: () => void;
 	onRemove: (scheduledTransaction: ScheduledTransaction) => void;
 };
 
@@ -58,7 +63,6 @@ class ScheduledTransactionsStore {
 @observer
 export default
 class ScheduledTransactions extends Component<Props, {}> {
-	public static path = '/scheduled-transactions/';
 	private store: ScheduledTransactionsStore;
 
 	constructor(props: Props) {
@@ -71,11 +75,31 @@ class ScheduledTransactions extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {onRemove, scheduledTransactions} = this.props;
+		const {
+			onRemove,
+			items,
+			isBudget,
+			showCreate,
+			onOpenCreate,
+		} = this.props;
 
 		return (
 			<List>
-				{scheduledTransactions.map((scheduledTransaction) => (
+				{showCreate && (
+					<ListItem
+						rightIcon={
+							<AddIcon/>
+						}
+						onTouchTap={onOpenCreate}
+						primaryText={`Create ${isBudget ? 'Budget' : 'Recurring Transaction'}`}
+					/>
+				)}
+				{!showCreate && !items.length && (
+					<ListItem
+						primaryText={`No ${isBudget ? 'budget' : 'recurring transaction'} available`}
+					/>
+				)}
+				{items.map((scheduledTransaction) => (
 					<ListItem
 						key={scheduledTransaction.id}
 						primaryText={`${scheduledTransaction.name}`}
@@ -88,11 +112,6 @@ class ScheduledTransactions extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>('scheduled-transaction', scheduledTransaction, onRemove)}
 					/>
 				))}
-				{!scheduledTransactions.length && (
-					<ListItem
-						primaryText="No recurring transactions available"
-					/>
-				)}
 			</List>
 		);
 	}

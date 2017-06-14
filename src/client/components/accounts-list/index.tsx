@@ -13,7 +13,7 @@ import AppStore from '../../stores/app';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
-	accounts: Account[];
+	items: Account[];
 	showCreate?: boolean;
 	store: AppStore;
 	onEdit?: (account: Account) => void;
@@ -81,7 +81,7 @@ class AccountsList extends Component<Props, {}> {
 
 	public render() {
 		const {
-			accounts,
+			items,
 			onRemove,
 			onOpenCreate,
 			showCreate,
@@ -101,12 +101,13 @@ class AccountsList extends Component<Props, {}> {
 							onTouchTap={onOpenCreate}
 							primaryText="Create Account"
 						/>
-					) || (
+					)}
+					{!showCreate && !items.length && (
 						<ListItem
 							primaryText="No accounts available"
 						/>
 					)}
-					{accounts.map((account) => (
+					{items.map((account) => (
 						<ListItem
 							key={account.id}
 							primaryText={`${account.name}`}

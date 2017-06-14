@@ -21,7 +21,7 @@ import RepeatField from './repeat-field';
 type Props = {
 	accounts: Account[];
 	isBudget?: boolean;
-	scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
+	model: ScheduledTransaction | ScheduledTransactionFacade;
 	onSubmit(): void;
 };
 
@@ -36,38 +36,38 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		const {
 			accounts,
 			isBudget,
-			scheduledTransaction,
+			model,
 			onSubmit,
 		} = this.props;
-		const isFacade = scheduledTransaction instanceof ScheduledTransactionFacade;
-		const selectedTowardAccountId = scheduledTransaction.towardAccount && scheduledTransaction.towardAccount.id || null;
-		const selectedFromAccountId = scheduledTransaction.fromAccount && scheduledTransaction.fromAccount.id || null;
+		const isFacade = model instanceof ScheduledTransactionFacade;
+		const selectedTowardAccountId = model.towardAccount && model.towardAccount.id || null;
+		const selectedFromAccountId = model.fromAccount && model.fromAccount.id || null;
 
 		// TODO Simplify this to always use the facade
 		return (
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
 					{isFacade && <NameAmountPartial
-						transactionPartials={(scheduledTransaction as ScheduledTransactionFacade).transactionPartials}
-						onAddEntry={() => (scheduledTransaction as ScheduledTransactionFacade).addPartial()}
-						onRemoveEntry={(id) => (scheduledTransaction as ScheduledTransactionFacade).removePartial(id)}
+						transactionPartials={(model as ScheduledTransactionFacade).transactionPartials}
+						onAddEntry={() => (model as ScheduledTransactionFacade).addPartial()}
+						onRemoveEntry={(id) => (model as ScheduledTransactionFacade).removePartial(id)}
 						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
 					/> || (
 						<div style={{
 							display: 'flex',
 						}}>
 							<TextField
-								errorText={scheduledTransaction.name ? '' : 'Name is required'}
+								errorText={model.name ? '' : 'Name is required'}
 								floatingLabelText="Name"
-								value={scheduledTransaction.name}
-								onChange={((ev: any, value: any) => this.handleUpdateName(value, scheduledTransaction)) as any}
+								value={model.name}
+								onChange={((ev: any, value: any) => this.handleUpdateName(value, model)) as any}
 							/>
 							{' '}
 							<MoneyEdit
 								style={{
 									marginLeft: 10,
 								}}
-								money={scheduledTransaction.amount}
+								money={model.amount}
 							/>
 						</div>
 					)}
@@ -85,7 +85,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 								width: 40,
 							}}
 						>
-							{scheduledTransaction.type === TransactionType.Income ?
+							{model.type === TransactionType.Income ?
 								<IncomeIcon
 									style={{
 										bottom: 13,
@@ -103,8 +103,8 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						<SelectField
 							fullWidth
 							floatingLabelText="Type"
-							value={scheduledTransaction.type}
-							onChange={(ev, index, value) => this.handleUpdateType(value, scheduledTransaction)}
+							value={model.type}
+							onChange={(ev, index, value) => this.handleUpdateType(value, model)}
 						>
 							<MenuItem
 								leftIcon={<IncomeIcon/>}
@@ -127,8 +127,8 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						hintText="Portrait Dialog"
 						formatDate={(d) => formatDate(d)}
 						firstDayOfWeek={0}
-						onChange={(ev, date) => this.handleUpdateStartDate(date, scheduledTransaction)}
-						value={scheduledTransaction.startDate}
+						onChange={(ev, date) => this.handleUpdateStartDate(date, model)}
+						value={model.startDate}
 					/>
 				</div>
 				{!!accounts.length && (
@@ -137,7 +137,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							errorText={this.fromAccountErrText()}
 							accounts={accounts}
 							label="From Account"
-							onChange={(value) => this.handleUpdateFromAccount(value, scheduledTransaction)}
+							onChange={(value) => this.handleUpdateFromAccount(value, model)}
 							selectedAccountId={selectedFromAccountId}
 						/>
 						{!isBudget && (
@@ -145,7 +145,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 								errorText={this.towardAccountErrText()}
 								accounts={accounts}
 								label="Towards Account"
-								onChange={(value) => this.handleUpdateTowardAccount(value, scheduledTransaction)}
+								onChange={(value) => this.handleUpdateTowardAccount(value, model)}
 								selectedAccountId={selectedTowardAccountId}
 							/>
 						)}
@@ -153,19 +153,19 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 				)}
 				<div style={{display: 'inline-block'}}>
 					<Checkbox
-						checked={scheduledTransaction.repeats}
+						checked={model.repeats}
 						label="Repeats"
-						onClick={() => this.handleToggleRepeats(scheduledTransaction)}
+						onClick={() => this.handleToggleRepeats(model)}
 						type="checkbox"
 					/>
 				</div>
-				{scheduledTransaction.repeats && (
+				{model.repeats && (
 					<div>
-						Next Occurance: {scheduledTransaction.repeatValues.length ?
-							formatDate(scheduledTransaction.nextOccurance) :
+						Next Occurance: {model.repeatValues.length ?
+							formatDate(model.nextOccurance) :
 							'N/A'
 						}
-						<RepeatField scheduledTransaction={scheduledTransaction} />
+						<RepeatField scheduledTransaction={model} />
 					</div>
 				)}
 			</form>
@@ -174,7 +174,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 
 	private fromAccountErrText() {
 		let errorText = '';
-		const scheduledTransaction = this.props.scheduledTransaction;
+		const scheduledTransaction = this.props.model;
 
 		if(
 			!scheduledTransaction.fromAccount &&
@@ -188,7 +188,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 
 	private towardAccountErrText() {
 		let errorText = '';
-		const scheduledTransaction = this.props.scheduledTransaction;
+		const scheduledTransaction = this.props.model;
 
 		if(
 			!scheduledTransaction.towardAccount &&

@@ -90,7 +90,7 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 					<ScheduledTransactionEdit
 						accounts={this.store.accounts}
 						isBudget
-						scheduledTransaction={this.store.budget}
+						model={this.store.budget}
 						onSubmit={() => this.handleSaveBudget()}
 					/>
 					<FloatingActionButton

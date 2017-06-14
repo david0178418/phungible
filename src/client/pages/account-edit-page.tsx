@@ -77,7 +77,7 @@ class AccountEditPage extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<AccountEdit
-						account={account}
+						model={account}
 						onSubmit={() => this.handleSaveAccount()}
 					/>
 					<FloatingActionButton

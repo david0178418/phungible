@@ -11,7 +11,7 @@ import EditRemoveMenu from '../shared/edit-remove-menu';
 
 type Props = {
 	store: AppStore;
-	transactions: Transaction[];
+	items: Transaction[];
 	onRemove: (transaction: Transaction) => void;
 };
 
@@ -62,10 +62,10 @@ class TransactionsList extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {onRemove, transactions} = this.props;
+		const {onRemove, items} = this.props;
 		return (
 			<List>
-				{transactions.map((transaction) => (
+				{items.map((transaction) => (
 					<ListItem
 						key={transaction.id}
 						primaryText={`${transaction.amount.valFormatted}`}
@@ -73,7 +73,7 @@ class TransactionsList extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
 					/>
 				))}
-				{!transactions.length && (
+				{!items.length && (
 					<ListItem
 						primaryText="No transactions available"
 					/>

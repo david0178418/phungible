@@ -84,7 +84,7 @@ class GettingStarted extends React.Component<Props, State> {
 						<StepLabel>Add Accounts</StepLabel>
 						<StepContent>
 							<CreateAccountsStep
-								accounts={accounts}
+								items={accounts}
 							/>
 						</StepContent>
 					</Step>
@@ -92,7 +92,7 @@ class GettingStarted extends React.Component<Props, State> {
 						<StepLabel>Add Recurring Transactions</StepLabel>
 						<StepContent>
 							<CreateScheduledTransactionsStep
-								scheduledTransactions={scheduledTransactions}
+								items={scheduledTransactions}
 							/>
 						</StepContent>
 					</Step>
@@ -100,7 +100,7 @@ class GettingStarted extends React.Component<Props, State> {
 						<StepLabel>Add Budgets</StepLabel>
 						<StepContent>
 							<CreateBudgetsStep
-								budgets={budgets}
+								items={budgets}
 							/>
 						</StepContent>
 					</Step>

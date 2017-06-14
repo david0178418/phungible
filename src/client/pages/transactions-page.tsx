@@ -33,7 +33,7 @@ class Transactions extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<TransactionsList
-						transactions={store.transactions}
+						items={store.transactions}
 						onRemove={(transaction: Transaction) => this.props.appStore.removeTransaction(transaction)}
 						store={store}
 					/>
