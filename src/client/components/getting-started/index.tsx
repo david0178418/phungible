@@ -54,10 +54,18 @@ interface Props {
 export default
 class GettingStarted extends React.Component<Props, State> {
 	private store: State;
+	private completedSteps: Array<() => boolean>;
 
 	constructor(props: Props) {
 		super(props);
 		this.store = new State();
+		this.completedSteps = [
+			() => true, // intro
+			() => !!props.appStore.accounts.length,
+			() => !!props.appStore.scheduledTransactions.length,
+			() => !!props.appStore.budgets.length,
+			() => true, // done
+		];
 	}
 
 	public render() {
@@ -119,6 +127,7 @@ class GettingStarted extends React.Component<Props, State> {
 					/>
 					<RaisedButton
 						primary
+						disabled={!this.stepComplete()}
 						label={lastStep ? 'Finish' : 'Next'}
 						onTouchTap={() => this.handleNext()}
 					/>
@@ -145,5 +154,9 @@ class GettingStarted extends React.Component<Props, State> {
 
 	private handlePrev() {
 		this.store.prevStep();
+	}
+
+	private stepComplete() {
+		return this.completedSteps[this.store.stepIndex]();
 	}
 }
