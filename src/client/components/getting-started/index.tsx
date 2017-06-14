@@ -1,4 +1,5 @@
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
 	Step,
@@ -119,11 +120,24 @@ class GettingStarted extends React.Component<Props, State> {
 						</StepContent>
 					</Step>
 				</Stepper>
-				<div>
+				<Paper
+					style={{
+						bottom: 0,
+						left: 0,
+						padding: 10,
+						position: 'fixed',
+						width: '100%',
+						zIndex: 2,
+					}}
+					transitionEnabled={false}
+				>
 					<FlatButton
 						label="Back"
 						disabled={firstStep}
 						onTouchTap={() => this.handlePrev()}
+						style={{
+							marginRight: 10,
+						}}
 					/>
 					<RaisedButton
 						primary
@@ -131,11 +145,13 @@ class GettingStarted extends React.Component<Props, State> {
 						label={lastStep ? 'Finish' : 'Next'}
 						onTouchTap={() => this.handleNext()}
 					/>
-					<FlatButton
-						label="skip"
-						onTouchTap={() => this.handleFinish()}
-					/>
-				</div>
+					{!lastStep && (
+						<FlatButton
+							label="skip"
+							onTouchTap={() => this.handleFinish()}
+						/>
+					)}
+				</Paper>
 			</div>
 		);
 	}
