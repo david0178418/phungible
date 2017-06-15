@@ -1,6 +1,6 @@
 {
   "name": "phungible",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Phungible budget app",
   "engines": {
     "node": ">=6.10.1"
@@ -46,7 +46,7 @@
     "tslint": "^5.0.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.2.1",
-    "webpack": "^3.0.0-rc.1"
+    "webpack": "^2.6.1"
   },
   "dependencies": {
     "accounting": "^0.4.1",
@@ -60,9 +60,9 @@
     "moment-recur": "^1.0.5",
     "navigo": "^5.2.0",
     "offline-plugin": "^4.7.0",
-    "react": "^15.6.0",
-    "react-addons-transition-group": "^15.4.2",
-    "react-dom": "^15.6.0",
+    "react": "^15.6.1",
+    "react-addons-transition-group": "^15.6.0",
+    "react-dom": "^15.6.1",
     "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.2.0",
     "recharts": "^1.0.0-alpha.0",
