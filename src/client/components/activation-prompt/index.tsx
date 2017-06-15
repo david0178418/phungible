@@ -7,6 +7,7 @@ import * as React from 'react';
 import {Component, KeyboardEvent} from 'react';
 
 import {activate} from '../../shared/api';
+import {dialogStyles} from '../../shared/styles';
 
 interface Props {
 	open: boolean;
@@ -59,6 +60,7 @@ class ActivationPrompt extends Component<Props, {}> {
 		return (
 			<Dialog
 				modal
+				{...dialogStyles}
 				open={open}
 				title="Welcome to the Phungible Closed Beta"
 				titleStyle={{
@@ -71,9 +73,6 @@ class ActivationPrompt extends Component<Props, {}> {
 						onTouchTap={() => this.handleSubmit()}
 					/>,
 				]}
-				style={{
-					textAlign: 'center',
-				}}
 			>
 				<TextField
 					disabled={this.store.busy}
@@ -83,7 +82,7 @@ class ActivationPrompt extends Component<Props, {}> {
 					onChange={(e, val) => this.handleCodeUpdate(val)}
 					onKeyUp={(e) => this.handleKeyUp(e)}
 					style={{
-						maxWidth: '100%',
+						width: '100%',
 					}}
 					hintStyle={{
 						textAlign: 'center',

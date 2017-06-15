@@ -39,7 +39,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<ScheduledTransactionList
-						scheduledTransactions={store.scheduledTransactions}
+						items={store.scheduledTransactions}
 						store={store}
 						onRemove={
 							(scheduledTransaction: ScheduledTransaction) =>

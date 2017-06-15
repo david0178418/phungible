@@ -4,6 +4,7 @@ import BudgetEditPage from './budget-edit-page';
 import BudgetsPage from './budgets-page';
 import ClearDataPage from './clear-data-page';
 import DailyActivityPage from './daily-activity-page';
+import GettingStartedPage from './getting-started-page';
 import Help from './help-page';
 import ScheduledTransactionEditPage from './scheduled-transaction-edit-page';
 import ScheduledTransactionsPage from './scheduled-transactions-page';
@@ -21,6 +22,7 @@ export {
 	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
+	GettingStartedPage,
 	Help,
 	SummaryPage,
 	ScheduledTransactionEditPage,

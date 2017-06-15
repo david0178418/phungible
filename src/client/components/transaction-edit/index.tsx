@@ -1,4 +1,3 @@
-import ScheduledTransaction from '../../stores/scheduled-transaction';
 import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
@@ -7,6 +6,7 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {Component, FormEvent} from 'react';
 import * as React from 'react';
+import ScheduledTransaction from '../../stores/scheduled-transaction';
 
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';

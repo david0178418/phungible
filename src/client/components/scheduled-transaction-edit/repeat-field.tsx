@@ -30,7 +30,9 @@ class RepeatField extends Component<Props, any> {
 		const {scheduledTransaction} = this.props;
 
 		return (
-			<div>
+			<div style={{
+				minHeight: 410,
+			}}>
 				<Tabs
 					onChange={(newType) => {
 						setTimeout(() => this.handleTabChange(newType), 0);

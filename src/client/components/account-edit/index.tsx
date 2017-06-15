@@ -11,21 +11,21 @@ import Account, {AccountType} from '../../stores/account';
 import AccountEditBalanceHistory from './account-edit-balance-history';
 
 type Props = {
-	account: Account;
+	model: Account;
 	onSubmit(): void;
 };
 
 export default
-observer(function AccountEdit({account, onSubmit}: Props) {
+observer(function AccountEdit({model, onSubmit}: Props) {
 	return (
 		<form className="edit-account content" onSubmit={(ev: any) => handleSubmit(ev, onSubmit)}>
 			<div style={{display: 'flex'}}>
 				<TextField
 					fullWidth
-					errorText={account.name ? '' : 'Name is requied'}
+					errorText={model.name ? '' : 'Name is requied'}
 					floatingLabelText="Name"
-					value={account.name}
-					onChange={((ev: any, value: any) => handleUpdateName(value, account)) as any}
+					value={model.name}
+					onChange={((ev: any, value: any) => handleUpdateName(value, model)) as any}
 				/>
 			</div>
 			<div
@@ -40,7 +40,7 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 						width: 40,
 					}}
 				>
-					{account.type === AccountType.Savings ?
+					{model.type === AccountType.Savings ?
 						<SavingsIcon
 							style={{
 								bottom: 13,
@@ -58,8 +58,8 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 				<SelectField
 					fullWidth
 					floatingLabelText="Type"
-					value={account.type}
-					onChange={(ev, index, value) => handleUpdateType(value, account)}
+					value={model.type}
+					onChange={(ev, index, value) => handleUpdateType(value, model)}
 				>
 					<MenuItem
 						leftIcon={<SavingsIcon/>}
@@ -77,12 +77,12 @@ observer(function AccountEdit({account, onSubmit}: Props) {
 				<TextField
 					fullWidth
 					floatingLabelText="Notes"
-					value={account.notes}
-					onChange={((ev: any, value: any) => handleUpdateNotes(value, account)) as any}
+					value={model.notes}
+					onChange={((ev: any, value: any) => handleUpdateNotes(value, model)) as any}
 				/>
 			</div>
 			<AccountEditBalanceHistory
-				account={account}
+				account={model}
 			/>
 		</form>
 	);

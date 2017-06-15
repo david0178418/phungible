@@ -15,18 +15,13 @@ import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/schedu
 import Page from './page';
 import ScheduledTransactionsPage from './scheduled-transactions-page';
 
-class CreateScheduledTransactionStore {
+class ScheduledTransactionEditStore {
 	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;
 	private appStore: AppStore;
 
-	constructor(appStore: AppStore, scheduledTransactionId?: string) {
+	constructor(appStore: AppStore, model: ScheduledTransactionFacade | ScheduledTransaction) {
 		this.appStore = appStore;
-
-		if(scheduledTransactionId) {
-			this.scheduledTransaction = appStore.findScheduledTransaction(scheduledTransactionId);
-		} else {
-			this.scheduledTransaction = new ScheduledTransactionFacade();
-		}
+		this.scheduledTransaction = model;
 	}
 
 	public saveScheduledTransactions() {
@@ -53,21 +48,35 @@ class CreateScheduledTransactionStore {
 
 type Props = {
 	appStore?: AppStore;
-	id: string;
+	id?: string;
+	model?: ScheduledTransaction
+	style?: any;
 	router?: Navigo;
+	onBack?: () => void;
+	onSave?: () => void;
 };
 
 @inject('appStore', 'router') @observer
 export default
-class CreateScheduledTransaction extends Component<Props, {}> {
+class ScheduledTransactionEditPage extends Component<Props, {}> {
 	public static path = '/scheduled-transaction/edit/';
 	public static pathParams = '/scheduled-transaction/edit/:id';
 	public static title = 'Recurring Transaction';
-	private store: CreateScheduledTransactionStore;
+	private store: ScheduledTransactionEditStore;
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new CreateScheduledTransactionStore(props.appStore, props.id);
+		let model: ScheduledTransactionFacade | ScheduledTransaction;
+
+		if(props.model) {
+			model = props.model;
+		} else if(props.id) {
+			model = this.props.appStore.findScheduledTransaction(props.id);
+		}
+		if (!model) {
+			model = new ScheduledTransactionFacade();
+		}
+		this.store = new ScheduledTransactionEditStore(props.appStore, model);
 	}
 
 	public render() {
@@ -76,18 +85,21 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		} = this.store;
 		const transactionsValid = this.store.scheduledTransaction.isValid;
 		const action = (scheduledTransaction instanceof ScheduledTransaction && scheduledTransaction.id) ? 'Edit' : 'Create';
-
+		const style = this.props.style || {};
 		return (
-			<Page className="slide-horizontal">
+			<Page
+				className="slide-horizontal"
+				style={style}
+			>
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
-					title={`${action} ${CreateScheduledTransaction.title}`}
+					title={`${action} ${ScheduledTransactionEditPage.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ContentArea>
 					<ScheduledTransactionEdit
 						accounts={this.store.accounts}
-						scheduledTransaction={this.store.scheduledTransaction}
+						model={this.store.scheduledTransaction}
 						onSubmit={() => this.handleSaveScheduledTransaction()}
 					/>
 					<FloatingActionButton
@@ -103,14 +115,18 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		);
 	}
 
-	private handleSaveScheduledTransaction() {
-		setTimeout(() => {
-			this.store.saveScheduledTransactions();
-			this.routeBack();
-		}, 100);
+	private routeBack() {
+		this.props.onBack ?
+			this.props.onBack() :
+			this.props.router.navigate(ScheduledTransactionsPage.path);
 	}
 
-	private routeBack() {
-		this.props.router.navigate(ScheduledTransactionsPage.path);
+	private handleSaveScheduledTransaction() {
+		if(this.props.onSave) {
+			this.props.onSave();
+		} else {
+			this.store.saveScheduledTransactions();
+		}
+		this.routeBack();
 	}
 }

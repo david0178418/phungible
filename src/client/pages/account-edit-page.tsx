@@ -20,14 +20,9 @@ class AccountEditStore {
 	public account: Account;
 	public appStore: AppStore;
 
-	constructor(appStore: AppStore, scheduledTransaction?: string) {
+	constructor(appStore: AppStore, model: Account) {
 		this.appStore = appStore;
-
-		if(scheduledTransaction) {
-			this.account = appStore.findAccount(scheduledTransaction);
-		} else {
-			this.account = new Account();
-		}
+		this.account = model;
 	}
 
 	public saveAccount() {
@@ -46,8 +41,12 @@ class AccountEditStore {
 }
 type Props = {
 	appStore?: AppStore;
-	id: string;
+	id?: string;
+	model?: Account;
+	style?: any;
 	router?: Navigo;
+	onBack?: () => void;
+	onSave?: () => void;
 };
 
 @inject('appStore', 'router') @observer
@@ -59,7 +58,18 @@ class AccountEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new AccountEditStore(props.appStore, this.props.id);
+		let model;
+
+		if(props.model) {
+			model = props.model;
+		} else if(props.id) {
+			model = this.props.appStore.findAccount(this.props.id);
+		}
+
+		if(!model) {
+			model = new Account();
+		}
+		this.store = new AccountEditStore(props.appStore, model);
 	}
 
 	public render() {
@@ -67,9 +77,12 @@ class AccountEditPage extends Component<Props, {}> {
 			account,
 		} = this.store;
 		const action = account.id ? 'Edit' : 'Create';
-
+		const style = this.props.style || {};
 		return (
-			<Page className="slide-horizontal">
+			<Page
+				className="slide-horizontal"
+				style={style}
+			>
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} Account`}
@@ -77,7 +90,7 @@ class AccountEditPage extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<AccountEdit
-						account={account}
+						model={account}
 						onSubmit={() => this.handleSaveAccount()}
 					/>
 					<FloatingActionButton
@@ -94,13 +107,17 @@ class AccountEditPage extends Component<Props, {}> {
 	}
 
 	private routeBack() {
-		this.props.router.navigate(AccountsPage.path);
+		this.props.onBack ?
+			this.props.onBack() :
+			this.props.router.navigate(AccountsPage.path);
 	}
 
 	private handleSaveAccount() {
-		setTimeout(() => {
+		if(this.props.onSave) {
+			this.props.onSave();
+		} else {
 			this.store.saveAccount();
 			this.routeBack();
-		}, 100);
+		}
 	}
 }

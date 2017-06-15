@@ -1,7 +1,9 @@
-import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import * as React from 'react';
 import {Component} from 'react';
+
+import {dialogStyles} from '../../shared/styles';
 
 interface Props {
 	updateAvailable: boolean;
@@ -25,6 +27,7 @@ class UpdatePrompt extends Component<Props, State> {
 		return (
 			<Dialog
 				modal
+				{...dialogStyles}
 				open={this.props.updateAvailable && !this.state.ignoreUpdate}
 				actions={[
 					<FlatButton

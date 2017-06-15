@@ -35,7 +35,7 @@ class Accounts extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<AccountsList
-						accounts={store.accounts}
+						items={store.accounts}
 						onRemove={(account: Account) => store.removeAccount(account)}
 						store={store}
 					/>

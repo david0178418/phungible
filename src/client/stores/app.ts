@@ -3,11 +3,14 @@ import * as moment from 'moment';
 import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
 
+import ItemTypeName from 'item-type-name';
 import {generateUuid, Money} from '../shared/utils';
 import Account from './account';
 import ProfilesStore from './profiles';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
+
+type ItemType = Account | ScheduledTransaction | Transaction;
 
 export default
 class AppStore {
@@ -154,6 +157,22 @@ class AppStore {
 			this.transactions.filter((schedTrans) => schedTrans.isValid),
 		);
 	}
+	public removeItem(item: ItemType, typeName: ItemTypeName) {
+		switch(typeName) {
+			case 'Account':
+				this.removeAccount(item as Account);
+				break;
+			case 'Budget':
+				this.removeBudget(item as ScheduledTransaction);
+				break;
+			case 'Recurring Transaction':
+				this.removeScheduledTransaction(item as ScheduledTransaction);
+				break;
+			case 'Transaction':
+				this.removeTransaction(item as Transaction);
+				break;
+		}
+	}
 	@action public removeAccount(account: Account) {
 		(this.accounts as any).remove(account);
 		this.cleanBudgets();
@@ -188,6 +207,22 @@ class AppStore {
 		}
 
 		this.sortTransactions();
+	}
+	public saveItem(newItem: ItemType, type: ItemTypeName) {
+		switch(type) {
+			case 'Account':
+				this.saveAccount(newItem as Account);
+				break;
+			case 'Budget':
+				this.saveBudget(newItem as ScheduledTransaction);
+				break;
+			case 'Recurring Transaction':
+				this.saveScheduledTransaction(newItem as ScheduledTransaction);
+				break;
+			case 'Transaction':
+				this.saveScheduledTransaction(newItem as ScheduledTransaction);
+				break;
+		}
 	}
 	@action public saveAccount(newAccount: Account) {
 		if(!newAccount.id) {

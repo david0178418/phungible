@@ -20,15 +20,9 @@ class BudgetEditStore {
 	public budget: ScheduledTransaction | ScheduledTransactionFacade;
 	private appStore: AppStore;
 
-	constructor(appStore: AppStore, budgetId?: string) {
+	constructor(appStore: AppStore, model: ScheduledTransactionFacade | ScheduledTransaction) {
 		this.appStore = appStore;
-
-		if(budgetId) {
-			this.budget = appStore.findBudget(budgetId);
-		} else {
-			this.budget = new ScheduledTransactionFacade();
-			this.budget.type = TransactionType.BudgetedExpense;
-		}
+		this.budget = model;
 	}
 
 	public saveBudget() {
@@ -55,13 +49,17 @@ class BudgetEditStore {
 
 type Props = {
 	appStore?: AppStore;
-	id: string;
+	id?: string;
+	model?: ScheduledTransaction
+	style?: any;
 	router?: Navigo;
+	onBack?: () => void;
+	onSave?: () => void;
 };
 
 @inject('appStore', 'router') @observer
 export default
-class CreateScheduledTransaction extends Component<Props, {}> {
+class BudgetEditPage extends Component<Props, {}> {
 	public static path = '/budget/edit/';
 	public static pathParams = '/budget/edit/:id';
 	public static title = 'Budget';
@@ -69,7 +67,19 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		this.store = new BudgetEditStore(props.appStore, props.id);
+		let model: ScheduledTransactionFacade | ScheduledTransaction;
+
+		if(props.model) {
+			model = props.model;
+		} else if(props.id) {
+			model = this.props.appStore.findBudget(props.id);
+		}
+
+		if(!model) {
+			model = new ScheduledTransactionFacade();
+			model.type = TransactionType.BudgetedExpense;
+		}
+		this.store = new BudgetEditStore(props.appStore, model);
 	}
 
 	public render() {
@@ -78,19 +88,22 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 		} = this.store;
 		const transactionsValid = this.store.budget.isValid;
 		const action = (budget instanceof ScheduledTransaction && budget.id) ? 'Edit' : 'Create';
-
+		const style = this.props.style || {};
 		return (
-			<Page className="slide-horizontal">
+			<Page
+				className="slide-horizontal"
+				style={style}
+			>
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
-					title={`${action} ${CreateScheduledTransaction.title}`}
+					title={`${action} ${BudgetEditPage.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ContentArea>
 					<ScheduledTransactionEdit
 						accounts={this.store.accounts}
 						isBudget
-						scheduledTransaction={this.store.budget}
+						model={this.store.budget}
 						onSubmit={() => this.handleSaveBudget()}
 					/>
 					<FloatingActionButton
@@ -107,13 +120,17 @@ class CreateScheduledTransaction extends Component<Props, {}> {
 	}
 
 	private routeBack() {
-		this.props.router.navigate(BudgetsPage.path);
+		this.props.onBack ?
+			this.props.onBack() :
+			this.props.router.navigate(BudgetsPage.path);
 	}
 
 	private handleSaveBudget() {
-		setTimeout(() => {
+		if(this.props.onSave) {
+			this.props.onSave();
+		} else {
 			this.store.saveBudget();
 			this.routeBack();
-		}, 100);
+		}
 	}
 }

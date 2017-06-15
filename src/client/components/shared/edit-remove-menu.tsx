@@ -12,18 +12,26 @@ function EditRemoveMenu<T extends {id: string}>(
 	type: string,
 	item: T,
 	onRemove: (item: T) => void,
+	onEdit?: (item: T) => void,
 ) {
+	const editItemProps: any = {
+		primaryText: 'Edit',
+		rightIcon: <EditorModeEdit/>,
+	};
+
+	if(onEdit) {
+		editItemProps.onTouchTap = onEdit;
+	} else {
+		editItemProps.href = `#/${type}/edit/${item.id}`;
+	}
+
 	return (
 		<IconMenu
 			anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 			iconButtonElement={<IconButton><MoreVertical/></IconButton>}
 			targetOrigin={{horizontal: 'right', vertical: 'top'}}
 		>
-			<MenuItem
-				href={`#/${type}/edit/${item.id}`}
-				primaryText="Edit"
-				rightIcon={<EditorModeEdit/>}
-			/>
+			<MenuItem {...editItemProps}/>
 			<MenuItem
 				onTouchTap={() => onRemove(item)}
 				primaryText="Remove"
