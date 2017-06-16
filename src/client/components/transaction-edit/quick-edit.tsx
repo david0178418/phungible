@@ -65,7 +65,6 @@ class QuickEdit extends Component<Props, {}> {
 					{transaction && (
 						<TransactionEdit
 							hideDate
-							hideNotes
 							hideTowardsAccount
 							hideType
 							accounts={accounts}
