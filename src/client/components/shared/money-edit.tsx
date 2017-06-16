@@ -26,7 +26,7 @@ class MoneyEdit extends Component<Props, State> {
 		return (
 			<div style={assign({}, style)}>
 				<TextField
-					inputStyle={{ textAlign: 'right'}}
+					inputStyle={{textAlign: 'right'}}
 					name="dollars"
 					floatingLabelFixed
 					floatingLabelText="$"
@@ -34,7 +34,7 @@ class MoneyEdit extends Component<Props, State> {
 						width: 75,
 					}}
 					type="number"
-					value={money.valFixed}
+					defaultValue={money.valFixed}
 					ref={(input) => this.textInput = input}
 					onBlur={() => this.handleBlur()}
 					onChange={((ev: any, value: any) => this.handleUpdateAmount(value))}
