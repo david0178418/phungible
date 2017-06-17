@@ -1,5 +1,9 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import MoreVertical from 'material-ui/svg-icons/navigation/more-vert';
 import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
@@ -32,6 +36,20 @@ class Accounts extends Component<Props, {}> {
 				<Navigation
 					title="Accounts"
 					appStore={store}
+					iconElementRight={
+						store.unconfirmedTransactions.length && (
+							<IconMenu
+								anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+								iconButtonElement={<IconButton><MoreVertical/></IconButton>}
+								targetOrigin={{horizontal: 'right', vertical: 'top'}}
+							>
+								<MenuItem
+									onTouchTap={() => store.openTransactionConfirmation()}
+									primaryText="Confirm pending transactions"
+								/>
+							</IconMenu>
+						)
+					}
 				/>
 				<ContentArea>
 					<AccountsList

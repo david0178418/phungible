@@ -1,13 +1,13 @@
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import MenuItem from 'material-ui/MenuItem';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import {inject} from 'mobx-react';
-import * as React from 'react';
-import {Component} from 'react';
-
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import MoreVertical from 'material-ui/svg-icons/navigation/more-vert';
+import {inject} from 'mobx-react';
+import {Component} from 'react';
+import * as React from 'react';
+
 import ContentArea from '../components/shared/content-area';
 import Link from '../components/shared/link';
 import TransactionsList from '../components/transactions-list';
