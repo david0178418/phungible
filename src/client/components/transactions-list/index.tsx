@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 import {Component} from 'react';
 
+import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
@@ -68,8 +69,23 @@ class TransactionsList extends Component<Props, {}> {
 				{items.map((transaction) => (
 					<ListItem
 						key={transaction.id}
-						primaryText={`${transaction.amount.valFormatted}`}
-						secondaryText={`${transaction.name}`}
+						primaryText={
+							`${transaction.amount.valFormatted} ${transaction.name} ` +
+							(transaction.needsConfirmation ? '(pending)' : '')
+						}
+						secondaryText={(
+							(transaction.fromAccount ?
+								`From: ${transaction.fromAccount.name}` : '') +
+							(transaction.towardAccount && transaction.fromAccount ? ', ' : '') +
+							(transaction.towardAccount ?
+								`Toward: ${transaction.towardAccount.name}` : '')
+						)}
+						leftIcon={(
+							// Hack for circular dep
+							transaction.type === 2 ?
+								<IncomeIcon/> :
+								<ExpenseIcon/>
+						)}
 						rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
 					/>
 				))}

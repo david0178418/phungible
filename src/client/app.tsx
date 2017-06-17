@@ -7,6 +7,7 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import ActivationPrompt from './components/activation-prompt';
 import PinPrompt from './components/pin-prompt';
+import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
 import Storage from './shared/storage';
 import theme from './shared/theme';
@@ -21,6 +22,7 @@ class AppInitStore {
 	@observable public pin = '';
 	@observable public needUserPin = false;
 	@observable public isActivated = true;
+
 	@computed get checkingPin() {
 		return this.needUserPin && (this.pin.length === 4);
 	}
@@ -158,6 +160,13 @@ class App extends Component<Props, any> {
 							open={!isActivated}
 							onActivation={() => this.handleActivation()}
 						/>
+						{!!this.store && (
+							<TransactionConfirmationPrompt
+								open={this.store.showTransactionConfirmation}
+								transactions={this.store.unconfirmedTransactions}
+								onDone={() => this.store.dismissTransactionConfirmation()}
+							/>
+						)}
 						<style>{Styles}</style>
 						{!!this.store && (
 							<Provider appStore={this.store}>

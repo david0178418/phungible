@@ -1,4 +1,4 @@
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import 'moment-recur';
 import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
@@ -29,8 +29,13 @@ class AppStore {
 	public lastUpdatedDate: string;
 	@serializable(list(object(ScheduledTransaction)))
 	@observable public scheduledTransactions: ScheduledTransaction[];
+	@observable public showTransactionConfirmation: boolean;
 	@serializable(list(object(Transaction)))
 	@observable public transactions: Transaction[];
+
+	@computed get unconfirmedTransactions() {
+		return this.transactions.filter((transaction) => transaction.needsConfirmation);
+	}
 
 	constructor() {
 		this.id = generateUuid();
@@ -39,6 +44,7 @@ class AppStore {
 		this.scheduledTransactions = observable([]);
 		this.transactions = observable([]);
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
+		this.showTransactionConfirmation = !this.unconfirmedTransactions.length;
 		(window as any).store = this;
 	}
 
@@ -156,6 +162,10 @@ class AppStore {
 		(this.transactions as any).replace(
 			this.transactions.filter((schedTrans) => schedTrans.isValid),
 		);
+	}
+	@action public dismissTransactionConfirmation() {
+		this.showTransactionConfirmation = false;
+		this.save();
 	}
 	public removeItem(item: ItemType, typeName: ItemTypeName) {
 		switch(typeName) {
@@ -301,6 +311,7 @@ class AppStore {
 		}
 
 		const transactions = this.transactions
+			.filter((transaction) => !transaction.needsConfirmation)
 			.filter((transaction) => (
 				lastBalanceUpdate.date.isBefore(transaction.date, 'day') &&
 				moment(transaction.date).isSameOrBefore(today, 'day')

@@ -1,4 +1,5 @@
 import CreditCardIcon from 'material-ui/svg-icons/action/credit-card';
+import DoneIcon from 'material-ui/svg-icons/action/done';
 import AddCricleOutlineIcon from 'material-ui/svg-icons/content/add-circle-outline';
 import MoneyIcon from 'material-ui/svg-icons/editor/attach-money';
 import TrendingDownIcon from 'material-ui/svg-icons/navigation/arrow-downward';
@@ -54,5 +55,12 @@ export
 function IncomeIcon({style}: SvgIconProps) {
 	return (
 		<TrendingUpIcon color={Colors.Money} style={style} />
+	);
+}
+
+export
+function ConfirmIcon({style}: SvgIconProps) {
+	return (
+		<DoneIcon style={style} />
 	);
 }

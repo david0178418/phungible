@@ -106,6 +106,7 @@ class PinPrompt extends Component<Props, {}> {
 		}
 
 		const customDialogStyles = {
+			bodyStyle: dialogStyles.bodyStyle,
 			className: dialogStyles.className,
 			// tslint:disable-next-line:prefer-object-spread
 			contentStyle: Object.assign({

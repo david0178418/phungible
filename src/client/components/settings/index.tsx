@@ -119,7 +119,6 @@ class Settings extends Component<Props, {}> {
 				>
 					<Dialog
 						{...dialogStyles}
-						autoScrollBodyContent
 						open={showDebug}
 						onRequestClose={() => this.store.closeDebug()}
 						actions={[
