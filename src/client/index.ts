@@ -30,8 +30,8 @@ function renderApp(updateAvailable: boolean) {
 	);
 }
 
+useStrict(true);
 renderApp(false);
-
 beginTransition();
 
 function beginTransition() {

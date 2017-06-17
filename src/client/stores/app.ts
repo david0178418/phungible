@@ -17,6 +17,7 @@ class AppStore {
 	@action public static deserialize(data: any) {
 		const temp = deserialize(AppStore, data);
 		temp.tempFixReferencesBug();
+		temp.showTransactionConfirmation = !!temp.unconfirmedTransactions.length;
 		return temp;
 	}
 	@serializable(identifier())
@@ -44,7 +45,6 @@ class AppStore {
 		this.scheduledTransactions = observable([]);
 		this.transactions = observable([]);
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
-		this.showTransactionConfirmation = !this.unconfirmedTransactions.length;
 		(window as any).store = this;
 	}
 
