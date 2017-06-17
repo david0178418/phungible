@@ -322,6 +322,24 @@ class AppStore {
 
 		return account.applyTransactions(transactions, today);
 	}
+	public getPendingChange(account: Account) {
+		const pendingConfirmation = this.transactions
+			.filter((transaction) => !!transaction.needsConfirmation);
+
+		return new Money(
+			pendingConfirmation
+				.filter((transaction) => !!transaction.fromAccount)
+				.filter((transaction) => transaction.fromAccount.id === account.id)
+				.reduce((total, transaction) => total + transaction.amount.valCents, 0)
+				* account.fromBalanceDirection
+			+
+			pendingConfirmation
+				.filter((transaction) => !!transaction.towardAccount)
+				.filter((transaction) => transaction.towardAccount.id === account.id)
+				.reduce((total, transaction) => total + transaction.amount.valCents, 0)
+				* account.towardBalanceDirection,
+		);
+	}
 	private findFutureTransactionsOnDate(date: Date) {
 		const scheduledTransactions =
 			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));

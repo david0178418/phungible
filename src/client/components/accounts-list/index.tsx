@@ -111,8 +111,8 @@ class AccountsList extends Component<Props, {}> {
 					{items.map((account) => (
 						<ListItem
 							key={account.id}
-							primaryText={`${account.name}`}
-							secondaryText={`Current Balance: ${store.getBalanceAsOfDate(account, today).valFormatted}`}
+							primaryText={`${store.getBalanceAsOfDate(account, today).valFormatted} ${account.name}`}
+							secondaryText={`Pending: ${store.getPendingChange(account).valFormatted}`}
 							leftIcon={
 								account.type === AccountType.Savings ?
 									<SavingsIcon/> :

@@ -30,7 +30,7 @@ function renderApp(updateAvailable: boolean) {
 	);
 }
 
-useStrict(true);
+// useStrict(true);
 renderApp(false);
 beginTransition();
 
