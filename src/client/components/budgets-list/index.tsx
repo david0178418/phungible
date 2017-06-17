@@ -62,14 +62,18 @@ class BudgetsList extends Component<Props, {}> {
 	}
 
 	public render() {
-		const {onRemove, budgets} = this.props;
+		const {
+			budgets,
+			onRemove,
+			store,
+		} = this.props;
 		return (
 			<List>
 				{budgets.map((budget) => (
 					<ListItem
 						key={budget.id}
-						primaryText={`${budget.amount.valFormatted}`}
-						secondaryText={`${budget.name}`}
+						primaryText={`${budget.amount.valFormatted} ${budget.name}`}
+						secondaryText={`Current Remaining: ${store.findRemainingBudgetBalance(budget.id).valFormatted}`}
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>('budget', budget, onRemove)}
 					/>
 				))}
