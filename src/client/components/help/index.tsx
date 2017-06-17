@@ -67,7 +67,6 @@ class Help extends Component<Props, State> {
 					/>
 				</List>
 				<Dialog
-					autoScrollBodyContent
 					{...dialogStyles}
 					open={!!this.state.openContent}
 					onRequestClose={() => this.handleClose()}

@@ -38,6 +38,8 @@ class Transaction {
 	@serializable(object(Account))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
+	@observable public needsConfirmation = false;
+	@serializable
 	@observable public notes = '';
 	@serializable(list(primitive()))
 	@observable public labels: string[];
@@ -73,6 +75,10 @@ class Transaction {
 			this.type !== Income && this.fromAccount ||
 			this.type === Income && this.towardAccount
 		));
+	}
+
+	@action public confirm() {
+		this.needsConfirmation = false;
 	}
 
 	public affectsAccount(account: Account) {

@@ -11,6 +11,9 @@ export const pageStyle = {
 } as any;
 
 export const dialogStyles = {
+	bodyStyle: {
+		overflowY: 'auto',
+	},
 	className: 'dialog-vert-resize-fix',
 	contentStyle: {
 		maxWidth: 750,

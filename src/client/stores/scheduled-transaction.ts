@@ -171,6 +171,7 @@ class ScheduledTransaction {
 			fromAccount: this.fromAccount,
 			generatedFrom: this,
 			name: this.name,
+			needsConfirmation: true,
 			towardAccount: this.towardAccount,
 			type: this.type,
 		});

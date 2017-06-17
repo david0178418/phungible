@@ -31,6 +31,7 @@ import NavItem from './nav-item';
 type Props = {
 	appStore?: AppStore;
 	title: string;
+	iconElementRight?: JSX.Element;
 };
 
 type MenuItemProps = any;
@@ -115,8 +116,14 @@ class Navigation extends React.Component<Props, any> {
 			scheduledTransactions,
 			transactions,
 		} = this.props.appStore;
+		const appBarProps: Partial<Props> = {};
+
+		if(this.props.iconElementRight) {
+			appBarProps.iconElementRight = this.props.iconElementRight;
+		}
 		return (
 			<AppBar
+				{...appBarProps}
 				className="app-title"
 				onLeftIconButtonTouchTap={() => this.handleDrawerStateUpdate(true)}
 				title={this.props.title}
