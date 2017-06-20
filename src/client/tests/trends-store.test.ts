@@ -189,7 +189,7 @@ describe('Trend Store', () => {
 		expect(data[data.length - 1].Total).to.equal(0);
 	});
 
-	it('should ignore budgeted transactions during working period', () => {
+	it('should not be affected by budgeted transactions during working period', () => {
 		const today = new Date('01/03/2015');
 		const BudgetBar = {
 			today,

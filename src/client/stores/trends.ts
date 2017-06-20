@@ -124,34 +124,83 @@ class TrendsStore {
 		const dateMoments = dateRange(this.fromDate, this.toDate);
 		const accounts = this.accounts;
 		const combinedBudgetsScheduledTransaction = this.budgets.concat(this.scheduledTransactions);
-		const unbrokenBudgets = this.budgets
-			.filter((budget) => budget.lastOccurance)
-			.filter((budget) => !budgetIsExceeded(budget, this.transactions));
 
-		const unplannedTransactionEffects: TransactionEffect[] = this.transactions
-			.filter((transaction) => !transaction.generatedFrom)
+		const transactionEffects: TransactionEffect[] = this.transactions
 			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
 			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
 			.filter((transaction) => transaction);
 
-		const budgetedTransactionEffects: TransactionEffect[] = this.transactions
-			.filter((transaction) => !!transaction.generatedFrom)
-			.filter((transaction) => (
-				!unbrokenBudgets.some((budget) => {
-					return budget.id === transaction.generatedFrom.id &&
-						moment(transaction.date).isBetween(budget.lastOccurance, budget.nextOccurance, 'days', '[)');
-				})
-			))
-			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
-			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
-			.filter((transaction) => transaction);
+		const budgetedAmounts = this.budgets
+			.map((budget) => {
+				const date = budget.occuranceOnOrBeforeDate(dateMoments[0].toDate());
+				if(!date) {
+					return null;
+				}
+				return {
+					accountId: budget.fromAccount.id,
+					amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
+					date,
+				};
+			})
+			.filter((x) => x);
 
-		const pendingBudgetEffects: TransactionEffect[] = unbrokenBudgets
-				.map((budget) => ({
-				accountId: budget.fromAccount.id,
-				amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
-				date: budget.lastOccurance,
-			}));
+		const budgetAdjustments: TransactionEffect[] = this.budgets
+			.map((budget) => {
+				const startDate = budget.occuranceOnOrBeforeDate(dateMoments[0].toDate());
+
+				if(!startDate) {
+					return [];
+				}
+
+				const range = dateRange(startDate, dateMoments[dateMoments.length - 1]);
+				let remainingPeriodTotal = 0;
+				return range
+					.map((date) => {
+						remainingPeriodTotal = budget.occursOn(date) ? budget.amount.valCents : remainingPeriodTotal;
+
+						const budgetTransactionTotal = this.transactions
+							.filter((transaction) => transaction.generatedFrom)
+							.filter((transaction) => transaction.generatedFrom.id === budget.id)
+							.filter((transaction) => transaction.occursOn(date))
+							.reduce((sum, transaction) => sum + transaction.amount.valCents, 0);
+
+						if(budgetTransactionTotal) {
+							remainingPeriodTotal -= budgetTransactionTotal * budget.fromAccount.fromBalanceDirection;
+
+							return {
+								accountId: budget.fromAccount.id,
+								amount: budgetTransactionTotal * -budget.fromAccount.fromBalanceDirection,
+								date: date.toDate(),
+							};
+						}
+
+						return null;
+					})
+					.filter((transactionEffect) => transactionEffect);
+			})
+			.reduce((val, effects) => val.concat(effects), [])
+			.reduce((val, effects) => val.concat(effects), []);
+
+		const budgetLeadingEdgeRollup = this.budgets
+			.map((budget) => {
+				const x = budgetAdjustments
+					.filter((budgetedEffect) => budgetedEffect.accountId === budget.fromAccount.id)
+					.filter((budgetedEffect) => !dateMoments[0].isSameOrBefore(budgetedEffect.date, 'day'));
+
+				if(!x.length) {
+					return null;
+				}
+
+				return x.reduce((rollUp, budgetedEffect) => {
+						rollUp.amount += budgetedEffect.amount;
+						return rollUp;
+					}, {
+						accountId: budget.fromAccount.id,
+						amount: budget.amount.valCents * budget.fromAccount.fromBalanceDirection,
+						date: dateMoments[0].toDate(),
+					});
+			})
+			.filter((val) => val);
 
 		const pendingScheduledTransactionEffects: TransactionEffect[] = dateMoments
 			.filter((dateMoment) => dateMoment.isAfter(this.today, 'day'))
@@ -190,14 +239,15 @@ class TrendsStore {
 
 						return effects;
 					})
-					.reduce((val, effects) => val.concat(effects), []	)
+					.reduce((val, effects) => val.concat(effects), [])
 			))
 			.reduce((val, effects) => val.concat(effects), []);
 
-		const transactionEffects = [].concat(
-			unplannedTransactionEffects,
-			budgetedTransactionEffects,
-			pendingBudgetEffects,
+		const effects = [].concat(
+			transactionEffects,
+			budgetedAmounts,
+			budgetAdjustments,
+			budgetLeadingEdgeRollup,
 			pendingScheduledTransactionEffects,
 		);
 
@@ -211,7 +261,7 @@ class TrendsStore {
 					.filter((account) => dateMoment.isSameOrAfter(account.firstBalanceUpdate.date, 'day'))
 					.reduce((val, account) => {
 						val[account.id] =
-							transactionEffectsOnAccountDate(account, dateMoment, transactionEffects);
+							effectsOnAccountDate(account, dateMoment, effects);
 						return val;
 					}, dateBalances);
 			})
@@ -233,20 +283,7 @@ class TrendsStore {
 	}
 }
 
-// TODO Refactor and figure out where these co
-function budgetIsExceeded(budget: ScheduledTransaction, transactions: Transaction[]) {
-	const startDate = moment(budget.lastOccurance);
-
-	const broken = transactions
-		.filter((transaction) => transaction.generatedFrom)
-		.filter((transaction) => transaction.generatedFrom.id === budget.id)
-		.filter((transaction) => startDate.isSameOrBefore(transaction.date, 'day'))
-		.reduce((val, transaction) => val + transaction.amount.valCents, 0) > budget.amount.valCents;
-
-	return broken;
-}
-
-function transactionEffectsOnAccountDate(account: Account, date: Moment, transactionEffects: TransactionEffect[]) {
+function effectsOnAccountDate(account: Account, date: Moment, transactionEffects: TransactionEffect[]) {
 	const balance = account.lastBalanceUpdateAsOf(date.toDate()).amount.valCents;
 	const totalChange = transactionEffects
 		.filter((transactionEffect) =>

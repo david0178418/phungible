@@ -97,17 +97,11 @@ class ScheduledTransaction {
 			dateMoment.subtract(1, 'day');
 		}
 	}
+	@computed get firstOccurance() {
+		return this.occuranceOnOrBeforeDate(this.today);
+	}
 	@computed get nextOccurance() {
-		const dateMoment = moment(this.today);
-
-		while(true) {
-			dateMoment.add(1, 'day');
-			if(this.occursOn(dateMoment)) {
-				return dateMoment.toDate();
-			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
-				return null;
-			}
-		}
+		return this.occuranceAfterDate(this.today);
 	}
 	@computed get recurrence() {
 		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
@@ -198,6 +192,29 @@ class ScheduledTransaction {
 		return this.amount.val *
 			this.occuranceCountInRange(fromDate, toDate) *
 			(this.type === TransactionType.Income ? 1 : -1);
+	}
+	public occuranceOnOrBeforeDate(date: Date) {
+		const dateMoment = moment(date);
+
+		while(true) {
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
+				return null;
+			}
+
+			dateMoment.subtract(1, 'day');
+		}
+	}
+	public occuranceAfterDate(date: Date) {
+		const dateMoment = moment(this.startDate);
+		dateMoment.add(1, 'day');
+
+		while(true) {
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			}
+		}
 	}
 }
 
