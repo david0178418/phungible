@@ -21,7 +21,7 @@ const LineColors = [
 	'#4daf4a',
 	'#984ea3',
 	'#ff7f00',
-	'#ffff33',
+	'#4fe7ff',
 	'#a65628',
 	'#f781bf',
 ];
