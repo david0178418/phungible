@@ -236,7 +236,7 @@ describe('Trend Store', () => {
 		expect(data[data.length - 1].Total).to.equal(-100);
 	});
 
-	it('should count transactions that break budgets during working period', () => {
+	it('should show budget overages during working period', () => {
 		const today = new Date('01/03/2015');
 		const BudgetBar = {
 			today,
@@ -308,5 +308,65 @@ describe('Trend Store', () => {
 
 		expect(data[0].Foo).to.equal(0);
 		expect(data[0].Total).to.equal(0);
+	});
+
+	it('should not apply pending transactions', () => {
+		const today = new Date('01/03/2015');
+		const trendsStore = TrendsStore.deserialize({
+			accounts: [AccountFoo100],
+			scheduledTransactions: [],
+			budgets: [],
+			transactions: [{
+				needsConfirmation: true,
+				amount: {
+					totalValCents: 50,
+				},
+				_dateString: '01/04/2015',
+				type: 1, // Expense
+				fromAccount: AccountFoo100,
+			}],
+		});
+
+		trendsStore.today = today;
+
+		trendsStore.fromDate = new Date('01/03/2015');
+		trendsStore.toDate = new Date('01/04/2015');
+
+		const data = trendsStore.formattedData;
+
+		expect(data[0].Foo).to.equal(100);
+		expect(data[0].Total).to.equal(100);
+		expect(data[1].Foo).to.equal(100);
+		expect(data[1].Total).to.equal(100);
+	});
+
+	it('should apply confirmed transactions', () => {
+		const today = new Date('01/03/2015');
+		const trendsStore = TrendsStore.deserialize({
+			accounts: [AccountFoo100],
+			scheduledTransactions: [],
+			budgets: [],
+			transactions: [{
+				needsConfirmation: false,
+				amount: {
+					totalValCents: 50,
+				},
+				_dateString: '01/04/2015',
+				type: 1, // Expense
+				fromAccount: AccountFoo100,
+			}],
+		});
+
+		trendsStore.today = today;
+
+		trendsStore.fromDate = new Date('01/03/2015');
+		trendsStore.toDate = new Date('01/04/2015');
+
+		const data = trendsStore.formattedData;
+
+		expect(data[0].Foo).to.equal(100);
+		expect(data[0].Total).to.equal(100);
+		expect(data[1].Foo).to.equal(50);
+		expect(data[1].Total).to.equal(50);
 	});
 });

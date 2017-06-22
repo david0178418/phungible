@@ -124,8 +124,9 @@ class TrendsStore {
 		const dateMoments = dateRange(this.fromDate, this.toDate);
 		const accounts = this.accounts;
 		const combinedBudgetsScheduledTransaction = this.budgets.concat(this.scheduledTransactions);
+		const confirmedTransactions = this.transactions.filter((transaction) => !transaction.needsConfirmation);
 
-		const transactionEffects: TransactionEffect[] = this.transactions
+		const transactionEffects: TransactionEffect[] = confirmedTransactions
 			.map((transaction) => transaction.affectOnDateRange(this.fromDate, this.toDate))
 			.reduce((val, transactionEffectLists) => val.concat(transactionEffectLists), [])
 			.filter((transaction) => transaction);
@@ -175,7 +176,7 @@ class TrendsStore {
 							return null;
 						}
 
-						const budgetTransactionTotal = this.transactions
+						const budgetTransactionTotal = confirmedTransactions
 							.filter((transaction) => transaction.generatedFrom)
 							.filter((transaction) => transaction.generatedFrom.id === budget.id)
 							.filter((transaction) => transaction.occursOn(date))
