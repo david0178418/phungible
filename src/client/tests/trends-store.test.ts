@@ -189,7 +189,7 @@ describe('Trend Store', () => {
 		expect(data[data.length - 1].Total).to.equal(0);
 	});
 
-	it('should ignore budgeted transactions during working period', () => {
+	it('should not be affected by budgeted transactions during working period', () => {
 		const today = new Date('01/03/2015');
 		const BudgetBar = {
 			today,
@@ -275,8 +275,8 @@ describe('Trend Store', () => {
 
 		const data = trendsStore.formattedData;
 
-		expect(data[0].Foo).to.equal(100);
-		expect(data[0].Total).to.equal(100);
+		expect(data[0].Foo).to.equal(0);
+		expect(data[0].Total).to.equal(0);
 		expect(data[1].Foo).to.equal(-50);
 		expect(data[1].Total).to.equal(-50);
 		expect(data[data.length - 1].Foo).to.equal(-150);

@@ -8,6 +8,8 @@ import {generateUuid} from '../shared/utils';
 import Money from '../shared/utils/money';
 import Account from './account';
 
+type DateMoment = Date | Moment;
+
 export
 enum RepeatTypes {
 	Days,
@@ -97,17 +99,11 @@ class ScheduledTransaction {
 			dateMoment.subtract(1, 'day');
 		}
 	}
+	@computed get firstOccurance() {
+		return this.occuranceOnOrBeforeDate(this.today);
+	}
 	@computed get nextOccurance() {
-		const dateMoment = moment(this.today);
-
-		while(true) {
-			dateMoment.add(1, 'day');
-			if(this.occursOn(dateMoment)) {
-				return dateMoment.toDate();
-			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
-				return null;
-			}
-		}
+		return this.occuranceAfterDate(this.today);
 	}
 	@computed get recurrence() {
 		return RecurTypes.getRecurrence(this._startDate, this._repeatType, this._repeatValues, this.repeatUnit);
@@ -176,18 +172,39 @@ class ScheduledTransaction {
 			type: this.type,
 		});
 	}
-	public occursOn(date: Date | Moment) {
+	public earliestUnpassedDateInRange(from: DateMoment, to?: DateMoment) {
+		const fromMoment = moment(from);
+		to = to || from;
+		const toMoment = moment(to);
+
+		while(!fromMoment.isAfter(toMoment, 'day')) {
+			if(fromMoment.isSameOrAfter(this.lastOccurance, 'day')) {
+				return fromMoment.toDate();
+			}
+			fromMoment.add(1, 'day');
+		}
+
+		return null;
+	}
+	public occursOn(date: DateMoment) {
 		return this.recurrence.matches(date);
 	}
 	public occuranceCountInRange(fromDate: Date, toDate: Date) {
+		return this.occurancesInRange(fromDate, toDate).length;
+	}
+	public occurancesInRange(fromDate: Date, toDate: Date) {
 		const from = moment(fromDate);
 		const to = moment(toDate);
 		const rangeSize = to.diff(from, 'days');
-		let occurances = 0;
+		const occurances = [];
 
 		for(let x = 0; x <= rangeSize; x++) {
 			if(this.recurrence.matches(from)) {
-				occurances++;
+				occurances.push({
+					accountId: this.fromAccount.id,
+					amount: this.amount.valCents * this.fromAccount.fromBalanceDirection,
+					date: from.toDate(),
+				});
 			}
 			from.add(1, 'day');
 		}
@@ -198,6 +215,29 @@ class ScheduledTransaction {
 		return this.amount.val *
 			this.occuranceCountInRange(fromDate, toDate) *
 			(this.type === TransactionType.Income ? 1 : -1);
+	}
+	public occuranceOnOrBeforeDate(date: Date) {
+		const dateMoment = moment(date);
+
+		while(true) {
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			} else if(dateMoment.isSameOrBefore(this.startDate, 'day')) {
+				return null;
+			}
+
+			dateMoment.subtract(1, 'day');
+		}
+	}
+	public occuranceAfterDate(date: Date) {
+		const dateMoment = moment(this.startDate);
+		dateMoment.add(1, 'day');
+
+		while(true) {
+			if(this.occursOn(dateMoment)) {
+				return dateMoment.toDate();
+			}
+		}
 	}
 }
 

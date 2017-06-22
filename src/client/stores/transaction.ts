@@ -1,5 +1,6 @@
 import {assign} from 'lodash';
 import {action, computed, observable} from 'mobx';
+import {Moment} from 'moment';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
@@ -67,7 +68,10 @@ class Transaction {
 		}
 	}
 	@computed get date() {
-		return moment(this._dateString, 'MM/DD/YYYY').toDate();
+		return this.dateMoment.toDate();
+	}
+	@computed get dateMoment() {
+		return moment(this._dateString, 'MM/DD/YYYY');
 	}
 	@computed get isValid() {
 		const {Income} = TransactionType;
@@ -118,5 +122,8 @@ class Transaction {
 		}
 
 		return affects;
+	}
+	public occursOn(date: Date | Moment) {
+		return this.dateMoment.isSame(date, 'day');
 	}
 }
