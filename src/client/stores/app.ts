@@ -307,20 +307,69 @@ class AppStore {
 			return null;
 		}
 
-		const today = new Date();
-
-		if(lastBalanceUpdate.date.isSame(today, 'day')) {
+		if(lastBalanceUpdate.date.isSame(date, 'day')) {
 			return lastBalanceUpdate.amount;
 		}
 
 		const transactions = this.transactions
 			.filter((transaction) => !transaction.needsConfirmation)
-			.filter((transaction) => (
-				lastBalanceUpdate.date.isBefore(transaction.date, 'day') &&
-				moment(transaction.date).isSameOrBefore(today, 'day')
-			));
+			.filter((transaction) => {
+				return (
+					(transaction.fromAccount && transaction.fromAccount.id === account.id) ||
+					(transaction.towardAccount && transaction.towardAccount.id === account.id)
+				);
+			})
+			.filter((transaction) => (lastBalanceUpdate.date.isBefore(transaction.date, 'day')))
+			.filter((transaction) => (moment(transaction.date).isSameOrBefore(date, 'day')));
 
-		return account.applyTransactions(transactions, today);
+		return account.applyTransactions(transactions, date);
+	}
+	public getBalanceExpectation(account: Account, date: Date) {
+		// yesterday's expectation plus given day's transactions
+		const dayPriorExpectation = this.getBalanceAsOfDate(account, moment(date).subtract(1, 'day').toDate());
+
+		if(!dayPriorExpectation) {
+			return  this.getBalanceAsOfDate(account, date);
+		}
+
+		const dateMoment = moment(date);
+
+		const dateTransactions = this.transactions
+			.filter((transaction) => dateMoment.isSame(transaction.date, 'day'));
+		const fromAmount = dateTransactions
+			.filter((transaction) => transaction.fromAccount)
+			.filter((transaction) => transaction.fromAccount.id === account.id)
+			.reduce((total, val) => total + val.amount.valCents, 0);
+		const towardAmount = dateTransactions
+			.filter((transaction) => transaction.towardAccount)
+			.filter((transaction) => transaction.towardAccount.id === account.id)
+			.reduce((total, val) => total + val.amount.valCents, 0);
+
+		dayPriorExpectation.addCents(
+			(fromAmount * account.fromBalanceDirection) +
+			(towardAmount * account.towardBalanceDirection),
+		);
+
+		return dayPriorExpectation;
+	}
+	public getBalanceExpectationDifference(account: Account, date: Date) {
+		const actualAmount = this.getBalanceAsOfDate(account, date);
+		const expectedAmount = this.getBalanceExpectation(account, date);
+
+		if(!actualAmount && expectedAmount) {
+			return expectedAmount;
+		}
+
+		if(!expectedAmount && actualAmount) {
+			return actualAmount;
+		}
+
+		if(!(expectedAmount || actualAmount)) {
+			// or null??
+			return new Money();
+		}
+
+		return new Money(actualAmount.valCents - expectedAmount.valCents);
 	}
 	public getPendingChange(account: Account) {
 		const pendingConfirmation = this.transactions

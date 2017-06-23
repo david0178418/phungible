@@ -6,18 +6,69 @@ import ListItem from 'material-ui/List/ListItem';
 import Subheader from 'material-ui/Subheader';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import {Component} from 'react';
 import * as React from 'react';
 
 import Colors from '../../shared/colors';
 import formatDate from '../../shared/utils/format-date';
+import Money from '../../shared/utils/money';
 import Account from '../../stores/account';
+import AppStore from '../../stores/app';
 import BalanceUpdate from '../../stores/balance-update';
 import MoneyEdit from '../shared/money-edit';
 
+interface BalanceHistoryItemProps {
+	id: string;
+	balance: Money;
+	expectationDifference: Money | null;
+	formattedStartDate: string;
+	towardDirection: 1 | -1;
+	onRemove(): void;
+}
+
+function BalanceHistoryItem({
+	id,
+	balance,
+	expectationDifference,
+	formattedStartDate,
+	towardDirection,
+	onRemove,
+}: BalanceHistoryItemProps) {
+	return (
+		<ListItem
+			key={id}
+			primaryText={`${balance.valFormatted}`}
+			secondaryTextLines={2}
+			secondaryText={
+				(expectationDifference && expectationDifference.valCents) ? (
+					<p>
+						as2 of {formattedStartDate}
+						<div
+							style={{
+								color: expectationDifference.valCents * towardDirection > 0 ? Colors.Money : Colors.Debt,
+							}}
+						>
+							<em>Unaccounted expenses {expectationDifference.valFormatted}</em>
+						</div>
+					</p>
+				) :
+				`as1 of ${formattedStartDate}`
+			}
+			rightIconButton={(
+				<IconButton
+					onTouchTap={onRemove}
+				>
+					<ActionDelete />
+				</IconButton>
+			)}
+		/>
+	);
+}
+
 type Props = {
 	account: Account;
+	appStore?: AppStore;
 };
 
 class Store {
@@ -39,7 +90,7 @@ class Store {
 	}
 }
 
-@observer
+@inject('appStore') @observer
 export default
 class AccountEditBalanceHistory extends Component<Props, any> {
 	public store: Store;
@@ -97,22 +148,19 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 				</div>
 				<List>
 					<Subheader>Account Balance History</Subheader>
-					{account.balanceUpdateHistory.map((balanceUpdate) => {
-						return (
-							<ListItem
-								key={balanceUpdate.id}
-								primaryText={`${balanceUpdate.balance.valFormatted}`}
-								secondaryText={`as of ${balanceUpdate.formattedStartDate}`}
-								rightIconButton={(
-									<IconButton
-										onTouchTap={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
-									>
-										<ActionDelete />
-									</IconButton>
-								)}
-							/>
-						);
-					})}
+					{account.balanceUpdateHistory.map((balanceUpdate, index) => (
+						<BalanceHistoryItem
+							id={balanceUpdate.id}
+							balance={balanceUpdate.balance}
+							formattedStartDate={balanceUpdate.formattedStartDate}
+							towardDirection={account.towardBalanceDirection}
+							expectationDifference={
+								index !== account.balanceUpdateHistory.length - 1 &&
+								this.props.appStore.getBalanceExpectationDifference(account, balanceUpdate.date)
+							}
+							onRemove={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
+						/>
+					))}
 					{!account.balanceUpdateHistory.length && (
 						<ListItem
 							style={{

@@ -54,14 +54,9 @@ class Account {
 		let lastBalanceUpdate: BalanceUpdate | null = null;
 		let returnVal;
 
-		lastBalanceUpdate = this.balanceUpdateHistory.reduce((a, b) => {
-			if(!a || !a.isBefore(dateMoment)) {
-				// if the first element isn't before the date, none will be
-				return a;
-			}
-
-			return b.isBefore(dateMoment) ? b : a;
-		});
+		lastBalanceUpdate = this.balanceUpdateHistory
+			.filter((balanceUpdate) => dateMoment.isSameOrAfter(balanceUpdate.date, 'day'))
+			.reduce((a, b) => a && a.moment.isAfter(b.date) ? a : b, null);
 
 		if(lastBalanceUpdate) {
 			returnVal = {
