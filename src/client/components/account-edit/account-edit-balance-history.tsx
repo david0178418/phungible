@@ -49,7 +49,7 @@ function BalanceHistoryItem({
 								color: expectationDifference.valCents * towardDirection > 0 ? Colors.Money : Colors.Debt,
 							}}
 						>
-							<em>Unaccounted expenses {expectationDifference.valFormatted}</em>
+							<em>Unaccounted amount: {expectationDifference.valFormatted}</em>
 						</div>
 					</p>
 				) :
