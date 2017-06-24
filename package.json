@@ -12,6 +12,7 @@
     "clean": "rm -Rf build",
     "server": "http-server ./build/client/",
     "start": "npm run server & gulp",
+    "start:prod": "npm run build:prod && npm run server",
     "test": "npm run test:unit && npm run test:lint",
     "test:unit": "export TS_NODE_PROJECT=src/client && mocha --compilers ts:ts-node/register,tsx:ts-node/register src/client/**/*.test.ts",
     "test:unit:watch": "npm run test:unit -- --watch",
