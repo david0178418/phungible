@@ -2,6 +2,10 @@
   "name": "Phungible",
   "short_name": "Phungible",
   "icons": [{
+    "src": "images/icons/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    }, {
     "src": "images/icons/icon-36x36.png",
       "sizes": "36x36",
       "type": "image/png"
@@ -42,7 +46,7 @@
       "sizes": "512x512",
       "type": "image/png"
     }],
-  "start_url": "https://app.phungible.com/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0097A7",
 "theme_color": "#0097A7"
