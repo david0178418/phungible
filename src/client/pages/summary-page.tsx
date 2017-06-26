@@ -17,6 +17,7 @@ type Props = {
 export default
 class SummaryPage extends Component<Props, {}> {
 	public static path = '/summary';
+	public static title = 'Summary';
 
 	constructor(props: Props) {
 		super(props);

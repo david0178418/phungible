@@ -23,6 +23,7 @@ type State = {
 export default
 class TrendsPage extends Component<Props, State> {
 	public static path = '/trends/';
+	public static title = 'Trends';
 
 	constructor(props: Props) {
 		super(props);

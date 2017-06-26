@@ -18,6 +18,7 @@ type Props = {
 export default
 class DailyActivityPage extends Component<Props, {}> {
 	public static path = '/';
+	public static title = 'Daily Activity';
 
 	constructor(props: Props) {
 		super(props);

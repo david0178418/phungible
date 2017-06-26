@@ -51,6 +51,7 @@ export default
 class TransactionEditPage extends Component<Props, {}> {
 	public static path = '/transaction/edit/';
 	public static pathParams = '/transaction/edit/:id';
+	public static title = 'Tranasaction Edit';
 	private store: TransactionEditStore;
 
 	constructor(props: Props) {
@@ -61,7 +62,7 @@ class TransactionEditPage extends Component<Props, {}> {
 	public render() {
 		const {
 			accounts,
-			budgets
+			budgets,
 		} = this.props.appStore;
 		const {
 			transaction,

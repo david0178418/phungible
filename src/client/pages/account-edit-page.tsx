@@ -54,6 +54,7 @@ export default
 class AccountEditPage extends Component<Props, {}> {
 	public static path = '/account/edit/';
 	public static pathParams = '/account/edit/:id';
+	public static title = 'Account Edit';
 	private store: AccountEditStore;
 
 	constructor(props: Props) {

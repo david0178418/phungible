@@ -90,8 +90,12 @@
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 		ga('create', 'UA-99423781-1', 'auto');
-		ga('set', 'appName', 'webapp');
-		ga('send', 'pageview');
+		ga('set', 'appName', 'Phungible');
+		ga('send', {
+			hitType: 'pageview',
+			page: location.hash,
+			title: 'App Load',
+		});
 	</script>
 	<script src="js/app.js"></script>
 </html>

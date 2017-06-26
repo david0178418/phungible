@@ -26,6 +26,7 @@ type Props = {
 export default
 class Transactions extends Component<Props, {}> {
 	public static path = '/transactions';
+	public static title = 'Transactions';
 
 	public render() {
 		const store = this.props.appStore;

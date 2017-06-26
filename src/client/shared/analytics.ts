@@ -1,9 +1,13 @@
+(window as any).ga('set', 'appVersion', VERSION);
+
 export default
 class Analytics {
-	public static logScreenView(screenName: string) {
+	public static logScreenView(title: string, path: string) {
 		const fields: any = {
-			screenName,
+			hitType: 'pageview',
+			page: path,
+			title,
 		};
-		(window as any).ga('send', 'screenview', fields);
+		(window as any).ga('send', fields);
 	}
 }

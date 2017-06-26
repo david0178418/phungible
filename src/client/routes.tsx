@@ -24,7 +24,10 @@ import {
 	TransactionsPage,
 	TrendsPage,
 } from './pages';
-
+interface Page {
+	path: string;
+	title: string;
+}
 type Props = {
 	updateAvailable: boolean,
 };
@@ -78,36 +81,36 @@ class Routes extends Component<Props, State> {
 	// TODO dry this up
 	public componentWillMount() {
 		this.router.on({
-			[SummaryPage.path]: () => this.setPage(SummaryPage.path),
-			[AccountEditPage.path]: () => this.setPage(AccountEditPage.path),
-			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage.path, params),
-			[AccountsPage.path]: () => this.setPage(AccountsPage.path),
-			[BudgetsPage.path]: () => this.setPage(BudgetsPage.path),
-			[BudgetEditPage.path]: () => this.setPage(BudgetEditPage.path),
-			[BudgetEditPage.pathParams]: (params) => this.setPage(BudgetEditPage.path, params),
-			[ClearDataPage.path]: () => this.setPage(ClearDataPage.path),
-			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage.path),
-			[GettingStartedPage.path]: () => this.setPage(GettingStartedPage.path),
-			[Help.path]: () => this.setPage(Help.path),
-			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage.path),
-			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage.path, params),
-			[ScheduledTransactionsPage.path]: () => this.setPage(ScheduledTransactionsPage.path),
-			[SettingsPage.path]: () => this.setPage(SettingsPage.path),
-			[TransactionEditPage.path]: () => this.setPage(TransactionEditPage.path),
-			[TransactionEditPage.pathParams]: (params) => this.setPage(TransactionEditPage.path, params),
-			[TransactionsPage.path]: () => this.setPage(TransactionsPage.path),
-			[TrendsPage.path]: () => this.setPage(TrendsPage.path),
+			[SummaryPage.path]: () => this.setPage(SummaryPage),
+			[AccountEditPage.path]: () => this.setPage(AccountEditPage),
+			[AccountEditPage.pathParams]: (params) => this.setPage(AccountEditPage, params),
+			[AccountsPage.path]: () => this.setPage(AccountsPage),
+			[BudgetsPage.path]: () => this.setPage(BudgetsPage),
+			[BudgetEditPage.path]: () => this.setPage(BudgetEditPage),
+			[BudgetEditPage.pathParams]: (params) => this.setPage(BudgetEditPage, params),
+			[ClearDataPage.path]: () => this.setPage(ClearDataPage),
+			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage),
+			[GettingStartedPage.path]: () => this.setPage(GettingStartedPage),
+			[Help.path]: () => this.setPage(Help),
+			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage),
+			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage, params),
+			[ScheduledTransactionsPage.path]: () => this.setPage(ScheduledTransactionsPage),
+			[SettingsPage.path]: () => this.setPage(SettingsPage),
+			[TransactionEditPage.path]: () => this.setPage(TransactionEditPage),
+			[TransactionEditPage.pathParams]: (params) => this.setPage(TransactionEditPage, params),
+			[TransactionsPage.path]: () => this.setPage(TransactionsPage),
+			[TrendsPage.path]: () => this.setPage(TrendsPage),
 		})
 		.resolve();
 	}
 
-	public setPage(page: string, params: object = {}) {
+	public setPage(page: Page, params: object = {}) {
 		this.setState({
 			disableNextPageAnimation: this.currentPageIsHorizontalSlide(),
-			page,
+			page: page.path,
 			params,
 		});
-		Analytics.logScreenView(page);
+		Analytics.logScreenView(page.title, page.path);
 	}
 
 	public render() {
