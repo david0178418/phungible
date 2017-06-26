@@ -237,6 +237,7 @@ class ScheduledTransaction {
 			if(this.occursOn(dateMoment)) {
 				return dateMoment.toDate();
 			}
+			dateMoment.add(1, 'day');
 		}
 	}
 }
