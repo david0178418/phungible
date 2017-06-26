@@ -160,14 +160,14 @@ class ScheduledTransaction {
 			(this.towardAccount && this.towardAccount.id === accountId)
 		);
 	}
-	public generateTransaction(date: Date) {
+	public generateTransaction(date: Date, needsConfirmation = true) {
 		return new Transaction({
 			amount: this.amount,
 			date,
 			fromAccount: this.fromAccount,
 			generatedFrom: this,
 			name: this.name,
-			needsConfirmation: true,
+			needsConfirmation,
 			towardAccount: this.towardAccount,
 			type: this.type,
 		});

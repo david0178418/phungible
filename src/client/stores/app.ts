@@ -206,13 +206,13 @@ class AppStore {
 		(this.transactions as any).remove(transaction);
 		this.save();
 	}
-	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string) {
+	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
 		const daysSince = moment().diff(lastUpdate, 'days');
 
 		for(let x = 0; x <= daysSince; x++) {
 			if(scheduledTransaction.occursOn(lastUpdate)) {
-				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate());
+				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
 			}
@@ -264,11 +264,11 @@ class AppStore {
 			newScheduledTransaction.id = generateUuid();
 			this.scheduledTransactions.push(newScheduledTransaction);
 
-			if(moment().isSameOrBefore(newScheduledTransaction.startDate, 'days')) {
+			if(moment().isSameOrAfter(newScheduledTransaction.startDate, 'days')) {
 				if(newScheduledTransaction.repeats) {
-					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString);
+					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString, false);
 				} else {
-					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate);
+					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate, false);
 					transaction.id = generateUuid();
 					this.transactions.push(transaction);
 				}
