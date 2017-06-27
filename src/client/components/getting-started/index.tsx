@@ -95,7 +95,7 @@ class GettingStarted extends React.Component<Props, State> {
 							</p>
 							<p>
 								Budget planning is hard.  <em>Phungible</em> aims to make
-								plannig easier by allowing you your financial future if you stick to your plan today.
+								planning easier by allowing you your financial future if you stick to your plan today.
 							</p>
 							<p>
 								Let's get started!
