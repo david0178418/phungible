@@ -10,7 +10,7 @@ import GettingStartedPage from '../../pages/getting-started-page';
 import {dialogStyles} from '../../shared/styles';
 
 interface State {
-	openContent: string;
+	openContent: string | JSX.Element;
 }
 
 interface Props {
@@ -38,31 +38,78 @@ class Help extends Component<Props, State> {
 					<ListItem
 						primaryText="About Accounts"
 						onTouchTap={() => this.handleOpen(
-							`Coming soon...`,
+							<div>
+								Accounts are anywhere money can be placed or withdrawn.
+								This can be a bank account, a credit card, or even a piggy
+								bank.
+								<p>
+									At least one balance update is needed to begin
+									tracking your balance.  The balance over time
+									is calculated with transactions against the
+									account.  Any aditional balance updates provided
+									are used to determine if any untracked
+									expenses exist.  This can be useful to resync
+									if you were not able to enter some transactions.
+								</p>
+								<p>
+									Interest rates are not applied to accounts
+									are not tracked with the balances, so the
+									balance update can be used to keep tabs on
+									how much is being accumulated in interest.
+								</p>
+							</div>,
 						)}
 					/>
 					<ListItem
 						primaryText="About Transactions"
 						onTouchTap={() => this.handleOpen(
-							`Coming soon...`,
+							<div>
+								A transaction is just movement of money. The most
+								common case will be an expense.  But a transaction
+								could also include moving money from your checking
+								to savings or a payment to a credit card.
+								<p>
+									If a transaction is created from a Recurring Transaction,
+									it will need to be confirmed.  You will be prompted
+									to do this on your next login.  This will also help
+									remind you about what your money plan.
+								</p>
+							</div>,
 						)}
 					/>
 					<ListItem
 						primaryText="About Recurring Transactions"
 						onTouchTap={() => this.handleOpen(
-							`Coming soon...`,
+							<div>
+								Recurring transactions are your known, planned expenses.
+								Good examples of these are a car payment or moving money
+								to a savings account.  On the date these occur, this
+								will generate an unconfirmed transaction.
+								<p>
+									Any transaction generated from a recurring
+									transaction can be edited for one-off changes.
+								</p>
+							</div>,
 						)}
 					/>
 					<ListItem
 						primaryText="About Budgets"
 						onTouchTap={() => this.handleOpen(
-							`Coming soon...`,
-						)}
-					/>
-					<ListItem
-						primaryText="How are trends calculated?"
-						onTouchTap={() => this.handleOpen(
-							`Coming soon...`,
+							<div>
+								Budgets are lesser-known expenses that you wish to
+								control.  On the trends chart, when projecting
+								forward, it is assumed you will spend the entire
+								amount budgeted.  Once the budget period passes, the
+								budgeted amount is forgotten and only your actual
+								expenses are shown.
+								<p>
+									A budgeted expense can be entered from the
+									<em>Daily Activity</em> page by clicking on
+									the budget category.  From here, you will
+									be able to create a transaction that will
+									draw from this amount.
+								</p>
+							</div>,
 						)}
 					/>
 				</List>
@@ -90,7 +137,7 @@ class Help extends Component<Props, State> {
 		});
 	}
 
-	private handleOpen(content: string) {
+	private handleOpen(content: string | JSX.Element) {
 		this.setState({
 			openContent: content,
 		});
