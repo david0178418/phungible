@@ -43,7 +43,7 @@ function BalanceHistoryItem({
 			secondaryText={
 				(expectationDifference && expectationDifference.valCents) ? (
 					<p>
-						as2 of {formattedStartDate}
+						as of {formattedStartDate}
 						<div
 							style={{
 								color: expectationDifference.valCents * towardDirection > 0 ? Colors.Money : Colors.Debt,
@@ -53,7 +53,7 @@ function BalanceHistoryItem({
 						</div>
 					</p>
 				) :
-				`as1 of ${formattedStartDate}`
+				`as of ${formattedStartDate}`
 			}
 			rightIconButton={(
 				<IconButton
