@@ -151,6 +151,9 @@ class ScheduledTransaction {
 		this._repeatValues.push(val);
 		(this._repeatValues as any).replace(this._repeatValues.sort((a, b) => a - b));
 	}
+	@action public setRepeatValue(val: number[]) {
+		(this._repeatValues as any).replace(val.sort((a, b) => a - b));
+	}
 	@action public removeRepeatValue(removeVal: number) {
 		(this._repeatValues as any).replace(this._repeatValues.filter((currentVal) => removeVal !== currentVal));
 	}

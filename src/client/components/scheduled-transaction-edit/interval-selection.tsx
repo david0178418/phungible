@@ -26,7 +26,7 @@ class IntervalSelection extends Component<Props, any> {
 					floatingLabelText="Every"
 					onChange={((ev: any, value: any) => this.handleUpdateRepeatValue(value, scheduledTransaction)) as any}
 					onFocus={(e) => (e.target as any).select()}
-					style={{width: 30}}
+					style={{width: 50}}
 					type="number"
 					value={scheduledTransaction.repeatValues[0]}
 				/>
@@ -34,7 +34,7 @@ class IntervalSelection extends Component<Props, any> {
 					value={scheduledTransaction.repeatUnit}
 					onChange={(ev, index, value) => this.handleUpdateRepeatUnit(value, scheduledTransaction)}
 					floatingLabelText=" "
-					style={{width: 'calc(100% - 30px)'}}
+					style={{width: 'calc(100% - 50px)'}}
 				>
 					<MenuItem value={RepeatUnits.Day} primaryText="Day"/>
 					<MenuItem value={RepeatUnits.Week} primaryText="Week"/>
@@ -48,9 +48,18 @@ class IntervalSelection extends Component<Props, any> {
 	@action private handleUpdateRepeatUnit(newRepeatUnit: RepeatUnits, scheduledTransaction: ScheduledTransaction) {
 		scheduledTransaction.repeatUnit = newRepeatUnit;
 	}
-	@action private handleUpdateRepeatValue(newRepeatValue: number, scheduledTransaction: ScheduledTransaction) {
-		if(newRepeatValue > 0) {
-			scheduledTransaction.repeatValues[0] = newRepeatValue | 0;
+	@action private handleUpdateRepeatValue(newRepeatValue: string, scheduledTransaction: ScheduledTransaction) {
+		let num = +newRepeatValue;
+		if(!isNaN(num)) {
+			if(num <= 0) {
+				num = 1;
+			}
+
+			if(num > 400) {
+				num = 400;
+			}
+
+			scheduledTransaction.setRepeatValue([num]);
 		}
 	}
 }
