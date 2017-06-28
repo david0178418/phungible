@@ -25,18 +25,9 @@ class SettingsStore {
 	@observable public confirmPin = false;
 	@observable public showDebug = false;
 	@observable public isEncrypted: boolean;
-	@observable private _aboutIsOpen = false;
 
 	constructor() {
 		this.updateEncryption();
-	}
-
-	public getAboutIsOpen() {
-		return this._aboutIsOpen;
-	}
-
-	@action public setAboutIsOpen(val: boolean) {
-		this._aboutIsOpen = val;
 	}
 
 	@action public updateEncryption() {
@@ -87,26 +78,6 @@ class Settings extends Component<Props, {}> {
 						onToggle={(ev) => this.handleEncryptionToggle()}
 					/>}
 				/>
-				<ListItem
-					primaryText="About"
-					onTouchTap={() => this.handleOpenAbout()}
-				>
-					<Dialog
-						{...dialogStyles}
-						open={this.store.getAboutIsOpen()}
-						onRequestClose={() => this.handleCloseAbout()}
-						actions={[
-							<FlatButton
-								label="Close"
-								primary={true}
-								onTouchTap={() => this.handleCloseAbout()}
-							/>,
-						]}
-					>
-						The Phungible logo is modified from "Piggy Bank"
-						icon licensed from <a href="https://www.flaticon.com" target="_blank">www.flaticon.com</a>
-					</Dialog>
-				</ListItem>
 				<ListItem primaryText={`Version: ${VERSION}`}/>
 				<ListItem
 					primaryText="Check for update"
@@ -176,13 +147,5 @@ class Settings extends Component<Props, {}> {
 		this.props.appStore.saveAll();
 		this.store.updateEncryption();
 		this.store.closeConfirmation();
-	}
-
-	private handleOpenAbout() {
-		this.store.setAboutIsOpen(true);
-	}
-
-	private handleCloseAbout() {
-		this.store.setAboutIsOpen(false);
 	}
 }
