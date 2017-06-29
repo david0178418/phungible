@@ -100,10 +100,10 @@ class AppStore {
 	public runTransactionSinceLastUpdate() {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
 			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
-			lastUpdate.add(1, 'day');
 			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
 		});
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
+		this.save();
 	}
 	@action public clearAllData() {
 		(this.accounts as any).clear();

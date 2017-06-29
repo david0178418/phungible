@@ -10,9 +10,11 @@ import {Component} from 'react';
 
 import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
+import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 
 interface Props {
+	store: AppStore;
 	open: boolean;
 	transactions: Transaction[];
 	onDone(): void;
@@ -20,7 +22,7 @@ interface Props {
 
 @observer
 export default
-class ActivationPrompt extends Component<Props, {}> {
+class TransactionConfirmationPrompt extends Component<Props, {}> {
 	public render() {
 		const {
 			open,
@@ -65,7 +67,7 @@ class ActivationPrompt extends Component<Props, {}> {
 							)}
 							rightIconButton={(
 								<IconButton
-									onTouchTap={() => transaction.confirm()}
+									onTouchTap={() => this.handleConfirm(transaction)}
 								>
 									<ConfirmIcon/>
 								</IconButton>
@@ -81,8 +83,14 @@ class ActivationPrompt extends Component<Props, {}> {
 		this.props.onDone();
 	}
 
+	private handleConfirm(transaction: Transaction) {
+		transaction.confirm();
+		this.props.store.save();
+	}
+
 	private handleConfirmAll() {
 		this.props.transactions.forEach((transaction) => transaction.confirm());
 		this.props.onDone();
+		this.props.store.save();
 	}
 }
