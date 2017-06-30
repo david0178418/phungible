@@ -24,7 +24,6 @@
     "@types/accounting": "^0.3.31",
     "@types/chai": "^4.0.1",
     "@types/classnames": "^2.2.0",
-    "@types/lodash": "^4.14.66",
     "@types/material-ui": "^0.17.12",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.2",
@@ -52,7 +51,6 @@
   "dependencies": {
     "accounting": "^0.4.1",
     "classnames": "^2.2.5",
-    "lodash": "^4.17.4",
     "material-ui": "^0.18.0",
     "mobx": "^3.1.16",
     "mobx-react": "^4.1.0",

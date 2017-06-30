@@ -1,4 +1,3 @@
-import {assign} from 'lodash';
 import * as React from 'react';
 
 type Props = {
@@ -16,7 +15,7 @@ const defaultStyle: any = {
 
 export default
 function Page({children, className, style}: Props) {
-	const computedStyle = assign({}, defaultStyle, style);
+	const computedStyle = Object.assign({}, defaultStyle, style);
 	return (
 		<div style={computedStyle} className={`page ${className}`}>
 			{children}

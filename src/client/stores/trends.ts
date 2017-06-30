@@ -1,4 +1,3 @@
-import {assign} from 'lodash';
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {deserialize, list, object, serializable} from 'serializr';
@@ -29,7 +28,7 @@ class TrendsStore {
 	@observable private selectedTrends: string[];
 
 	constructor(params: Partial<TrendsStore> = {}) {
-		assign(this, {
+		Object.assign(this, {
 			accounts: [],
 			fromDate: this.startOfMonth,
 			toDate: moment().add(6, 'weeks').endOf('week').toDate(),

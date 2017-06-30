@@ -1,4 +1,3 @@
-import {assign} from 'lodash';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import {observable} from 'mobx';
@@ -110,7 +109,7 @@ class PinPrompt extends Component<Props, {}> {
 			bodyStyle: dialogStyles.bodyStyle,
 			className: dialogStyles.className,
 			// tslint:disable-next-line:prefer-object-spread
-			contentStyle: assign({
+			contentStyle: Object.assign({
 				transform: 'none',
 			}, dialogStyles.contentStyle),
 		};

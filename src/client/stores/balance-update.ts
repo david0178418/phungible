@@ -1,4 +1,3 @@
-import {assign} from 'lodash';
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {identifier, object, serializable} from 'serializr';
@@ -15,7 +14,7 @@ class BalanceUpdate {
 	@observable private _date: string;
 
 	constructor(params: Partial<BalanceUpdate> = {}) {
-		assign(this, {
+		Object.assign(this, {
 			balance: new Money(),
 			date: new Date(),
 			id: generateUuid(),

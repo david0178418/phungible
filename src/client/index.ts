@@ -3,6 +3,7 @@ import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import * as React from 'react';
 import {render} from 'react-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
+import './polyfills';
 
 import Routes from './routes';
 

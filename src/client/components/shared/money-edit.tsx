@@ -1,4 +1,3 @@
-import {assign} from 'lodash';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
@@ -24,7 +23,7 @@ class MoneyEdit extends Component<Props, State> {
 	public render() {
 		const {money, style} = this.props;
 		return (
-			<div style={assign({}, style)}>
+			<div style={Object.assign({}, style)}>
 				<TextField
 					inputStyle={{textAlign: 'right'}}
 					name="dollars"
