@@ -17,6 +17,7 @@ import {
 	BudgetEditPage,
 	BudgetsPage,
 	DailyActivityPage,
+	FeedbackPage,
 	Help,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -180,6 +181,13 @@ class Navigation extends React.Component<Props, any> {
 						onTouchTap={() => this.handleDrawerStateUpdate(false)}
 					>
 						{Help.title}
+					</NavItem>
+					<NavItem
+						leftIcon={<FeedbackPage.icon />}
+						href={FeedbackPage.path}
+						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+					>
+						{FeedbackPage.title}
 					</NavItem>
 					<NavItem
 						href={SettingsPage.path}
