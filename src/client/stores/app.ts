@@ -102,6 +102,7 @@ class AppStore {
 			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
 			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
 		});
+		this.showTransactionConfirmation = !!this.unconfirmedTransactions.length;
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 		this.save();
 	}
@@ -210,13 +211,13 @@ class AppStore {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
 		const daysSince = moment().diff(lastUpdate, 'days');
 
-		for(let x = 0; x <= daysSince; x++) {
+		for(let x = 0; x < daysSince; x++) {
+			lastUpdate.add(1, 'day');
 			if(scheduledTransaction.occursOn(lastUpdate)) {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
 			}
-			lastUpdate.add(1, 'day');
 		}
 
 		this.sortTransactions();
