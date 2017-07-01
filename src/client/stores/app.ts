@@ -97,7 +97,7 @@ class AppStore {
 	public debugString() {
 		return JSON.stringify(serialize(this));
 	}
-	public runTransactionSinceLastUpdate() {
+	@action public runTransactionSinceLastUpdate() {
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
 			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
 			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
