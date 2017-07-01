@@ -55,6 +55,7 @@ if(isProd) {
 
 plugins.push(
 	new OfflinePlugin({
+		responseStrategy: 'network-first',
 		externals: [
 			'/',
 			'/index.html',
