@@ -1,10 +1,11 @@
 import FeedbackIcon from 'material-ui/svg-icons/action/feedback';
 import * as React from 'react';
-import {Component} from 'react';
+import { Component } from 'react';
 
 import Feedback from '../components/feedback-form';
 import ContentArea from '../components/shared/content-area';
 import Navigation from '../layout/navigation';
+import { pageStyle } from '../shared/styles';
 import AppStore from '../stores/app';
 import Page from './page';
 
@@ -27,7 +28,7 @@ class FeedbackPage extends Component<Props, {}> {
 		return (
 			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
 				<Navigation title={FeedbackPage.title}/>
-				<ContentArea>
+				<ContentArea style={pageStyle}>
 					<Feedback />
 				</ContentArea>
 			</Page>

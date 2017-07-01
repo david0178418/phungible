@@ -1,61 +1,103 @@
-import {action, observable} from 'mobx';
-import {inject, observer} from 'mobx-react';
+import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import { action, observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
+import { Component } from 'react';
 
 import Storage from '../../shared/storage';
 import AppStore from '../../stores/app';
+
+const USER_EMAIL_KEY = 'userEmail';
 
 interface Props {
 	appStore?: AppStore;
 }
 
-class SettingsStore {
-	@observable public confirmPin = false;
-	@observable public showDebug = false;
-	@observable public isEncrypted: boolean;
+class FeedbackStore {
+	@observable public isBug = false;
+	@observable public userFeedback = '';
+	@observable public userEmail = '';
 
 	constructor() {
-		this.updateEncryption();
+		this.userEmail = Storage.getItem(USER_EMAIL_KEY) || '';
 	}
 
-	@action public updateEncryption() {
-		this.isEncrypted = Storage.isEncrypted();
+	public setIsBug(bugVal: boolean) {
+		this.setVal('isBug', bugVal);
+
 	}
 
-	@action public openConfirmation() {
-		this.confirmPin = true;
+	public setEmail(newEmail: string) {
+		if(this.setVal('userEmail', newEmail)) {
+			Storage.setItem(USER_EMAIL_KEY, newEmail);
+		}
 	}
 
-	@action public closeConfirmation() {
-		this.confirmPin = false;
+	public setUserFeedback(newEmail: string) {
+		this.setVal('userFeedback', newEmail);
 	}
 
-	@action public closeDebug() {
-		this.showDebug = false;
-	}
-
-	@action public openDebug() {
-		this.showDebug = true;
+	@action private setVal<Field extends keyof FeedbackStore>(field: Field, val: FeedbackStore[Field]) {
+		if(this[field] !== val) {
+			this[field] = val;
+			return true;
+		}
+		return false;
 	}
 }
 
 @inject('appStore') @observer
 export default
 class FeedbackForm extends Component<Props, {}> {
-	private store: SettingsStore;
+	private store: FeedbackStore;
 
 	constructor(props: Props) {
 		super(props);
 
-		this.store = new SettingsStore();
+		this.store = new FeedbackStore();
 	}
 
 	public render() {
+		const {
+			store,
+		} = this;
 		return (
-			<form>
-				1234321
-			</form>
+			<div>
+				<p>
+					Do you have some feedback?  Did you find a bug? Want to
+					share say something nice (or mean!) with us?
+				</p>
+				<p>
+					<TextField
+						floatingLabelText="Email address"
+						value={store.userEmail}
+						onChange={(ev, val) => store.setEmail(val)}
+						fullWidth
+					/>
+					<TextField
+						fullWidth
+						multiLine
+						floatingLabelText="Feedback"
+						errorText="Must be at least 100 character"
+						value={store.userFeedback}
+						onChange={(ev, val) => store.setUserFeedback(val)}
+					/>
+					<Checkbox
+						checked={store.isBug}
+						onCheck={(ev, val) => store.setIsBug(val)}
+						label="I'm reporting a bug"
+					/>
+				</p>
+				<p>
+					<RaisedButton
+						primary
+						fullWidth
+						label="Submit"
+					/>
+				</p>
+			</div>
 		);
 	}
 }
