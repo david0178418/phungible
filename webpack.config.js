@@ -56,7 +56,6 @@ if(isProd) {
 plugins.push(
 	new OfflinePlugin({
 		externals: [
-			'./',
 			'/',
 			'/manifest.json',
 			'/images/icons/favicon.ico',
