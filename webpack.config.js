@@ -57,6 +57,7 @@ plugins.push(
 	new OfflinePlugin({
 		externals: [
 			'/',
+			'/index.html',
 			'/manifest.json',
 			'/images/icons/favicon.ico',
 			'/images/icons/icon-192x192.png',
