@@ -1,15 +1,16 @@
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import { Component } from 'react';
 
+import {submitFeedback} from '../../shared/api';
 import Storage from '../../shared/storage';
 import AppStore from '../../stores/app';
-
 const USER_EMAIL_KEY = 'userEmail';
+const MIN_FEEDBACK = 75;
 
 interface Props {
 	appStore?: AppStore;
@@ -17,11 +18,24 @@ interface Props {
 
 class FeedbackStore {
 	@observable public isBug = false;
-	@observable public userFeedback = '';
-	@observable public userEmail = '';
+	@observable public feedback = '';
+	@observable public email = '';
+	@observable public open = true;
+
+	@computed get emailIsValid() {
+		return !this.email || this.email.indexOf('@') && this.email.trim().length > 3;
+	}
+
+	@computed get feedbackIsValid() {
+		return this.feedback.length >= MIN_FEEDBACK;
+	}
+
+	@computed get isValid() {
+		return this.feedbackIsValid && this.emailIsValid;
+	}
 
 	constructor() {
-		this.userEmail = Storage.getItem(USER_EMAIL_KEY) || '';
+		this.email = Storage.getItem(USER_EMAIL_KEY) || '';
 	}
 
 	public setIsBug(bugVal: boolean) {
@@ -30,13 +44,34 @@ class FeedbackStore {
 	}
 
 	public setEmail(newEmail: string) {
-		if(this.setVal('userEmail', newEmail)) {
+		if(this.setVal('email', newEmail)) {
 			Storage.setItem(USER_EMAIL_KEY, newEmail);
 		}
 	}
 
 	public setUserFeedback(newEmail: string) {
-		this.setVal('userFeedback', newEmail);
+		this.setVal('feedback', newEmail);
+	}
+
+	public formatData(appStore: AppStore) {
+		let debugData = '';
+
+		if(this.isBug) {
+			const appData = appStore.serialize();
+			delete appData.transactions;
+			debugData = JSON.stringify(appData);
+		}
+
+		return {
+			debugData,
+			email: this.emailIsValid ? this.email : '',
+			feedback: this.feedback,
+			isBug: this.isBug,
+		};
+	}
+
+	public closeForm() {
+		this.open = false;
 	}
 
 	@action private setVal<Field extends keyof FeedbackStore>(field: Field, val: FeedbackStore[Field]) {
@@ -72,16 +107,17 @@ class FeedbackForm extends Component<Props, {}> {
 				<p>
 					<TextField
 						floatingLabelText="Email address"
-						value={store.userEmail}
+						value={store.email}
+						errorText={store.emailIsValid ? '' : 'Must be a vaid email'}
 						onChange={(ev, val) => store.setEmail(val)}
 						fullWidth
 					/>
 					<TextField
 						fullWidth
 						multiLine
-						floatingLabelText="Feedback"
-						errorText="Must be at least 100 character"
-						value={store.userFeedback}
+						floatingLabelText="Feedback (required)"
+						errorText={store.feedbackIsValid ? '' : `Must be at least ${MIN_FEEDBACK} character`}
+						value={store.feedback}
 						onChange={(ev, val) => store.setUserFeedback(val)}
 					/>
 					<Checkbox
@@ -94,10 +130,17 @@ class FeedbackForm extends Component<Props, {}> {
 					<RaisedButton
 						primary
 						fullWidth
+						disabled={!store.isValid}
 						label="Submit"
+						onClick={() => this.handleSubmit()}
 					/>
 				</p>
 			</div>
 		);
+	}
+
+	public handleSubmit() {
+		submitFeedback(this.store.formatData(this.props.appStore))
+		.then(() => this.store.closeForm());
 	}
 }

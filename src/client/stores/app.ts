@@ -94,6 +94,9 @@ class AppStore {
 		ProfilesStore.saveCurrentProfile();
 		ProfilesStore.saveProfiles();
 	}
+	public serialize() {
+		return serialize(this);
+	}
 	public debugString() {
 		return JSON.stringify(serialize(this));
 	}
