@@ -81,6 +81,7 @@ class Transaction {
 	}
 
 	@action public confirm() {
+		this.date = new Date();
 		this.needsConfirmation = false;
 	}
 
