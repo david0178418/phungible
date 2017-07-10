@@ -265,7 +265,7 @@ class TrendsStore {
 			))
 			.reduce((val, effects) => val.concat(effects), []);
 
-		const effects = [].concat(
+		const allEffects = [].concat(
 			transactionEffects,
 			budgetedAmounts,
 			budgetAdjustments,
@@ -283,7 +283,7 @@ class TrendsStore {
 					.filter((account) => dateMoment.isSameOrAfter(account.firstBalanceUpdate.date, 'day'))
 					.reduce((val, account) => {
 						val[account.id] =
-							effectsOnAccountDate(account, dateMoment, effects);
+							effectsOnAccountDate(account, dateMoment, allEffects);
 						return val;
 					}, dateBalances);
 			})

@@ -11,12 +11,12 @@ function dateRange(from: DateRangeParam, to: DateRangeParam) {
 	const fromMoment = moment(from);
 	const toMoment = moment(to);
 	const diff = toMoment.diff(fromMoment, 'days');
-	const dateRange = [];
+	const range = [];
 
 	for(let x = 0; x <= diff; x++) {
-		dateRange.push(fromMoment.clone());
+		range.push(fromMoment.clone());
 		fromMoment.add(1, 'day');
 	}
 
-	return dateRange;
+	return range;
 }

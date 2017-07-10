@@ -5,7 +5,6 @@ import {Component} from 'react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
-import ActivationPrompt from './components/activation-prompt';
 import PinPrompt from './components/pin-prompt';
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
@@ -21,7 +20,6 @@ type Props = {
 class AppInitStore {
 	@observable public pin = '';
 	@observable public needUserPin = false;
-	@observable public isActivated = true;
 
 	@computed get checkingPin() {
 		return this.needUserPin && (this.pin.length === 4);
@@ -125,23 +123,18 @@ class App extends Component<Props, any> {
 
 	// TODO Cleanup quick/hack encryption code
 	@action public componentDidMount() {
-		if(Storage.isActivated()) {
-			Storage.initStorage((success: boolean) => {
-				if(success) {
-					this.handleStorageInit();
-				} else {
-					this.initStore.needUserPin = true;
-				}
-			});
-		} else {
-			this.initStore.isActivated = false;
-		}
+		Storage.initStorage((success: boolean) => {
+			if(success) {
+				this.handleStorageInit();
+			} else {
+				this.initStore.needUserPin = true;
+			}
+		});
 	}
 
 	public render() {
 		const {
 			checkingPin,
-			isActivated,
 			needUserPin,
 			pin,
 		} = this.initStore;
@@ -155,10 +148,6 @@ class App extends Component<Props, any> {
 							pin={pin}
 							onClearPin={() => this.handleClearPin()}
 							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
-						/>
-						<ActivationPrompt
-							open={!isActivated}
-							onActivation={() => this.handleActivation()}
 						/>
 						{!!this.store && (
 							<TransactionConfirmationPrompt
@@ -184,12 +173,6 @@ class App extends Component<Props, any> {
 					</Layout>
 			</MuiThemeProvider>
 		);
-	}
-
-	@action private handleActivation() {
-		this.initStore.isActivated = true;
-		Storage.actvate();
-		Storage.initStorage(() => this.handleStorageInit());
 	}
 
 	@action private handleClearPin() {
