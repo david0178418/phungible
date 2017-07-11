@@ -14,6 +14,7 @@ import {
 	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
+	FeedbackPage,
 	GettingStartedPage,
 	Help,
 	ScheduledTransactionEditPage,
@@ -90,6 +91,8 @@ class Routes extends Component<Props, State> {
 			[BudgetEditPage.pathParams]: (params) => this.setPage(BudgetEditPage, params),
 			[ClearDataPage.path]: () => this.setPage(ClearDataPage),
 			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage),
+			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage),
+			[FeedbackPage.path]: () => this.setPage(FeedbackPage),
 			[GettingStartedPage.path]: () => this.setPage(GettingStartedPage),
 			[Help.path]: () => this.setPage(Help),
 			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage),
@@ -159,6 +162,12 @@ class Routes extends Component<Props, State> {
 						<DailyActivityPage
 							disableAnimation={disableNextPageAnimation}
 							key={DailyActivityPage.path}
+						/>
+					}
+					{page === FeedbackPage.path &&
+						<FeedbackPage
+							disableAnimation={disableNextPageAnimation}
+							key={FeedbackPage.path}
 						/>
 					}
 					{page === GettingStartedPage.path &&

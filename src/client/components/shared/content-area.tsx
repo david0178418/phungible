@@ -5,16 +5,17 @@ const HEADING_HEIGHT = 64;
 
 type Props = {
 	children?: any;
+	style?: any;
 };
 
 export default
-function ContentArea({children}: Props) {
+function ContentArea({children, style}: Props) {
 	return (
-		<div style={{
+		<div style={Object.assign({
 			maxHeight: `calc(100vh - ${HEADING_HEIGHT}px - ${BOTTOM_PADDING}px)`,
 			overflowX: 'auto',
 			paddingBottom: BOTTOM_PADDING,
-		}}>
+		}, style)}>
 			{children}
 		</div>
 	);
