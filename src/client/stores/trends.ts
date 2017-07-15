@@ -155,7 +155,9 @@ class TrendsStore {
 
 		const budgetAdjustments: TransactionEffect[] = this.budgets
 			.map((budget) => {
-				const startDate = budget.occuranceOnOrBeforeDate(dateMoments[0].toDate());
+				const startDate = dateMoments.find((dateMoment) => {
+					return !!budget.occuranceOnOrBeforeDate(dateMoment.toDate());
+				});
 
 				if(!startDate) {
 					return [];
@@ -184,8 +186,8 @@ class TrendsStore {
 						if(budgetTransactionTotal && remainingPeriodTotal > 0) {
 							let amount = -(budgetTransactionTotal * budget.fromAccount.fromBalanceDirection);
 
-							if(remainingPeriodTotal < amount) {
-								amount = remainingPeriodTotal;
+							if(remainingPeriodTotal < -amount) {
+								amount = -remainingPeriodTotal;
 								remainingPeriodTotal = 0;
 							}
 

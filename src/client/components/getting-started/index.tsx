@@ -95,7 +95,7 @@ class GettingStarted extends React.Component<Props, State> {
 							</p>
 							<p>
 								Budget planning is hard.  <em>Phungible</em> aims to make
-								planning easier by allowing you your financial future if you stick to your plan today.
+								planning easier by allowing you to take control of your financial future if you stick to your plan today.
 							</p>
 							<p>
 								Let's get started!
@@ -163,7 +163,10 @@ class GettingStarted extends React.Component<Props, State> {
 									<em>Transactions</em> are the <strong>real</strong> record of your
 									spending.  <em>Recurring Transactions</em> will
 									automatically create <em>Transactions</em> on the dates they
-									occur.  <em>Budgets</em> have <em>Transactions</em> filed against them.
+									occur.
+								</p>
+								<p>
+									<em>Budgets</em> have <em>Transactions</em> filed against them.
 									When making projections on <em>Account</em> balances, it is assumed you will spend
 									the entire amount.  If more is spent than
 									budgeted for a given period, that budget
