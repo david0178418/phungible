@@ -3,7 +3,7 @@
   "version": "0.6.2",
   "description": "Phungible budget app",
   "engines": {
-    "node": ">=6.10.1"
+    "node": ">=6.10.2"
   },
   "main": "src/server/index.js",
   "scripts": {
