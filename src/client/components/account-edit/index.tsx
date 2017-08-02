@@ -40,7 +40,7 @@ observer(function AccountEdit({model, onSubmit}: Props) {
 						width: 40,
 					}}
 				>
-					{model.type === AccountType.Savings ?
+					{model.accountType === AccountType.Savings ?
 						<SavingsIcon
 							style={{
 								bottom: 13,
@@ -58,7 +58,7 @@ observer(function AccountEdit({model, onSubmit}: Props) {
 				<SelectField
 					fullWidth
 					floatingLabelText="Type"
-					value={model.type}
+					value={model.accountType}
 					onChange={(ev, index, value) => handleUpdateType(value, model)}
 				>
 					<MenuItem
@@ -99,5 +99,5 @@ const handleUpdateName = action(function(newName: string, account: Account) {
 	account.name = newName;
 });
 const handleUpdateType = action(function(newType: AccountType, account: Account) {
-	account.type = newType;
+	account.accountType = newType;
 });

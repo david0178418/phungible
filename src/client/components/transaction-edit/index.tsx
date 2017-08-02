@@ -5,10 +5,10 @@ import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import ScheduledTransaction from '../../stores/scheduled-transaction';
 
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
+import Budget from '../../stores/budget';
 import Transaction, {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
@@ -18,7 +18,7 @@ type FormEvent = React.FormEvent<HTMLFormElement>;
 
 type Props = {
 	accounts: Account[];
-	budgets: ScheduledTransaction[];
+	budgets: Budget[];
 	hideDate?: boolean;
 	hideNotes?: boolean;
 	hideTowardsAccount?: boolean;
@@ -72,7 +72,7 @@ class TransactionEdit extends Component<Props, any> {
 						<SelectField
 							fullWidth
 							floatingLabelText="Type"
-							value={transaction.type}
+							value={transaction.transactionType}
 							onChange={(ev, index, value) => this.handleUpdateType(value, transaction)}
 						>
 							<MenuItem value={TransactionType.Expense} primaryText="Expense" />
@@ -142,7 +142,7 @@ class TransactionEdit extends Component<Props, any> {
 
 		if(
 			!transaction.fromAccount &&
-			transaction.type !== TransactionType.Income
+			transaction.transactionType !== TransactionType.Income
 		) {
 			errorText = 'Expenses require an account to draw from';
 		}
@@ -156,7 +156,7 @@ class TransactionEdit extends Component<Props, any> {
 
 		if(
 			!transaction.towardAccount &&
-			transaction.type === TransactionType.Income
+			transaction.transactionType === TransactionType.Income
 		) {
 			errorText = 'Incomes require an account to deposit toward';
 		}
@@ -188,7 +188,7 @@ class TransactionEdit extends Component<Props, any> {
 		transaction.date = newDate;
 	}
 	@action private handleUpdateType(newType: TransactionType, transaction: Transaction) {
-		transaction.type = newType;
+		transaction.transactionType = newType;
 	}
 	private findAccount(id: string) {
 		return this.props.accounts.find((account) => account.id === id) || null;

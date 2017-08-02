@@ -58,10 +58,10 @@ class TrendsPage extends Component<Props, State> {
 					>
 						{renderBody && (
 							<Trends
-								accounts={appStore.accounts}
-								budgets={appStore.budgets}
-								transactions={appStore.transactions}
-								scheduledTransactions={appStore.scheduledTransactions}
+								accounts={(appStore.accounts as any).toJS()}
+								budgets={(appStore.budgets as any).toJS()}
+								transactions={(appStore.transactions as any).toJS()}
+								scheduledTransactions={(appStore.scheduledTransactions as any).toJS()}
 							/>
 						)}
 						{!renderBody && (

@@ -1,5 +1,10 @@
+import PouchStorage from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
+import Account from './account';
+import Budget from './budget';
+import ScheduledTransaction from './scheduled-transaction';
+import Transaction from './transaction';
 
 const PROFILE_DATA_PREFIX = 'profile-data-';
 
@@ -19,7 +24,7 @@ class Profiles {
 		return Profiles.profiles.find((profile) => profile.id === id);
 	}
 
-	public static getCurrentProfile() {
+	public static async getCurrentProfile() {
 		const profiles = Profiles.getProfiles();
 
 		if(!profiles.length) {
@@ -33,11 +38,42 @@ class Profiles {
 			Profiles.saveCurrentProfile();
 		}
 
+		const db = PouchStorage.openDb(Profiles.currentProfile.id);
+		const info = await db.info();
+
+		if(!info.doc_count) {
+			const legacyProfile = Storage.getItem(`${PROFILE_DATA_PREFIX}${Profiles.currentProfile.id}`);
+			await PouchStorage.convertOldTree(legacyProfile);
+		}
+
 		return Profiles.currentProfile;
 	}
 
-	public static getProfileData(id: string) {
-		return Storage.getItem(`${PROFILE_DATA_PREFIX}${id}`);
+	public static async getProfileData(id: string) {
+		let accounts: Account[];
+		let budgets: Budget[];
+		let scheduledTransactions: ScheduledTransaction[];
+		let transactions: Transaction[];
+
+		return Promise.all([
+			PouchStorage.getAllType(Account.type).then((a) => accounts = a),
+			PouchStorage.getAllType(Budget.type).then((b) => budgets = b),
+			PouchStorage.getAllType(ScheduledTransaction.type).then((s) => scheduledTransactions = s),
+			PouchStorage.getAllType(Transaction.type).then((t) => transactions = t),
+		])
+		.then((values) => {
+			return {
+				accounts: values[0],
+				budgets: values[1],
+				id,
+				scheduledTransactions: values[2],
+				transactions: values[3],
+			};
+		});
+	}
+
+	public static getLastProfileId() {
+		return Storage.getItem('lastProfileId');
 	}
 
 	public static saveCurrentProfileData(data: any) {
@@ -80,3 +116,5 @@ class Profiles {
 		};
 	}
 }
+
+(window as any).Profiles = Profiles;

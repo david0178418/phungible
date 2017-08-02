@@ -1,16 +1,17 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import 'moment-recur';
-import {deserialize, identifier, list, object, serializable, serialize} from 'serializr';
+import { deserialize, identifier, list, object, serializable, serialize } from 'serializr';
 
 import ItemTypeName from 'item-type-name';
+import PouchStorage from '../shared/pouch-storage';
 import {generateUuid, Money} from '../shared/utils';
 import Account from './account';
-import ProfilesStore from './profiles';
+import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
-type ItemType = Account | ScheduledTransaction | Transaction;
+type ItemType = Account | Budget | ScheduledTransaction | Transaction;
 
 export default
 class AppStore {
@@ -25,7 +26,7 @@ class AppStore {
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
 	@serializable(list(object(ScheduledTransaction)))
-	@observable public budgets: ScheduledTransaction[];
+	@observable public budgets: Budget[];
 	@serializable
 	public lastUpdatedDate: string;
 	@serializable(list(object(ScheduledTransaction)))
@@ -86,14 +87,6 @@ class AppStore {
 
 		return transactions;
 	}
-	public save() {
-		ProfilesStore.saveCurrentProfileData(serialize(this));
-	}
-	public saveAll() {
-		this.save();
-		ProfilesStore.saveCurrentProfile();
-		ProfilesStore.saveProfiles();
-	}
 	public serialize() {
 		return serialize(this);
 	}
@@ -107,42 +100,58 @@ class AppStore {
 		});
 		this.showTransactionConfirmation = !!this.unconfirmedTransactions.length;
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
-		this.save();
 	}
 	@action public clearAllData() {
 		(this.accounts as any).clear();
 		(this.budgets as any).clear();
 		(this.scheduledTransactions as any).clear();
 		(this.transactions as any).clear();
-		this.save();
+		PouchStorage.deleteDb()
+		.then(() => PouchStorage.openDb(this.id));
 	}
 	@action public cleanScheduledTransactions() {
 		const accountIds = this.accounts.map((account) => account.id);
-		this.scheduledTransactions
-			.forEach((schedTrans) => {
-				if(schedTrans.fromAccount && accountIds.indexOf(schedTrans.fromAccount.id) === -1) {
-					schedTrans.fromAccount = null;
-				}
-
-				if(schedTrans.towardAccount && accountIds.indexOf(schedTrans.towardAccount.id) === -1) {
-					schedTrans.towardAccount = null;
-				}
-			});
-
 		(this.scheduledTransactions as any).replace(
-			this.scheduledTransactions.filter((schedTrans) => schedTrans.isValid),
-		);
+			this.scheduledTransactions
+				.filter((schedTrans) => {
+					let updated = false;
+
+					if(schedTrans.fromAccount && accountIds.indexOf(schedTrans.fromAccount.id) === -1) {
+						schedTrans.fromAccount = null;
+						updated = true;
+					}
+
+					if(schedTrans.towardAccount && accountIds.indexOf(schedTrans.towardAccount.id) === -1) {
+						schedTrans.towardAccount = null;
+						updated = true;
+					}
+
+					if(!schedTrans.isValid) {
+						PouchStorage.removeDoc(schedTrans);
+					} else if(updated) {
+						PouchStorage.saveDoc(schedTrans);
+					}
+				}),
+			);
 	}
 	@action public cleanBudgets() {
 		const accountIds = this.accounts.map((account) => account.id);
 		this.budgets
 			.forEach((budget) => {
+				let updated = false;
+
 				if(budget.fromAccount && accountIds.indexOf(budget.fromAccount.id) === -1) {
 					budget.fromAccount = null;
+					updated = true;
 				}
 
 				if(budget.towardAccount && accountIds.indexOf(budget.towardAccount.id) === -1) {
 					budget.towardAccount = null;
+					updated = true;
+				}
+
+				if(updated) {
+					PouchStorage.saveDoc(budget);
 				}
 			});
 
@@ -154,12 +163,20 @@ class AppStore {
 		const accountIds = this.accounts.map((account) => account.id);
 		this.transactions
 			.forEach((transaction) => {
+				let updated = false;
+
 				if(transaction.fromAccount && accountIds.indexOf(transaction.fromAccount.id) === -1) {
 					transaction.fromAccount = null;
+					updated = true;
 				}
 
 				if(transaction.towardAccount && accountIds.indexOf(transaction.towardAccount.id) === -1) {
 					transaction.towardAccount = null;
+					updated = true;
+				}
+
+				if(updated) {
+					PouchStorage.saveDoc(transaction);
 				}
 			});
 
@@ -169,7 +186,6 @@ class AppStore {
 	}
 	@action public dismissTransactionConfirmation() {
 		this.showTransactionConfirmation = false;
-		this.save();
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
@@ -180,7 +196,7 @@ class AppStore {
 				this.removeAccount(item as Account);
 				break;
 			case 'Budget':
-				this.removeBudget(item as ScheduledTransaction);
+				this.removeBudget(item as Budget);
 				break;
 			case 'Recurring Transaction':
 				this.removeScheduledTransaction(item as ScheduledTransaction);
@@ -195,20 +211,19 @@ class AppStore {
 		this.cleanBudgets();
 		this.cleanScheduledTransactions();
 		this.cleanTransactions();
-
-		this.save();
+		PouchStorage.removeDoc(account);
 	}
-	@action public removeBudget(budget: ScheduledTransaction) {
+	@action public removeBudget(budget: Budget) {
 		(this.budgets as any).remove(budget);
-		this.save();
+		PouchStorage.removeDoc(budget);
 	}
 	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		(this.scheduledTransactions as any).remove(scheduledTransaction);
-		this.save();
+		PouchStorage.removeDoc(scheduledTransaction);
 	}
 	@action public removeTransaction(transaction: Transaction) {
 		(this.transactions as any).remove(transaction);
-		this.save();
+		PouchStorage.removeDoc(transaction);
 	}
 	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
@@ -220,6 +235,7 @@ class AppStore {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
+				PouchStorage.saveDoc(transaction);
 			}
 		}
 
@@ -231,7 +247,7 @@ class AppStore {
 				this.saveAccount(newItem as Account);
 				break;
 			case 'Budget':
-				this.saveBudget(newItem as ScheduledTransaction);
+				this.saveBudget(newItem as Budget);
 				break;
 			case 'Recurring Transaction':
 				this.saveScheduledTransaction(newItem as ScheduledTransaction);
@@ -249,9 +265,9 @@ class AppStore {
 			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
 			this.accounts[index] = newAccount;
 		}
-		this.save();
+		PouchStorage.saveDoc(newAccount);
 	}
-	@action public saveBudget(newBudget: ScheduledTransaction) {
+	@action public saveBudget(newBudget: Budget) {
 		if(!newBudget.id) {
 			newBudget.id = generateUuid();
 			this.budgets.push(newBudget);
@@ -261,7 +277,7 @@ class AppStore {
 			);
 			this.budgets[index] = newBudget;
 		}
-		this.save();
+		PouchStorage.saveDoc(newBudget);
 	}
 	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
@@ -286,7 +302,7 @@ class AppStore {
 		}
 
 		this.sortTransactions();
-		this.save();
+		PouchStorage.saveDoc(newScheduledTransaction);
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
@@ -297,7 +313,7 @@ class AppStore {
 			this.transactions[index] = newTransaction;
 		}
 		this.sortTransactions();
-		this.save();
+		PouchStorage.saveDoc(newTransaction);
 	}
 	@action public sortTransactions() {
 		(this.transactions as any).replace(this.transactions.sort((a, b) => {
@@ -393,15 +409,8 @@ class AppStore {
 				* account.towardBalanceDirection,
 		);
 	}
-	private findFutureTransactionsOnDate(date: Date) {
-		const scheduledTransactions =
-			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));
-
-		return scheduledTransactions.map((scheduledTransaction) => scheduledTransaction.generateTransaction(date));
-	}
-
-	private tempFixReferencesBug() {
-		this.scheduledTransactions.concat(this.budgets).map((schedTrans) => {
+	public tempFixReferencesBug() {
+		[].concat(this.scheduledTransactions, this.budgets).map((schedTrans) => {
 			if(schedTrans.fromAccount) {
 				schedTrans.fromAccount = this.findAccount(schedTrans.fromAccount.id);
 			}
@@ -409,5 +418,11 @@ class AppStore {
 				schedTrans.towardAccount = this.findAccount(schedTrans.towardAccount.id);
 			}
 		});
+	}
+	private findFutureTransactionsOnDate(date: Date) {
+		const scheduledTransactions =
+			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));
+
+		return scheduledTransactions.map((scheduledTransaction) => scheduledTransaction.generateTransaction(date));
 	}
 }

@@ -30,7 +30,7 @@ function ActivityItem({transaction, onRemove}: ActivityItemProps) {
 			secondaryText={secondaryText}
 			rightIconButton={rightIconButton}
 			leftIcon={
-				transaction.type === TransactionType.Income ?
+				transaction.transactionType === TransactionType.Income ?
 					<ActionTrendingUp color={Colors.Money} /> :
 					<ActionTrendingDown color={Colors.Debt} />
 			}

@@ -5,21 +5,21 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 
 import AppStore from '../../stores/app';
-import ScheduledTransaction from '../../stores/scheduled-transaction';
+import Budget from '../../stores/budget';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 const {Component} = React;
 
 type Props = {
 	store: AppStore;
-	budgets: ScheduledTransaction[];
-	onRemove: (budget: ScheduledTransaction) => void;
+	budgets: Budget[];
+	onRemove: (budget: Budget) => void;
 };
 
 class BudgetsStore {
 	public appStore: AppStore;
 
-	@observable private _openBudget: ScheduledTransaction;
+	@observable private _openBudget: Budget;
 
 	constructor(appStore: AppStore) {
 		this.appStore = appStore;
@@ -29,17 +29,17 @@ class BudgetsStore {
 		this._openBudget = null;
 	}
 	@action public createBudget() {
-		this._openBudget = new ScheduledTransaction();
+		this._openBudget = new Budget();
 	}
 	@action public saveBudget() {
 		this.appStore.saveBudget(this._openBudget);
 		this.closeOpenBudget();
 	}
-	@action public editBudget(budget: ScheduledTransaction) {
-		this._openBudget = ScheduledTransaction.clone(budget);
+	@action public editBudget(budget: Budget) {
+		this._openBudget = Budget.clone(budget);
 	}
-	@action public removeBudget(budget: ScheduledTransaction) {
-		this._openBudget = ScheduledTransaction.clone(budget);
+	@action public removeBudget(budget: Budget) {
+		this._openBudget = Budget.clone(budget);
 	}
 	@computed get budgets() {
 		return this.appStore.budgets;
@@ -47,7 +47,7 @@ class BudgetsStore {
 	@computed get isOpen() {
 		return !!this._openBudget;
 	}
-	get openBudget(): ScheduledTransaction {
+	get openBudget(): Budget {
 		return this._openBudget;
 	}
 }
@@ -75,7 +75,7 @@ class BudgetsList extends Component<Props, {}> {
 						key={budget.id}
 						primaryText={`${budget.amount.valFormatted} ${budget.name}`}
 						secondaryText={`Current Remaining: ${store.findRemainingBudgetBalance(budget.id).valFormatted}`}
-						rightIconButton={EditRemoveMenu<ScheduledTransaction>('budget', budget, onRemove)}
+						rightIconButton={EditRemoveMenu<Budget>('budget', budget, onRemove)}
 					/>
 				))}
 				{!budgets.length && (

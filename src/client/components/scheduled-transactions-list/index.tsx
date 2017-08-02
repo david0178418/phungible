@@ -105,7 +105,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 						primaryText={`${scheduledTransaction.name}`}
 						secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
 						leftIcon={
-							scheduledTransaction.type === TransactionType.Income ?
+							scheduledTransaction.transactionType === TransactionType.Income ?
 								<IncomeIcon/> :
 								<ExpenseIcon/>
 						}

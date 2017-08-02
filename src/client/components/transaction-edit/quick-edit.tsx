@@ -2,9 +2,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-import ScheduledTransaction from '../../stores/scheduled-transaction';
 
 import Account from '../../stores/account';
+import Budget from '../../stores/budget';
 import Transaction from '../../stores/transaction';
 import TransactionEdit from '../transaction-edit';
 
@@ -12,7 +12,7 @@ const {Component} = React;
 
 interface Props {
 	accounts: Account[];
-	budgets?: ScheduledTransaction[];
+	budgets?: Budget[];
 	date: Date;
 	openButtonText: string;
 	transaction: Transaction;

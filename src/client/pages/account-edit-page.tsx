@@ -1,4 +1,3 @@
-
 import AppBar from 'material-ui/AppBar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconButton from 'material-ui/IconButton';
@@ -15,7 +14,7 @@ import AppStore from '../stores/app';
 import AccountsPage from './accounts-page';
 import Page from './page';
 
-const {Component} = React;
+const { Component } = React;
 
 class AccountEditStore {
 	public account: Account;
@@ -60,7 +59,7 @@ class AccountEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		let model;
+		let model: Account;
 
 		if(props.model) {
 			model = props.model;

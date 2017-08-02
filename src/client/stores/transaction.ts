@@ -4,6 +4,7 @@ import {deserialize, identifier, list, object, primitive, serializable, serializ
 
 import Money from '../shared/utils/money';
 import Account from './account';
+import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
 
 type Moment = moment.Moment;
@@ -22,8 +23,11 @@ interface TransactionEffect {
 	date: Date;
 }
 
+type TYPE = 'transaction';
+
 export default
 class Transaction {
+	public static type: TYPE = 'transaction';
 	@action public static deserialize(data: any) {
 		return deserialize(Transaction, data);
 	}
@@ -47,9 +51,11 @@ class Transaction {
 	@serializable
 	@observable public name = '';
 	@serializable
-	@observable public type: TransactionType = TransactionType.Expense;
+	@observable public transactionType: TransactionType = TransactionType.Expense;
 	@serializable(object(ScheduledTransaction))
-	@observable public generatedFrom: ScheduledTransaction | null = null;
+	@observable public generatedFrom: ScheduledTransaction | Budget | null = null;
+	@serializable
+	public type: TYPE = 'transaction';
 	@serializable
 	@observable private _dateString: string;
 
@@ -76,8 +82,8 @@ class Transaction {
 	@computed get isValid() {
 		const {Income} = TransactionType;
 		return !!(this.name && (
-			this.type !== Income && this.fromAccount ||
-			this.type === Income && this.towardAccount
+			this.transactionType !== Income && this.fromAccount ||
+			this.transactionType === Income && this.towardAccount
 		));
 	}
 
@@ -126,5 +132,9 @@ class Transaction {
 	}
 	public occursOn(date: Date | Moment) {
 		return this.dateMoment.isSame(date, 'day');
+	}
+
+	public serialize() {
+		return serialize(this);
 	}
 }

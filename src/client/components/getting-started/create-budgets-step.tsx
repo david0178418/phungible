@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import BudgetEditPage from '../../pages/budget-edit-page';
 import AppStore from '../../stores/app';
-import ScheduledTransaction from '../../stores/scheduled-transaction';
-import ScheduledTransactionsList from '../scheduled-transactions-list';
+import Budget from '../../stores/budget';
+import BudgetsList from '../budgets-list';
 import CreateItemStep from './create-item-step';
 
 interface Props {
-	items: ScheduledTransaction[];
+	items: Budget[];
 	appStore?: AppStore;
 }
 
@@ -30,8 +30,8 @@ class CreateAccountsStep extends React.Component<Props, {}> {
 					appStore={appStore}
 					items={items}
 					typeName="Budget"
-					modelClass={ScheduledTransaction}
-					listComponent={ScheduledTransactionsList}
+					modelClass={Budget}
+					listComponent={BudgetsList}
 					editComponent={BudgetEditPage}
 					listComponentProps={{
 						isBudget: true,

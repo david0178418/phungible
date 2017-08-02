@@ -7,7 +7,7 @@ import * as React from 'react';
 
 import Colors from '../../shared/colors';
 import AppStore from '../../stores/app';
-import ScheduledTransaction from '../../stores/scheduled-transaction';
+import Budget from '../../stores/budget';
 import Transaction from '../../stores/transaction';
 import QuickEdit from '../transaction-edit/quick-edit';
 
@@ -15,7 +15,7 @@ const {Component} = React;
 
 interface Props {
 	store: AppStore;
-	budgets: ScheduledTransaction[];
+	budgets: Budget[];
 	onAdd: (transaction: Transaction) => void;
 	onRemove: (transaction: Transaction) => void;
 }
@@ -88,7 +88,7 @@ class CurrentBudgets extends Component<Props, {}> {
 		);
 	}
 
-	@action private handleAddExpenseFromBudget(budget: ScheduledTransaction) {
+	@action private handleAddExpenseFromBudget(budget: Budget) {
 		if(!this.store.quickTransaction) {
 			this.handleToggleQuickTransaction();
 		}

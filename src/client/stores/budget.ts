@@ -36,16 +36,16 @@ enum RepeatUnits {
 	None,
 }
 
-type TYPE = 'recurring-transaction';
+type TYPE = 'budget';
 
 export default
-class ScheduledTransaction {
-	public static type: TYPE = 'recurring-transaction';
+class Budget {
+	public static type: TYPE = 'budget';
 	@action public static deserialize(data: any) {
-		return deserialize(ScheduledTransaction, data);
+		return deserialize(Budget, data);
 	}
-	@action public static clone(originalEntry: ScheduledTransaction) {
-		return ScheduledTransaction.deserialize(serialize(originalEntry));
+	@action public static clone(originalEntry: Budget) {
+		return Budget.deserialize(serialize(originalEntry));
 	}
 	@serializable(object(Account))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
@@ -71,13 +71,13 @@ class ScheduledTransaction {
 	@serializable
 	@observable public transactionType: TransactionType = TransactionType.Expense;
 	@serializable
-	public type: TYPE = 'recurring-transaction';
+	public type: TYPE = 'budget';
 	@serializable
 	@observable private _repeatType: RepeatTypes = RepeatTypes.Days;
 	@serializable
 	@observable private _startDate: string;
 
-	constructor(params: Partial<ScheduledTransaction> = {}) {
+	constructor(params: Partial<Budget> = {}) {
 		Object.assign(this, {
 			_repeatValues: [],
 			amount: new Money(),
@@ -254,7 +254,7 @@ class ScheduledTransaction {
 }
 
 export
-class ScheduledTransactionPartial {
+class BudgetPartial {
 	public id: string;
 	@observable public name = '';
 	public amount: Money;
@@ -266,8 +266,8 @@ class ScheduledTransactionPartial {
 }
 
 export
-class ScheduledTransactionFacade extends ScheduledTransaction {
-	@observable public transactionPartials: ScheduledTransactionPartial[];
+class BudgetFacade extends Budget {
+	@observable public transactionPartials: BudgetPartial[];
 
 	constructor() {
 		super();
@@ -290,16 +290,16 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	@action public addPartial() {
-		this.transactionPartials.push(new ScheduledTransactionPartial());
+		this.transactionPartials.push(new BudgetPartial());
 	}
 
 	@action public removePartial(id: string) {
 		(this.transactionPartials as any).replace(this.transactionPartials.filter((tp) => tp.id !== id));
 	}
 
-	public createScheduledTransactions() {
+	public createBudgets() {
 		return this.transactionPartials.map((transaction) => {
-			return ScheduledTransaction.deserialize({
+			return Budget.deserialize({
 				...this.serialize(),
 				amount: transaction.amount,
 				name: transaction.name,

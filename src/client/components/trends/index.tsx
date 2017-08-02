@@ -6,6 +6,7 @@ import * as React from 'react';
 import DatePicker from 'material-ui/DatePicker';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
+import Budget from '../../stores/budget';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
 import TrendsStore from '../../stores/trends';
@@ -15,7 +16,7 @@ const {Component} = React;
 
 interface Props {
 	accounts: Account[];
-	budgets: ScheduledTransaction[];
+	budgets: Budget[];
 	transactions: Transaction[];
 	scheduledTransactions: ScheduledTransaction[];
 }

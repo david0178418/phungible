@@ -115,7 +115,7 @@ class AccountsList extends Component<Props, {}> {
 							primaryText={`${store.getBalanceAsOfDate(account, today).valFormatted} ${account.name}`}
 							secondaryText={`Pending: ${store.getPendingChange(account).valFormatted}`}
 							leftIcon={
-								account.type === AccountType.Savings ?
+								account.accountType === AccountType.Savings ?
 									<SavingsIcon/> :
 									<DebtIcon/>
 							}

@@ -1,8 +1,6 @@
 import * as moment from 'moment';
 import 'moment-recur';
 
-import {RepeatDays, RepeatTypes, RepeatUnits} from '../../stores/scheduled-transaction';
-
 export default
 class RecurTypes {
 	public static getRecurrence(startDate: string, interval: RepeatTypes, values: number[], unit?: RepeatUnits) {
@@ -40,3 +38,5 @@ class RecurTypes {
 		return values.map((val) => RepeatDays[val]);
 	}
 }
+
+import {RepeatDays, RepeatTypes, RepeatUnits} from '../../stores/scheduled-transaction';

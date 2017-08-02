@@ -13,8 +13,11 @@ enum AccountType {
 	Savings,
 }
 
+type TYPE = 'account';
+
 export default
 class Account {
+	public static type: TYPE = 'account';
 	@action public static deserialize(data: any) {
 		return deserialize(Account, data);
 	}
@@ -30,9 +33,11 @@ class Account {
 	@serializable
 	@observable public name = '';
 	@serializable
-	@observable public type: AccountType = AccountType.Savings;
+	@observable public accountType: AccountType = AccountType.Savings;
 	@serializable(list(object(BalanceUpdate)))
 	@observable public balanceUpdateHistory: BalanceUpdate[];
+	@serializable
+	public type: TYPE = 'account';
 
 	constructor(params: Partial<Account> = {}) {
 		Object.assign(this, {
@@ -84,13 +89,13 @@ class Account {
 		return !!(this.name && this.balanceUpdateHistory.length);
 	}
 	@computed get fromBalanceDirection() {
-		return this.type === AccountType.Debt ? 1 : -1;
+		return this.accountType === AccountType.Debt ? 1 : -1;
 	}
 	@computed get globalBalanceDirection() {
-		return this.type === AccountType.Savings ? 1 : -1;
+		return this.accountType === AccountType.Savings ? 1 : -1;
 	}
 	@computed get towardBalanceDirection() {
-		return this.type === AccountType.Savings ? 1 : -1;
+		return this.accountType === AccountType.Savings ? 1 : -1;
 	}
 
 	public applyTransactions(transactions: Transaction[], date: Date) {
@@ -103,9 +108,9 @@ class Account {
 
 			if(lastBalanceUpdate.date.isSameOrBefore(transactionDate, 'days') && transactionDate.isSameOrBefore(date, 'days')) {
 				if(transaction.fromAccount && transaction.fromAccount.id === this.id) {
-					total += transaction.amount.valCents * (this.type === Debt ? 1 : -1);
+					total += transaction.amount.valCents * (this.accountType === Debt ? 1 : -1);
 				} else if(transaction.towardAccount && transaction.towardAccount.id === this.id) {
-					total += transaction.amount.valCents * (this.type === Savings ? 1 : -1);
+					total += transaction.amount.valCents * (this.accountType === Savings ? 1 : -1);
 				}}
 		});
 
@@ -124,5 +129,9 @@ class Account {
 			}
 		});
 		return change;
+	}
+
+	public serialize() {
+		return serialize(this);
 	}
 }

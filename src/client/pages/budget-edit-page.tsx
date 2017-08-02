@@ -6,11 +6,11 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 
-import ScheduledTransactionEdit from '../components/scheduled-transaction-edit';
+import BudgetEdit from '../components/budget-edit';
 import ContentArea from '../components/shared/content-area';
 import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
-import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
+import Budget, {BudgetFacade} from '../stores/budget';
 import {TransactionType} from '../stores/transaction';
 import BudgetsPage from './budgets-page';
 import Page from './page';
@@ -18,24 +18,24 @@ import Page from './page';
 const {Component} = React;
 
 class BudgetEditStore {
-	public budget: ScheduledTransaction | ScheduledTransactionFacade;
+	public budget: Budget | BudgetFacade;
 	private appStore: AppStore;
 
-	constructor(appStore: AppStore, model: ScheduledTransactionFacade | ScheduledTransaction) {
+	constructor(appStore: AppStore, model: BudgetFacade | Budget) {
 		this.appStore = appStore;
 		this.budget = model;
 	}
 
 	public saveBudget() {
 		if(this.budget.isValid) {
-			if(this.budget instanceof ScheduledTransactionFacade) {
-				this.budget.createScheduledTransactions().map((transaction) => {
+			if(this.budget instanceof BudgetFacade) {
+				this.budget.createBudgets().map((transaction) => {
 					this.appStore.saveBudget(transaction);
-					this.budget = new ScheduledTransactionFacade();
+					this.budget = new BudgetFacade();
 				});
 			} else {
 				this.appStore.saveBudget(this.budget);
-				this.budget = new ScheduledTransactionFacade();
+				this.budget = new BudgetFacade();
 			}
 			return true;
 		} else {
@@ -51,7 +51,7 @@ class BudgetEditStore {
 type Props = {
 	appStore?: AppStore;
 	id?: string;
-	model?: ScheduledTransaction
+	model?: Budget
 	style?: any;
 	router?: Navigo;
 	onBack?: () => void;
@@ -68,7 +68,7 @@ class BudgetEditPage extends Component<Props, {}> {
 
 	constructor(props: Props) {
 		super(props);
-		let model: ScheduledTransactionFacade | ScheduledTransaction;
+		let model: BudgetFacade | Budget;
 
 		if(props.model) {
 			model = props.model;
@@ -77,8 +77,8 @@ class BudgetEditPage extends Component<Props, {}> {
 		}
 
 		if(!model) {
-			model = new ScheduledTransactionFacade();
-			model.type = TransactionType.BudgetedExpense;
+			model = new BudgetFacade();
+			model.transactionType = TransactionType.BudgetedExpense;
 		}
 		this.store = new BudgetEditStore(props.appStore, model);
 	}
@@ -88,7 +88,7 @@ class BudgetEditPage extends Component<Props, {}> {
 			budget,
 		} = this.store;
 		const transactionsValid = this.store.budget.isValid;
-		const action = (budget instanceof ScheduledTransaction && budget.id) ? 'Edit' : 'Create';
+		const action = (budget instanceof Budget && budget.id) ? 'Edit' : 'Create';
 		const style = this.props.style || {};
 		return (
 			<Page
@@ -101,7 +101,7 @@ class BudgetEditPage extends Component<Props, {}> {
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
 				<ContentArea>
-					<ScheduledTransactionEdit
+					<BudgetEdit
 						accounts={this.store.accounts}
 						isBudget
 						model={this.store.budget}

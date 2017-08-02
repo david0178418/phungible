@@ -4,10 +4,8 @@ import {observer, Provider} from 'mobx-react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
-import PinPrompt from './components/pin-prompt';
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
-import Storage from './shared/storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
 import ProfilesStore, {Profile} from './stores/profiles';
@@ -127,34 +125,21 @@ class App extends Component<Props, any> {
 		this.initStore = new AppInitStore();
 	}
 
-	// TODO Cleanup quick/hack encryption code
 	@action public componentDidMount() {
-		Storage.initStorage((success: boolean) => {
-			if(success) {
-				this.handleStorageInit();
-			} else {
-				this.initStore.needUserPin = true;
-			}
-		});
+		this.handleStorageInit();
 	}
 
 	public render() {
-		const {
-			checkingPin,
-			needUserPin,
-			pin,
-		} = this.initStore;
-
 		return (
 			<MuiThemeProvider muiTheme={theme}>
 					<Layout>
-						<PinPrompt
+						{/* <PinPrompt
 							open={needUserPin}
 							busy={checkingPin}
 							pin={pin}
 							onClearPin={() => this.handleClearPin()}
 							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
-						/>
+						/> */}
 						{!!this.store && (
 							<TransactionConfirmationPrompt
 								store={this.store}
@@ -181,40 +166,42 @@ class App extends Component<Props, any> {
 		);
 	}
 
-	@action private handleClearPin() {
-		this.initStore.pin = '';
-	}
+	// @action private handleClearPin() {
+	// 	this.initStore.pin = '';
+	// }
 
-	@action private handlePinUpdate(pin: string) {
-		this.initStore.pin = pin;
+	// @action private handlePinUpdate(pin: string) {
+	// 	this.initStore.pin = pin;
 
-		if(this.initStore.checkingPin) {
-			Storage.initStorage((success: boolean) => {
-				if(success) {
-					this.handleStorageInit();
-					this.initStore.needUserPin = false;
+	// 	if(this.initStore.checkingPin) {
+	// 		Storage.initLocalStorage(this.initStore.pin).then((success: boolean) => {
+	// 			if(success) {
+	// 				this.handleStorageInit();
+	// 				this.initStore.needUserPin = false;
+	// 			} else {
+	// 				this.initStore.pin = '';
+	// 			}
+	// 		});
+	// 	}
+	// }
+
+	@action private async handleStorageInit() {
+		this.currentProfile = await ProfilesStore.getCurrentProfile();
+
+		return ProfilesStore
+			.getProfileData(this.currentProfile.id)
+			.then(action((data) => {
+				if(data) {
+					this.store = AppStore.deserialize(data);
 				} else {
-					this.initStore.pin = '';
+					this.store = new AppStore();
 				}
-			}, this.initStore.pin);
-		}
-	}
+				this.store.runTransactionSinceLastUpdate();
 
-	@action private handleStorageInit() {
-		this.currentProfile = ProfilesStore.getCurrentProfile();
-		const data = ProfilesStore.getProfileData(this.currentProfile.id);
-
-		if(data) {
-			this.store = AppStore.deserialize(data);
-		} else {
-			this.store = new AppStore();
-		}
-
-		this.store.runTransactionSinceLastUpdate();
-
-		// Check every 5 minutes.  Runs transactions when day rolls over
-		setTimeout(() => {
-			this.store.runTransactionSinceLastUpdate();
-		}, 1000 * 60 * 5);
+				// Check every 5 minutes.  Runs transactions when day rolls over
+				setTimeout(() => {
+					this.store.runTransactionSinceLastUpdate();
+				}, 1000 * 60 * 5);
+			}));
 	}
 }

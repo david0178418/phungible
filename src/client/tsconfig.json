@@ -3,6 +3,12 @@
         "experimentalDecorators": true,
         "outDir": "./build/client/",
         "sourceMap": true,
+        "lib": [
+            "dom",
+            "es5",
+            "es2015.promise",
+            "scripthost"
+        ],
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "module": "commonjs",

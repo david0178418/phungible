@@ -5,31 +5,29 @@ import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
+import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
 import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
-import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../../stores/scheduled-transaction';
+import Budget, {BudgetFacade, RepeatUnits} from '../../stores/budget';
 import {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 import NameAmountPartial from './name-amount-partial';
 import RepeatField from './repeat-field';
 
-const {Component} = React;
-type FormEvent = React.FormEvent<HTMLFormElement>;
-
 type Props = {
 	accounts: Account[];
 	isBudget?: boolean;
-	model: ScheduledTransaction | ScheduledTransactionFacade;
+	model: Budget | BudgetFacade;
 	onSubmit(): void;
 };
 
 @observer
 export default
-class ScheduledTransactionEdit extends Component<Props, any> {
+class BudgetEdit extends Component<Props, any> {
 	constructor(props: Props) {
 		super(props);
 	}
@@ -41,7 +39,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 			model,
 			onSubmit,
 		} = this.props;
-		const isFacade = model instanceof ScheduledTransactionFacade;
+		const isFacade = model instanceof BudgetFacade;
 		const selectedTowardAccountId = model.towardAccount && model.towardAccount.id || null;
 		const selectedFromAccountId = model.fromAccount && model.fromAccount.id || null;
 
@@ -50,9 +48,9 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 			<form className="create-scheduled-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div>
 					{isFacade && <NameAmountPartial
-						transactionPartials={(model as ScheduledTransactionFacade).transactionPartials}
-						onAddEntry={() => (model as ScheduledTransactionFacade).addPartial()}
-						onRemoveEntry={(id) => (model as ScheduledTransactionFacade).removePartial(id)}
+						transactionPartials={(model as BudgetFacade).transactionPartials}
+						onAddEntry={() => (model as BudgetFacade).addPartial()}
+						onRemoveEntry={(id) => (model as BudgetFacade).removePartial(id)}
 						onUpdateName={(name, transaction) => this.handleUpdateName(name, transaction)}
 					/> || (
 						<div style={{
@@ -167,7 +165,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 							formatDate(model.nextOccurance) :
 							'N/A'
 						}
-						<RepeatField scheduledTransaction={model} />
+						<RepeatField budget={model} />
 					</div>
 				)}
 			</form>
@@ -202,26 +200,26 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 		return errorText;
 	}
 
-	@action private handleSubmit(e: FormEvent, onSubmit: () => void) {
+	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
 		e.preventDefault();
 		onSubmit();
 	}
-	@action private handleToggleRepeats(scheduledTransaction: ScheduledTransaction) {
+	@action private handleToggleRepeats(scheduledTransaction: Budget) {
 		scheduledTransaction.repeatUnit = scheduledTransaction.repeats ? RepeatUnits.None : RepeatUnits.Week;
 	}
-	@action private handleUpdateFromAccount(accountId: string, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateFromAccount(accountId: string, scheduledTransaction: Budget) {
 		scheduledTransaction.fromAccount = this.findAccount(accountId);
 	}
-	@action private handleUpdateTowardAccount(accountId: string, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateTowardAccount(accountId: string, scheduledTransaction: Budget) {
 		scheduledTransaction.towardAccount = this.findAccount(accountId);
 	}
 	@action private handleUpdateName(newName: string, scheduledTransaction: {name: string}) {
 		scheduledTransaction.name = newName;
 	}
-	@action private handleUpdateStartDate(newDate: Date, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateStartDate(newDate: Date, scheduledTransaction: Budget) {
 		scheduledTransaction.startDate = newDate;
 	}
-	@action private handleUpdateType(newType: TransactionType, scheduledTransaction: ScheduledTransaction) {
+	@action private handleUpdateType(newType: TransactionType, scheduledTransaction: Budget) {
 		scheduledTransaction.transactionType = newType;
 	}
 

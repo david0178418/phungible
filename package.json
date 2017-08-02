@@ -1,6 +1,6 @@
 {
   "name": "phungible",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "description": "Phungible budget app",
   "engines": {
     "node": ">=6.10.3"
@@ -25,9 +25,10 @@
     "@types/chai": "^4.0.4",
     "@types/classnames": "^2.2.3",
     "@types/material-ui": "^0.18.0",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.0.25",
-    "@types/react": "^15.6.2",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.24",
+    "@types/pouchdb": "^6.3.0",
+    "@types/react": "15.x.x",
     "@types/react-addons-css-transition-group": "^15.0.3",
     "@types/react-dom": "^15.5.4",
     "chai": "^4.0.0",
@@ -44,7 +45,7 @@
     "ts-node": "^3.1.0",
     "tslint": "^5.7.0",
     "tslint-loader": "^3.5.3",
-    "typescript": "2.x.x",
+    "typescript": "^2.5.1",
     "webpack": "3.x.x"
   },
   "dependencies": {
@@ -58,6 +59,8 @@
     "navigo": "^5.2.0",
     "offline-plugin": "^4.7.0",
     "react": "15.x.x",
+    "pouchdb": "^6.3.4",
+    "pouchdb-authentication": "^0.5.5",
     "react-addons-transition-group": "^15.6.0",
     "react-dom": "^15.6.1",
     "react-transition-group": "^1.2.0",

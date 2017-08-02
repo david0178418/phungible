@@ -4,6 +4,7 @@ import {deserialize, list, object, serializable} from 'serializr';
 
 import {dateRange} from '../shared/utils';
 import Account from '../stores/account';
+import Budgets from '../stores/budget';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction, {TransactionEffect} from './transaction';
 
@@ -18,8 +19,8 @@ class TrendsStore {
 	@observable public toDate: Date;
 	@serializable(list(object(Account)))
 	public accounts: Account[];
-	@serializable(list(object(ScheduledTransaction)))
-	public budgets: ScheduledTransaction[];
+	@serializable(list(object(Budgets)))
+	public budgets: Budgets[];
 	@serializable(list(object(ScheduledTransaction)))
 	public scheduledTransactions: ScheduledTransaction[];
 	public today: Date;
@@ -122,7 +123,10 @@ class TrendsStore {
 	@computed get formattedData() {
 		const dateMoments = dateRange(this.fromDate, this.toDate);
 		const accounts = this.accounts;
-		const combinedBudgetsScheduledTransaction = this.budgets.concat(this.scheduledTransactions);
+		const combinedBudgetsScheduledTransaction = [].concat(
+			this.budgets,
+			this.scheduledTransactions,
+		);
 		const confirmedTransactions = this.transactions.filter((transaction) => !transaction.needsConfirmation);
 
 		const transactionEffects: TransactionEffect[] = confirmedTransactions

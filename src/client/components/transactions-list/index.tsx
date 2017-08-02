@@ -83,7 +83,7 @@ class TransactionsList extends Component<Props, {}> {
 						)}
 						leftIcon={(
 							// Hack for circular dep
-							transaction.type === 2 ?
+							transaction.transactionType === 2 ?
 								<IncomeIcon/> :
 								<ExpenseIcon/>
 						)}

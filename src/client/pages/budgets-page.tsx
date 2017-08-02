@@ -9,7 +9,7 @@ import Link from '../components/shared/link';
 import Navigation from '../layout/navigation';
 import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
-import ScheduledTransaction from '../stores/scheduled-transaction';
+import Budget from '../stores/budget';
 import Page from './page';
 
 const {Component} = React;
@@ -37,7 +37,7 @@ class Budgets extends Component<Props, {}> {
 						budgets={store.budgets}
 						store={store}
 						onRemove={
-							(budget: ScheduledTransaction) =>
+							(budget: Budget) =>
 								this.props.appStore.removeBudget(budget)
 						}
 					/>

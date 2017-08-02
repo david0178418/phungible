@@ -1,15 +1,22 @@
 import {computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {identifier, object, serializable} from 'serializr';
+import {identifier, object, serializable, serialize} from 'serializr';
 
 import {generateUuid, Money} from '../shared/utils';
 
+type TYPE = 'balance-update';
+
 export default
 class BalanceUpdate {
+	public static type: TYPE = 'balance-update';
 	@serializable(identifier())
 	public id: string;
 	@serializable(object(Money))
 	public balance: Money;
+	@serializable
+	public parent: string;
+	@serializable
+	public type: TYPE = 'balance-update';
 	@serializable
 	@observable private _date: string;
 
@@ -40,5 +47,9 @@ class BalanceUpdate {
 
 	public isBefore(a: moment.Moment) {
 		return !this.moment.isBefore(a, 'day');
+	}
+
+	public serialize() {
+		return serialize(this);
 	}
 }
