@@ -63,7 +63,7 @@ observer(function AccountEdit({model, onSubmit}: Props) {
 				>
 					<MenuItem
 						leftIcon={<SavingsIcon/>}
-						primaryText="Availble Money"
+						primaryText="Available Money"
 						value={AccountType.Savings}
 					/>
 					<MenuItem

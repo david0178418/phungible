@@ -51,12 +51,9 @@ class Help extends Component<Props, State> {
 									expenses exist.  This can be useful to resync
 									if you were not able to enter some transactions.
 								</p>
-								<p>
-									Interest rates are not applied to accounts
-									are not tracked with the balances, so the
-									balance update can be used to keep tabs on
-									how much is being accumulated in interest.
-								</p>
+								<small>
+									<em>Note: Interest rates are not currently applied to accounts.</em>
+								</small>
 							</div>,
 						)}
 					/>
