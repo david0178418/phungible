@@ -6,12 +6,13 @@ import ListItem from 'material-ui/List/ListItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
+
+const {Component} = React;
 
 interface Props {
 	store: AppStore;

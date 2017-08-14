@@ -1,11 +1,12 @@
 import {action, computed, observable} from 'mobx';
-import {Moment} from 'moment';
 import * as moment from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import Money from '../shared/utils/money';
 import Account from './account';
 import ScheduledTransaction from './scheduled-transaction';
+
+type Moment = moment.Moment;
 
 export
 enum TransactionType {

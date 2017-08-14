@@ -1,11 +1,12 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {Moment} from 'moment';
 import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
 
 import {generateUuid} from '../shared/utils';
 import Money from '../shared/utils/money';
 import Account from './account';
+
+type Moment = moment.Moment;
 
 type DateMoment = Date | Moment;
 
