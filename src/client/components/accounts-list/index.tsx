@@ -4,7 +4,6 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import {AddIcon, DebtIcon, SavingsIcon} from '../../shared/shared-components';
@@ -12,6 +11,8 @@ import {dialogStyles} from '../../shared/styles';
 import Account, {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
 import EditRemoveMenu from '../shared/edit-remove-menu';
+
+const {Component} = React;
 
 type Props = {
 	items: Account[];

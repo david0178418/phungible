@@ -5,7 +5,6 @@ import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {inject, observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import AccountEdit from '../components/account-edit';
@@ -15,6 +14,8 @@ import Account from '../stores/account';
 import AppStore from '../stores/app';
 import AccountsPage from './accounts-page';
 import Page from './page';
+
+const {Component} = React;
 
 class AccountEditStore {
 	public account: Account;

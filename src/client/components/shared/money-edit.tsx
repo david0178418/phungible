@@ -2,9 +2,10 @@ import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import Money from '../../shared/utils/money';
+
+const {Component} = React;
 
 interface State {
 	labelValue: string;

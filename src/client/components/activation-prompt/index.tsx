@@ -4,10 +4,12 @@ import TextField from 'material-ui/TextField';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component, KeyboardEvent} from 'react';
 
 import {activate} from '../../shared/api';
 import {dialogStyles} from '../../shared/styles';
+
+type KeyboardEvent = React.KeyboardEvent<{}>;
+const {Component} = React;
 
 interface Props {
 	open: boolean;
@@ -104,7 +106,7 @@ class ActivationPrompt extends Component<Props, {}> {
 		this.store.setCode(code);
 	}
 
-	private handleKeyUp(e: KeyboardEvent<{}>) {
+	private handleKeyUp(e: KeyboardEvent) {
 		if(e.keyCode === 13) {
 			this.handleSubmit();
 		}

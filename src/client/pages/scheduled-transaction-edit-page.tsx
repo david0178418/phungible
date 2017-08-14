@@ -4,7 +4,6 @@ import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {inject, observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import ScheduledTransactionEdit from '../components/scheduled-transaction-edit';
@@ -14,6 +13,8 @@ import AppStore from '../stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
 import Page from './page';
 import ScheduledTransactionsPage from './scheduled-transactions-page';
+
+const {Component} = React;
 
 class ScheduledTransactionEditStore {
 	public scheduledTransaction: ScheduledTransaction | ScheduledTransactionFacade;

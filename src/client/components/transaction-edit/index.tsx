@@ -4,7 +4,6 @@ import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component, FormEvent} from 'react';
 import * as React from 'react';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 
@@ -13,6 +12,9 @@ import Account from '../../stores/account';
 import Transaction, {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
+
+const {Component} = React;
+type FormEvent = React.FormEvent<HTMLFormElement>;
 
 type Props = {
 	accounts: Account[];
@@ -163,7 +165,7 @@ class TransactionEdit extends Component<Props, any> {
 	}
 
 	// TODO refactor all this
-	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
+	@action private handleSubmit(e: FormEvent, onSubmit: () => void) {
 		e.preventDefault();
 		onSubmit();
 	}

@@ -2,7 +2,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import ScheduledTransactionList from '../components/scheduled-transactions-list';
 import ContentArea from '../components/shared/content-area';
@@ -12,6 +11,8 @@ import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import ScheduledTransaction from '../stores/scheduled-transaction';
 import Page from './page';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

@@ -3,13 +3,14 @@ import {List, ListItem} from 'material-ui/List';
 import {observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
-import {Component} from 'react';
 
 import formatDate from '../../shared/utils/format-date';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 import QuickEdit from '../transaction-edit/quick-edit';
 import ActivityItem from './activity-item';
+
+const {Component} = React;
 
 interface Props {
 	store: AppStore;

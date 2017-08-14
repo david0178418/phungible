@@ -3,10 +3,12 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import {observer} from 'mobx-react';
 import * as moment from 'moment';
-import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
 import ScheduledTransaction, {RepeatDays} from '../../stores/scheduled-transaction';
+
+const {Component} = React;
+type MouseEvent = React.MouseEvent<{}>;
 
 type Props = {
 	scheduledTransaction: ScheduledTransaction;
@@ -63,7 +65,7 @@ class DaySelection extends Component<Props, any> {
 		);
 	}
 
-	public handleValueChange(e: MouseEvent<{}>, checked: boolean) {
+	public handleValueChange(e: MouseEvent, checked: boolean) {
 		if(checked) {
 			this.props.scheduledTransaction.addRepeatValue(+(e.target as any).value);
 		} else {

@@ -4,13 +4,14 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
-import {Component} from 'react';
 
 import Colors from '../../shared/colors';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
 import QuickEdit from '../transaction-edit/quick-edit';
+
+const {Component} = React;
 
 interface Props {
 	store: AppStore;

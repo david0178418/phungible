@@ -2,13 +2,14 @@ import {Tab, Tabs} from 'material-ui/Tabs';
 import {inject, observer} from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {pageStyle} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
 import CurrentBudgets from './current-budgets';
 import DailyTransactions from './daily-transactions';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

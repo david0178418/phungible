@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import {Component} from 'react';
 import {
 	CartesianGrid,
 	Legend,
@@ -14,6 +13,8 @@ import {
 } from 'recharts';
 
 import Money from '../../shared/utils/money';
+
+const {Component} = React;
 
 const LineColors = [
 	'#e41a1c',

@@ -1,6 +1,7 @@
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
+
+const {Component} = React;
 
 type Line = {
 	color: string;

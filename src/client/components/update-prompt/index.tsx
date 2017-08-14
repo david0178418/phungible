@@ -1,9 +1,10 @@
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {dialogStyles} from '../../shared/styles';
+
+const {Component} = React;
 
 interface Props {
 	updateAvailable: boolean;

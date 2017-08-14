@@ -2,10 +2,12 @@ import Checkbox from 'material-ui/Checkbox';
 import {GridList, GridTile} from 'material-ui/GridList';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import {observer} from 'mobx-react';
-import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
 import ScheduledTransaction from '../../stores/scheduled-transaction';
+
+const {Component} = React;
+type MouseEvent = React.MouseEvent<{}>;
 
 type Props = {
 	scheduledTransaction: ScheduledTransaction;
@@ -72,7 +74,7 @@ class DateSelection extends Component<Props, any> {
 		);
 	}
 
-	public handleValueChange(e: MouseEvent<{}>, checked: boolean) {
+	public handleValueChange(e: MouseEvent, checked: boolean) {
 		if(checked) {
 			this.props.scheduledTransaction.addRepeatValue(+(e.target as any).value);
 		} else {

@@ -2,10 +2,11 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import SettingsPage from '../../pages/settings-page';
 import AppStore from '../../stores/app';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

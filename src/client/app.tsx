@@ -1,7 +1,6 @@
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {action, computed, observable} from 'mobx';
 import {observer, Provider} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
@@ -12,6 +11,8 @@ import Storage from './shared/storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
 import ProfilesStore, {Profile} from './stores/profiles';
+
+const {Component} = React;
 
 type Props = {
 	children?: any;

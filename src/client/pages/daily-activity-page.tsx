@@ -1,6 +1,5 @@
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import DailyActivity from '../components/daily-activity';
 import ContentArea from '../components/shared/content-area';
@@ -8,6 +7,8 @@ import Navigation from '../layout/navigation';
 import AppStore from '../stores/app';
 import Transaction from '../stores/transaction';
 import Page from './page';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

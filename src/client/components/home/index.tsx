@@ -1,11 +1,12 @@
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {pageStyle} from '../../shared/styles';
 import Money from '../../shared/utils/money';
 import {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

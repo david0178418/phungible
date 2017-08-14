@@ -4,7 +4,6 @@ import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {inject, observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import ContentArea from '../components/shared/content-area';
@@ -14,6 +13,8 @@ import AppStore from '../stores/app';
 import Transaction from '../stores/transaction';
 import Page from './page';
 import TransactionsPage from './transactions-page';
+
+const {Component} = React;
 
 class TransactionEditStore {
 	public transaction: Transaction;

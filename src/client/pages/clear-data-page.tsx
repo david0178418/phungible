@@ -3,13 +3,14 @@ import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import ClearData from '../components/clear-data';
 import ContentArea from '../components/shared/content-area';
 import AppStore from '../stores/app';
 import Page from './page';
 import SettingsPage from './settings-page';
+
+const {Component} = React;
 
 type Props = {
 	router?: Navigo;

@@ -4,10 +4,11 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import GettingStartedPage from '../../pages/getting-started-page';
 import {dialogStyles} from '../../shared/styles';
+
+const {Component} = React;
 
 interface State {
 	openContent: string | JSX.Element;

@@ -3,9 +3,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {dialogStyles} from '../../shared/styles';
+
+const {Component} = React;
 
 interface PinProps {
 	length: number;

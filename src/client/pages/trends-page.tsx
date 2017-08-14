@@ -1,7 +1,6 @@
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import ContentArea from '../components/shared/content-area';
@@ -9,6 +8,8 @@ import Trends from '../components/trends';
 import Navigation from '../layout/navigation';
 import AppStore from '../stores/app';
 import Page from './page';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

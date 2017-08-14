@@ -1,11 +1,12 @@
 import {Provider} from 'mobx-react';
 import * as N from 'navigo';
 import * as React from 'react';
-import {Component} from 'react';
 
 import App from './app';
 import UpdatePrompt from './components/update-prompt';
 import Analytics from './shared/analytics';
+
+const {Component} = React;
 
 import {
 	AccountEditPage,

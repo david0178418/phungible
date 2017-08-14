@@ -3,11 +3,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import TextField from 'material-ui/TextField';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 import MoneyEdit from '../shared/money-edit';
 
 import {ScheduledTransactionPartial} from '../../stores/scheduled-transaction';
+
+const {Component} = React;
 
 type Props = {
 	transactionPartials: ScheduledTransactionPartial[];

@@ -5,7 +5,6 @@ import MenuItem from 'material-ui/MenuItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import MoreVertical from 'material-ui/svg-icons/navigation/more-vert';
 import {inject} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import ContentArea from '../components/shared/content-area';
@@ -16,6 +15,8 @@ import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import Transaction from '../stores/transaction';
 import Page from './page';
+
+const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;

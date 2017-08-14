@@ -8,7 +8,6 @@ import Toggle from 'material-ui/Toggle';
 import {action, observable} from 'mobx';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import ClearDataPage from '../../pages/clear-data-page';
@@ -16,6 +15,8 @@ import Storage from '../../shared/storage';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import PinConfirmation from './pin-confirmation';
+
+const {Component} = React;
 
 interface Props {
 	appStore?: AppStore;

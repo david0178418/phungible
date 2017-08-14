@@ -3,11 +3,12 @@ import ListItem from 'material-ui/List/ListItem';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
+
+const {Component} = React;
 
 type Props = {
 	store: AppStore;

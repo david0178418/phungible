@@ -3,10 +3,11 @@ import FlatButton from 'material-ui/FlatButton';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import {dialogStyles} from '../../shared/styles';
 import PinPrompt from '../pin-prompt';
+
+const {Component} = React;
 
 interface Props {
 	open: boolean;

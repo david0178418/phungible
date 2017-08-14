@@ -1,7 +1,8 @@
 import MenuItem from 'material-ui/MenuItem';
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
+
+const {Component} = React;
 
 const iconProps = {
 	style: {

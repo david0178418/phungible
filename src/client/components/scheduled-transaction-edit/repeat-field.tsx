@@ -1,7 +1,6 @@
 import {Tab, Tabs} from 'material-ui/Tabs';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import ScheduledTransaction, {RepeatTypes} from '../../stores/scheduled-transaction';
@@ -11,6 +10,8 @@ import IntervalSelection from './interval-selection';
 
 import * as moment from 'moment';
 import 'moment-recur';
+
+const {Component} = React;
 
 // TODO Remove debug
 (window as any).moment = moment;

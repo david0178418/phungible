@@ -7,7 +7,6 @@ import Subheader from 'material-ui/Subheader';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import {action, observable} from 'mobx';
 import {inject, observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 
 import Colors from '../../shared/colors';
@@ -17,6 +16,8 @@ import Account from '../../stores/account';
 import AppStore from '../../stores/app';
 import BalanceUpdate from '../../stores/balance-update';
 import MoneyEdit from '../shared/money-edit';
+
+const {Component} = React;
 
 interface BalanceHistoryItemProps {
 	id: string;

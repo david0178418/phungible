@@ -2,7 +2,6 @@ import Checkbox from 'material-ui/Checkbox';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
-import {Component} from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
 import formatDate from '../../shared/utils/format-date';
@@ -11,6 +10,8 @@ import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
 import TrendsStore from '../../stores/trends';
 import TrendsChart from './trends-chart';
+
+const {Component} = React;
 
 interface Props {
 	accounts: Account[];
