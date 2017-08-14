@@ -184,7 +184,7 @@ class TrendsStore {
 							.reduce((sum, transaction) => sum + transaction.amount.valCents, 0);
 
 						if(budgetTransactionTotal && remainingPeriodTotal > 0) {
-							let amount = -(budgetTransactionTotal * budget.fromAccount.fromBalanceDirection);
+							let amount = budgetTransactionTotal * budget.fromAccount.fromBalanceDirection;
 
 							if(remainingPeriodTotal < -amount) {
 								amount = -remainingPeriodTotal;
@@ -193,7 +193,7 @@ class TrendsStore {
 
 							return {
 								accountId: budget.fromAccount.id,
-								amount,
+								amount: -amount,
 								date: date.toDate(),
 							};
 						}
