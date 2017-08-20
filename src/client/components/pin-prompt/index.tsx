@@ -92,7 +92,7 @@ class PinPrompt extends Component<Props, {}> {
 			actions.push(
 				<RaisedButton
 					label="Clear"
-					onTouchTap={onClearPin}
+					onClick={onClearPin}
 				/>,
 			);
 		}
@@ -101,7 +101,7 @@ class PinPrompt extends Component<Props, {}> {
 			actions.push(
 			<RaisedButton
 				label="Cancel"
-				onTouchTap={onCancel}
+				onClick={onCancel}
 			/>,
 			);
 		}
@@ -139,7 +139,7 @@ class PinPrompt extends Component<Props, {}> {
 							secondary
 							key={num}
 							label={num}
-							onTouchTap={() => this.handleUpdatePin(num)}
+							onClick={() => this.handleUpdatePin(num)}
 							style={{
 								flex: '0 0 30%',
 								margin: num === '0' ? '1% 33%' : '1%',

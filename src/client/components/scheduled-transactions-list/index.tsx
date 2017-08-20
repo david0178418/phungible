@@ -90,7 +90,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 						rightIcon={
 							<AddIcon/>
 						}
-						onTouchTap={onOpenCreate}
+						onClick={onOpenCreate}
 						primaryText={`Create ${isBudget ? 'Budget' : 'Recurring Transaction'}`}
 					/>
 				)}

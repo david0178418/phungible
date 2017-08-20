@@ -58,7 +58,7 @@ function BalanceHistoryItem({
 			}
 			rightIconButton={(
 				<IconButton
-					onTouchTap={onRemove}
+					onClick={onRemove}
 				>
 					<ActionDelete />
 				</IconButton>
@@ -142,7 +142,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 					<div>
 						<FlatButton
 							label="Add Balance"
-							onTouchTap={() => this.handleUpdateAddBalanceUpdate()}
+							onClick={() => this.handleUpdateAddBalanceUpdate()}
 							primary
 						/>
 					</div>

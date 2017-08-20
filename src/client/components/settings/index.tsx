@@ -82,11 +82,11 @@ class Settings extends Component<Props, {}> {
 				<ListItem primaryText={`Version: ${VERSION}`}/>
 				<ListItem
 					primaryText="Check for update"
-					onTouchTap={() => OfflinePluginRuntime.update()}
+					onClick={() => OfflinePluginRuntime.update()}
 				/>
 				<ListItem
 					primaryText="Debug data"
-					onTouchTap={() => this.store.openDebug()}
+					onClick={() => this.store.openDebug()}
 					rightIcon={<BugReport/>}
 				>
 					<Dialog
@@ -97,7 +97,7 @@ class Settings extends Component<Props, {}> {
 							<FlatButton
 								label="Done"
 								primary
-								onTouchTap={() => this.store.closeDebug()}
+								onClick={() => this.store.closeDebug()}
 							/>,
 						]}
 					>

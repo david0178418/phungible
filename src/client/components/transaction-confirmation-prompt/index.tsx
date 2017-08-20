@@ -39,12 +39,12 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 				actions={[
 					<FlatButton
 						label="Later"
-						onTouchTap={() => this.handleLater()}
+						onClick={() => this.handleLater()}
 					/>,
 					<RaisedButton
 						primary
 						label="Confirm All"
-						onTouchTap={() => this.handleConfirmAll()}
+						onClick={() => this.handleConfirmAll()}
 					/>,
 				]}
 			>
@@ -68,7 +68,7 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 							)}
 							rightIconButton={(
 								<IconButton
-									onTouchTap={() => this.handleConfirm(transaction)}
+									onClick={() => this.handleConfirm(transaction)}
 								>
 									<ConfirmIcon/>
 								</IconButton>

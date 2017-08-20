@@ -101,12 +101,12 @@ class PinConfirmation extends Component<Props, {}> {
 						<FlatButton
 							label="Close"
 							primary
-							onTouchTap={() => this.handleCancel()}
+							onClick={() => this.handleCancel()}
 						/>,
 						<FlatButton
 							label="Retry"
 							primary
-							onTouchTap={() => this.handleRetry()}
+							onClick={() => this.handleRetry()}
 						/>,
 					]}
 				>

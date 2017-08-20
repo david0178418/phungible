@@ -86,7 +86,7 @@ class TransactionEditPage extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						disabled={!transaction.isValid}
-						onTouchTap={() => this.handleSaveTransaction()}
+						onClick={() => this.handleSaveTransaction()}
 						style={floatingActionButtonStyle}
 						zDepth={2}
 					>

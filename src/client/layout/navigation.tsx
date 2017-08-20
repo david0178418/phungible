@@ -139,13 +139,13 @@ class Navigation extends React.Component<Props, any> {
 					<NavItem
 						leftIcon={<DateRangeIcon />}
 						href={`${DailyActivityPage.path}`}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						Daily Activity
 					</NavItem>
 					<NavItem
 						{...trendsProps(accounts.length)}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						Trends
 					</NavItem>
@@ -153,46 +153,46 @@ class Navigation extends React.Component<Props, any> {
 						href={accountTarget(accounts.length)}
 						leftIcon={<AccountBalanceIcon />}
 						rightIcon={<Badge badgeContent={accounts.length} primary />}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						Accounts
 					</NavItem>
 					<NavItem
 						{...budgetProps(budgets.length, accounts.length)}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{BudgetsPage.title}
 					</NavItem>
 					<NavItem
 						{...scheduledTransactionProps(scheduledTransactions.length, accounts.length)}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{ScheduledTransactionsPage.title}
 					</NavItem>
 					<NavItem
 						{...transactionProps(transactions.length, accounts.length)}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						Transactions
 					</NavItem>
 					<NavItem
 						leftIcon={<HelpIcon />}
 						href={`${Help.path}`}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{Help.title}
 					</NavItem>
 					<NavItem
 						leftIcon={<FeedbackPage.icon />}
 						href={FeedbackPage.path}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{FeedbackPage.title}
 					</NavItem>
 					<NavItem
 						href={SettingsPage.path}
 						leftIcon={<SettingsIcon/>}
-						onTouchTap={() => this.handleDrawerStateUpdate(false)}
+						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{SettingsPage.title}
 					</NavItem>

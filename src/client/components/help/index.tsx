@@ -34,11 +34,11 @@ class Help extends Component<Props, State> {
 				<List>
 					<ListItem
 						primaryText="Getting Started"
-						onTouchTap={() => this.handleOpenGettingStarted()}
+						onClick={() => this.handleOpenGettingStarted()}
 					/>
 					<ListItem
 						primaryText="About Accounts"
-						onTouchTap={() => this.handleOpen(
+						onClick={() => this.handleOpen(
 							<div>
 								Accounts are anywhere money can be placed or withdrawn.
 								This can be a bank account, a credit card, or even a piggy
@@ -60,7 +60,7 @@ class Help extends Component<Props, State> {
 					/>
 					<ListItem
 						primaryText="About Transactions"
-						onTouchTap={() => this.handleOpen(
+						onClick={() => this.handleOpen(
 							<div>
 								A transaction is just movement of money. The most
 								common case will be an expense.  But a transaction
@@ -77,7 +77,7 @@ class Help extends Component<Props, State> {
 					/>
 					<ListItem
 						primaryText="About Recurring Transactions"
-						onTouchTap={() => this.handleOpen(
+						onClick={() => this.handleOpen(
 							<div>
 								Recurring transactions are your known, planned expenses.
 								Good examples of these are a car payment or moving money
@@ -92,7 +92,7 @@ class Help extends Component<Props, State> {
 					/>
 					<ListItem
 						primaryText="About Budgets"
-						onTouchTap={() => this.handleOpen(
+						onClick={() => this.handleOpen(
 							<div>
 								Budgets are lesser-known expenses that you wish to
 								control.  On the trends chart, when projecting
@@ -119,7 +119,7 @@ class Help extends Component<Props, State> {
 						<FlatButton
 							label="Done"
 							primary
-							onTouchTap={() => this.handleClose()}
+							onClick={() => this.handleClose()}
 						/>,
 					]}
 				>

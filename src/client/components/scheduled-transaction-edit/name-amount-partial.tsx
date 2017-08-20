@@ -52,7 +52,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 								style={{
 									alignSelf: 'flex-end',
 								}}
-								onTouchTap={() => this.handleRemoveEntry(schedTranspartial.id)}
+								onClick={() => this.handleRemoveEntry(schedTranspartial.id)}
 							>
 								<ActionDelete/>
 							</IconButton>
@@ -65,7 +65,7 @@ class ScheduledTransactionEdit extends Component<Props, any> {
 						marginTop: 15,
 					}}
 					label="Add another"
-					onTouchTap={() => this.props.onAddEntry()}
+					onClick={() => this.props.onAddEntry()}
 					primary
 				/>
 			</div>

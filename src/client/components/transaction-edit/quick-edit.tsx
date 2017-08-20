@@ -86,14 +86,14 @@ class QuickEdit extends Component<Props, {}> {
 								width: '100%',
 							}}
 							disabled={!transaction.isValid}
-							onTouchTap={onAdd}
+							onClick={onAdd}
 						/>
 						<RaisedButton
 							label="Cancel Expense"
 							style={{
 								width: '100%',
 							}}
-							onTouchTap={onToggleOpen}
+							onClick={onToggleOpen}
 						/>
 					</div>
 				)}
@@ -105,7 +105,7 @@ class QuickEdit extends Component<Props, {}> {
 						style={{
 							width: '100%',
 						}}
-						onTouchTap={onToggleOpen}
+						onClick={onToggleOpen}
 					/>
 				)}
 			</div>

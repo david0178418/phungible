@@ -109,7 +109,7 @@ class BudgetEditPage extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						disabled={!transactionsValid}
-						onTouchTap={() => this.handleSaveBudget()}
+						onClick={() => this.handleSaveBudget()}
 						style={floatingActionButtonStyle}
 						zDepth={2}
 					>

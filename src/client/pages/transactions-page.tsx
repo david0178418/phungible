@@ -44,7 +44,7 @@ class Transactions extends Component<Props, {}> {
 								targetOrigin={{horizontal: 'right', vertical: 'top'}}
 							>
 								<MenuItem
-									onTouchTap={() => store.openTransactionConfirmation()}
+									onClick={() => store.openTransactionConfirmation()}
 									primaryText="Confirm pending transactions"
 								/>
 							</IconMenu>

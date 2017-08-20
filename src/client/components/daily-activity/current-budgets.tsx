@@ -68,7 +68,7 @@ class CurrentBudgets extends Component<Props, {}> {
 									key={budget.id}
 									primaryText={budget.name}
 									secondaryText={`renews ${moment(budget.nextOccurance).format('MMM D, YYYYY')}`}
-									onTouchTap={() => this.handleAddExpenseFromBudget(budget)}
+									onClick={() => this.handleAddExpenseFromBudget(budget)}
 									rightIcon={
 										<span style={{color}}>
 											{amount.valFormattedNearestDollar}

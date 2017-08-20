@@ -72,7 +72,7 @@ class ActivationPrompt extends Component<Props, {}> {
 					<RaisedButton
 						label="Submit"
 						disabled={!canSubmit}
-						onTouchTap={() => this.handleSubmit()}
+						onClick={() => this.handleSubmit()}
 					/>,
 				]}
 			>

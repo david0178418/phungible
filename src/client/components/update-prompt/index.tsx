@@ -34,12 +34,12 @@ class UpdatePrompt extends Component<Props, State> {
 					<FlatButton
 						primary
 						label="Later"
-						onTouchTap={() => this.handleIgnoreUpdate()}
+						onClick={() => this.handleIgnoreUpdate()}
 					/>,
 					<FlatButton
 						primary
 						label="Restart and Update"
-						onTouchTap={() => this.handleApplyUpdate()}
+						onClick={() => this.handleApplyUpdate()}
 					/>,
 				]}
 			>

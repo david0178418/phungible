@@ -105,7 +105,7 @@ class ScheduledTransactionEditPage extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						disabled={!transactionsValid}
-						onTouchTap={() => this.handleSaveScheduledTransaction()}
+						onClick={() => this.handleSaveScheduledTransaction()}
 						style={floatingActionButtonStyle}
 						zDepth={2}
 					>

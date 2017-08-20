@@ -20,7 +20,7 @@ function EditRemoveMenu<T extends {id: string}>(
 	};
 
 	if(onEdit) {
-		editItemProps.onTouchTap = onEdit;
+		editItemProps.onClick = onEdit;
 	} else {
 		editItemProps.href = `#/${type}/edit/${item.id}`;
 	}
@@ -33,7 +33,7 @@ function EditRemoveMenu<T extends {id: string}>(
 		>
 			<MenuItem {...editItemProps}/>
 			<MenuItem
-				onTouchTap={() => onRemove(item)}
+				onClick={() => onRemove(item)}
 				primaryText="Remove"
 				rightIcon={<ActionDelete/>}
 			/>

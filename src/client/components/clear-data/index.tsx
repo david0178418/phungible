@@ -32,7 +32,7 @@ class ClearData extends Component<Props, {}> {
 						style={{
 							marginTop: '75px',
 						}}
-						onTouchTap={() => this.handleClearData()}
+						onClick={() => this.handleClearData()}
 					>
 						<WarningIcon/>
 					</FloatingActionButton>

@@ -97,7 +97,7 @@ class AccountEditPage extends Component<Props, {}> {
 					/>
 					<FloatingActionButton
 						disabled={!account.isValid}
-						onTouchTap={() => this.handleSaveAccount()}
+						onClick={() => this.handleSaveAccount()}
 						style={floatingActionButtonStyle}
 						zDepth={2}
 					>

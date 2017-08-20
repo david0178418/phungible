@@ -194,7 +194,7 @@ class GettingStarted extends React.Component<Props, State> {
 					<FlatButton
 						label="Back"
 						disabled={firstStep}
-						onTouchTap={() => this.handlePrev()}
+						onClick={() => this.handlePrev()}
 						style={{
 							marginRight: 10,
 						}}
@@ -203,12 +203,12 @@ class GettingStarted extends React.Component<Props, State> {
 						primary
 						disabled={!this.stepComplete()}
 						label={lastStep ? 'Finish' : 'Next'}
-						onTouchTap={() => this.handleNext()}
+						onClick={() => this.handleNext()}
 					/>
 					{!lastStep && (
 						<FlatButton
 							label="skip"
-							onTouchTap={() => this.handleFinish()}
+							onClick={() => this.handleFinish()}
 						/>
 					)}
 				</Paper>

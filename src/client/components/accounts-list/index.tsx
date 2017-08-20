@@ -100,7 +100,7 @@ class AccountsList extends Component<Props, {}> {
 							rightIcon={
 								<AddIcon/>
 							}
-							onTouchTap={onOpenCreate}
+							onClick={onOpenCreate}
 							primaryText="Create Account"
 						/>
 					)}
@@ -137,12 +137,12 @@ class AccountsList extends Component<Props, {}> {
 						<FlatButton
 							primary
 							label="Cancel"
-							onTouchTap={() => this.store.closeConfirmRemoval()}
+							onClick={() => this.store.closeConfirmRemoval()}
 						/>,
 						<FlatButton
 							primary
 							label="Delete"
-							onTouchTap={() => {
+							onClick={() => {
 								this.store.closeConfirmRemoval();
 								onRemove(deletionCandidate);
 							}}

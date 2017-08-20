@@ -16,7 +16,7 @@ type Props = {
 	href?: string;
 	leftIcon: React.ReactElement<any>;
 	rightIcon?: React.ReactElement<any>;
-	onTouchTap: () => any;
+	onClick: () => any;
 	router?: Navigo;
 };
 
@@ -35,7 +35,7 @@ class NavItem extends Component<Props, {}> {
 			<MenuItem
 				disabled={disabled}
 				leftIcon={React.cloneElement(leftIcon, iconProps)}
-				onTouchTap={() => this.handleRoute(href)}
+				onClick={() => this.handleRoute(href)}
 				innerDivStyle={{
 					padding: '0 42px',
 				}}
@@ -47,7 +47,7 @@ class NavItem extends Component<Props, {}> {
 	}
 
 	private handleRoute(route: string) {
-		this.props.onTouchTap();
+		this.props.onClick();
 		this.props.router.navigate(route);
 	}
 }
