@@ -5,13 +5,14 @@ import { action, computed, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import * as moment from 'moment';
 import * as React from 'react';
-import { Component } from 'react';
 
 import {submitFeedback} from '../../shared/api';
 import Storage from '../../shared/storage';
 import AppStore from '../../stores/app';
 const USER_EMAIL_KEY = 'userEmail';
 const MIN_FEEDBACK = 75;
+
+const { Component } = React;
 
 interface Props {
 	appStore?: AppStore;

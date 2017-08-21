@@ -92,7 +92,7 @@ class BudgetEditPage extends Component<Props, {}> {
 		const style = this.props.style || {};
 		return (
 			<Page
-				className="slide-horizontal"
+				animationDirection="horizontal"
 				style={style}
 			>
 				<AppBar

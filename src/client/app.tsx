@@ -13,6 +13,7 @@ import AppStore from './stores/app';
 import ProfilesStore, {Profile} from './stores/profiles';
 
 const {Component} = React;
+const TRANSITION_TIME = 350;
 
 type Props = {
 	children?: any;
@@ -57,7 +58,11 @@ const Styles = `
 
 	.page-enter-active.slide-vertical {
 		transform: translate(0, 0);
-		transition: transform 350ms;
+		transition: transform ${TRANSITION_TIME}ms;
+	}
+
+	.page-enter-active.slide-vertical.page-disable-in {
+		transition: none;
 	}
 
 	.slide-vertical + .slide-vertical {
@@ -75,7 +80,7 @@ const Styles = `
 
 	.page-enter-active.slide-horizontal {
 		transform: translate(0, 0);
-		transition: transform 350ms;
+		transition: transform ${TRANSITION_TIME}ms;
 	}
 
 	.page-leave.slide-horizontal {
@@ -83,7 +88,7 @@ const Styles = `
 	}
 	.page-leave-active.slide-horizontal {
 		transform: translate(100vw, 0);
-		transition: transform 350ms;
+		transition: transform ${TRANSITION_TIME}ms;
 	}
 
 	/* CONTENT */
@@ -164,8 +169,8 @@ class App extends Component<Props, any> {
 								<CSSTransitionGroup
 									component="div"
 									transitionName="page"
-									transitionEnterTimeout={350}
-									transitionLeaveTimeout={350}
+									transitionEnterTimeout={TRANSITION_TIME}
+									transitionLeaveTimeout={TRANSITION_TIME}
 								>
 									{this.props.children}
 								</CSSTransitionGroup>

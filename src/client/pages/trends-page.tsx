@@ -13,7 +13,6 @@ const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;
-	disableAnimation: boolean;
 };
 
 type State = {
@@ -45,7 +44,7 @@ class TrendsPage extends Component<Props, State> {
 		const {appStore} = this.props;
 		const {renderBody} = this.state;
 		return (
-			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
+			<Page animationDirection="vertical">
 				<Navigation
 					title="Trends"
 					appStore={appStore}

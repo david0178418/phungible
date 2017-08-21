@@ -30,7 +30,7 @@ class ClearDataPage extends Component<Props, {}> {
 	public render() {
 		const {appStore} = this.props;
 		return (
-			<Page className="slide-horizontal">
+			<Page animationDirection="horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title="Nuke All Data"

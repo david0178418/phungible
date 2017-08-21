@@ -81,10 +81,7 @@ class AccountEditPage extends Component<Props, {}> {
 		const action = account.id ? 'Edit' : 'Create';
 		const style = this.props.style || {};
 		return (
-			<Page
-				className="slide-horizontal"
-				style={style}
-			>
+			<Page animationDirection="horizontal" style={style} >
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} Account`}

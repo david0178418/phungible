@@ -12,7 +12,6 @@ const {Component} = React;
 
 type Props = {
 	appStore?: AppStore;
-	disableAnimation: boolean;
 };
 
 @inject('appStore') @observer
@@ -28,7 +27,7 @@ class DailyActivityPage extends Component<Props, {}> {
 	public render() {
 		const {appStore} = this.props;
 		return (
-			<Page className={this.props.disableAnimation ? '' : 'slide-vertical'}>
+			<Page animationDirection="vertical">
 				<Navigation title="Daily Activity" appStore={appStore} />
 				<ContentArea>
 					<DailyActivity

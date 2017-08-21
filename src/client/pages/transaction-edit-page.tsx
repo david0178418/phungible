@@ -71,7 +71,7 @@ class TransactionEditPage extends Component<Props, {}> {
 		const action = transaction.id ? 'Edit' : 'Create';
 
 		return (
-			<Page className="slide-horizontal">
+			<Page animationDirection="horizontal">
 				<AppBar
 					onLeftIconButtonTouchTap={() => this.routeBack()}
 					title={`${action} Transaction`}

@@ -34,7 +34,6 @@ type Props = {
 	updateAvailable: boolean,
 };
 type State = {
-	disableNextPageAnimation: boolean;
 	ignoreUpdate: boolean;
 	page: string;
 	params: any;
@@ -56,26 +55,15 @@ function getCurrengtHash() {
 export default
 class Routes extends Component<Props, State> {
 	private router: Navigo;
-	private horizontalSlidePages: string[];
 
 	constructor(props: Props) {
 		super(props);
 
 		this.state = {
-			disableNextPageAnimation: false,
 			ignoreUpdate: false,
 			page: getCurrengtHash(),
 			params: {},
 		};
-
-		// TODO Refactor this
-		this.horizontalSlidePages = [
-			AccountEditPage.path,
-			BudgetEditPage.path,
-			ClearDataPage.path,
-			ScheduledTransactionEditPage.path,
-			TransactionEditPage.path,
-		];
 
 		this.router = new N(null, true);
 	}
@@ -110,7 +98,6 @@ class Routes extends Component<Props, State> {
 
 	public setPage(page: Page, params: object = {}) {
 		this.setState({
-			disableNextPageAnimation: this.currentPageIsHorizontalSlide(),
 			page: page.path,
 			params,
 		});
@@ -119,7 +106,6 @@ class Routes extends Component<Props, State> {
 
 	public render() {
 		const {
-			disableNextPageAnimation,
 			page,
 			params,
 		} = this.state;
@@ -132,7 +118,6 @@ class Routes extends Component<Props, State> {
 				<App>
 					{page === AccountsPage.path &&
 						<AccountsPage
-							disableAnimation={disableNextPageAnimation}
 							key={AccountsPage.path}
 						/>
 					}
@@ -144,7 +129,6 @@ class Routes extends Component<Props, State> {
 					}
 					{page === BudgetsPage.path &&
 						<BudgetsPage
-							disableAnimation={disableNextPageAnimation}
 							key={BudgetsPage.path}
 						/>
 					}
@@ -161,13 +145,11 @@ class Routes extends Component<Props, State> {
 					}
 					{page === DailyActivityPage.path &&
 						<DailyActivityPage
-							disableAnimation={disableNextPageAnimation}
 							key={DailyActivityPage.path}
 						/>
 					}
 					{page === FeedbackPage.path &&
 						<FeedbackPage
-							disableAnimation={disableNextPageAnimation}
 							key={FeedbackPage.path}
 						/>
 					}
@@ -178,13 +160,11 @@ class Routes extends Component<Props, State> {
 					}
 					{page === Help.path &&
 						<Help
-							disableAnimation={disableNextPageAnimation}
 							key={Help.path}
 						/>
 					}
 					{page === TransactionsPage.path &&
 						<TransactionsPage
-							disableAnimation={disableNextPageAnimation}
 							key={TransactionsPage.path}
 						/>
 					}
@@ -196,7 +176,6 @@ class Routes extends Component<Props, State> {
 					}
 					{page === ScheduledTransactionsPage.path &&
 						<ScheduledTransactionsPage
-							disableAnimation={disableNextPageAnimation}
 							key={ScheduledTransactionsPage.path}
 						/>
 					}
@@ -208,19 +187,16 @@ class Routes extends Component<Props, State> {
 					}
 					{page === SettingsPage.path &&
 						<SettingsPage
-							disableAnimation={disableNextPageAnimation}
 							key={SettingsPage.path}
 						/>
 					}
 					{page === SummaryPage.path &&
 						<SummaryPage
-							disableAnimation={disableNextPageAnimation}
 							key={SummaryPage.path}
 						/>
 					}
 					{page === TrendsPage.path &&
 						<TrendsPage
-							disableAnimation={disableNextPageAnimation}
 							key={TrendsPage.path}
 						/>
 					}
@@ -228,9 +204,5 @@ class Routes extends Component<Props, State> {
 				</App>
 			</Provider>
 		);
-	}
-
-	private currentPageIsHorizontalSlide() {
-		return this.horizontalSlidePages.indexOf(this.state.page) !== -1;
 	}
 }
