@@ -27,9 +27,7 @@ function EditRemoveMenu<T extends {id: string}>(
 
 	return (
 		<IconMenu
-			anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 			iconButtonElement={<IconButton><MoreVertical/></IconButton>}
-			targetOrigin={{horizontal: 'right', vertical: 'top'}}
 		>
 			<MenuItem {...editItemProps}/>
 			<MenuItem

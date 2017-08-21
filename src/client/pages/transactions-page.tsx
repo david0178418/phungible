@@ -38,9 +38,7 @@ class Transactions extends Component<Props, {}> {
 					iconElementRight={
 						store.unconfirmedTransactions.length && (
 							<IconMenu
-								anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
 								iconButtonElement={<IconButton><MoreVertical/></IconButton>}
-								targetOrigin={{horizontal: 'right', vertical: 'top'}}
 							>
 								<MenuItem
 									onClick={() => store.openTransactionConfirmation()}
