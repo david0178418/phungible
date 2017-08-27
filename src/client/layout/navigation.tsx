@@ -135,7 +135,15 @@ class Navigation extends React.Component<Props, any> {
 					open={this.state.isOpen}
 					onRequestChange={(isOpen) => this.handleDrawerStateUpdate(isOpen)}
 				>
-					<AppBar iconElementLeft={<span/>} title="Phungible"/>
+					<AppBar
+						title="Phungible"
+						iconStyleLeft={{
+							marginTop: 12,
+						}}
+						iconElementLeft={(
+							<img src="images/icons/icon-32x32.png" />
+						)}
+					/>
 					<NavItem
 						leftIcon={<DateRangeIcon />}
 						href={`${DailyActivityPage.path}`}

@@ -1,6 +1,6 @@
 {
   "name": "phungible",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Phungible budget app",
   "engines": {
     "node": ">=6.10.3"
