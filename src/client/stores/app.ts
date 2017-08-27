@@ -106,8 +106,9 @@ class AppStore {
 		(this.budgets as any).clear();
 		(this.scheduledTransactions as any).clear();
 		(this.transactions as any).clear();
-		PouchStorage.deleteDb()
-		.then(() => PouchStorage.openDb(this.id));
+		PouchStorage
+			.deleteDb()
+			.then(() => PouchStorage.openDb(this.id));
 	}
 	@action public cleanScheduledTransactions() {
 		const accountIds = this.accounts.map((account) => account.id);
