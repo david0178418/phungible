@@ -11,7 +11,7 @@ import AppStore from './stores/app';
 import ProfilesStore, {Profile} from './stores/profiles';
 
 const {Component} = React;
-const TRANSITION_TIME = 350;
+const TRANSITION_TIME = 500;
 
 type Props = {
 	children?: any;
@@ -51,12 +51,13 @@ const Styles = `
 
 	/* Vertical slide */
 	.page-enter.slide-vertical {
-		transform: translate(0, 100vh);
+		opacity: 0;
 	}
 
 	.page-enter-active.slide-vertical {
+		opacity: 1;
 		transform: translate(0, 0);
-		transition: transform ${TRANSITION_TIME}ms;
+		transition: opacity ${TRANSITION_TIME / 2}ms;
 	}
 
 	.page-enter-active.slide-vertical.page-disable-in {
