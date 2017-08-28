@@ -1,5 +1,7 @@
+import RaisedButton from 'material-ui/RaisedButton';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
+import { AddIcon } from '../../shared/shared-components';
 
 import AppStore from '../../stores/app';
 
@@ -26,7 +28,11 @@ class Settings extends Component<Props, {}> {
 	public render() {
 		return (
 			<div>
-				Sync Manager
+				<RaisedButton
+					primary
+					icon={<AddIcon/>}
+					label="Create Account"
+				/>
 			</div>
 		);
 	}
