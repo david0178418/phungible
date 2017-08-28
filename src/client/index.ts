@@ -1,33 +1,17 @@
 import {useStrict} from 'mobx';
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import * as React from 'react';
 import {render} from 'react-dom';
 import './polyfills';
 
 import Routes from './routes';
 
-OfflinePluginRuntime.install({
-	onUpdateReady() {
-		OfflinePluginRuntime.applyUpdate();
-	},
-	onUpdated() {
-		setTimeout(() => {
-			renderApp(true);
-		}, 2000);
-	},
-});
-
-function renderApp(updateAvailable: boolean) {
-	render(
-		React.createElement(Routes, {
-			updateAvailable,
-		}),
-		document.getElementById('app'),
-	);
-}
-
 useStrict(true);
-renderApp(false);
+
+render(
+	React.createElement(Routes),
+	document.getElementById('app'),
+);
+
 beginTransition();
 
 function beginTransition() {

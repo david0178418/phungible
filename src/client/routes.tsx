@@ -3,7 +3,6 @@ import * as N from 'navigo';
 import * as React from 'react';
 
 import App from './app';
-import UpdatePrompt from './components/update-prompt';
 import Analytics from './shared/analytics';
 
 const {Component} = React;
@@ -31,7 +30,6 @@ interface Page {
 	title: string;
 }
 type Props = {
-	updateAvailable: boolean,
 };
 type State = {
 	ignoreUpdate: boolean;
@@ -200,7 +198,6 @@ class Routes extends Component<Props, State> {
 							key={TrendsPage.path}
 						/>
 					}
-					<UpdatePrompt updateAvailable={this.props.updateAvailable} />
 				</App>
 			</Provider>
 		);
