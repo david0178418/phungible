@@ -8,7 +8,6 @@ import {action, observable} from 'mobx';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import ClearDataPage from '../../pages/clear-data-page';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
@@ -65,10 +64,6 @@ class Settings extends Component<Props, {}> {
 					/>}
 				/> */}
 				<ListItem primaryText={`Version: ${VERSION}`}/>
-				<ListItem
-					primaryText="Check for update"
-					onClick={() => OfflinePluginRuntime.update()}
-				/>
 				<ListItem
 					primaryText="Debug data"
 					onClick={() => this.store.openDebug()}

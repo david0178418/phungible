@@ -1,10 +1,12 @@
 import {useStrict} from 'mobx';
+import * as OfflinePlugin from 'offline-plugin/runtime';
 import * as React from 'react';
 import {render} from 'react-dom';
 import './polyfills';
 
 import Routes from './routes';
 
+OfflinePlugin.install();
 useStrict(true);
 
 render(
