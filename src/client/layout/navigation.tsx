@@ -3,6 +3,7 @@ import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import HelpIcon from 'material-ui/svg-icons/action/help';
@@ -19,6 +20,7 @@ import {
 	DailyActivityPage,
 	FeedbackPage,
 	Help,
+	PhungibleAccountManagePager,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
 	SettingsPage,
@@ -145,17 +147,24 @@ class Navigation extends React.Component<Props, any> {
 						)}
 					/>
 					<NavItem
+						leftIcon={<AccountIcon />}
+						href={`${PhungibleAccountManagePager.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{PhungibleAccountManagePager.title}
+					</NavItem>
+					<NavItem
 						leftIcon={<DateRangeIcon />}
 						href={`${DailyActivityPage.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Daily Activity
+						{DailyActivityPage.title}
 					</NavItem>
 					<NavItem
 						{...trendsProps(accounts.length)}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Trends
+						{TrendsPage.title}
 					</NavItem>
 					<NavItem
 						href={accountTarget(accounts.length)}
@@ -163,7 +172,7 @@ class Navigation extends React.Component<Props, any> {
 						rightIcon={<Badge badgeContent={accounts.length} primary />}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Accounts
+						{AccountEditPage.title}
 					</NavItem>
 					<NavItem
 						{...budgetProps(budgets.length, accounts.length)}
@@ -181,7 +190,7 @@ class Navigation extends React.Component<Props, any> {
 						{...transactionProps(transactions.length, accounts.length)}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Transactions
+						{TransactionsPage.title}
 					</NavItem>
 					<NavItem
 						leftIcon={<HelpIcon />}
