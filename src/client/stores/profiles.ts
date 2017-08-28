@@ -43,7 +43,10 @@ class Profiles {
 
 		if(!info.doc_count) {
 			const legacyProfile = Storage.getItem(`${PROFILE_DATA_PREFIX}${Profiles.currentProfile.id}`);
-			await PouchStorage.convertOldTree(legacyProfile);
+
+			if(legacyProfile) {
+				await PouchStorage.convertOldTree(legacyProfile);
+			}
 		}
 
 		return Profiles.currentProfile;
