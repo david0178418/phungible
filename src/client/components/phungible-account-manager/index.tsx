@@ -1,9 +1,8 @@
-import RaisedButton from 'material-ui/RaisedButton';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import { AddIcon } from '../../shared/shared-components';
 
 import AppStore from '../../stores/app';
+import SignupForm from './signup-form';
 
 const {Component} = React;
 
@@ -16,7 +15,7 @@ class PhungibleAccountManagerStore {
 
 @inject('appStore') @observer
 export default
-class Settings extends Component<Props, {}> {
+class PhungibleAccountManager extends Component<Props, {}> {
 	private store: PhungibleAccountManagerStore;
 
 	constructor(props: Props) {
@@ -28,10 +27,8 @@ class Settings extends Component<Props, {}> {
 	public render() {
 		return (
 			<div>
-				<RaisedButton
-					primary
-					icon={<AddIcon/>}
-					label="Create Account"
+				<SignupForm
+					onSubmit={() => {/**/}}
 				/>
 			</div>
 		);

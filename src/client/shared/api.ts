@@ -36,4 +36,19 @@ function submitFeedback(feedbackData: FeedbackData) {
 		.then((responseText) => responseText.json());
 }
 
+export
+function registerUser(email: string, password: string) {
+	return fetch(`${API_URI}/register`, {
+		body: JSON.stringify({
+			name: email,
+			password,
+		}),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		method: 'post',
+	})
+	.then((responseText) => responseText.json());
+}
+
 (window as any).activate = activate;
