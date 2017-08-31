@@ -6,6 +6,11 @@ declare module 'item-type-name' {
 	export default ItemTypeName;
 }
 
+declare module 'material-ui-icons/MoreVert' {
+	const x: any;
+	export = x;
+}
+
 declare module 'recharts' {
 	export const Area: any;
 	export const AreaChart: any;

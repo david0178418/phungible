@@ -1,5 +1,5 @@
 import AppBar from 'material-ui/AppBar';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -84,14 +84,14 @@ class TransactionEditPage extends Component<Props, {}> {
 						transaction={transaction}
 						onSubmit={() => this.handleSaveTransaction()}
 					/>
-					<FloatingActionButton
+					<Button
+						fab
 						disabled={!transaction.isValid}
 						onClick={() => this.handleSaveTransaction()}
 						style={floatingActionButtonStyle}
-						zDepth={2}
 					>
 						<ActionDone />
-					</FloatingActionButton>
+					</Button>
 				</ContentArea>
 			</Page>
 		);

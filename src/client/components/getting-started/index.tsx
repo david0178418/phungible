@@ -1,4 +1,4 @@
-import FlatButton from 'material-ui/FlatButton';
+import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
@@ -191,14 +191,15 @@ class GettingStarted extends React.Component<Props, State> {
 					}}
 					transitionEnabled={false}
 				>
-					<FlatButton
-						label="Back"
+					<Button
 						disabled={firstStep}
 						onClick={() => this.handlePrev()}
 						style={{
 							marginRight: 10,
 						}}
-					/>
+					>
+						Back
+					</Button>
 					<RaisedButton
 						primary
 						disabled={!this.stepComplete()}
@@ -206,10 +207,11 @@ class GettingStarted extends React.Component<Props, State> {
 						onClick={() => this.handleNext()}
 					/>
 					{!lastStep && (
-						<FlatButton
-							label="skip"
+						<Button
 							onClick={() => this.handleFinish()}
-						/>
+						>
+							skip
+						</Button>
 					)}
 				</Paper>
 			</div>

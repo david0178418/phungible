@@ -1,4 +1,4 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
@@ -46,14 +46,14 @@ class ScheduledTransactions extends Component<Props, {}> {
 								this.props.appStore.removeScheduledTransaction(scheduledTransaction)
 						}
 					/>
-					<FloatingActionButton
-						secondary
-						containerElement={<Link to="/scheduled-transaction/edit" />}
+					<Button
+						fab
+						component={Link}
+						href="/scheduled-transaction/edit"
 						style={floatingActionButtonStyle}
-						zDepth={2}
 					>
 						<ContentAdd />
-					</FloatingActionButton>
+					</Button>
 				</ContentArea>
 			</Page>
 		);

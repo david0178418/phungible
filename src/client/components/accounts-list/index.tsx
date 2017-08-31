@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import {action, computed, observable} from 'mobx';
@@ -10,7 +10,7 @@ import {AddIcon, DebtIcon, SavingsIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
 import Account, {AccountType} from '../../stores/account';
 import AppStore from '../../stores/app';
-import EditRemoveMenu from '../shared/edit-remove-menu';
+import { AccountEditRemoveMenu } from '../shared/edit-remove-menu';
 
 const {Component} = React;
 
@@ -119,11 +119,13 @@ class AccountsList extends Component<Props, {}> {
 									<SavingsIcon/> :
 									<DebtIcon/>
 							}
-							rightIconButton={EditRemoveMenu<Account>(
-								'account',
-								account,
-								() => this.store.confirmRemoval(account),
-								(this.props.onEdit ? () => this.props.onEdit(account) : undefined),
+							rightIconButton={(
+								<AccountEditRemoveMenu
+									type="account"
+									item={account}
+									onRemove={() => this.store.confirmRemoval(account)}
+									onEdit={(this.props.onEdit ? () => this.props.onEdit(account) : undefined)}
+								/>
 							)}
 						/>
 					))}
@@ -134,19 +136,20 @@ class AccountsList extends Component<Props, {}> {
 					open={!!deletionCandidate}
 					title={deletionCandidate && `Deleting '${deletionCandidate.name}' will delete related entries. Delete?`}
 					actions={[
-						<FlatButton
-							primary
-							label="Cancel"
+						<Button
 							onClick={() => this.store.closeConfirmRemoval()}
-						/>,
-						<FlatButton
-							primary
-							label="Delete"
+						>
+							Cancel
+						</Button>,
+						<Button
+							color="primary"
 							onClick={() => {
 								this.store.closeConfirmRemoval();
 								onRemove(deletionCandidate);
 							}}
-						/>,
+						>
+							Delete
+						</Button>,
 					]}
 				/>
 			</div>

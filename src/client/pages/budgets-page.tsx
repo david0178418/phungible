@@ -1,4 +1,4 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {inject} from 'mobx-react';
 import * as React from 'react';
@@ -41,13 +41,15 @@ class Budgets extends Component<Props, {}> {
 								this.props.appStore.removeBudget(budget)
 						}
 					/>
-					<FloatingActionButton
-						secondary
-						containerElement={<Link to="/budget/edit" />}
+					<Button
+						fab
+						color="accent"
+						component={Link}
+						href="/budget/edit"
 						style={floatingActionButtonStyle}
 					>
 						<ContentAdd />
-					</FloatingActionButton>
+					</Button>
 				</ContentArea>
 			</Page>
 		);

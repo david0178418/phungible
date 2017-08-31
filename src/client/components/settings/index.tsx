@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import BugReport from 'material-ui/svg-icons/action/bug-report';
@@ -74,11 +74,12 @@ class Settings extends Component<Props, {}> {
 						open={showDebug}
 						onRequestClose={() => this.store.closeDebug()}
 						actions={[
-							<FlatButton
-								label="Done"
-								primary
+							<Button
+								color="primary"
 								onClick={() => this.store.closeDebug()}
-							/>,
+							>
+								Done
+							</Button>,
 						]}
 					>
 						{showDebug && (

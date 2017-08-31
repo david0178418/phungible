@@ -1,5 +1,5 @@
 import AppBar from 'material-ui/AppBar';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -100,14 +100,14 @@ class ScheduledTransactionEditPage extends Component<Props, {}> {
 						model={this.store.scheduledTransaction}
 						onSubmit={() => this.handleSaveScheduledTransaction()}
 					/>
-					<FloatingActionButton
+					<Button
+						fab
 						disabled={!transactionsValid}
 						onClick={() => this.handleSaveScheduledTransaction()}
 						style={floatingActionButtonStyle}
-						zDepth={2}
 					>
 						<ActionDone />
-					</FloatingActionButton>
+					</Button>
 				</ContentArea>
 			</Page>
 		);

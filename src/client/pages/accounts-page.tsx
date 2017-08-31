@@ -1,4 +1,4 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -56,14 +56,14 @@ class Accounts extends Component<Props, {}> {
 						onRemove={(account: Account) => store.removeAccount(account)}
 						store={store}
 					/>
-					<FloatingActionButton
-						secondary
-						containerElement={<Link to="/account/edit" />}
+					<Button
+						fab
+						component={Link}
+						href="/account/edit"
 						style={floatingActionButtonStyle}
-						zDepth={2}
 					>
 						<ContentAdd />
-					</FloatingActionButton>
+					</Button>
 				</ContentArea>
 			</Page>
 		);

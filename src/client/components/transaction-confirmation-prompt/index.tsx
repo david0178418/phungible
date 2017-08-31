@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
@@ -38,10 +38,11 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 				open={open}
 				title="Pending Transactions"
 				actions={[
-					<FlatButton
-						label="Later"
+					<Button
 						onClick={() => this.handleLater()}
-					/>,
+					>
+						Later
+					</Button>,
 					<RaisedButton
 						primary
 						label="Confirm All"

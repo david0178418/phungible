@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import DatePicker from 'material-ui/DatePicker';
-import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
@@ -140,11 +140,12 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 						/>
 					</div>
 					<div>
-						<FlatButton
-							label="Add Balance"
+						<Button
+							color="primary"
 							onClick={() => this.handleUpdateAddBalanceUpdate()}
-							primary
-						/>
+						>
+							Add Balance
+						</Button>
 					</div>
 				</div>
 				<List>

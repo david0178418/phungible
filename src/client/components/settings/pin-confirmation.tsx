@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
@@ -98,16 +98,18 @@ class PinConfirmation extends Component<Props, {}> {
 					open={this.store.entryFailed && open}
 					title="Error"
 					actions={[
-						<FlatButton
-							label="Close"
-							primary
+						<Button
+							color="primary"
 							onClick={() => this.handleCancel()}
-						/>,
-						<FlatButton
-							label="Retry"
-							primary
+						>
+							Close
+						</Button>,
+						<Button
+							color="primary"
 							onClick={() => this.handleRetry()}
-						/>,
+						>
+							Retry
+						</Button>,
 					]}
 				>
 					Pins to not match

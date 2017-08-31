@@ -1,5 +1,5 @@
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import {inject} from 'mobx-react';
@@ -116,11 +116,12 @@ class Help extends Component<Props, State> {
 					open={!!this.state.openContent}
 					onRequestClose={() => this.handleClose()}
 					actions={[
-						<FlatButton
-							label="Done"
-							primary
+						<Button
+							color="primary"
 							onClick={() => this.handleClose()}
-						/>,
+						>
+							Done
+						</Button>,
 					]}
 				>
 					{this.state.openContent}

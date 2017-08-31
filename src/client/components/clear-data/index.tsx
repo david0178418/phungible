@@ -1,4 +1,4 @@
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Button from 'material-ui/Button';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import {inject} from 'mobx-react';
 import * as React from 'react';
@@ -27,15 +27,16 @@ class ClearData extends Component<Props, {}> {
 					Are you sure?  The data will <strong>not</strong> be recoverable.
 				</p>
 				<div>
-					<FloatingActionButton
-						backgroundColor="red"
+					<Button
+						fab
+						color="accent"
 						style={{
 							marginTop: '75px',
 						}}
 						onClick={() => this.handleClearData()}
 					>
 						<WarningIcon/>
-					</FloatingActionButton>
+					</Button>
 				</div>
 			</div>
 		);
