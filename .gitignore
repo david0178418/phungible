@@ -1,5 +1,7 @@
-node_modules
+.nyc_output
+.vscode
 build
 build_log.txt
-.vscode
+coverage
+node_modules
 yarn-error.log
