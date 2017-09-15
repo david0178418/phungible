@@ -5,7 +5,6 @@ import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component, FormEvent} from 'react';
 import * as React from 'react';
 
 import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
@@ -17,6 +16,9 @@ import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 import NameAmountPartial from './name-amount-partial';
 import RepeatField from './repeat-field';
+
+type FormEvent = React.FormEvent<HTMLFormElement>;
+const { Component } = React;
 
 type Props = {
 	accounts: Account[];
@@ -200,7 +202,7 @@ class BudgetEdit extends Component<Props, any> {
 		return errorText;
 	}
 
-	@action private handleSubmit(e: FormEvent<HTMLFormElement>, onSubmit: () => void) {
+	@action private handleSubmit(e: FormEvent, onSubmit: () => void) {
 		e.preventDefault();
 		onSubmit();
 	}

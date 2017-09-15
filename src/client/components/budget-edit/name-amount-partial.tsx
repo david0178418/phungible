@@ -3,11 +3,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import TextField from 'material-ui/TextField';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 import MoneyEdit from '../shared/money-edit';
 
 import {BudgetPartial} from '../../stores/budget';
+
+const { Component } = React;
 
 type Props = {
 	transactionPartials: BudgetPartial[];
@@ -51,7 +52,7 @@ class BudgetEdit extends Component<Props, any> {
 								style={{
 									alignSelf: 'flex-end',
 								}}
-								onTouchTap={() => this.handleRemoveEntry(schedTranspartial.id)}
+								onClick={() => this.handleRemoveEntry(schedTranspartial.id)}
 							>
 								<ActionDelete/>
 							</IconButton>
@@ -64,7 +65,7 @@ class BudgetEdit extends Component<Props, any> {
 						marginTop: 15,
 					}}
 					label="Add another"
-					onTouchTap={() => this.props.onAddEntry()}
+					onClick={() => this.props.onAddEntry()}
 					primary
 				/>
 			</div>

@@ -3,9 +3,10 @@ import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Component} from 'react';
 import * as React from 'react';
 import Budget, {RepeatUnits} from '../../stores/budget';
+
+const { Component } = React;
 
 type Props = {
 	budget: Budget;

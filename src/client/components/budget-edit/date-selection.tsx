@@ -2,10 +2,12 @@ import Checkbox from 'material-ui/Checkbox';
 import {GridList, GridTile} from 'material-ui/GridList';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import {observer} from 'mobx-react';
-import {Component, MouseEvent} from 'react';
 import * as React from 'react';
 
 import Budget from '../../stores/budget';
+
+type MouseEvent = React.MouseEvent<{}>;
+const { Component } = React;
 
 type Props = {
 	budget: Budget;
@@ -72,7 +74,7 @@ class DateSelection extends Component<Props, any> {
 		);
 	}
 
-	public handleValueChange(e: MouseEvent<{}>, checked: boolean) {
+	public handleValueChange(e: MouseEvent, checked: boolean) {
 		if(checked) {
 			this.props.budget.addRepeatValue(+(e.target as any).value);
 		} else {
