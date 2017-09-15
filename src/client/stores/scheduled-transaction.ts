@@ -6,6 +6,10 @@ import {generateUuid} from '../shared/utils';
 import Money from '../shared/utils/money';
 import Account from './account';
 
+let RecurTypes: any;
+let TransactionType: any;
+let Transaction: any;
+
 type Moment = moment.Moment;
 type DateMoment = Date | Moment;
 
@@ -69,7 +73,7 @@ class ScheduledTransaction {
 	@observable public _repeatValues: number[];
 	public today: Date;
 	@serializable
-	@observable public transactionType: TransactionType = TransactionType.Expense;
+	@observable public transactionType: number;
 	@serializable
 	public type: TYPE = 'recurring-transaction';
 	@serializable
@@ -85,6 +89,7 @@ class ScheduledTransaction {
 			labels: [],
 			startDate: moment().toDate(),
 			today: moment().toDate(),
+			transactionType: TransactionType.Expense,
 		}, params);
 
 		(window as any).scheduledTransaction = this; // TODO Remove debug
@@ -308,6 +313,15 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 }
 
-// Moved to resolve circular dependency issue.
-import RecurTypes from '../shared/utils/recur-types';
-import Transaction, {TransactionType} from './transaction';
+setTimeout(() => {
+	// Moved to resolve circular dependency issue
+	import('../shared/utils/recur-types')
+		.then((m) => {
+			RecurTypes = m.default;
+		});
+	import('./transaction')
+		.then((m) => {
+			TransactionType = m.TransactionType;
+			Transaction = m.default;
+		});
+}, 0);

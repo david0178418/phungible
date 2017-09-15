@@ -99,6 +99,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'build/client/js/'),
 		filename: 'app.js',
+		publicPath: 'js/'
 	},
 	resolve: {
 		extensions: [

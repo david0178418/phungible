@@ -131,3 +131,5 @@ declare module 'pouchdb-authentication' {
 	const x: any;
 	export = x;
 }
+
+declare module 'whatwg-fetch';

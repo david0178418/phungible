@@ -1,4 +1,6 @@
-import 'whatwg-fetch';
+if(!window.fetch) {
+	import('whatwg-fetch');
+}
 
 export
 function activate(activationCode: string) {
