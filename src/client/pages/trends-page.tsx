@@ -1,4 +1,3 @@
-import RefreshIndicator from 'material-ui/RefreshIndicator';
 import {inject} from 'mobx-react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
@@ -62,17 +61,6 @@ class TrendsPage extends Component<Props, State> {
 								budgets={(appStore.budgets as any).toJS()}
 								transactions={(appStore.transactions as any).toJS()}
 								scheduledTransactions={(appStore.scheduledTransactions as any).toJS()}
-							/>
-						)}
-						{!renderBody && (
-							<RefreshIndicator
-								left={-35}
-								top={150}
-								size={70}
-								status="loading"
-								style={{
-									marginLeft: '50%',
-								}}
 							/>
 						)}
 					</CSSTransitionGroup>

@@ -1,4 +1,5 @@
 import Checkbox from 'material-ui/Checkbox';
+import CircularProgress from 'material-ui/CircularProgress';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -32,7 +33,11 @@ class Trends extends Component<Props, {}> {
 		super(props);
 		this.store = new TrendsStore(props);
 		import('./trends-chart')
-			.then(action((m: any) => this.TrendsChartComponent = m.default));
+			.then((m: any) => {
+				setTimeout(action(() => {
+					this.TrendsChartComponent = m.default;
+				}), 500);
+			});
 	}
 
 	public render() {
@@ -89,6 +94,16 @@ class Trends extends Component<Props, {}> {
 						onAnimationEnd={() => this.handleAnimationEnd()}
 						trendNames={store.selectedTrendOptions}
 						allTrendNames={store.trendOptions}
+					/>
+				)}
+
+				{!this.TrendsChartComponent && (
+					<CircularProgress
+						style={{
+							marginTop: 51,
+							textAlign: 'center',
+							width: '100%',
+						}}
 					/>
 				)}
 			</div>
