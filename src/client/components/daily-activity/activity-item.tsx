@@ -3,8 +3,8 @@ import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward'
 import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import Colors from '../../shared/colors';
-import {TransactionType} from '../../stores/transaction';
 import Transaction from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 

@@ -1,11 +1,5 @@
-// Needed at top to resolve circular dependency issue with Account
-import ScheduledTransaction from '../stores/scheduled-transaction';
-
 import PouchDB from 'pouchdb';
 import * as PouchAuthentication from 'pouchdb-authentication';
-import Account from '../stores/account';
-import Budget from '../stores/budget';
-import Transaction from '../stores/transaction';
 
 (window as any).PouchDB = PouchDB;
 
@@ -105,35 +99,6 @@ class PouchStorage {
 			});
 
 		return new Promise((resolve) => done = resolve);
-	}
-
-	public static async convertOldTree(store: any) {
-		const writes: Array<Promise<any>> = [];
-		let profile = PouchStorage.openDb(store.id);
-		profile.destroy();
-		profile = PouchStorage.openDb(store.id);
-
-		store.accounts.forEach((a: any) => {
-			a.accountType = a.type;
-			a.type = Account.type;
-			writes.push(PouchStorage.saveDoc(a));
-		});
-		store.budgets.forEach((b: any) => {
-			b.type = Budget.type;
-			writes.push(PouchStorage.saveDoc(b));
-		});
-		store.scheduledTransactions.forEach((s: any) => {
-			s.transactionType = s.type;
-			s.type = ScheduledTransaction.type;
-			writes.push(PouchStorage.saveDoc(s));
-		});
-		store.transactions.forEach((t: any) => {
-			t.transactionType = t.type;
-			t.type = Transaction.type;
-			writes.push(PouchStorage.saveDoc(t));
-		});
-
-		return Promise.all(writes).then(() => store);
 	}
 }
 // TODO Remove debug

@@ -38,16 +38,7 @@ class Profiles {
 			Profiles.saveCurrentProfile();
 		}
 
-		const db = PouchStorage.openDb(Profiles.currentProfile.id);
-		const info = await db.info();
-
-		if(!info.doc_count) {
-			const legacyProfile = Storage.getItem(`${PROFILE_DATA_PREFIX}${Profiles.currentProfile.id}`);
-
-			if(legacyProfile) {
-				await PouchStorage.convertOldTree(legacyProfile);
-			}
-		}
+		PouchStorage.openDb(Profiles.currentProfile.id);
 
 		return Profiles.currentProfile;
 	}
@@ -60,9 +51,15 @@ class Profiles {
 
 		return Promise.all([
 			PouchStorage.getAllType(Account.type).then((a) => accounts = a),
-			PouchStorage.getAllType(Budget.type).then((b) => budgets = b),
-			PouchStorage.getAllType(ScheduledTransaction.type).then((s) => scheduledTransactions = s),
-			PouchStorage.getAllType(Transaction.type).then((t) => transactions = t),
+			PouchStorage
+				.getAllType(Budget.type)
+				.then((b) => budgets = b),
+			PouchStorage
+				.getAllType(ScheduledTransaction.type)
+				.then((s) => scheduledTransactions = s),
+			PouchStorage
+				.getAllType(Transaction.type)
+				.then((t) => transactions = t),
 		])
 		.then((values) => {
 			return {

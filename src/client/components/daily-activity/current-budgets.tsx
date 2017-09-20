@@ -95,7 +95,7 @@ class CurrentBudgets extends Component<Props, {}> {
 		this.store.quickTransaction.date = new Date();
 		this.store.quickTransaction.name = `${budget.name} Expense`;
 		this.store.quickTransaction.fromAccount = budget.fromAccount;
-		this.store.quickTransaction.generatedFrom = budget;
+		this.store.quickTransaction.generatedFromBudget = budget;
 	}
 
 	@action private handleToggleQuickTransaction() {

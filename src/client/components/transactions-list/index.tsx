@@ -4,6 +4,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
@@ -83,7 +84,7 @@ class TransactionsList extends Component<Props, {}> {
 						)}
 						leftIcon={(
 							// Hack for circular dep
-							transaction.transactionType === 2 ?
+							transaction.transactionType === TransactionType.Income ?
 								<IncomeIcon/> :
 								<ExpenseIcon/>
 						)}

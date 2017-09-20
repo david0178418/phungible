@@ -8,10 +8,10 @@ import * as React from 'react';
 
 import BudgetEdit from '../components/budget-edit';
 import ContentArea from '../components/shared/content-area';
+import {TransactionType} from '../constants';
 import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import Budget, {BudgetFacade} from '../stores/budget';
-import {TransactionType} from '../stores/transaction';
 import BudgetsPage from './budgets-page';
 import Page from './page';
 

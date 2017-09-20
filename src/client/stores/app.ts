@@ -25,7 +25,7 @@ class AppStore {
 	public id: string;
 	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
-	@serializable(list(object(ScheduledTransaction)))
+	@serializable(list(object(Budget)))
 	@observable public budgets: Budget[];
 	@serializable
 	public lastUpdatedDate: string;
@@ -62,8 +62,8 @@ class AppStore {
 		const lastOccurance = moment(budget.lastOccurance);
 		const totalRemaining = this.transactions
 			.filter((transaction) => lastOccurance.isSameOrBefore(transaction.date, 'day'))
-			.filter((transaction) => transaction.generatedFrom)
-			.filter((transaction) => transaction.generatedFrom.id === budget.id)
+			.filter((transaction) => transaction.generatedFromBudget)
+			.filter((transaction) => transaction.generatedFromBudget.id === budget.id)
 			.reduce((amount, transaction) => amount - transaction.amount.valCents, budget.amount.valCents);
 
 		return new Money(totalRemaining);

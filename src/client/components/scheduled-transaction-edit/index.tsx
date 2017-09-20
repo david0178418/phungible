@@ -7,11 +7,11 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import ScheduledTransaction, {RepeatUnits, ScheduledTransactionFacade} from '../../stores/scheduled-transaction';
-import {TransactionType} from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 import NameAmountPartial from './name-amount-partial';

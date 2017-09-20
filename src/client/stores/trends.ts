@@ -182,8 +182,8 @@ class TrendsStore {
 						}
 
 						const budgetTransactionTotal = confirmedTransactions
-							.filter((transaction) => transaction.generatedFrom)
-							.filter((transaction) => transaction.generatedFrom.id === budget.id)
+							.filter((transaction) => transaction.generatedFromBudget)
+							.filter((transaction) => transaction.generatedFromBudget.id === budget.id)
 							.filter((transaction) => transaction.occursOn(date))
 							.reduce((sum, transaction) => sum + transaction.amount.valCents, 0);
 

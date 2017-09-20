@@ -2,13 +2,10 @@
 // tslint:disable:no-unused-expression
 import {expect} from 'chai';
 
+import {TransactionType} from '../constants';
 import TrendsStore from '../stores/trends';
 
 // TODO Figure out circular dependency to properly import these
-// TransactionTypes
-// 	BudgetedExpense: 0,
-// 	Expense: 1
-// 	Income: 2
 
 // RepeatTypes
 // 	Days: 0
@@ -81,9 +78,9 @@ describe('Trend Store', () => {
 					totalValCents: 100,
 				},
 				id: '1',
-				type: 1, // Expense
+				type: TransactionType.Expense,
 				_startDate: '01/02/2015',
-				fromAccount: AccountFoo100,
+				fromAccount: AccountFoo100.id,
 			}],
 			budgets: [],
 			transactions: [],
@@ -120,9 +117,9 @@ describe('Trend Store', () => {
 					totalValCents: 100,
 				},
 				id: '1',
-				type: 0, // BudgetedExpense
+				type: TransactionType.BudgetedExpense, // BudgetedExpense
 				_startDate: '01/03/2015',
-				fromAccount: AccountFoo100,
+				fromAccount: AccountFoo100.id,
 			}],
 			transactions: [],
 		});
@@ -162,9 +159,9 @@ describe('Trend Store', () => {
 					totalValCents: 100,
 				},
 				id: '1',
-				type: 0, // BudgetedExpense
+				type: TransactionType.BudgetedExpense,
 				_startDate: '01/03/2015',
-				fromAccount: AccountFoo100,
+				fromAccount: AccountFoo100.id,
 			}],
 			transactions: [],
 		});
@@ -201,9 +198,9 @@ describe('Trend Store', () => {
 				totalValCents: 100,
 			},
 			id: '1',
-			type: 0, // BudgetedExpense
+			type: TransactionType.BudgetedExpense,
 			_startDate: '01/03/2015',
-			fromAccount: AccountFoo100,
+			fromAccount: AccountFoo100.id,
 		};
 		const trendsStore = TrendsStore.deserialize({
 			accounts: [AccountFoo100],
@@ -214,9 +211,9 @@ describe('Trend Store', () => {
 					totalValCents: 50,
 				},
 				_dateString: '01/04/2015',
-				type: 0, // BudgetedExpense
-				fromAccount: AccountFoo100,
-				generatedFrom: BudgetBar,
+				type: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100.id,
+				generatedFromBudget: BudgetBar.id,
 			}],
 		});
 
@@ -248,9 +245,9 @@ describe('Trend Store', () => {
 				totalValCents: 100,
 			},
 			id: '1',
-			type: 0, // BudgetedExpense
+			type: TransactionType.BudgetedExpense,
 			_startDate: '01/03/2015',
-			fromAccount: AccountFoo100,
+			fromAccount: AccountFoo100.id,
 		};
 		const trendsStore = TrendsStore.deserialize({
 			accounts: [AccountFoo100],
@@ -261,9 +258,9 @@ describe('Trend Store', () => {
 					totalValCents: 150,
 				},
 				_dateString: '01/04/2015',
-				type: 0, // BudgetedExpense
-				fromAccount: AccountFoo100,
-				generatedFrom: BudgetBar,
+				type: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100.id,
+				generatedFromBudget: BudgetBar.id,
 			}],
 		});
 
@@ -294,8 +291,8 @@ describe('Trend Store', () => {
 					totalValCents: 100,
 				},
 				_dateString: '01/03/2015',
-				type: 0, // BudgetedExpense
-				fromAccount: AccountFoo100,
+				type: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100.id,
 			}],
 		});
 
@@ -322,8 +319,8 @@ describe('Trend Store', () => {
 					totalValCents: 50,
 				},
 				_dateString: '01/04/2015',
-				type: 1, // Expense
-				fromAccount: AccountFoo100,
+				type: TransactionType.Expense,
+				fromAccount: AccountFoo100.id,
 			}],
 		});
 
@@ -352,8 +349,8 @@ describe('Trend Store', () => {
 					totalValCents: 50,
 				},
 				_dateString: '01/04/2015',
-				type: 1, // Expense
-				fromAccount: AccountFoo100,
+				type: TransactionType.Expense,
+				fromAccount: AccountFoo100.id,
 			}],
 		});
 

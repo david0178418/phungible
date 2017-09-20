@@ -2,7 +2,8 @@ import {computed, observable} from 'mobx';
 import * as moment from 'moment';
 import {identifier, object, serializable, serialize} from 'serializr';
 
-import {generateUuid, Money} from '../shared/utils';
+import generateUuid from '../shared/utils/generate-uuid';
+import Money from '../shared/utils/money';
 
 type TYPE = 'balance-update';
 

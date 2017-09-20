@@ -1,13 +1,14 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, primitive, reference, serializable, serialize} from 'serializr';
 
+import {TransactionType} from '../constants';
 import {generateUuid} from '../shared/utils';
+import { getAccount } from '../shared/utils/get-data-type';
 import Money from '../shared/utils/money';
 import Account from './account';
 
 let RecurTypes: any;
-let TransactionType: any;
 let Transaction: any;
 
 type Moment = moment.Moment;
@@ -51,9 +52,9 @@ class ScheduledTransaction {
 	@action public static clone(originalEntry: ScheduledTransaction) {
 		return ScheduledTransaction.deserialize(serialize(originalEntry));
 	}
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Money))
 	public amount: Money;
@@ -73,7 +74,7 @@ class ScheduledTransaction {
 	@observable public _repeatValues: number[];
 	public today: Date;
 	@serializable
-	@observable public transactionType: number;
+	@observable public transactionType: TransactionType = TransactionType.Expense;
 	@serializable
 	public type: TYPE = 'recurring-transaction';
 	@serializable
@@ -89,7 +90,6 @@ class ScheduledTransaction {
 			labels: [],
 			startDate: moment().toDate(),
 			today: moment().toDate(),
-			transactionType: TransactionType.Expense,
 		}, params);
 
 		(window as any).scheduledTransaction = this; // TODO Remove debug
@@ -177,7 +177,7 @@ class ScheduledTransaction {
 			amount: this.amount,
 			date,
 			fromAccount: this.fromAccount,
-			generatedFrom: this,
+			generatedFromSchedTrans: this,
 			name: this.name,
 			needsConfirmation,
 			towardAccount: this.towardAccount,
@@ -321,7 +321,6 @@ setTimeout(() => {
 		});
 	import('./transaction')
 		.then((m) => {
-			TransactionType = m.TransactionType;
 			Transaction = m.default;
 		});
 }, 0);

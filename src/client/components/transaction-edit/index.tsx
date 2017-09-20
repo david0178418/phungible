@@ -6,10 +6,11 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import Budget from '../../stores/budget';
-import Transaction, {TransactionType} from '../../stores/transaction';
+import Transaction from '../../stores/transaction';
 import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 
@@ -44,7 +45,7 @@ class TransactionEdit extends Component<Props, any> {
 			transaction,
 			onSubmit,
 		} = this.props;
-		const budgetId = transaction.generatedFrom && transaction.generatedFrom.id;
+		const budgetId = transaction.generatedFromBudget && transaction.generatedFromBudget.id;
 		const selectedTowardAccountId = transaction.towardAccount && transaction.towardAccount.id || null;
 		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
@@ -173,7 +174,7 @@ class TransactionEdit extends Component<Props, any> {
 		transaction.fromAccount = this.findAccount(accountId);
 	}
 	@action private handleUpdateFromBudget(budgetId: string, transaction: Transaction) {
-		transaction.generatedFrom = this.findBudget(budgetId);
+		transaction.generatedFromBudget = this.findBudget(budgetId);
 	}
 	@action private handleUpdateTowardAccount(accountId: string, transaction: Transaction) {
 		transaction.towardAccount = this.findAccount(accountId);

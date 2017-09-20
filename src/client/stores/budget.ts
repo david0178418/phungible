@@ -1,13 +1,18 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, primitive, reference, serializable, serialize} from 'serializr';
 
+import {TransactionType} from '../constants';
 import {generateUuid} from '../shared/utils';
+import {getAccount} from '../shared/utils/get-data-type';
 import Money from '../shared/utils/money';
 import Account from './account';
 
 type Moment = moment.Moment;
 type DateMoment = Date | Moment;
+
+let RecurTypes: any;
+let Transaction: any;
 
 export
 enum RepeatTypes {
@@ -47,9 +52,9 @@ class Budget {
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));
 	}
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Money))
 	public amount: Money;
@@ -69,7 +74,7 @@ class Budget {
 	@observable public _repeatValues: number[];
 	public today: Date;
 	@serializable
-	@observable public transactionType: TransactionType = TransactionType.Expense;
+	@observable public transactionType: TransactionType = TransactionType.BudgetedExpense;
 	@serializable
 	public type: TYPE = 'budget';
 	@serializable
@@ -172,7 +177,7 @@ class Budget {
 			amount: this.amount,
 			date,
 			fromAccount: this.fromAccount,
-			generatedFrom: this,
+			generatedFromBudget: this,
 			name: this.name,
 			needsConfirmation,
 			towardAccount: this.towardAccount,
@@ -308,6 +313,14 @@ class BudgetFacade extends Budget {
 	}
 }
 
-// Moved to resolve circular dependency issue.
-import RecurTypes from '../shared/utils/recur-types';
-import Transaction, {TransactionType} from './transaction';
+setTimeout(() => {
+	// Moved to resolve circular dependency issue
+	import('../shared/utils/recur-types')
+		.then((m) => {
+			RecurTypes = m.default;
+		});
+	import('./transaction')
+		.then((m) => {
+			Transaction = m.default;
+		});
+}, 0);

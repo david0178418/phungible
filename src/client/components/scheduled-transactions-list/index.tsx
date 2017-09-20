@@ -5,10 +5,10 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import {AddIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
-import {TransactionType} from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
 const {Component} = React;

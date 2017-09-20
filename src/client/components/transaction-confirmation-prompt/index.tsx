@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
+import {TransactionType} from '../../constants';
 import PouchStorage from '../../shared/pouch-storage';
 import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
@@ -63,7 +64,7 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 							)}
 							leftIcon={(
 								// Hack for circular dep
-								transaction.transactionType === 2 ?
+								transaction.transactionType === TransactionType.Income ?
 									<IncomeIcon/> :
 									<ExpenseIcon/>
 							)}

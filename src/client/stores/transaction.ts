@@ -1,20 +1,15 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, identifier, list, object, primitive, serializable, serialize} from 'serializr';
+import {deserialize, identifier, list, object, primitive, reference, serializable, serialize} from 'serializr';
 
+import {TransactionType} from '../constants';
+import { getAccount, getBudget, getScheduledTransaction } from '../shared/utils/get-data-type';
 import Money from '../shared/utils/money';
 import Account from './account';
 import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
 
 type Moment = moment.Moment;
-
-export
-enum TransactionType {
-	BudgetedExpense,
-	Expense,
-	Income,
-}
 
 export
 interface TransactionEffect {
@@ -38,9 +33,9 @@ class Transaction {
 	@observable public id: string;
 	@serializable(object(Money))
 	public amount: Money;
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable(object(Account))
+	@serializable(reference(Account, getAccount))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public needsConfirmation = false;
@@ -52,8 +47,10 @@ class Transaction {
 	@observable public name = '';
 	@serializable
 	@observable public transactionType: TransactionType = TransactionType.Expense;
-	@serializable(object(ScheduledTransaction))
-	@observable public generatedFrom: ScheduledTransaction | Budget | null = null;
+	@serializable(reference(ScheduledTransaction, getScheduledTransaction))
+	@observable public generatedFromSchedTrans: ScheduledTransaction | null = null;
+	@serializable(reference(Budget, getBudget))
+	@observable public generatedFromBudget: Budget | null = null;
 	@serializable
 	public type: TYPE = 'transaction';
 	@serializable
