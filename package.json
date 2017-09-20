@@ -16,7 +16,7 @@
     "start:prod": "npm run build:prod && npm run server",
     "test": "npm run test:unit && npm run test:lint",
     "test:coverage": "nyc -e '.ts' --r html -r lcov -r text npm run test:unit",
-    "test:unit": "export TS_NODE_PROJECT=src/client && mocha --compilers ts:ts-node/register,tsx:ts-node/register src/client/**/*.test.ts",
+    "test:unit": "export TS_NODE_PROJECT=src/client && TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --compilers ts:ts-node/register,tsx:ts-node/register src/client/**/*.test.ts",
     "test:unit:watch": "npm run test:unit -- --watch",
     "test:lint": "tslint --project tslint.json src/**/*.ts*"
   },
