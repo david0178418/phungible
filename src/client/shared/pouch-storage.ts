@@ -1,8 +1,6 @@
 import PouchDB from 'pouchdb';
 import * as PouchAuthentication from 'pouchdb-authentication';
 
-(window as any).PouchDB = PouchDB;
-
 PouchDB.plugin(PouchAuthentication);
 
 export
