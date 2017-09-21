@@ -1,7 +1,4 @@
 import PouchDB from 'pouchdb';
-import * as PouchAuthentication from 'pouchdb-authentication';
-
-PouchDB.plugin(PouchAuthentication);
 
 export
 interface Document {
@@ -99,5 +96,3 @@ class PouchStorage {
 		return new Promise((resolve) => done = resolve);
 	}
 }
-// TODO Remove debug
-(window as any).PouchStorage = PouchStorage;

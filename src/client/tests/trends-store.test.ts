@@ -3,6 +3,12 @@
 import {expect} from 'chai';
 
 import {TransactionType} from '../constants';
+import Money from '../shared/utils/money';
+import Account from '../stores/account';
+import BalanceUpdateHistory from '../stores/balance-update';
+import Budget from '../stores/budget';
+import ScheduledTransaction from '../stores/scheduled-transaction';
+import Transaction from '../stores/transaction';
 import TrendsStore from '../stores/trends';
 
 // TODO Figure out circular dependency to properly import these
@@ -30,22 +36,22 @@ import TrendsStore from '../stores/trends';
 
 (global as any).window = {};
 
-const AccountFoo100 = {
+const AccountFoo100 = new Account({
 	id: '1',
 	name: 'Foo',
-	balanceUpdateHistory: [{
-		balance: {
-			totalValCents: 100,
-		},
-		_date: '01/02/2015',
-	}],
-};
+	balanceUpdateHistory: [
+		new BalanceUpdateHistory({
+			balance: new Money(100),
+			date: new Date('01/02/2015'),
+		}),
+	],
+});
 
 describe('Trend Store', () => {
 	it('should log account balances', () => {
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
-			scheduleTransactions: [],
+			scheduledTransactions: [],
 			budgets: [],
 			transactions: [],
 		});
@@ -65,23 +71,21 @@ describe('Trend Store', () => {
 
 	it('should add scheduled transactions', () => {
 		const today = new Date('01/02/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			today,
 			accounts: [AccountFoo100],
-			scheduledTransactions: [{
+			scheduledTransactions: [new ScheduledTransaction({
 				today,
-				_repeatType: 1, // Dates
+				repeatType: 1, // Dates
 				_repeatValues: [
 					3, // 3rd of the month
 				],
-				amount: {
-					totalValCents: 100,
-				},
+				amount: new Money(100),
 				id: '1',
-				type: TransactionType.Expense,
-				_startDate: '01/02/2015',
-				fromAccount: AccountFoo100.id,
-			}],
+				transactionType: TransactionType.Expense,
+				startDate: new Date('01/02/2015'),
+				fromAccount: AccountFoo100,
+			})],
 			budgets: [],
 			transactions: [],
 		});
@@ -104,23 +108,21 @@ describe('Trend Store', () => {
 
 	it('should add budgeted amounts', () => {
 		const today = new Date('01/02/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
-			budgets: [{
+			budgets: [new Budget({
 				today,
-				_repeatType: 1, // Dates
+				repeatType: 1, // Dates
 				_repeatValues: [
 					3, // 3rd of the month
 				],
-				amount: {
-					totalValCents: 100,
-				},
+				amount: new Money(100),
 				id: '1',
-				type: TransactionType.BudgetedExpense, // BudgetedExpense
-				_startDate: '01/03/2015',
-				fromAccount: AccountFoo100.id,
-			}],
+				transactionType: TransactionType.BudgetedExpense,
+				startDate: new Date('01/03/2015'),
+				fromAccount: AccountFoo100,
+			})],
 			transactions: [],
 		});
 
@@ -146,23 +148,21 @@ describe('Trend Store', () => {
 
 	it('should ignore budget amounts prior to current period', () => {
 		const today = new Date('02/03/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
-			budgets: [{
+			budgets: [new Budget({
 				today,
-				_repeatType: 1, // Dates
+				repeatType: 1, // Dates
 				_repeatValues: [
 					3, // 3rd of the month
 				],
-				amount: {
-					totalValCents: 100,
-				},
+				amount: new Money(100),
 				id: '1',
-				type: TransactionType.BudgetedExpense,
-				_startDate: '01/03/2015',
-				fromAccount: AccountFoo100.id,
-			}],
+				transactionType: TransactionType.BudgetedExpense,
+				startDate: new Date('01/03/2015'),
+				fromAccount: AccountFoo100,
+			})],
 			transactions: [],
 		});
 
@@ -188,33 +188,29 @@ describe('Trend Store', () => {
 
 	it('should not be affected by budgeted transactions during working period', () => {
 		const today = new Date('01/03/2015');
-		const BudgetBar = {
+		const BudgetBar = new Budget({
 			today,
-			_repeatType: 1, // Dates
+			repeatType: 1, // Dates
 			_repeatValues: [
 				3, // 3rd of the month
 			],
-			amount: {
-				totalValCents: 100,
-			},
+			amount: new Money(100),
 			id: '1',
-			type: TransactionType.BudgetedExpense,
-			_startDate: '01/03/2015',
-			fromAccount: AccountFoo100.id,
-		};
-		const trendsStore = TrendsStore.deserialize({
+			transactionType: TransactionType.BudgetedExpense,
+			startDate: new Date('01/03/2015'),
+			fromAccount: AccountFoo100,
+		});
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
 			budgets: [BudgetBar],
-			transactions: [{
-				amount: {
-					totalValCents: 50,
-				},
-				_dateString: '01/04/2015',
-				type: TransactionType.BudgetedExpense,
-				fromAccount: AccountFoo100.id,
-				generatedFromBudget: BudgetBar.id,
-			}],
+			transactions: [new Transaction({
+				amount: new Money(50),
+				date: new Date('01/04/2015'),
+				transactionType: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100,
+				generatedFromBudget: BudgetBar,
+			})],
 		});
 
 		trendsStore.today = today;
@@ -235,33 +231,29 @@ describe('Trend Store', () => {
 
 	it('should show budget overages during working period', () => {
 		const today = new Date('01/03/2015');
-		const BudgetBar = {
+		const BudgetBar = new Budget({
 			today,
-			_repeatType: 1, // Dates
+			repeatType: 1, // Dates
 			_repeatValues: [
 				3, // 3rd of the month
 			],
-			amount: {
-				totalValCents: 100,
-			},
+			amount: new Money(100),
 			id: '1',
-			type: TransactionType.BudgetedExpense,
-			_startDate: '01/03/2015',
-			fromAccount: AccountFoo100.id,
-		};
-		const trendsStore = TrendsStore.deserialize({
+			transactionType: TransactionType.BudgetedExpense,
+			startDate: new Date('01/03/2015'),
+			fromAccount: AccountFoo100,
+		});
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
 			budgets: [BudgetBar],
-			transactions: [{
-				amount: {
-					totalValCents: 150,
-				},
-				_dateString: '01/04/2015',
-				type: TransactionType.BudgetedExpense,
-				fromAccount: AccountFoo100.id,
-				generatedFromBudget: BudgetBar.id,
-			}],
+			transactions: [new Transaction({
+				amount: new Money(150),
+				date: new Date('01/04/2015'),
+				transactionType: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100,
+				generatedFromBudget: BudgetBar,
+			})],
 		});
 
 		trendsStore.today = today;
@@ -282,18 +274,16 @@ describe('Trend Store', () => {
 
 	it('should apply unscheduled transactions', () => {
 		const today = new Date('01/03/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			budgets: [],
 			scheduledTransactions: [],
-			transactions: [{
-				amount: {
-					totalValCents: 100,
-				},
-				_dateString: '01/03/2015',
-				type: TransactionType.BudgetedExpense,
-				fromAccount: AccountFoo100.id,
-			}],
+			transactions: [new Transaction({
+				amount: new Money(100),
+				date: new Date('01/03/2015'),
+				transactionType: TransactionType.BudgetedExpense,
+				fromAccount: AccountFoo100,
+			})],
 		});
 
 		trendsStore.today = today;
@@ -309,19 +299,17 @@ describe('Trend Store', () => {
 
 	it('should not apply pending transactions', () => {
 		const today = new Date('01/03/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
 			budgets: [],
-			transactions: [{
+			transactions: [new Transaction({
 				needsConfirmation: true,
-				amount: {
-					totalValCents: 50,
-				},
-				_dateString: '01/04/2015',
-				type: TransactionType.Expense,
-				fromAccount: AccountFoo100.id,
-			}],
+				amount: new Money(50),
+				date: new Date('01/04/2015'),
+				transactionType: TransactionType.Expense,
+				fromAccount: AccountFoo100,
+			})],
 		});
 
 		trendsStore.today = today;
@@ -339,19 +327,17 @@ describe('Trend Store', () => {
 
 	it('should apply confirmed transactions', () => {
 		const today = new Date('01/03/2015');
-		const trendsStore = TrendsStore.deserialize({
+		const trendsStore = new TrendsStore({
 			accounts: [AccountFoo100],
 			scheduledTransactions: [],
 			budgets: [],
-			transactions: [{
+			transactions: [new Transaction({
 				needsConfirmation: false,
-				amount: {
-					totalValCents: 50,
-				},
-				_dateString: '01/04/2015',
-				type: TransactionType.Expense,
-				fromAccount: AccountFoo100.id,
-			}],
+				amount: new Money(50),
+				date: new Date('01/04/2015'),
+				transactionType: TransactionType.Expense,
+				fromAccount: AccountFoo100,
+			})],
 		});
 
 		trendsStore.today = today;
