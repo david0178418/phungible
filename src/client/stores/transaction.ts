@@ -23,8 +23,16 @@ type TYPE = 'transaction';
 export default
 class Transaction {
 	public static type: TYPE = 'transaction';
-	@action public static deserialize(data: any) {
-		return deserialize(Transaction, data);
+	public static deserialize(data: any) {
+		return new Promise((resolve, reject) => {
+			deserialize(Transaction, data, (err: any, result: any) => {
+				if(err) {
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+		});
 	}
 	@action public static clone(originalTransaction: Transaction) {
 		return Transaction.deserialize(serialize(originalTransaction));

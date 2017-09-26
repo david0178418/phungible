@@ -112,10 +112,10 @@ class Navigation extends React.Component<Props, any> {
 	// TODO dry this up
 	public render() {
 		const {
-			accounts,
-			budgets,
-			scheduledTransactions,
-			transactions,
+			accounts = [],
+			budgets = [],
+			scheduledTransactions = [],
+			transactions = [],
 		} = this.props.appStore;
 		const appBarProps: Partial<Props> = {};
 

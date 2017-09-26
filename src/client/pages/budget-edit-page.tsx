@@ -26,10 +26,10 @@ class BudgetEditStore {
 		this.budget = model;
 	}
 
-	public saveBudget() {
+	public async saveBudget() {
 		if(this.budget.isValid) {
 			if(this.budget instanceof BudgetFacade) {
-				this.budget.createBudgets().map((transaction) => {
+				(await this.budget.createBudgets()).map((transaction: any) => {
 					this.appStore.saveBudget(transaction);
 					this.budget = new BudgetFacade();
 				});

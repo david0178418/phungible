@@ -37,11 +37,11 @@ class TransactionsStore {
 		this.appStore.saveTransaction(this._openTransaction);
 		this.closeOpenTransaction();
 	}
-	@action public editTransaction(transaction: Transaction) {
-		this._openTransaction = Transaction.clone(transaction);
+	@action public async editTransaction(transaction: Transaction) {
+		this._openTransaction = await Transaction.clone(transaction) as any;
 	}
-	@action public removeTransaction(transaction: Transaction) {
-		this._openTransaction = Transaction.clone(transaction);
+	@action public async removeTransaction(transaction: Transaction) {
+		this._openTransaction = await Transaction.clone(transaction) as any;
 	}
 	@computed get transactions() {
 		return this.appStore.transactions;

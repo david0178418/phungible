@@ -44,22 +44,17 @@ class Profiles {
 	}
 
 	public static async getProfileData(id: string) {
-		let accounts: Account[];
-		let budgets: Budget[];
-		let scheduledTransactions: ScheduledTransaction[];
-		let transactions: Transaction[];
-
 		return Promise.all([
-			PouchStorage.getAllType(Account.type).then((a) => accounts = a),
 			PouchStorage
-				.getAllType(Budget.type)
-				.then((b) => budgets = b),
+				.getAllType(Account.type),
 			PouchStorage
-				.getAllType(ScheduledTransaction.type)
-				.then((s) => scheduledTransactions = s),
+				.getAllType(Budget.type),
 			PouchStorage
-				.getAllType(Transaction.type)
-				.then((t) => transactions = t),
+				.getAllType(ScheduledTransaction.type),
+			PouchStorage
+				.getAllType(Transaction.type),
+			PouchStorage
+				.getAllType('profile-data'),
 		])
 		.then((values) => {
 			return {
@@ -68,6 +63,7 @@ class Profiles {
 				id,
 				scheduledTransactions: values[2],
 				transactions: values[3],
+				...values[4],
 			};
 		});
 	}

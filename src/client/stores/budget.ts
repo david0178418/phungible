@@ -46,8 +46,16 @@ type TYPE = 'budget';
 export default
 class Budget {
 	public static type: TYPE = 'budget';
-	@action public static deserialize(data: any) {
-		return deserialize(Budget, data);
+	public static deserialize(data: any) {
+		return new Promise((resolve, reject) => {
+			deserialize(Budget, data, (err: any, result: any) => {
+				if(err) {
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+		});
 	}
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));
@@ -303,13 +311,15 @@ class BudgetFacade extends Budget {
 	}
 
 	public createBudgets() {
-		return this.transactionPartials.map((transaction) => {
-			return Budget.deserialize({
-				...this.serialize(),
-				amount: transaction.amount,
-				name: transaction.name,
-			});
-		});
+		return Promise.all(
+			this.transactionPartials.map((transaction) => {
+				return Budget.deserialize({
+					...this.serialize(),
+					amount: transaction.amount,
+					name: transaction.name,
+				});
+			}),
+		);
 	}
 }
 

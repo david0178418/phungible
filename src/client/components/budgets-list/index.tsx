@@ -35,11 +35,11 @@ class BudgetsStore {
 		this.appStore.saveBudget(this._openBudget);
 		this.closeOpenBudget();
 	}
-	@action public editBudget(budget: Budget) {
-		this._openBudget = Budget.clone(budget);
+	@action public async editBudget(budget: Budget) {
+		this._openBudget = await Budget.clone(budget) as any;
 	}
-	@action public removeBudget(budget: Budget) {
-		this._openBudget = Budget.clone(budget);
+	@action public async removeBudget(budget: Budget) {
+		this._openBudget = await Budget.clone(budget) as any;
 	}
 	@computed get budgets() {
 		return this.appStore.budgets;

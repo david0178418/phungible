@@ -42,8 +42,8 @@ class ScheduledTransactionsStore {
 		this.appStore.saveScheduledTransaction(this._openScheduledTransaction);
 		this.closeOpenScheduledTransaction();
 	}
-	@action public editScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this._openScheduledTransaction = ScheduledTransaction.clone(scheduledTransaction);
+	@action public async editScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
+		this._openScheduledTransaction = await ScheduledTransaction.clone(scheduledTransaction) as any;
 	}
 
 	@computed get accounts() {

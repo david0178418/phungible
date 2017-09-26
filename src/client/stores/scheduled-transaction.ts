@@ -46,8 +46,16 @@ type TYPE = 'recurring-transaction';
 export default
 class ScheduledTransaction {
 	public static type: TYPE = 'recurring-transaction';
-	@action public static deserialize(data: any) {
-		return deserialize(ScheduledTransaction, data);
+	public static deserialize(data: any) {
+		return new Promise((resolve, reject) => {
+			deserialize(ScheduledTransaction, data, (err: any, result: any) => {
+				if(err) {
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+		});
 	}
 	@action public static clone(originalEntry: ScheduledTransaction) {
 		return ScheduledTransaction.deserialize(serialize(originalEntry));
@@ -303,13 +311,15 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	public createScheduledTransactions() {
-		return this.transactionPartials.map((transaction) => {
-			return ScheduledTransaction.deserialize({
-				...this.serialize(),
-				amount: transaction.amount,
-				name: transaction.name,
-			});
-		});
+		return Promise.all(
+			this.transactionPartials.map((transaction) => {
+				return ScheduledTransaction.deserialize({
+					...this.serialize(),
+					amount: transaction.amount,
+					name: transaction.name,
+				});
+			}),
+		);
 	}
 }
 

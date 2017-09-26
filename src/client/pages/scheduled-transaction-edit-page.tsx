@@ -25,11 +25,11 @@ class ScheduledTransactionEditStore {
 		this.scheduledTransaction = model;
 	}
 
-	public saveScheduledTransactions() {
+	public async saveScheduledTransactions() {
 		if(this.scheduledTransaction.isValid) {
 			if(this.scheduledTransaction instanceof ScheduledTransactionFacade) {
-				this.scheduledTransaction.createScheduledTransactions().map((transaction) => {
-					this.appStore.saveScheduledTransaction(transaction);
+				(await this.scheduledTransaction.createScheduledTransactions()).map((transaction) => {
+					this.appStore.saveScheduledTransaction(transaction as ScheduledTransaction);
 					this.scheduledTransaction = new ScheduledTransactionFacade();
 				});
 			} else {

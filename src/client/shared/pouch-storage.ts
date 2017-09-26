@@ -3,7 +3,7 @@ import PouchDB from 'pouchdb';
 export
 interface Document {
 	id: string;
-	type: string;
+	type?: string;
 	parent?: string;
 	serialize?(): any;
 }
@@ -47,7 +47,7 @@ class PouchStorage {
 	public static async saveDoc(data: Document) {
 		let done: any;
 		data = data.serialize ? data.serialize() : data;
-		const pouchId = `${data.type}:${data.id}`;
+		const pouchId = data.type ? `${data.type}:${data.id}` : data.id;
 
 		activeProfileDB
 			.get(pouchId)

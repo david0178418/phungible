@@ -191,9 +191,9 @@ class App extends Component<Props, any> {
 
 		return ProfilesStore
 			.getProfileData(this.currentProfile.id)
-			.then(action((data) => {
+			.then(async (data) => {
 				if(data) {
-					this.store = AppStore.deserialize(data);
+					this.store = await AppStore.deserialize(data);
 				} else {
 					this.store = new AppStore();
 				}
@@ -203,6 +203,6 @@ class App extends Component<Props, any> {
 				setTimeout(() => {
 					this.store.runTransactionSinceLastUpdate();
 				}, 1000 * 60 * 5);
-			}));
+			});
 	}
 }

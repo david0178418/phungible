@@ -20,7 +20,7 @@ export
 async function getType(Model: any, id: string, callback: (err: any, result: any) => void) {
 	try {
 		const data = await PouchStorage.getDoc(`${Model.type}:${id}`);
-		callback(null, deserialize(Model, data));
+		deserialize(Model, data, callback);
 	} catch(e) {
 		callback(e, null);
 	}
