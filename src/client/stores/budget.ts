@@ -47,7 +47,7 @@ export default
 class Budget {
 	public static type: TYPE = 'budget';
 	@action public static deserialize(data: any) {
-		return deserialize(Budget, data);
+		return deserialize(Budget, data, () => {debugger;});
 	}
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));

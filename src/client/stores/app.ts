@@ -1,7 +1,7 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import 'moment-recur';
-import { deserialize, identifier, list, object, serializable, serialize } from 'serializr';
+import { identifier, serializable, serialize } from 'serializr';
 
 import ItemTypeName from 'item-type-name';
 import PouchStorage from '../shared/pouch-storage';
@@ -16,36 +16,48 @@ type ItemType = Account | Budget | ScheduledTransaction | Transaction;
 export default
 class AppStore {
 	@action public static deserialize(data: any) {
-		const temp = deserialize(AppStore, data);
-		temp.tempFixReferencesBug();
+		const {
+			accounts,
+			budgets,
+			scheduledTransactions,
+			transactions,
+		} = data;
+		const temp = new AppStore({
+			accounts: accounts && accounts.map((a: any) => Account.deserialize(a)),
+			budgets: budgets && budgets.map((b: any) => {
+				return Budget.deserialize(b);
+			}),
+			scheduledTransactions: scheduledTransactions &&
+				scheduledTransactions.map((s: any) => ScheduledTransaction.deserialize(s)),
+			transactions: transactions && transactions.map((t: any) => Transaction.deserialize(t)),
+		});
 		temp.showTransactionConfirmation = !!temp.unconfirmedTransactions.length;
 		return temp;
 	}
 	@serializable(identifier())
 	public id: string;
-	@serializable(list(object(Account)))
 	@observable public accounts: Account[];
-	@serializable(list(object(Budget)))
 	@observable public budgets: Budget[];
 	@serializable
 	public lastUpdatedDate: string;
-	@serializable(list(object(ScheduledTransaction)))
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@observable public showTransactionConfirmation: boolean;
-	@serializable(list(object(Transaction)))
 	@observable public transactions: Transaction[];
 
 	@computed get unconfirmedTransactions() {
 		return this.transactions.filter((transaction) => transaction.needsConfirmation);
 	}
 
-	constructor() {
-		this.id = generateUuid();
-		this.accounts = observable([]);
-		this.budgets = observable([]);
-		this.scheduledTransactions = observable([]);
-		this.transactions = observable([]);
-		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
+	constructor(params: Partial<AppStore> = {}) {
+		Object.assign(this, {
+			accounts: observable([]),
+			budgets: observable([]),
+			id: generateUuid(),
+			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
+			scheduledTransactions: observable([]),
+			transactions: observable([]),
+		}, params);
+
 		(window as any).store = this;
 	}
 
@@ -100,6 +112,7 @@ class AppStore {
 		});
 		this.showTransactionConfirmation = !!this.unconfirmedTransactions.length;
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
+		this.save();
 	}
 	@action public clearAllData() {
 		(this.accounts as any).clear();
@@ -241,6 +254,9 @@ class AppStore {
 		}
 
 		this.sortTransactions();
+	}
+	public save() {
+		PouchStorage.saveDoc(this);
 	}
 	public saveItem(newItem: ItemType, type: ItemTypeName) {
 		switch(type) {
@@ -409,16 +425,6 @@ class AppStore {
 				.reduce((total, transaction) => total + transaction.amount.valCents, 0)
 				* account.towardBalanceDirection,
 		);
-	}
-	public tempFixReferencesBug() {
-		[].concat(this.scheduledTransactions, this.budgets).map((schedTrans) => {
-			if(schedTrans.fromAccount) {
-				schedTrans.fromAccount = this.findAccount(schedTrans.fromAccount.id);
-			}
-			if(schedTrans.towardAccount) {
-				schedTrans.towardAccount = this.findAccount(schedTrans.towardAccount.id);
-			}
-		});
 	}
 	private findFutureTransactionsOnDate(date: Date) {
 		const scheduledTransactions =
