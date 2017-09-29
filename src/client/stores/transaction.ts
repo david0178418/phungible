@@ -111,10 +111,7 @@ class Transaction {
 
 		const affects: TransactionEffect[] = [];
 
-		if(
-			this.fromAccount &&
-			!moment(this.date).isSame(this.fromAccount.latestBalanceUpdate.date, 'day')
-		) {
+		if(this.fromAccount) {
 			affects.push({
 				accountId: this.fromAccount.id,
 				amount: this.amount.valCents * this.fromAccount.fromBalanceDirection,
@@ -122,10 +119,7 @@ class Transaction {
 			});
 		}
 
-		if(
-			this.towardAccount &&
-			!moment(this.date).isSame(this.towardAccount.latestBalanceUpdate.date, 'day')
-		) {
+		if(this.towardAccount) {
 			affects.push({
 				accountId: this.towardAccount.id,
 				amount: this.amount.valCents * this.towardAccount.towardBalanceDirection,

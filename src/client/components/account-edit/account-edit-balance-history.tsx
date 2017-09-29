@@ -124,10 +124,13 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 								marginRight: 15,
 							}}
 							textFieldStyle={{
-								width: 150,
+								width: 180,
+							}}
+							floatingLabelStyle={{
+								width: 185,
 							}}
 							formatDate={(d) => formatDate(d)}
-							floatingLabelText="As of"
+							floatingLabelText="Balance on morning of"
 							firstDayOfWeek={0}
 							onChange={(ev, value) => this.handleUpdateBalanceDate(value, newBalanceUpdate)}
 							value={newBalanceUpdate.date}

@@ -349,10 +349,6 @@ class AppStore {
 			return null;
 		}
 
-		if(lastBalanceUpdate.date.isSame(date, 'day')) {
-			return lastBalanceUpdate.amount;
-		}
-
 		const transactions = this.transactions
 			.filter((transaction) => !transaction.needsConfirmation)
 			.filter((transaction) => {
@@ -361,7 +357,7 @@ class AppStore {
 					(transaction.towardAccount && transaction.towardAccount.id === account.id)
 				);
 			})
-			.filter((transaction) => (lastBalanceUpdate.date.isBefore(transaction.date, 'day')))
+			.filter((transaction) => (lastBalanceUpdate.date.isSameOrBefore(transaction.date, 'day')))
 			.filter((transaction) => (moment(transaction.date).isSameOrBefore(date, 'day')));
 
 		return account.applyTransactions(transactions, date);
