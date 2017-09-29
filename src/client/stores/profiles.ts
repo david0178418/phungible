@@ -54,7 +54,7 @@ class Profiles {
 			PouchStorage
 				.getAllType(Transaction.type),
 			PouchStorage
-				.getAllType('profile-data'),
+				.getDoc('profile-data'),
 		])
 		.then((values) => {
 			return {

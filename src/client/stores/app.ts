@@ -1,7 +1,7 @@
 import {action, computed, observable} from 'mobx';
 import * as moment from 'moment';
 import 'moment-recur';
-import { identifier, serializable, serialize } from 'serializr';
+import { serializable, serialize } from 'serializr';
 
 import ItemTypeName from 'item-type-name';
 import PouchStorage from '../shared/pouch-storage';
@@ -34,12 +34,12 @@ class AppStore {
 				accounts: vals[0],
 				budgets: vals[1],
 				id: data.id,
+				lastUpdatedDate: data.lastUpdatedDate,
 				scheduledTransactions: vals[2],
 				transactions: vals[3],
 			});
 		});
 	}
-	@serializable(identifier())
 	public id: string;
 	@observable public accounts: Account[];
 	@observable public budgets: Budget[];
@@ -105,19 +105,26 @@ class AppStore {
 		return transactions;
 	}
 	public serialize() {
-		return serialize(this);
+		return {
+			id: 'profile-data',
+			...serialize(this),
+		};
 	}
 	public debugString() {
 		return JSON.stringify(serialize(this));
 	}
 	@action public runTransactionSinceLastUpdate() {
+		const lastUpdate = this.lastUpdatedDate;
+
 		this.scheduledTransactions.forEach((scheduledTransaction) => {
-			const lastUpdate = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
-			this.runTransactions(scheduledTransaction, lastUpdate.format('MM/DD/YYYY'));
+			const lastUpdateMoment = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
+			this.runTransactions(scheduledTransaction, lastUpdateMoment.format('MM/DD/YYYY'));
 		});
 		this.showTransactionConfirmation = !!this.unconfirmedTransactions.length;
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
-		this.save();
+		if(lastUpdate !== this.lastUpdatedDate) {
+			this.save();
+		}
 	}
 	@action public clearAllData() {
 		(this.accounts as any).clear();
