@@ -51,4 +51,19 @@ function registerUser(email: string, password: string) {
 	.then((responseText) => responseText.json());
 }
 
+export
+function signIn(email: string, password: string) {
+	return fetch(`${API_URI}/signin`, {
+		body: JSON.stringify({
+			name: email,
+			password,
+		}),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		method: 'post',
+	})
+	.then((responseText) => responseText.json());
+}
+
 (window as any).activate = activate;

@@ -2,7 +2,7 @@ import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 
 import AppStore from '../../stores/app';
-import SignupForm from './signup-form';
+import SignUpForm from './sign-up-form';
 
 const {Component} = React;
 
@@ -27,9 +27,7 @@ class PhungibleAccountManager extends Component<Props, {}> {
 	public render() {
 		return (
 			<div>
-				<SignupForm
-					onSubmit={() => {/**/}}
-				/>
+				<SignUpForm/>
 			</div>
 		);
 	}
