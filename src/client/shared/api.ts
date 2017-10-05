@@ -37,7 +37,7 @@ function submitFeedback(feedbackData: FeedbackData) {
 }
 
 export
-function registerUser(email: string, password: string) {
+function register(email: string, password: string) {
 	return fetch(`${API_URI}/register`, {
 		body: JSON.stringify({
 			name: email,
@@ -52,8 +52,8 @@ function registerUser(email: string, password: string) {
 }
 
 export
-function signIn(email: string, password: string) {
-	return fetch(`${API_URI}/signin`, {
+function login(email: string, password: string) {
+	return fetch(`${API_URI}/sync/_session`, {
 		body: JSON.stringify({
 			name: email,
 			password,
@@ -66,4 +66,13 @@ function signIn(email: string, password: string) {
 	.then((responseText) => responseText.json());
 }
 
-(window as any).activate = activate;
+export
+function logout() {
+	return fetch(`${API_URI}/sync/_session`, {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		method: 'delete',
+	})
+	.then((responseText) => responseText.json());
+}

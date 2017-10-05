@@ -5,7 +5,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 
-import { registerUser, signIn } from '../../shared/api';
+import { login, register } from '../../shared/api';
 
 const { Component } = React;
 
@@ -65,17 +65,16 @@ class Selectors {
 	}
 }
 
-const style = {
-	textAlign: 'center',
-};
-
 interface Props {
 	email?: string;
+	onCreation(email: string): void;
+	onLogin(email: string): void;
 }
 
 class Store {
 	@observable public creatingAccount = false;
 	@observable public email = '';
+	@observable public errorMessage = '';
 	@observable public password = '';
 	@observable public retypedPassword = '';
 }
@@ -88,18 +87,24 @@ class Settings extends Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
 		this.store = new Store();
+
+		if(props.email) {
+			this.store.email = props.email;
+		}
 	}
 
 	public render() {
 		const {
 			creatingAccount,
 			email,
+			errorMessage,
 			password,
 			retypedPassword,
 		} = this.store;
 
 		return (
-			<div style={style}>
+			<div>
+
 				<TextField
 					floatingLabelText="Email address"
 					value={email}
@@ -107,7 +112,7 @@ class Settings extends Component<Props, {}> {
 				/>
 				<TextField
 					floatingLabelText="Password"
-					hintText="Must be at least 6 characters"
+					hintText={creatingAccount ? 'Minimum 6 characters' : ''}
 					type="password"
 					value={password}
 					onChange={(e, val) => Actions.setPassword(this.store, val)}
@@ -130,7 +135,7 @@ class Settings extends Component<Props, {}> {
 							primary
 							disabled={!Selectors.canCreateAccount(this.store)}
 							label="Create Account"
-							onClick={() => registerUser(email, password)}
+							onClick={() => this.handleCreate(email, password)}
 						/>
 						<p>
 							<FlatButton
@@ -145,7 +150,7 @@ class Settings extends Component<Props, {}> {
 							primary
 							label="Sign In"
 							disabled={!Selectors.canSignIn(this.store)}
-							onClick={() => signIn(email, password)}
+							onClick={() => this.handleLogin(email, password)}
 						/>
 						<p>
 							<FlatButton
@@ -155,7 +160,29 @@ class Settings extends Component<Props, {}> {
 						</p>
 					</div>
 				)}
+				<div>
+					{errorMessage}
+				</div>
 			</div>
 		);
+	}
+
+	private async handleCreate(email: string, password: string) {
+			const regResp = await register(email, password);
+			if(!regResp.error) {
+				this.handleLogin(email, password);
+			} else {
+				this.store.errorMessage = 'User exists';
+			}
+	}
+
+	private async handleLogin(email: string, password: string) {
+		const loginResp = await login(email, password);
+
+		if(!loginResp.error) {
+			this.props.onLogin(email);
+		} else {
+			this.store.errorMessage = loginResp.reason;
+		}
 	}
 }

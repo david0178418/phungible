@@ -29,7 +29,7 @@ class PhungibleAccountManagePager extends Component<Props, {}> {
 			<Page animationDirection="vertical">
 				<Navigation title={PhungibleAccountManagePager.title} appStore={appStore} />
 				<ContentArea>
-					<PhungibleAccountManager appStore={appStore} />
+					<PhungibleAccountManager/>
 				</ContentArea>
 			</Page>
 		);

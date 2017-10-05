@@ -43,8 +43,10 @@ class AppStore {
 	public id: string;
 	@observable public accounts: Account[];
 	@observable public budgets: Budget[];
+	@observable public isLoggedIn: boolean;
 	@serializable
 	public lastUpdatedDate: string;
+	@observable public email: string;
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@observable public showTransactionConfirmation: boolean;
 	@observable public transactions: Transaction[];
@@ -57,6 +59,7 @@ class AppStore {
 		Object.assign(this, {
 			accounts: observable([]),
 			budgets: observable([]),
+			email: localStorage.getItem('userEmail') || '',
 			id: generateUuid(),
 			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
 			scheduledTransactions: observable([]),
@@ -266,6 +269,14 @@ class AppStore {
 		}
 
 		this.sortTransactions();
+	}
+	@action public handleLogin(email: string) {
+		window.localStorage.setItem('userEmail', email);
+		this.email = email;
+		this.isLoggedIn = true;
+	}
+	@action public handleLogout() {
+		this.isLoggedIn = false;
 	}
 	public save() {
 		PouchStorage.saveDoc(this);
