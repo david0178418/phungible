@@ -7,36 +7,6 @@ type HTTP_ACTION =
 	'get' |
 	'post';
 
-async function api(uri: string, method: HTTP_ACTION, data?: any) {
-	const headers = new Headers();
-	headers.append('Accept', 'application/json');
-	headers.append('Content-Type', 'application/json');
-	try {
-		const response = await fetch(uri, {
-			body: JSON.stringify(data),
-			credentials: 'same-origin',
-			headers,
-			method,
-		});
-		return response.json();
-	} catch(e) {
-		return e;
-	}
-}
-
-export
-function activate(activationCode: string) {
-	const headers = new Headers();
-	headers.append('Accept', 'application/json');
-	headers.append('Content-Type', 'application/json');
-	return fetch(`${API_URI}/activate/${activationCode}`, {
-			headers,
-		})
-		.then((response) => response.json())
-		.then((activationSuccessful) => activationSuccessful)
-		.catch((e) => true); // Just let them through if there is an error
-}
-
 interface FeedbackData {
 	debugData: string;
 	email: string;
@@ -73,4 +43,21 @@ async function logout() {
 export
 function isLoggedIn() {
 	return api(`${API_URI}/sync/_session`, 'get');
+}
+
+async function api(uri: string, method: HTTP_ACTION, data?: any) {
+	const headers = new Headers();
+	headers.append('Accept', 'application/json');
+	headers.append('Content-Type', 'application/json');
+	try {
+		const response = await fetch(uri, {
+			body: JSON.stringify(data),
+			credentials: 'same-origin',
+			headers,
+			method,
+		});
+		return response.json();
+	} catch(e) {
+		return e;
+	}
 }
