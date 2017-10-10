@@ -16,13 +16,13 @@ class LoggedIn extends Component<LoggedInProps, {}> {
 		return (
 			<div>
 				Logged in as {this.props.email}
-				<p>
+				<div>
 					<RaisedButton
 						primary
 						label="Sign Out"
 						onClick={() => this.handleLogout()}
 					/>
-				</p>
+				</div>
 			</div>
 		);
 	}

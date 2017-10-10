@@ -2,6 +2,28 @@ if(!window.fetch) {
 	import('whatwg-fetch');
 }
 
+type HTTP_ACTION =
+	'delete' |
+	'get' |
+	'post';
+
+async function api(uri: string, method: HTTP_ACTION, data?: any) {
+	const headers = new Headers();
+	headers.append('Accept', 'application/json');
+	headers.append('Content-Type', 'application/json');
+	try {
+		const response = await fetch(uri, {
+			body: JSON.stringify(data),
+			credentials: 'same-origin',
+			headers,
+			method,
+		});
+		return response.json();
+	} catch(e) {
+		return e;
+	}
+}
+
 export
 function activate(activationCode: string) {
 	const headers = new Headers();
@@ -24,55 +46,31 @@ interface FeedbackData {
 
 export
 function submitFeedback(feedbackData: FeedbackData) {
-	const headers = new Headers();
-	headers.append('Accept', 'application/json');
-	headers.append('Content-Type', 'application/json');
-
-	return fetch(`${API_URI}/feedback`, {
-			body: JSON.stringify(feedbackData),
-			headers,
-			method: 'post',
-		})
-		.then((responseText) => responseText.json());
+	return api(`${API_URI}/feedback`, 'post', feedbackData);
 }
 
 export
 function register(email: string, password: string) {
-	return fetch(`${API_URI}/register`, {
-		body: JSON.stringify({
-			name: email,
-			password,
-		}),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'post',
-	})
-	.then((responseText) => responseText.json());
+	return api(`${API_URI}/register`, 'post', {
+		name: email,
+		password,
+	});
 }
 
 export
 function login(email: string, password: string) {
-	return fetch(`${API_URI}/sync/_session`, {
-		body: JSON.stringify({
-			name: email,
-			password,
-		}),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'post',
-	})
-	.then((responseText) => responseText.json());
+	return api(`${API_URI}/sync/_session`, 'post', {
+		name: email,
+		password,
+	});
 }
 
 export
-function logout() {
-	return fetch(`${API_URI}/sync/_session`, {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'delete',
-	})
-	.then((responseText) => responseText.json());
+async function logout() {
+	return api(`${API_URI}/sync/_session`, 'delete');
+}
+
+export
+function isLoggedIn() {
+	return api(`${API_URI}/sync/_session`, 'get');
 }

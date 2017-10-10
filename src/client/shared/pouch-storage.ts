@@ -96,3 +96,6 @@ class PouchStorage {
 		return new Promise((resolve) => done = resolve);
 	}
 }
+
+(window as any).PouchStorage = PouchStorage;
+(window as any).PouchDB = PouchDB;

@@ -43,7 +43,7 @@ class AppStore {
 	public id: string;
 	@observable public accounts: Account[];
 	@observable public budgets: Budget[];
-	@observable public isLoggedIn: boolean;
+	@observable public isLoggedIn = false;
 	@serializable
 	public lastUpdatedDate: string;
 	@observable public email: string;
@@ -65,6 +65,16 @@ class AppStore {
 			scheduledTransactions: observable([]),
 			transactions: observable([]),
 		}, params);
+
+		import('../shared/api')
+			.then(({ isLoggedIn }) => {
+				isLoggedIn()
+					.then(({ userCtx }) => {
+						if(userCtx.name) {
+							this.handleLogin(userCtx.name);
+						}
+					});
+				});
 
 		(window as any).store = this;
 	}

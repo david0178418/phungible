@@ -33,7 +33,7 @@ class PhungibleAccountManager extends Component<Props, {}> {
 		const appStore = this.props.appStore;
 
 		return (
-			<p style={style}>
+			<div style={style}>
 				{appStore.isLoggedIn ? (
 					<LoggedIn
 						email={appStore.email}
@@ -46,7 +46,7 @@ class PhungibleAccountManager extends Component<Props, {}> {
 						onCreation={(e) => appStore.handleLogin(e)}
 					/>
 				)}
-			</p>
+			</div>
 		);
 	}
 }

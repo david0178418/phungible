@@ -144,7 +144,7 @@ class App extends Component<Props, any> {
 						{!!this.store && (
 							<TransactionConfirmationPrompt
 								store={this.store}
-								open={this.store.showTransactionConfirmation}
+								open={!!this.store.showTransactionConfirmation}
 								transactions={this.store.unconfirmedTransactions}
 								onDone={() => this.store.dismissTransactionConfirmation()}
 							/>

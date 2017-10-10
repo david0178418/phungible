@@ -137,12 +137,12 @@ class Settings extends Component<Props, {}> {
 							label="Create Account"
 							onClick={() => this.handleCreate(email, password)}
 						/>
-						<p>
+						<div>
 							<FlatButton
 								label="I have an account"
 								onClick={() => Actions.setNotCreating(this.store)}
 							/>
-						</p>
+						</div>
 					</div>
 				) : (
 					<div>
@@ -152,12 +152,12 @@ class Settings extends Component<Props, {}> {
 							disabled={!Selectors.canSignIn(this.store)}
 							onClick={() => this.handleLogin(email, password)}
 						/>
-						<p>
+						<div>
 							<FlatButton
 								label="I don\'t have an account"
 								onClick={() => Actions.setCreating(this.store)}
 							/>
-						</p>
+						</div>
 					</div>
 				)}
 				<div>
