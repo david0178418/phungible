@@ -15,16 +15,8 @@ interface FeedbackData {
 }
 
 export
-function submitFeedback(feedbackData: FeedbackData) {
-	return api(`${API_URI}/feedback`, 'post', feedbackData);
-}
-
-export
-function register(email: string, password: string) {
-	return api(`${API_URI}/register`, 'post', {
-		name: email,
-		password,
-	});
+function isLoggedIn() {
+	return api(`${API_URI}/sync/_session`, 'get');
 }
 
 export
@@ -41,8 +33,16 @@ async function logout() {
 }
 
 export
-function isLoggedIn() {
-	return api(`${API_URI}/sync/_session`, 'get');
+function register(email: string, password: string) {
+	return api(`${API_URI}/register`, 'post', {
+		name: email,
+		password,
+	});
+}
+
+export
+function submitFeedback(feedbackData: FeedbackData) {
+	return api(`${API_URI}/feedback`, 'post', feedbackData);
 }
 
 async function api(uri: string, method: HTTP_ACTION, data?: any) {
