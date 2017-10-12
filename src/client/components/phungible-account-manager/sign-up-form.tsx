@@ -104,19 +104,20 @@ class Settings extends Component<Props, {}> {
 
 		return (
 			<div>
-
 				<TextField
 					floatingLabelText="Email address"
 					value={email}
 					onChange={(e, val) => Actions.setEmail(this.store, val)}
 				/>
-				<TextField
-					floatingLabelText="Password"
-					hintText={creatingAccount ? 'Minimum 6 characters' : ''}
-					type="password"
-					value={password}
-					onChange={(e, val) => Actions.setPassword(this.store, val)}
-				/>
+				<div>
+					<TextField
+						floatingLabelText="Password"
+						hintText={creatingAccount ? 'Minimum 6 characters' : ''}
+						type="password"
+						value={password}
+						onChange={(e, val) => Actions.setPassword(this.store, val)}
+					/>
+				</div>
 				{creatingAccount ? (
 					<div>
 						<TextField
