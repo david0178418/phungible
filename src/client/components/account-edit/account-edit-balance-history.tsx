@@ -157,6 +157,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							id={balanceUpdate.id}
 							balance={balanceUpdate.balance}
 							formattedStartDate={balanceUpdate.formattedStartDate}
+							key={balanceUpdate.id}
 							towardDirection={account.towardBalanceDirection}
 							expectationDifference={
 								index !== account.balanceUpdateHistory.length - 1 &&

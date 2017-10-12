@@ -8,10 +8,10 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 
 import {TransactionType} from '../../constants';
-import PouchStorage from '../../shared/pouch-storage';
 import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
+import Profiles from '../../stores/profiles';
 import Transaction from '../../stores/transaction';
 
 const {Component} = React;
@@ -88,13 +88,13 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 
 	private handleConfirm(transaction: Transaction) {
 		transaction.confirm();
-		PouchStorage.saveDoc(transaction);
+		Profiles.saveDoc(transaction);
 	}
 
 	private handleConfirmAll() {
 		this.props.transactions.forEach((transaction) => {
 			transaction.confirm();
-			PouchStorage.saveDoc(transaction);
+			Profiles.saveDoc(transaction);
 		});
 		this.props.onDone();
 	}

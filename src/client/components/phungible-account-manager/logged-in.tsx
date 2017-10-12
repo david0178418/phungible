@@ -6,7 +6,7 @@ import { logout } from '../../shared/api';
 const { Component } = React;
 
 interface LoggedInProps {
-	email: string;
+	username: string;
 	onLogout(): void;
 }
 
@@ -15,7 +15,7 @@ class LoggedIn extends Component<LoggedInProps, {}> {
 	public render() {
 		return (
 			<div>
-				Logged in as {this.props.email}
+				Logged in as {this.props.username}
 				<div>
 					<RaisedButton
 						primary

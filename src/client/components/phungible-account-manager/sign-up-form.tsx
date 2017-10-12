@@ -13,8 +13,8 @@ class Actions {
 	@action public static setCreating(store: Store) {
 		store.creatingAccount = true;
 	}
-	@action public static setEmail(store: Store, email: string) {
-		store.email = email.trim();
+	@action public static setUsername(store: Store, username: string) {
+		store.username = username.trim();
 	}
 	@action public static setNotCreating(store: Store) {
 		store.creatingAccount = false;
@@ -31,24 +31,24 @@ class Selectors {
 	public static canCreateAccount(store: Store) {
 		return (
 			store.creatingAccount &&
-			Selectors.isValidEmail(store) &&
-			Selectors.isValidPassword(store)
+			Selectors.isValidUsername(store) &&
+			Selectors.isValidPassword(store) &&
+			Selectors.passwordsMatch(store)
 		);
 	}
 	public static canSignIn(store: Store) {
 		return !!(
 			!store.creatingAccount &&
-			store.email.trim() &&
+			store.username.trim() &&
 			store.password.trim()
 		);
 	}
-	public static isValidEmail(store: Store) {
-		const email = store.email.trim();
+	public static isValidUsername(store: Store) {
+		const username = store.username.trim();
 		return (
-			email.length >= 3 &&
-			email.length <= 254 &&
-			email.indexOf('@') !== -1 &&
-			email.indexOf(' ') === -1
+			username.length >= 4 &&
+			username.length <= 25 &&
+			username.indexOf(' ') === -1
 		);
 	}
 	public static isValidPassword(store: Store) {
@@ -66,14 +66,14 @@ class Selectors {
 }
 
 interface Props {
-	email?: string;
-	onCreation(email: string): void;
-	onLogin(email: string): void;
+	username?: string;
+	onCreation(username: string): void;
+	onLogin(username: string): void;
 }
 
 class Store {
 	@observable public creatingAccount = false;
-	@observable public email = '';
+	@observable public username = '';
 	@observable public errorMessage = '';
 	@observable public password = '';
 	@observable public retypedPassword = '';
@@ -88,15 +88,15 @@ class Settings extends Component<Props, {}> {
 		super(props);
 		this.store = new Store();
 
-		if(props.email) {
-			this.store.email = props.email;
+		if(props.username) {
+			this.store.username = props.username;
 		}
 	}
 
 	public render() {
 		const {
 			creatingAccount,
-			email,
+			username,
 			errorMessage,
 			password,
 			retypedPassword,
@@ -105,9 +105,9 @@ class Settings extends Component<Props, {}> {
 		return (
 			<div>
 				<TextField
-					floatingLabelText="Email address"
-					value={email}
-					onChange={(e, val) => Actions.setEmail(this.store, val)}
+					floatingLabelText="Username"
+					value={username}
+					onChange={(e, val) => Actions.setUsername(this.store, val)}
 				/>
 				<div>
 					<TextField
@@ -136,7 +136,7 @@ class Settings extends Component<Props, {}> {
 							primary
 							disabled={!Selectors.canCreateAccount(this.store)}
 							label="Create Account"
-							onClick={() => this.handleCreate(email, password)}
+							onClick={() => this.handleCreate(username, password)}
 						/>
 						<div>
 							<FlatButton
@@ -151,7 +151,7 @@ class Settings extends Component<Props, {}> {
 							primary
 							label="Sign In"
 							disabled={!Selectors.canSignIn(this.store)}
-							onClick={() => this.handleLogin(email, password)}
+							onClick={() => this.handleLogin(username, password)}
 						/>
 						<div>
 							<FlatButton
@@ -168,20 +168,20 @@ class Settings extends Component<Props, {}> {
 		);
 	}
 
-	private async handleCreate(email: string, password: string) {
-			const regResp = await register(email, password);
+	private async handleCreate(username: string, password: string) {
+			const regResp = await register(username, password);
 			if(!regResp.error) {
-				this.handleLogin(email, password);
+				this.handleLogin(username, password);
 			} else {
 				this.store.errorMessage = 'User exists';
 			}
 	}
 
-	private async handleLogin(email: string, password: string) {
-		const loginResp = await login(email, password);
+	private async handleLogin(username: string, password: string) {
+		const loginResp = await login(username, password);
 
 		if(!loginResp.error) {
-			this.props.onLogin(email);
+			this.props.onLogin(username);
 		} else {
 			this.store.errorMessage = loginResp.reason;
 		}

@@ -1,4 +1,4 @@
-import PouchStorage from '../shared/pouch-storage';
+import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
 import Account from './account';
@@ -6,7 +6,7 @@ import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
-const PROFILE_DATA_PREFIX = 'profile-data-';
+let activeProfileDB: PouchDB.Database;
 
 export
 interface Profile {
@@ -23,9 +23,11 @@ class Profiles {
 
 		return Profiles.profiles.find((profile) => profile.id === id);
 	}
-
+	public static destroyCurrentProfile() {
+		return activeProfileDB.destroy();
+	}
 	public static async getCurrentProfile() {
-		const profiles = Profiles.getProfiles();
+		const profiles = await Profiles.getProfiles();
 
 		if(!profiles.length) {
 			Profiles.currentProfile = Profiles.createDefaultProfile();
@@ -42,45 +44,38 @@ class Profiles {
 
 		return Profiles.currentProfile;
 	}
-
-	public static async getProfileData(id: string) {
-		return Promise.all([
-			PouchStorage
-				.getAllType(Account.type),
-			PouchStorage
-				.getAllType(Budget.type),
-			PouchStorage
-				.getAllType(ScheduledTransaction.type),
-			PouchStorage
-				.getAllType(Transaction.type),
-			PouchStorage
-				.getDoc('profile-data'),
-		])
-		.then((values) => {
-			return {
-				accounts: values[0],
-				budgets: values[1],
-				id,
-				scheduledTransactions: values[2],
-				transactions: values[3],
-				...values[4],
-			};
-		});
+	public static getDoc(docId: string) {
+		PouchStorage.getDoc(docId, activeProfileDB);
 	}
+	public static async getProfileData(id: string) {
+		if(!activeProfileDB) {
+			activeProfileDB = await PouchStorage.openDb(id);
+		}
 
+		const values = await Promise.all([
+			PouchStorage
+				.getAllType(Account.type, activeProfileDB),
+			PouchStorage
+				.getAllType(Budget.type, activeProfileDB),
+			PouchStorage
+				.getAllType(ScheduledTransaction.type, activeProfileDB),
+			PouchStorage
+				.getAllType(Transaction.type, activeProfileDB),
+		]);
+
+		return {
+			accounts: values[0],
+			budgets: values[1],
+			id,
+			scheduledTransactions: values[2],
+			transactions: values[3],
+			...values[4],
+		};
+	}
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId');
 	}
-
-	public static saveCurrentProfileData(data: any) {
-		Profiles.setProfileData(Profiles.currentProfile.id, data);
-	}
-
-	public static setProfileData(id: string, data: any) {
-		Storage.setItem(`${PROFILE_DATA_PREFIX}${id}`, data);
-	}
-
-	public static getProfiles() {
+	public static async getProfiles() {
 		if(Profiles.profiles) {
 			return Profiles.profiles;
 		}
@@ -93,7 +88,15 @@ class Profiles {
 
 		return Profiles.profiles;
 	}
-
+	public static removeDoc(doc: PouchDocument) {
+		PouchStorage.removeDoc(doc, activeProfileDB);
+	}
+	public static sync() {
+		PouchStorage.sync(activeProfileDB);
+	}
+	public static saveDoc(doc: PouchDocument) {
+		PouchStorage.saveDoc(doc, activeProfileDB);
+	}
 	public static saveProfiles() {
 		Storage.setItem('profiles', Profiles.profiles);
 	}

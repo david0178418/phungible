@@ -1,40 +1,25 @@
 import PouchDB from 'pouchdb';
+import { createDb, remoteDbExists } from '../shared/api';
+
+type Database = PouchDB.Database;
 
 export
-interface Document {
+interface PouchDocument {
 	id: string;
 	type?: string;
 	parent?: string;
 	serialize?(): any;
 }
 
-let activeProfileDB: PouchDB.Database;
-
 export default
 class PouchStorage {
-	public static deleteDb() {
-		return activeProfileDB.destroy();
-	}
-	public static openDb(name: string) {
-		if(activeProfileDB) {
-			activeProfileDB.close();
-		}
-		activeProfileDB = new PouchDB(name);
-		(window as any).activeProfileDB = activeProfileDB;
-		return activeProfileDB;
-	}
-	public static async getDoc(docId: string) {
-		let doc;
+	public static async createRemoteProfile(profileId: string) {
+		const response = await createDb(profileId);
 
-		try {
-			doc = await activeProfileDB.get(docId) as any;
-		} catch(e) {
-			//
-		}
-		return doc ? doc.data : null;
+		return !!response.ok;
 	}
-	public static async getAllType(type: string, parentId?: string) {
-		const result = await activeProfileDB.allDocs({
+	public static async getAllType(type: string, db: Database, parentId?: string) {
+		const result = await db.allDocs({
 			endkey: `${type}:\ufff0`,
 			include_docs: true,
 			startkey: `${type}:`,
@@ -42,46 +27,32 @@ class PouchStorage {
 		return result
 			.rows
 			.map((row: any) => row.doc.data)
-			.filter((doc: Document) => !parentId || doc.parent === parentId);
+			.filter((doc: PouchDocument) => !parentId || doc.parent === parentId);
 	}
-	public static async saveDoc(data: Document) {
-		let done: any;
-		data = data.serialize ? data.serialize() : data;
-		const pouchId = data.type ? `${data.type}:${data.id}` : data.id;
+	public static async getDoc(docId: string, db: Database) {
+		let doc;
 
-		activeProfileDB
-			.get(pouchId)
-			.then((doc) => {
-				activeProfileDB
-					.put({
-						_id: pouchId,
-						_rev: doc._rev,
-						data,
-					})
-					.then(done)
-					.catch(done);
-			})
-			.catch(() => {
-				activeProfileDB
-					.put({
-						_id: pouchId,
-						data,
-					})
-					.then(done)
-					.catch(done);
-			});
-
-		return new Promise((resolve) => done = resolve);
+		try {
+			doc = await db.get(docId) as any;
+		} catch {
+			//
+		}
+		return doc ? doc.data : null;
 	}
-
-	public static async removeDoc(data: Document) {
+	public static openDb(name: string) {
+		return new PouchDB(name);
+	}
+	public static remoteDbUrl(profileId: string) {
+		return `${location.protocol}//${location.hostname}/api/sync/profile-${profileId}`;
+	}
+	public static async removeDoc(data: PouchDocument, db: Database) {
 		let done: any;
 		const pouchId = `${data.type}:${data.id}`;
 
-		activeProfileDB
+		db
 			.get(pouchId)
 			.then((doc) => {
-				activeProfileDB
+				db
 					.remove({
 						_id: pouchId,
 						_rev: doc._rev,
@@ -94,6 +65,45 @@ class PouchStorage {
 			});
 
 		return new Promise((resolve) => done = resolve);
+	}
+	public static async saveDoc(data: PouchDocument, db: Database) {
+		let done: any;
+		data = data.serialize ? data.serialize() : data;
+		const pouchId = data.type ? `${data.type}:${data.id}` : data.id;
+
+		db
+			.get(pouchId)
+			.then((doc) => {
+				db
+					.put({
+						_id: pouchId,
+						_rev: doc._rev,
+						data,
+					})
+					.then(done)
+					.catch(done);
+			})
+			.catch(() => {
+				db
+					.put({
+						_id: pouchId,
+						data,
+					})
+					.then(done)
+					.catch(done);
+			});
+
+		return new Promise((resolve) => done = resolve);
+	}
+	public static async sync(db: Database) {
+		const dbInfo = await db.info();
+		const profileId = dbInfo.db_name;
+
+		if(!(await remoteDbExists(profileId))) {
+			await PouchStorage.createRemoteProfile(profileId);
+		}
+
+		return db.sync(PouchStorage.remoteDbUrl(profileId));
 	}
 }
 

@@ -4,8 +4,8 @@ import 'moment-recur';
 import { serializable, serialize } from 'serializr';
 
 import ItemTypeName from 'item-type-name';
-import PouchStorage from '../shared/pouch-storage';
 import {generateUuid, Money} from '../shared/utils';
+import Profiles from '../stores/profiles';
 import Account from './account';
 import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
@@ -46,7 +46,7 @@ class AppStore {
 	@observable public isLoggedIn = false;
 	@serializable
 	public lastUpdatedDate: string;
-	@observable public email: string;
+	@observable public username: string;
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@observable public showTransactionConfirmation: boolean;
 	@observable public transactions: Transaction[];
@@ -59,23 +59,22 @@ class AppStore {
 		Object.assign(this, {
 			accounts: observable([]),
 			budgets: observable([]),
-			email: localStorage.getItem('userEmail') || '',
 			id: generateUuid(),
 			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
 			scheduledTransactions: observable([]),
 			transactions: observable([]),
+			username: localStorage.getItem('username') || '',
 		}, params);
 
 		import('../shared/api')
-			.then(({ isLoggedIn }) => {
-				isLoggedIn()
-					.then(({ userCtx }) => {
-						if(userCtx.name) {
-							this.handleLogin(userCtx.name);
-						}
-					});
-				});
+			.then(async ({ isLoggedIn }) => {
+				const { userCtx } = await isLoggedIn();
 
+				if(userCtx.name) {
+					this.handleLogin(userCtx.name);
+					Profiles.sync();
+				}
+			});
 		(window as any).store = this;
 	}
 
@@ -119,7 +118,6 @@ class AppStore {
 	}
 	public serialize() {
 		return {
-			id: 'profile-data',
 			...serialize(this),
 		};
 	}
@@ -144,9 +142,7 @@ class AppStore {
 		(this.budgets as any).clear();
 		(this.scheduledTransactions as any).clear();
 		(this.transactions as any).clear();
-		PouchStorage
-			.deleteDb()
-			.then(() => PouchStorage.openDb(this.id));
+		Profiles.destroyCurrentProfile();
 	}
 	@action public cleanScheduledTransactions() {
 		const accountIds = this.accounts.map((account) => account.id);
@@ -166,9 +162,9 @@ class AppStore {
 					}
 
 					if(!schedTrans.isValid) {
-						PouchStorage.removeDoc(schedTrans);
+						Profiles.removeDoc(schedTrans);
 					} else if(updated) {
-						PouchStorage.saveDoc(schedTrans);
+						Profiles.saveDoc(schedTrans);
 					}
 				}),
 			);
@@ -190,7 +186,7 @@ class AppStore {
 				}
 
 				if(updated) {
-					PouchStorage.saveDoc(budget);
+					Profiles.saveDoc(budget);
 				}
 			});
 
@@ -215,7 +211,7 @@ class AppStore {
 				}
 
 				if(updated) {
-					PouchStorage.saveDoc(transaction);
+					Profiles.saveDoc(transaction);
 				}
 			});
 
@@ -250,19 +246,19 @@ class AppStore {
 		this.cleanBudgets();
 		this.cleanScheduledTransactions();
 		this.cleanTransactions();
-		PouchStorage.removeDoc(account);
+		Profiles.removeDoc(account);
 	}
 	@action public removeBudget(budget: Budget) {
 		(this.budgets as any).remove(budget);
-		PouchStorage.removeDoc(budget);
+		Profiles.removeDoc(budget);
 	}
 	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		(this.scheduledTransactions as any).remove(scheduledTransaction);
-		PouchStorage.removeDoc(scheduledTransaction);
+		Profiles.removeDoc(scheduledTransaction);
 	}
 	@action public removeTransaction(transaction: Transaction) {
 		(this.transactions as any).remove(transaction);
-		PouchStorage.removeDoc(transaction);
+		Profiles.removeDoc(transaction);
 	}
 	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
@@ -274,22 +270,22 @@ class AppStore {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
-				PouchStorage.saveDoc(transaction);
+				Profiles.saveDoc(transaction);
 			}
 		}
 
 		this.sortTransactions();
 	}
-	@action public handleLogin(email: string) {
-		window.localStorage.setItem('userEmail', email);
-		this.email = email;
+	@action public handleLogin(username: string) {
+		window.localStorage.setItem('username', username);
+		this.username = username;
 		this.isLoggedIn = true;
 	}
 	@action public handleLogout() {
 		this.isLoggedIn = false;
 	}
 	public save() {
-		PouchStorage.saveDoc(this);
+		Profiles.saveDoc(this);
 	}
 	public saveItem(newItem: ItemType, type: ItemTypeName) {
 		switch(type) {
@@ -315,7 +311,7 @@ class AppStore {
 			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
 			this.accounts[index] = newAccount;
 		}
-		PouchStorage.saveDoc(newAccount);
+		Profiles.saveDoc(newAccount);
 	}
 	@action public saveBudget(newBudget: Budget) {
 		if(!newBudget.id) {
@@ -327,7 +323,7 @@ class AppStore {
 			);
 			this.budgets[index] = newBudget;
 		}
-		PouchStorage.saveDoc(newBudget);
+		Profiles.saveDoc(newBudget);
 	}
 	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
@@ -352,7 +348,7 @@ class AppStore {
 		}
 
 		this.sortTransactions();
-		PouchStorage.saveDoc(newScheduledTransaction);
+		Profiles.saveDoc(newScheduledTransaction);
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
@@ -363,7 +359,7 @@ class AppStore {
 			this.transactions[index] = newTransaction;
 		}
 		this.sortTransactions();
-		PouchStorage.saveDoc(newTransaction);
+		Profiles.saveDoc(newTransaction);
 	}
 	@action public sortTransactions() {
 		(this.transactions as any).replace(this.transactions.sort((a, b) => {

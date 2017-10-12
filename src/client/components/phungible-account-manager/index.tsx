@@ -2,10 +2,15 @@ import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 
 import AppStore from '../../stores/app';
+import Profiles from '../../stores/profiles';
 import LoggedIn from './logged-in';
 import SignUpForm from './sign-up-form';
 
 const {Component} = React;
+
+interface State {
+	loading: boolean;
+}
 
 interface Props {
 	appStore?: AppStore;
@@ -20,13 +25,16 @@ const style = {
 
 @inject('appStore') @observer
 export default
-class PhungibleAccountManager extends Component<Props, {}> {
+class PhungibleAccountManager extends Component<Props, State> {
 	private store: PhungibleAccountManagerStore;
 
 	constructor(props: Props) {
 		super(props);
 
 		this.store = new PhungibleAccountManagerStore();
+		this.state = {
+			loading: false,
+		};
 	}
 
 	public render() {
@@ -35,18 +43,34 @@ class PhungibleAccountManager extends Component<Props, {}> {
 		return (
 			<div style={style}>
 				{appStore.isLoggedIn ? (
-					<LoggedIn
-						email={appStore.email}
-						onLogout={() => appStore.handleLogout()}
-					/>
+					<div>
+						<LoggedIn
+							username={appStore.username}
+							onLogout={() => appStore.handleLogout()}
+						/>
+						<button onClick={() => this.handleSync()}>Sync</button>
+						<div>
+							{this.state.loading && 'Syncing'}
+						</div>
+					</div>
 				) : (
 					<SignUpForm
-						email={appStore.email}
+						username={appStore.username}
 						onLogin={(e) => appStore.handleLogin(e)}
 						onCreation={(e) => appStore.handleLogin(e)}
 					/>
 				)}
 			</div>
 		);
+	}
+
+	private async handleSync() {
+		this.setState({
+			loading: true,
+		});
+		await Profiles.sync();
+		this.setState({
+			loading: false,
+		});
 	}
 }

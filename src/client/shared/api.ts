@@ -5,7 +5,8 @@ if(!window.fetch) {
 type HTTP_ACTION =
 	'delete' |
 	'get' |
-	'post';
+	'post' |
+	'put';
 
 interface FeedbackData {
 	debugData: string;
@@ -15,29 +16,44 @@ interface FeedbackData {
 }
 
 export
+function createDb(profileId: string) {
+	return api(`${API_URI}/create-profile/${profileId}`, 'put');
+}
+
+export
 function isLoggedIn() {
 	return api(`${API_URI}/sync/_session`, 'get');
 }
 
 export
-function login(email: string, password: string) {
+function login(username: string, password: string) {
 	return api(`${API_URI}/sync/_session`, 'post', {
-		name: email,
+		name: username,
 		password,
 	});
 }
 
 export
-async function logout() {
+function logout() {
 	return api(`${API_URI}/sync/_session`, 'delete');
 }
 
 export
-function register(email: string, password: string) {
+function register(username: string, password: string) {
 	return api(`${API_URI}/register`, 'post', {
-		name: email,
+		name: username,
 		password,
 	});
+}
+
+export
+async function remoteDbExists(profileId: string) {
+	try {
+		const response = await api(`${API_URI}/sync/profile-${profileId}`, 'get');
+		return !!response.db_name;
+	} catch {
+		return false;
+	}
 }
 
 export
