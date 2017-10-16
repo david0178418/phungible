@@ -221,7 +221,16 @@ class App extends Component<Props, any> {
 		const data = await Profiles.getProfileData(this.currentProfile.id);
 
 		if(data) {
-			this.store = await AppStore.deserialize(data);
+			const newVals = await AppStore.deserialize(data);
+
+			if(this.store) {
+				this.store.accounts  = newVals.accounts;
+				this.store.budgets  = newVals.budgets;
+				this.store.scheduledTransactions  = newVals.scheduledTransactions;
+				this.store.transactions  = newVals.transactions;
+			} else {
+				this.store = newVals;
+			}
 		} else {
 			this.store = new AppStore();
 		}
