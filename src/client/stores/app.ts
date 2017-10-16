@@ -65,17 +65,6 @@ class AppStore {
 			transactions: observable([]),
 			username: localStorage.getItem('username') || '',
 		}, params);
-
-		import('../shared/api')
-			.then(async ({ isLoggedIn }) => {
-				const { userCtx } = await isLoggedIn();
-
-				if(userCtx.name) {
-					this.handleLogin(userCtx.name);
-					Profiles.sync();
-				}
-			});
-		(window as any).store = this;
 	}
 
 	public findAccount(accountId: string) {

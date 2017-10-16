@@ -91,8 +91,8 @@ class Profiles {
 	public static removeDoc(doc: PouchDocument) {
 		PouchStorage.removeDoc(doc, activeProfileDB);
 	}
-	public static sync() {
-		PouchStorage.sync(activeProfileDB);
+	public static sync(onChange?: () => void) {
+		PouchStorage.sync(activeProfileDB, onChange);
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);

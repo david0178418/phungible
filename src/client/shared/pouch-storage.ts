@@ -95,7 +95,7 @@ class PouchStorage {
 
 		return new Promise((resolve) => done = resolve);
 	}
-	public static async sync(db: Database) {
+	public static async sync(db: Database, onChange: () => void) {
 		const dbInfo = await db.info();
 		const profileId = dbInfo.db_name;
 
@@ -103,7 +103,10 @@ class PouchStorage {
 			await PouchStorage.createRemoteProfile(profileId);
 		}
 
-		return db.sync(PouchStorage.remoteDbUrl(profileId));
+		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(profileId)));
+
+		// Why won't the sync stop on its own?
+		setTimeout(() => sync.cancel(), 500);
 	}
 }
 

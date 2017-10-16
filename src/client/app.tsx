@@ -6,9 +6,10 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
+import { isLoggedIn } from './shared/api';
 import theme from './shared/theme';
 import AppStore from './stores/app';
-import ProfilesStore, {Profile} from './stores/profiles';
+import Profiles, {Profile} from './stores/profiles';
 
 const {Component} = React;
 const TRANSITION_TIME = 500;
@@ -186,23 +187,38 @@ class App extends Component<Props, any> {
 	// 	}
 	// }
 
+	private async handleLoggedIn(appStore: AppStore) {
+		const { userCtx } = await isLoggedIn();
+
+		if(userCtx.name) {
+			appStore.handleLogin(userCtx.name);
+			Profiles.sync(() => this.handleRefreshStore());
+		}
+	}
+
 	@action private async handleStorageInit() {
-		this.currentProfile = await ProfilesStore.getCurrentProfile();
+		this.currentProfile = await Profiles.getCurrentProfile();
 
-		return ProfilesStore
-			.getProfileData(this.currentProfile.id)
-			.then(async (data) => {
-				if(data) {
-					this.store = await AppStore.deserialize(data);
-				} else {
-					this.store = new AppStore();
-				}
-				this.store.runTransactionSinceLastUpdate();
+		await this.handleRefreshStore();
 
-				// Check every 5 minutes.  Runs transactions when day rolls over
-				setTimeout(() => {
-					this.store.runTransactionSinceLastUpdate();
-				}, 1000 * 60 * 5);
-			});
+		this.store.runTransactionSinceLastUpdate();
+
+		this.handleLoggedIn(this.store);
+
+		// Check every 5 minutes.  Runs transactions when day rolls over
+		setTimeout(
+			() => this.store.runTransactionSinceLastUpdate(),
+			1000 * 60 * 5,
+		);
+	}
+
+	private async handleRefreshStore() {
+		const data = await Profiles.getProfileData(this.currentProfile.id);
+
+		if(data) {
+			this.store = await AppStore.deserialize(data);
+		} else {
+			this.store = new AppStore();
+		}
 	}
 }
