@@ -106,7 +106,10 @@ class PouchStorage {
 		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(profileId)));
 
 		// Why won't the sync stop on its own?
-		setTimeout(() => sync.cancel(), 500);
+		setTimeout(() => {
+			sync.cancel();
+			onChange();
+		}, 500);
 	}
 }
 

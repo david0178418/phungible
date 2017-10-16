@@ -193,6 +193,11 @@ class App extends Component<Props, any> {
 		if(userCtx.name) {
 			appStore.handleLogin(userCtx.name);
 			Profiles.sync(() => this.handleRefreshStore());
+
+			setInterval(
+				() => Profiles.sync(() => this.handleRefreshStore()),
+				15000,
+			);
 		}
 	}
 
