@@ -1,3 +1,4 @@
+import { AccountProfiles, getSyncedProfiles, ProfileMetaData } from '../shared/api';
 import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
@@ -11,44 +12,51 @@ let activeProfileDB: PouchDB.Database;
 export
 interface Profile {
 	id: string;
+	isSynced: boolean;
 	name: string;
 }
 
 export default
 class Profiles {
-	public static findProfile(id: string) {
-		if(!Profiles.profiles) {
-			return null;
-		}
-
-		return Profiles.profiles.find((profile) => profile.id === id);
-	}
 	public static destroyCurrentProfile() {
 		return activeProfileDB.destroy();
 	}
 	public static async getCurrentProfile() {
-		const profiles = await Profiles.getProfiles();
+		let loadedProfile = null;
+		const profiles = Profiles.getAllProfiles();
 
 		if(!profiles.length) {
-			Profiles.currentProfile = Profiles.createDefaultProfile();
-			Profiles.profiles.push(Profiles.currentProfile);
-			Profiles.saveProfiles();
-			Profiles.saveCurrentProfile();
+			const defaultProfile = Profiles.createDefaultProfile();
+
+			Profiles.saveProfiles({
+				accessible: [],
+				owned: [defaultProfile],
+			});
+			Profiles.saveCurrentProfile(defaultProfile.id);
+
+			loadedProfile = defaultProfile;
 		} else {
-			Profiles.currentProfile = Profiles.findProfile(Storage.getItem('lastProfileId'));
-			Profiles.currentProfile = profiles[0];
-			Profiles.saveCurrentProfile();
+			const lastLoadedId = Profiles.getLastProfileId();
+			loadedProfile = profiles.find((profile) => profile.id === lastLoadedId);
 		}
 
-		PouchStorage.openDb(Profiles.currentProfile.id);
-
-		return Profiles.currentProfile;
+		return loadedProfile;
 	}
 	public static getDoc(docId: string) {
 		PouchStorage.getDoc(docId, activeProfileDB);
 	}
 	public static async getProfileData(id: string) {
-		if(!activeProfileDB) {
+		let info: any = {};
+
+		if(activeProfileDB) {
+			info = await activeProfileDB.info();
+		}
+
+		if(info.db_name !== `profile-${id}`) {
+			if(activeProfileDB) {
+				activeProfileDB.close();
+			}
+
 			activeProfileDB = await PouchStorage.openDb(id);
 		}
 
@@ -75,42 +83,52 @@ class Profiles {
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId');
 	}
-	public static async getProfiles() {
-		if(Profiles.profiles) {
-			return Profiles.profiles;
+	public static getAccessibleProfiles() {
+		return Storage.getItem('profiles.accessible') || [];
+	}
+	public static getAllProfiles(): ProfileMetaData[] {
+		return Profiles.getOwnedProfiles().concat(Profiles.getAccessibleProfiles());
+	}
+	public static getOwnedProfiles() {
+		return Storage.getItem('profiles.owned') || [];
+	}
+	public static async refreshProfiles() {
+		try {
+			Profiles.saveProfiles(await getSyncedProfiles());
+			return true;
+		} catch {
+			return false;
 		}
-
-		Profiles.profiles = Storage.getItem('profiles');
-
-		if(!(Profiles.profiles && Profiles.profiles.length)) {
-			Profiles.profiles = [];
-		}
-
-		return Profiles.profiles;
 	}
 	public static removeDoc(doc: PouchDocument) {
 		PouchStorage.removeDoc(doc, activeProfileDB);
 	}
-	public static sync(onChange?: () => void) {
-		PouchStorage.sync(activeProfileDB, onChange);
+	public static async sync(onChange?: () => void) {
+		const profiles = await getSyncedProfiles();
+		// TODO get the profile id straight from the db instance
+		const profileId = Profiles.getLastProfileId();
+		const allProfiles = profiles.accessible.concat(profiles.owned);
+
+		if(allProfiles.indexOf(profileId) !== -1) {
+			PouchStorage.sync(activeProfileDB, onChange);
+		}
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);
 	}
-	public static saveProfiles() {
-		Storage.setItem('profiles', Profiles.profiles);
+	public static saveProfiles(profiles: AccountProfiles) {
+		Storage.setItem('profiles.accessible', profiles.owned);
+		Storage.setItem('profiles.accessible', profiles.owned);
 	}
 
-	public static saveCurrentProfile() {
-		Storage.setItem('lastProfileId', Profiles.currentProfile.id);
+	public static saveCurrentProfile(profileId: string) {
+		Storage.setItem('lastProfileId', profileId);
 	}
-
-	private static profiles: Profile[] = null;
-	private static currentProfile: Profile = null;
 
 	private static createDefaultProfile() {
 		return {
 			id: generateUUID(),
+			isSynced: false,
 			name: 'Default',
 		};
 	}

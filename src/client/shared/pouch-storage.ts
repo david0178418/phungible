@@ -95,7 +95,7 @@ class PouchStorage {
 
 		return new Promise((resolve) => done = resolve);
 	}
-	public static async sync(db: Database, onChange: () => void) {
+	public static async sync(db: Database, onChange?: () => void) {
 		const dbInfo = await db.info();
 		const profileId = dbInfo.db_name;
 
@@ -108,7 +108,10 @@ class PouchStorage {
 		// Why won't the sync stop on its own?
 		setTimeout(() => {
 			sync.cancel();
-			onChange();
+
+			if(onChange) {
+				onChange();
+			}
 		}, 500);
 	}
 }

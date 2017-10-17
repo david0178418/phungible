@@ -6,7 +6,7 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
-import { isLoggedIn } from './shared/api';
+import { getUserContext } from './shared/api';
 import theme from './shared/theme';
 import AppStore from './stores/app';
 import Profiles, {Profile} from './stores/profiles';
@@ -188,7 +188,11 @@ class App extends Component<Props, any> {
 	// }
 
 	private async handleLoggedIn(appStore: AppStore) {
-		const { userCtx } = await isLoggedIn();
+		const userCtx = await getUserContext();
+
+		if(!userCtx) {
+			return;
+		}
 
 		if(userCtx.name) {
 			appStore.handleLogin(userCtx.name);
@@ -202,7 +206,7 @@ class App extends Component<Props, any> {
 	}
 
 	@action private async handleStorageInit() {
-		this.currentProfile = await Profiles.getCurrentProfile();
+		this.currentProfile = await Profiles.getCurrentProfile() as Profile;
 
 		await this.handleRefreshStore();
 
@@ -218,18 +222,27 @@ class App extends Component<Props, any> {
 	}
 
 	private async handleRefreshStore() {
-		const data = await Profiles.getProfileData(this.currentProfile.id);
+		const [
+			profileData,
+			profiles,
+		] = await Promise.all([
+			Profiles.getProfileData(this.currentProfile.id),
+			Profiles.getAllProfiles(),
+		]);
 
-		if(data) {
-			const newVals = await AppStore.deserialize(data);
+		if(profileData) {
+			const newVals = await AppStore.deserialize(profileData);
 
+			// TODO Lots o' cleanup as signified by the "as" statements
 			if(this.store) {
 				this.store.accounts  = newVals.accounts;
 				this.store.budgets  = newVals.budgets;
+				this.store.profiles = profiles as Profile[];
 				this.store.scheduledTransactions  = newVals.scheduledTransactions;
 				this.store.transactions  = newVals.transactions;
 			} else {
 				this.store = newVals;
+				this.store.profiles = profiles as Profile[];
 			}
 		} else {
 			this.store = new AppStore();

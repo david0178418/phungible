@@ -16,13 +16,44 @@ interface FeedbackData {
 }
 
 export
+interface ProfileMetaData {
+	id: string;
+	isSynced?: boolean;
+	name: string;
+}
+
+export
+interface AccountProfiles {
+	accessible: ProfileMetaData[];
+	owned: ProfileMetaData[];
+}
+
+interface UserCtx {
+	name: string;
+	rolse: string[];
+}
+
+export
 function createDb(profileId: string) {
 	return api(`${API_URI}/create-profile/${profileId}`, 'put');
 }
 
 export
-function isLoggedIn() {
-	return api(`${API_URI}/sync/_session`, 'get');
+function getSyncedProfiles(): Promise<AccountProfiles> {
+	const username = localStorage.getItem('username');
+
+	if(!username) {
+		return new Promise((resolve) => resolve(null));
+	}
+
+	return api(`${API_URI}/profiles/${username}`, 'get');
+}
+
+export
+async function getUserContext(): Promise<UserCtx | null> {
+	const { userCtx } = await api(`${API_URI}/sync/_session`, 'get');
+
+	return userCtx;
 }
 
 export

@@ -1,8 +1,8 @@
 import { inject, observer } from 'mobx-react';
 import * as React from 'react';
+import Profiles from '../../stores/profiles';
 
 import AppStore from '../../stores/app';
-import Profiles from '../../stores/profiles';
 import LoggedIn from './logged-in';
 import SignUpForm from './sign-up-form';
 
@@ -48,7 +48,6 @@ class PhungibleAccountManager extends Component<Props, State> {
 							username={appStore.username}
 							onLogout={() => appStore.handleLogout()}
 						/>
-						<button onClick={() => this.handleSync()}>Sync</button>
 						<div>
 							{this.state.loading && 'Syncing'}
 						</div>
@@ -60,17 +59,28 @@ class PhungibleAccountManager extends Component<Props, State> {
 						onCreation={(e) => appStore.handleLogin(e)}
 					/>
 				)}
+				{appStore.profiles.map((profile) => (
+					<div key={profile.id}>
+						{profile.name}
+						{appStore.id === profile.id ? (
+								appStore.isLoggedIn && (
+									<button
+										onClick={() => Profiles.sync()}
+									>
+										Sync
+									</button>
+								)
+							) : (
+								<button
+									onClick={() => {/**/}}
+								>
+									Select
+								</button>
+							)
+						}
+					</div>
+				))}
 			</div>
 		);
-	}
-
-	private async handleSync() {
-		this.setState({
-			loading: true,
-		});
-		await Profiles.sync();
-		this.setState({
-			loading: false,
-		});
 	}
 }

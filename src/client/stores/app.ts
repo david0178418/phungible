@@ -5,7 +5,7 @@ import { serializable, serialize } from 'serializr';
 
 import ItemTypeName from 'item-type-name';
 import {generateUuid, Money} from '../shared/utils';
-import Profiles from '../stores/profiles';
+import Profiles, { Profile } from '../stores/profiles';
 import Account from './account';
 import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
@@ -44,6 +44,7 @@ class AppStore {
 	@observable public accounts: Account[];
 	@observable public budgets: Budget[];
 	@observable public isLoggedIn = false;
+	@observable public profiles: Profile[];
 	@serializable
 	public lastUpdatedDate: string;
 	@observable public username: string;
@@ -61,6 +62,7 @@ class AppStore {
 			budgets: observable([]),
 			id: generateUuid(),
 			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
+			profiles: observable([]),
 			scheduledTransactions: observable([]),
 			transactions: observable([]),
 			username: localStorage.getItem('username') || '',
