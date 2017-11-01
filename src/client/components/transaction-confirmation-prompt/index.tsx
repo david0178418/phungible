@@ -8,10 +8,10 @@ import {observer} from 'mobx-react';
 import * as React from 'react';
 
 import {TransactionType} from '../../constants';
+import Profiles from '../../shared/profile-storage';
 import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
-import Profiles from '../../stores/profiles';
 import Transaction from '../../stores/transaction';
 
 const {Component} = React;

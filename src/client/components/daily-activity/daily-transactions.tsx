@@ -43,13 +43,13 @@ class DailyActivity extends Component<Props, State> {
 			store,
 			onRemove,
 		} = this.props;
-		const transactions = store.findTransactionsOnDate(date);
+		const transactions = store.currentProfile.findTransactionsOnDate(date);
 
 		return (
 			<div>
 				<QuickEdit
-					accounts={store.accounts}
-					budgets={store.budgets}
+					accounts={store.currentProfile.accounts}
+					budgets={store.currentProfile.budgets}
 					date={date}
 					openButtonText="Add Quick Expense"
 					transaction={quickTransaction}

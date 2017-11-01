@@ -27,7 +27,7 @@ class AccountEditStore {
 
 	public saveAccount() {
 		if(this.account.isValid) {
-			this.appStore.saveAccount(this.account);
+			this.appStore.currentProfile.saveAccount(this.account);
 			this.account = new Account();
 			return true;
 		} else {
@@ -36,7 +36,7 @@ class AccountEditStore {
 	}
 
 	get accounts() {
-		return this.appStore.accounts;
+		return this.appStore.currentProfile.accounts;
 	}
 }
 type Props = {
@@ -64,7 +64,7 @@ class AccountEditPage extends Component<Props, {}> {
 		if(props.model) {
 			model = props.model;
 		} else if(props.id) {
-			model = this.props.appStore.findAccount(this.props.id);
+			model = this.props.appStore.currentProfile.findAccount(this.props.id);
 		}
 
 		if(!model) {

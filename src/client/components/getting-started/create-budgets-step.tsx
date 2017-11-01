@@ -37,7 +37,7 @@ class CreateAccountsStep extends React.Component<Props, {}> {
 						isBudget: true,
 					}}
 					editComponentProps={{
-						accounts: appStore.accounts,
+						accounts: appStore.currentProfile.accounts,
 						isBudget: true,
 					}}
 				/>

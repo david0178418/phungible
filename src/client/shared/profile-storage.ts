@@ -1,32 +1,25 @@
-import { AccountProfiles, getSyncedProfiles, ProfileMetaData } from '../shared/api';
+import { getSyncedProfiles } from '../shared/api';
 import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
-import Account from './account';
-import Budget from './budget';
-import ScheduledTransaction from './scheduled-transaction';
-import Transaction from './transaction';
+import Account from '../stores/account';
+import Budget from '../stores/budget';
+import ScheduledTransaction from '../stores/scheduled-transaction';
+import Transaction from '../stores/transaction';
 
 let activeProfileDB: PouchDB.Database;
-
-export
-interface Profile {
-	id: string;
-	isSynced: boolean;
-	name: string;
-}
 
 export default
 class Profiles {
 	public static destroyCurrentProfile() {
 		return activeProfileDB.destroy();
 	}
-	public static async getCurrentProfile() {
+	public static async getCurrentProfileMeta() {
 		let loadedProfile = null;
 		const profiles = Profiles.getAllProfiles();
 
 		if(!profiles.length) {
-			const defaultProfile = Profiles.createDefaultProfile();
+			const defaultProfile = Profiles.createDefaultProfileMeta();
 
 			Profiles.saveProfiles({
 				accessible: [],
@@ -87,9 +80,9 @@ class Profiles {
 		return Storage.getItem('profiles.accessible') || [];
 	}
 	public static getAllProfiles(): ProfileMetaData[] {
-		return Profiles.getOwnedProfiles().concat(Profiles.getAccessibleProfiles());
+		return Profiles.getOwnedProfileMetas().concat(Profiles.getAccessibleProfiles());
 	}
-	public static getOwnedProfiles() {
+	public static getOwnedProfileMetas(): ProfileMetaData[] {
 		return Storage.getItem('profiles.owned') || [];
 	}
 	public static async refreshProfiles() {
@@ -125,7 +118,7 @@ class Profiles {
 		Storage.setItem('lastProfileId', profileId);
 	}
 
-	private static createDefaultProfile() {
+	private static createDefaultProfileMeta() {
 		return {
 			id: generateUUID(),
 			isSynced: false,

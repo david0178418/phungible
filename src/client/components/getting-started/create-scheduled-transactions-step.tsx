@@ -34,7 +34,7 @@ class CreateAccountsStep extends React.Component<Props, {}> {
 					listComponent={ScheduledTransactionsList}
 					editComponent={ScheduledTransactionEditPage}
 					editComponentProps={{
-						accounts: appStore.accounts,
+						accounts: appStore.currentProfile.accounts,
 					}}
 				/>
 			</div>

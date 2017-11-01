@@ -7,9 +7,10 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
 import { getUserContext } from './shared/api';
+import ProfileStorage from './shared/profile-storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
-import Profiles, {Profile} from './stores/profiles';
+import Profile from './stores/profile';
 
 const {Component} = React;
 const TRANSITION_TIME = 500;
@@ -118,13 +119,14 @@ const Styles = `
 @observer
 export default
 class App extends Component<Props, any> {
-	@observable public store: AppStore;
+	public store: AppStore;
 	public initStore: AppInitStore;
-	public currentProfile: Profile;
 
 	constructor(props: Props) {
 		super(props);
 		this.initStore = new AppInitStore();
+		this.store = new AppStore();
+		(window as any).store = this.store;
 	}
 
 	@action public componentDidMount() {
@@ -142,16 +144,16 @@ class App extends Component<Props, any> {
 							onClearPin={() => this.handleClearPin()}
 							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
 						/> */}
-						{!!this.store && (
+						{this.store.currentProfile.transactions && (
 							<TransactionConfirmationPrompt
 								store={this.store}
 								open={!!this.store.showTransactionConfirmation}
-								transactions={this.store.unconfirmedTransactions}
+								transactions={this.store.currentProfile.unconfirmedTransactions}
 								onDone={() => this.store.dismissTransactionConfirmation()}
 							/>
 						)}
 						<style>{Styles}</style>
-						{!!this.store && (
+						{!!this.store && this.store.currentProfile && (
 							<Provider appStore={this.store}>
 								<CSSTransitionGroup
 									component="div"
@@ -196,27 +198,29 @@ class App extends Component<Props, any> {
 
 		if(userCtx.name) {
 			appStore.handleLogin(userCtx.name);
-			Profiles.sync(() => this.handleRefreshStore());
+			ProfileStorage.sync(() => this.handleRefreshStore());
 
 			setInterval(
-				() => Profiles.sync(() => this.handleRefreshStore()),
+				() => ProfileStorage.sync(() => this.handleRefreshStore()),
 				15000,
 			);
 		}
 	}
 
 	@action private async handleStorageInit() {
-		this.currentProfile = await Profiles.getCurrentProfile() as Profile;
+		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
+		const profileData = await ProfileStorage.getProfileData(currentProfileMeta.id);
+		this.store.currentProfile = await Profile.deserialize(profileData);
 
 		await this.handleRefreshStore();
 
-		this.store.runTransactionSinceLastUpdate();
+		this.store.currentProfile.runTransactionSinceLastUpdate();
 
 		this.handleLoggedIn(this.store);
 
 		// Check every 5 minutes.  Runs transactions when day rolls over
 		setTimeout(
-			() => this.store.runTransactionSinceLastUpdate(),
+			() => this.store.currentProfile.runTransactionSinceLastUpdate(),
 			1000 * 60 * 5,
 		);
 	}
@@ -226,26 +230,16 @@ class App extends Component<Props, any> {
 			profileData,
 			profiles,
 		] = await Promise.all([
-			Profiles.getProfileData(this.currentProfile.id),
-			Profiles.getAllProfiles(),
+			ProfileStorage.getProfileData(this.store.currentProfile.id),
+			ProfileStorage.getAllProfiles(),
 		]);
 
-		if(profileData) {
-			const newVals = await AppStore.deserialize(profileData);
+		this.store.profiles = profiles;
 
-			// TODO Lots o' cleanup as signified by the "as" statements
-			if(this.store) {
-				this.store.accounts  = newVals.accounts;
-				this.store.budgets  = newVals.budgets;
-				this.store.profiles = profiles as Profile[];
-				this.store.scheduledTransactions  = newVals.scheduledTransactions;
-				this.store.transactions  = newVals.transactions;
-			} else {
-				this.store = newVals;
-				this.store.profiles = profiles as Profile[];
-			}
+		if(profileData) {
+			this.store.currentProfile = await Profile.deserialize(profileData);
 		} else {
-			this.store = new AppStore();
+			this.store.currentProfile = new Profile();
 		}
 	}
 }

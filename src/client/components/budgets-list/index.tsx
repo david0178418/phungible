@@ -31,7 +31,7 @@ class BudgetsList extends Component<Props, {}> {
 					<ListItem
 						key={budget.id}
 						primaryText={`${budget.amount.valFormatted} ${budget.name}`}
-						secondaryText={`Current Remaining: ${store.findRemainingBudgetBalance(budget.id).valFormatted}`}
+						secondaryText={`Current Remaining: ${store.currentProfile.findRemainingBudgetBalance(budget.id).valFormatted}`}
 						rightIconButton={EditRemoveMenu<Budget>('budget', budget, onRemove)}
 					/>
 				))}

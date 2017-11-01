@@ -29,11 +29,11 @@ class ScheduledTransactionEditStore {
 		if(this.scheduledTransaction.isValid) {
 			if(this.scheduledTransaction instanceof ScheduledTransactionFacade) {
 				(await this.scheduledTransaction.createScheduledTransactions()).map((transaction) => {
-					this.appStore.saveScheduledTransaction(transaction as ScheduledTransaction);
+					this.appStore.currentProfile.saveScheduledTransaction(transaction as ScheduledTransaction);
 					this.scheduledTransaction = new ScheduledTransactionFacade();
 				});
 			} else {
-				this.appStore.saveScheduledTransaction(this.scheduledTransaction);
+				this.appStore.currentProfile.saveScheduledTransaction(this.scheduledTransaction);
 				this.scheduledTransaction = new ScheduledTransactionFacade();
 			}
 			return true;
@@ -43,7 +43,7 @@ class ScheduledTransactionEditStore {
 	}
 
 	get accounts() {
-		return this.appStore.accounts;
+		return this.appStore.currentProfile.accounts;
 	}
 }
 
@@ -72,7 +72,7 @@ class ScheduledTransactionEditPage extends Component<Props, {}> {
 		if(props.model) {
 			model = props.model;
 		} else if(props.id) {
-			model = this.props.appStore.findScheduledTransaction(props.id);
+			model = this.props.appStore.currentProfile.findScheduledTransaction(props.id);
 		}
 		if (!model) {
 			model = new ScheduledTransactionFacade();

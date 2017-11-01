@@ -15,19 +15,6 @@ interface FeedbackData {
 	isBug: boolean;
 }
 
-export
-interface ProfileMetaData {
-	id: string;
-	isSynced?: boolean;
-	name: string;
-}
-
-export
-interface AccountProfiles {
-	accessible: ProfileMetaData[];
-	owned: ProfileMetaData[];
-}
-
 interface UserCtx {
 	name: string;
 	rolse: string[];

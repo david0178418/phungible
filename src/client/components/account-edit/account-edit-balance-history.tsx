@@ -161,7 +161,7 @@ class AccountEditBalanceHistory extends Component<Props, any> {
 							towardDirection={account.towardBalanceDirection}
 							expectationDifference={
 								index !== account.balanceUpdateHistory.length - 1 &&
-								this.props.appStore.getBalanceExpectationDifference(account, balanceUpdate.date)
+								this.props.appStore.currentProfile.getBalanceExpectationDifference(account, balanceUpdate.date)
 							}
 							onRemove={() => this.handleUpdateRemoveBalanceUpdate(balanceUpdate)}
 						/>

@@ -18,11 +18,11 @@ class Summary extends Component<Props, any> {
 	public render() {
 		const {
 			accounts,
-		} = this.props.appStore;
+		} = this.props.appStore.currentProfile;
 		return (
 			<div style={pageStyle}>
 				<p>
-					Today's Balance is {Money.formatMoney(accounts.reduce((total, account) => {
+					Today's Balance is {Money.formatMoney((accounts).reduce((total, account) => {
 						return total += account.latestBalanceUpdate.balance.val * (account.accountType === AccountType.Savings ? 1 : -1);
 					}, 0))}
 				</p>

@@ -32,8 +32,8 @@ class DailyActivityPage extends Component<Props, {}> {
 				<ContentArea>
 					<DailyActivity
 						appStore={appStore}
-						onAdd={(transaction: Transaction) => this.props.appStore.saveTransaction(transaction)}
-						onRemove={(transaction: Transaction) => this.props.appStore.removeTransaction(transaction)}
+						onAdd={(transaction: Transaction) => this.props.appStore.currentProfile.saveTransaction(transaction)}
+						onRemove={(transaction: Transaction) => this.props.appStore.currentProfile.removeTransaction(transaction)}
 					/>
 				</ContentArea>
 			</Page>

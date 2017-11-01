@@ -59,7 +59,7 @@ class FeedbackStore {
 		let debugData = '';
 
 		if(this.isBug) {
-			const appData = appStore.serialize();
+			const appData = appStore.currentProfile.serialize();
 			delete appData.transactions;
 			debugData = JSON.stringify(appData);
 		}

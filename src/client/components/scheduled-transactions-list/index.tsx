@@ -26,7 +26,7 @@ type Props = {
 export default
 class ScheduledTransactions extends Component<Props, {}> {
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this.props.store.removeScheduledTransaction(scheduledTransaction);
+		this.props.store.currentProfile.removeScheduledTransaction(scheduledTransaction);
 	}
 
 	public render() {

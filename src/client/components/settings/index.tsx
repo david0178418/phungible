@@ -85,7 +85,7 @@ class Settings extends Component<Props, {}> {
 							<textarea
 								readOnly
 								onFocus={(e) => (e.target as any).select()}
-								defaultValue={this.props.appStore.debugString()}
+								defaultValue={this.props.appStore.currentProfile.debugString()}
 								style={{
 									height: 200,
 									resize: 'none',

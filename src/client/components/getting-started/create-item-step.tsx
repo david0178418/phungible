@@ -86,7 +86,7 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 					{...listComponentProps}
 					items={items}
 					showCreate
-					onRemove={(itemModel: ModelType) => appStore.removeItem(itemModel, typeName)}
+					onRemove={(itemModel: ModelType) => appStore.currentProfile.removeItem(itemModel, typeName)}
 					onEdit={(itemModel: ModelType) => this.handleOpenItem(itemModel)}
 					onOpenCreate={() => this.handleOpenItem()}
 					store={appStore}
@@ -106,7 +106,7 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 
 	private handleSaveItem() {
 		if(this.store.activeItem.isValid) {
-			this.props.appStore.saveItem(this.store.activeItem, this.props.typeName);
+			this.props.appStore.currentProfile.saveItem(this.store.activeItem, this.props.typeName);
 			this.store.closeItem();
 		}
 	}
