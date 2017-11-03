@@ -2,6 +2,7 @@ import CreditCardIcon from 'material-ui/svg-icons/action/credit-card';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import AddCricleOutlineIcon from 'material-ui/svg-icons/content/add-circle-outline';
 import MoneyIcon from 'material-ui/svg-icons/editor/attach-money';
+import FolderOpenIcon from 'material-ui/svg-icons/file/folder-open';
 import TrendingDownIcon from 'material-ui/svg-icons/navigation/arrow-downward';
 import TrendingUpIcon from 'material-ui/svg-icons/navigation/arrow-upward';
 import * as React from 'react';
@@ -62,5 +63,12 @@ export
 function ConfirmIcon({style}: SvgIconProps) {
 	return (
 		<DoneIcon style={style} />
+	);
+}
+
+export
+function ProfileIcon({style}: SvgIconProps) {
+	return (
+		<FolderOpenIcon style={style} />
 	);
 }

@@ -20,7 +20,8 @@ import {
 	DailyActivityPage,
 	FeedbackPage,
 	Help,
-	PhungibleAccountManagePager,
+	PhungibleAccountManagePage,
+	ProfileManager,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
 	SettingsPage,
@@ -28,6 +29,7 @@ import {
 	TransactionsPage,
 	TrendsPage,
 } from '../pages';
+import {ProfileIcon} from '../shared/shared-components';
 import AppStore from '../stores/app';
 import NavItem from './nav-item';
 
@@ -155,10 +157,17 @@ class Navigation extends React.Component<Props, any> {
 					/>
 					<NavItem
 						leftIcon={<AccountIcon />}
-						href={`${PhungibleAccountManagePager.path}`}
+						href={`${PhungibleAccountManagePage.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						{PhungibleAccountManagePager.title}
+						{PhungibleAccountManagePage.title}
+					</NavItem>
+					<NavItem
+						leftIcon={<ProfileIcon />}
+						href={`${ProfileManager.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{ProfileManager.title}
 					</NavItem>
 					<NavItem
 						leftIcon={<DateRangeIcon />}

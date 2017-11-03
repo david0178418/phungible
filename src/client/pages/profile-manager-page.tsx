@@ -1,7 +1,7 @@
 import {inject} from 'mobx-react';
 import * as React from 'react';
 
-import PhungibleAccountManager from '../components/phungible-account-manager';
+import ProfileManager from '../components/profile-manager';
 import ContentArea from '../components/shared/content-area';
 import Navigation from '../layout/navigation';
 import AppStore from '../stores/app';
@@ -15,17 +15,17 @@ type Props = {
 
 @inject('appStore')
 export default
-class PhungibleAccountManagePage extends Component<Props, {}> {
-	public static path = '/manage-sync';
-	public static title = 'Phungible Account';
+class ProfileManagerPage extends Component<Props, {}> {
+	public static path = '/manage-profile';
+	public static title = 'Profiles';
 
 	public render() {
 		const {appStore} = this.props;
 		return (
 			<Page animationDirection="vertical">
-				<Navigation title={PhungibleAccountManagePage.title} appStore={appStore} />
+				<Navigation title={ProfileManagerPage.title} appStore={appStore} />
 				<ContentArea>
-					<PhungibleAccountManager/>
+					<ProfileManager/>
 				</ContentArea>
 			</Page>
 		);

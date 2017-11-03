@@ -81,7 +81,7 @@ class Store {
 
 @observer
 export default
-class Settings extends Component<Props, {}> {
+class SignUpForm extends Component<Props, {}> {
 	private store: Store;
 
 	constructor(props: Props) {

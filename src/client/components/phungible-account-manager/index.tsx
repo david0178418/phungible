@@ -1,6 +1,5 @@
 import { inject, observer } from 'mobx-react';
 import * as React from 'react';
-import Profiles from '../../shared/profile-storage';
 
 import AppStore from '../../stores/app';
 import LoggedIn from './logged-in';
@@ -59,27 +58,6 @@ class PhungibleAccountManager extends Component<Props, State> {
 						onCreation={(e) => appStore.handleLogin(e)}
 					/>
 				)}
-				{appStore.profiles.map((profile) => (
-					<div key={profile.id}>
-						{profile.name}
-						{appStore.currentProfile.id === profile.id ? (
-								appStore.isLoggedIn && (
-									<button
-										onClick={() => Profiles.sync()}
-									>
-										Sync
-									</button>
-								)
-							) : (
-								<button
-									onClick={() => {/**/}}
-								>
-									Select
-								</button>
-							)
-						}
-					</div>
-				))}
 			</div>
 		);
 	}

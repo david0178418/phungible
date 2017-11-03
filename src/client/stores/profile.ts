@@ -15,7 +15,7 @@ type ItemType = Account | Budget | ScheduledTransaction | Transaction;
 
 export default
 class Profile {
-	@action public static deserialize(data: any) {
+	@action public static async deserialize(data: any): Promise<Profile> {
 		const {
 			accounts = [] as Account[],
 			budgets = [] as Budget[],
@@ -29,16 +29,16 @@ class Profile {
 			Promise.all(transactions.map((t) => Transaction.deserialize(t))),
 		];
 
-		return Promise.all(x).then((vals) => {
-			return new Profile({
+		const vals = await Promise.all(x);
+
+		return new Profile({
 				accounts: vals[0],
 				budgets: vals[1],
 				id: data.id,
 				lastUpdatedDate: data.lastUpdatedDate,
 				scheduledTransactions: vals[2],
 				transactions: vals[3],
-			});
-		});
+			} as any);
 	}
 	@serializable
 	@observable public isSynced: boolean;
