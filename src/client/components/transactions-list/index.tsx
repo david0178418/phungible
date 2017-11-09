@@ -1,6 +1,5 @@
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
@@ -18,51 +17,9 @@ type Props = {
 	onRemove: (transaction: Transaction) => void;
 };
 
-class TransactionsStore {
-	public appStore: AppStore;
-
-	@observable private _openTransaction: Transaction;
-
-	constructor(appStore: AppStore) {
-		this.appStore = appStore;
-	}
-
-	@action public closeOpenTransaction() {
-		this._openTransaction = null;
-	}
-	@action public createTransaction() {
-		this._openTransaction = new Transaction();
-	}
-	@action public saveTransaction() {
-		this.appStore.saveTransaction(this._openTransaction);
-		this.closeOpenTransaction();
-	}
-	@action public async editTransaction(transaction: Transaction) {
-		this._openTransaction = await Transaction.clone(transaction) as any;
-	}
-	@action public async removeTransaction(transaction: Transaction) {
-		this._openTransaction = await Transaction.clone(transaction) as any;
-	}
-	@computed get transactions() {
-		return this.appStore.transactions;
-	}
-	@computed get isOpen() {
-		return !!this._openTransaction;
-	}
-	get openTransaction(): Transaction {
-		return this._openTransaction;
-	}
-}
-
 @observer
 export default
 class TransactionsList extends Component<Props, {}> {
-	private store: TransactionsStore;
-
-	constructor(props: Props) {
-		super(props);
-		this.store = new TransactionsStore(props.store);
-	}
 
 	public render() {
 		const {onRemove, items} = this.props;

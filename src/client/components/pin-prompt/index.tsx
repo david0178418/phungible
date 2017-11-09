@@ -1,6 +1,5 @@
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
@@ -64,20 +63,9 @@ interface Props {
 	onPinUpdate(pin: string): void;
 }
 
-class PinPromptStore {
-	@observable public pin = '';
-}
-
 @observer
 export default
 class PinPrompt extends Component<Props, {}> {
-	private store: PinPromptStore;
-
-	constructor(props: Props) {
-		super(props);
-		this.store = new PinPromptStore();
-	}
-
 	public render() {
 		const {
 			title,

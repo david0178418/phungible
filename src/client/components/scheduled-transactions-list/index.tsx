@@ -1,7 +1,6 @@
 
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
-import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
@@ -23,53 +22,9 @@ type Props = {
 	onRemove: (scheduledTransaction: ScheduledTransaction) => void;
 };
 
-class ScheduledTransactionsStore {
-	public appStore: AppStore;
-	@observable private _openScheduledTransaction: ScheduledTransaction | null;
-
-	constructor(appStore: AppStore) {
-		this.appStore = appStore;
-		(window as any).schduledTransactionsStore = this;
-	}
-
-	@action public closeOpenScheduledTransaction() {
-		this._openScheduledTransaction = null;
-	}
-	@action public createScheduledTransaction() {
-		this._openScheduledTransaction = new ScheduledTransaction();
-	}
-	@action public saveScheduledTransaction() {
-		this.appStore.saveScheduledTransaction(this._openScheduledTransaction);
-		this.closeOpenScheduledTransaction();
-	}
-	@action public async editScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this._openScheduledTransaction = await ScheduledTransaction.clone(scheduledTransaction) as any;
-	}
-
-	@computed get accounts() {
-		return this.appStore.accounts;
-	}
-	@computed get scheduledTransactions() {
-		return this.appStore.scheduledTransactions;
-	}
-	@computed get isOpen() {
-		return !!this._openScheduledTransaction;
-	}
-	get openScheduledTransaction(): ScheduledTransaction {
-		return this._openScheduledTransaction;
-	}
-}
-
 @observer
 export default
 class ScheduledTransactions extends Component<Props, {}> {
-	private store: ScheduledTransactionsStore;
-
-	constructor(props: Props) {
-		super(props);
-		this.store = new ScheduledTransactionsStore(props.store);
-	}
-
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		this.props.store.removeScheduledTransaction(scheduledTransaction);
 	}

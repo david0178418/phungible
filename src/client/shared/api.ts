@@ -4,7 +4,12 @@ if(!window.fetch) {
 
 export
 function activate(activationCode: string) {
-	return fetch(`${API_URI}/activate/${activationCode}`)
+	const headers = new Headers();
+	headers.append('Accept', 'application/json');
+	headers.append('Content-Type', 'application/json');
+	return fetch(`${API_URI}/activate/${activationCode}`, {
+			headers,
+		})
 		.then((response) => response.json())
 		.then((activationSuccessful) => activationSuccessful)
 		.catch((e) => true); // Just let them through if there is an error
@@ -19,11 +24,13 @@ interface FeedbackData {
 
 export
 function submitFeedback(feedbackData: FeedbackData) {
+	const headers = new Headers();
+	headers.append('Accept', 'application/json');
+	headers.append('Content-Type', 'application/json');
+
 	return fetch(`${API_URI}/feedback`, {
 			body: JSON.stringify(feedbackData),
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			headers,
 			method: 'post',
 		})
 		.then((responseText) => responseText.json());
