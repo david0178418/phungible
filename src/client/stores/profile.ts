@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import 'moment-recur';
 import { serializable, serialize } from 'serializr';
 
-import ItemTypeName from 'item-type-name';
 import ProfileStorage from '../shared/profile-storage';
 import {generateUuid, Money} from '../shared/utils';
 import Account from './account';
@@ -23,10 +22,10 @@ class Profile {
 			transactions = [] as Transaction[],
 		} = data;
 		const x = [
-			accounts.map((a) => Account.deserialize(a)),
-			Promise.all(budgets.map((b) => Budget.deserialize(b))),
-			Promise.all(scheduledTransactions.map((s) => ScheduledTransaction.deserialize(s))),
-			Promise.all(transactions.map((t) => Transaction.deserialize(t))),
+			accounts.map((a: any) => Account.deserialize(a)),
+			Promise.all(budgets.map((b: any) => Budget.deserialize(b))),
+			Promise.all(scheduledTransactions.map((s: any) => ScheduledTransaction.deserialize(s))),
+			Promise.all(transactions.map((t: any) => Transaction.deserialize(t))),
 		];
 
 		const vals = await Promise.all(x);

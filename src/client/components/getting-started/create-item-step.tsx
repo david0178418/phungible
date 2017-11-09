@@ -3,7 +3,6 @@ import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
-import ItemTypeName from 'item-type-name';
 import Account from '../../stores/account';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';

@@ -8,3 +8,5 @@ interface ProfileMetaData {
 	isSynced?: boolean;
 	name: string;
 }
+
+type ItemTypeName = 'Account' | 'Budget' | 'Recurring Transaction' | 'Transaction';

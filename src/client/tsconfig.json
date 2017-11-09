@@ -16,7 +16,6 @@
         "strict": true,
         "alwaysStrict": true,
         "strictNullChecks": false,
-        "strictFunctionTypes": false,
         "target": "es5",
         "jsx": "react"
     },

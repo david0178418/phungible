@@ -15,9 +15,6 @@ interface Props {
 	appStore?: AppStore;
 }
 
-class PhungibleAccountManagerStore {
-}
-
 const style = {
 	textAlign: 'center',
 };
@@ -25,17 +22,6 @@ const style = {
 @inject('appStore') @observer
 export default
 class PhungibleAccountManager extends Component<Props, State> {
-	private store: PhungibleAccountManagerStore;
-
-	constructor(props: Props) {
-		super(props);
-
-		this.store = new PhungibleAccountManagerStore();
-		this.state = {
-			loading: false,
-		};
-	}
-
 	public render() {
 		const appStore = this.props.appStore;
 
