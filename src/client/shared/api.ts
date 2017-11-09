@@ -90,7 +90,7 @@ async function api(uri: string, method: HTTP_ACTION, data?: any) {
 			headers,
 			method,
 		});
-		return response.json();
+		return await response.json();
 	} catch(e) {
 		return e;
 	}
