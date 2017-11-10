@@ -14,6 +14,9 @@ class Profiles {
 	public static destroyCurrentProfile() {
 		return activeProfileDB.destroy();
 	}
+	public static destroyProfile(id: string) {
+		return PouchStorage.deleteDb(id);
+	}
 	public static async getCurrentProfileMeta() {
 		let loadedProfile = null;
 		const profiles = Profiles.getAllProfiles();

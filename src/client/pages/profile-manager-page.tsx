@@ -16,7 +16,7 @@ type Props = {
 @inject('appStore')
 export default
 class ProfileManagerPage extends Component<Props, {}> {
-	public static path = '/manage-profile';
+	public static path = '/manage-profiles';
 	public static title = 'Profiles';
 
 	public render() {

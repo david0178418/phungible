@@ -13,10 +13,14 @@ interface PouchDocument {
 
 export default
 class PouchStorage {
-	public static async createRemoteProfile(profileId: string) {
-		const response = await createDb(profileId);
+	public static async createRemoteDB(id: string) {
+		const response = await createDb(id);
 
 		return !!response.ok;
+	}
+	public static async deleteDb(id: string) {
+		const db = PouchStorage.openDb(id);
+		return db.destroy();
 	}
 	public static async getAllType(type: string, db: Database, parentId?: string) {
 		const result = await db.allDocs({
@@ -100,7 +104,7 @@ class PouchStorage {
 		const profileId = dbInfo.db_name;
 
 		if(!(await remoteDbExists(profileId))) {
-			await PouchStorage.createRemoteProfile(profileId);
+			await PouchStorage.createRemoteDB(profileId);
 		}
 
 		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(profileId)));

@@ -89,7 +89,7 @@ class AccountsList extends Component<Props, {}> {
 			showCreate,
 			store,
 		} = this.props;
-		const {deletionCandidate} = this.store;
+		const  {deletionCandidate} = this.store;
 		const today = new Date();
 
 		return (
