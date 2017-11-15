@@ -40,8 +40,6 @@ class Profile {
 			} as any);
 	}
 	@serializable
-	@observable public isSynced: boolean;
-	@serializable
 	@observable public name: string;
 	@serializable
 	public id: string;

@@ -231,7 +231,7 @@ class App extends Component<Props, any> {
 			profiles,
 		] = await Promise.all([
 			ProfileStorage.getProfileData(this.store.currentProfile.id),
-			ProfileStorage.getAllProfiles(),
+			ProfileStorage.getProfiles(),
 		]);
 
 		this.store.profiles = profiles;

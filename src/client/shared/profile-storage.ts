@@ -19,16 +19,14 @@ class Profiles {
 	}
 	public static async getCurrentProfileMeta() {
 		let loadedProfile = null;
-		const profiles = Profiles.getAllProfiles();
+		const profiles = Profiles.getProfiles();
 
 		if(!profiles.length) {
 			const defaultProfile = Profiles.createDefaultProfileMeta();
+			defaultProfile.id = generateUUID();
 
-			Profiles.saveProfiles({
-				accessible: [],
-				owned: [defaultProfile],
-			});
-			Profiles.saveCurrentProfile(defaultProfile.id);
+			Profiles.saveProfiles([defaultProfile]);
+			Profiles.setCurrentActiveProfile(defaultProfile.id);
 
 			loadedProfile = defaultProfile;
 		} else {
@@ -79,14 +77,8 @@ class Profiles {
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId');
 	}
-	public static getAccessibleProfiles() {
-		return Storage.getItem('profiles.accessible') || [];
-	}
-	public static getAllProfiles(): ProfileMetaData[] {
-		return Profiles.getOwnedProfileMetas().concat(Profiles.getAccessibleProfiles());
-	}
-	public static getOwnedProfileMetas(): ProfileMetaData[] {
-		return Storage.getItem('profiles.owned') || [];
+	public static getProfiles(): ProfileMetaData[] {
+		return Storage.getItem('profiles') || [];
 	}
 	public static async refreshProfiles() {
 		try {
@@ -103,29 +95,26 @@ class Profiles {
 		const profiles = await getSyncedProfiles();
 		// TODO get the profile id straight from the db instance
 		const profileId = Profiles.getLastProfileId();
-		const allProfiles = profiles.accessible.concat(profiles.owned);
 
-		if(allProfiles.indexOf(profileId) !== -1) {
+		if(profiles.indexOf(profileId) !== -1) {
 			PouchStorage.sync(activeProfileDB, onChange);
 		}
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);
 	}
-	public static saveProfiles(profiles: AccountProfiles) {
-		Storage.setItem('profiles.accessible', profiles.owned);
-		Storage.setItem('profiles.accessible', profiles.owned);
+	public static saveProfiles(profiles: ProfileMetaData[]) {
+		Storage.setItem('profiles', profiles);
 	}
-
-	public static saveCurrentProfile(profileId: string) {
+	public static setCurrentActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);
 	}
 
-	private static createDefaultProfileMeta() {
+	public static createDefaultProfileMeta() {
 		return {
-			id: generateUUID(),
+			id: '',
 			isSynced: false,
-			name: 'Default',
+			name: 'My Profile',
 		};
 	}
 }

@@ -26,11 +26,11 @@ function createDb(profileId: string) {
 }
 
 export
-function getSyncedProfiles(): Promise<AccountProfiles> {
+function getSyncedProfiles(): Promise<ProfileMetaData[]> {
 	const username = localStorage.getItem('username');
 
 	if(!username) {
-		return new Promise((resolve) => resolve(null));
+		return new Promise((resolve) => resolve([]));
 	}
 
 	return api(`${API_URI}/profiles/${username}`, 'get');

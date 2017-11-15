@@ -1,20 +1,28 @@
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import TextField from 'material-ui/TextField';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
+import { createViewModel, IViewModel } from 'mobx-utils/lib/create-view-model';
 import * as React from 'react';
 
 import ProfileStorage from '../../shared/profile-storage';
-import { dialogStyles } from '../../shared/styles';
+import { dialogStyles, floatingActionButtonStyle } from '../../shared/styles';
+import { generateUuid } from '../../shared/utils/index';
 import AppStore from '../../stores/app';
 import ProfileManagerOptions from './profile-manager-options';
 
 const { Component } = React;
 
+type ProfileMetaDataViewModel = ProfileMetaData & IViewModel<ProfileMetaData>;
+
 class Store {
 	@observable public deletionCandidate: ProfileMetaData | null = null;
+	@observable public editingProfile: ProfileMetaDataViewModel | null = null;
 }
 
 interface Props {
@@ -25,8 +33,27 @@ function closeConfirmRemoval(store: Store) {
 	store.deletionCandidate = null;
 }
 
+function createProfile(appStore: AppStore, profile: ProfileMetaData) {
+	profile.id = generateUuid();
+	appStore.profiles.push(profile);
+}
+
 function openConfirmRemoval(store: Store, deletionCandidate: ProfileMetaData) {
 	store.deletionCandidate = null;
+}
+
+function closeEditDialog(store: Store) {
+	store.editingProfile = null;
+}
+
+function updateProfile(store: Store) {
+	store.editingProfile.submit();
+	store.editingProfile = null;
+}
+
+function openEditDialog(store: Store, openProfile?: ProfileMetaData) {
+	openProfile = openProfile || observable(ProfileStorage.createDefaultProfileMeta());
+	store.editingProfile = createViewModel(openProfile);
 }
 
 function removalConfirmed(store: Store) {
@@ -53,7 +80,10 @@ class ProfileManager extends Component<Props, {}> {
 		// const loggedIn = appStore.isLoggedIn;
 		const currentProfileId = appStore.currentProfile.id;
 		const store = this.store;
-		const { deletionCandidate } = store;
+		const {
+			deletionCandidate,
+			editingProfile,
+		} = store;
 
 		return (
 			<div>
@@ -61,9 +91,11 @@ class ProfileManager extends Component<Props, {}> {
 					{appStore.profiles.map((profile) => (
 						<ListItem
 							key={profile.id}
-							primaryText={`${profile.name} ${(currentProfileId === profile.id) && 'active'}`}
+							primaryText={profile.name}
+							secondaryText={(currentProfileId === profile.id) && 'active'}
 							rightIconButton={
 								ProfileManagerOptions({
+									onEdit: () => openEditDialog(store, profile),
 									onRemove: () => openConfirmRemoval(store, profile),
 								})
 							}
@@ -79,16 +111,63 @@ class ProfileManager extends Component<Props, {}> {
 						<FlatButton
 							primary
 							label="Cancel"
-							onClick={() => closeConfirmRemoval(this.store)}
+							onClick={() => closeConfirmRemoval(store)}
 						/>,
 						<FlatButton
 							primary
 							label="Delete"
-							onClick={() => removalConfirmed(this.store)}
+							onClick={() => removalConfirmed(store)}
 						/>,
 					]}
 				/>
+				<Dialog
+					modal
+					{...dialogStyles}
+					open={!!editingProfile}
+					title="Edit Profile Name"
+					actions={[
+						<FlatButton
+							label="Cancel"
+							onClick={() => closeEditDialog(store)}
+						/>,
+						<FlatButton
+							primary
+							label="Save"
+							onClick={() => this.handleSaveProfile()}
+						/>,
+					]}
+				>
+					{editingProfile && (
+						<TextField
+							id={editingProfile.id}
+							value={editingProfile.name}
+							onChange={(ev, newValue) => this.handleUpdateName(newValue)}
+						/>
+					)}
+				</Dialog>
+				<FloatingActionButton
+					secondary
+					onClick={() => openEditDialog(store)}
+					style={floatingActionButtonStyle}
+					zDepth={2}
+				>
+					<ContentAdd />
+				</FloatingActionButton>
 			</div>
 		);
+	}
+
+	private handleSaveProfile() {
+		if(!this.store.editingProfile.id) {
+			createProfile(this.props.appStore, this.store.editingProfile.model);
+		}
+
+		updateProfile(this.store);
+
+		ProfileStorage.saveProfiles(this.props.appStore.profiles);
+	}
+
+	private handleUpdateName(newName: string) {
+		this.store.editingProfile.name = newName;
 	}
 }
