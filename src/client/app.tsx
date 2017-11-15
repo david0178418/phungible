@@ -209,20 +209,13 @@ class App extends Component<Props, any> {
 
 	@action private async handleStorageInit() {
 		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
-		const profileData = await ProfileStorage.getProfileData(currentProfileMeta.id);
-		this.store.currentProfile = await Profile.deserialize(profileData);
-
-		await this.handleRefreshStore();
+		this.store.openProfile(currentProfileMeta.id);
+		// await this.handleRefreshStore();
 
 		this.store.currentProfile.runTransactionSinceLastUpdate();
 
 		this.handleLoggedIn(this.store);
-
-		// Check every 5 minutes.  Runs transactions when day rolls over
-		setTimeout(
-			() => this.store.currentProfile.runTransactionSinceLastUpdate(),
-			1000 * 60 * 5,
-		);
+		this.store.profiles = await ProfileStorage.getProfiles();
 	}
 
 	private async handleRefreshStore() {
@@ -238,8 +231,6 @@ class App extends Component<Props, any> {
 
 		if(profileData) {
 			this.store.currentProfile = await Profile.deserialize(profileData);
-		} else {
-			this.store.currentProfile = new Profile();
 		}
 	}
 }

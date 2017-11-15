@@ -1,5 +1,6 @@
-import {action, observable} from 'mobx';
+import { action, observable} from 'mobx';
 
+import ProfileStorage from '../shared/profile-storage';
 import Profile from '../stores/profile';
 
 export default
@@ -22,6 +23,10 @@ class AppStore {
 	}
 	@action public dismissTransactionConfirmation() {
 		this.showTransactionConfirmation = false;
+	}
+	@action public async openProfile(profileId: string) {
+		const profileData = await ProfileStorage.getProfileData(profileId);
+		this.currentProfile = await Profile.deserialize(profileData);
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;

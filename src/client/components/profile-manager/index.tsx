@@ -88,19 +88,26 @@ class ProfileManager extends Component<Props, {}> {
 		return (
 			<div>
 				<List>
-					{appStore.profiles.map((profile) => (
-						<ListItem
-							key={profile.id}
-							primaryText={profile.name}
-							secondaryText={(currentProfileId === profile.id) && 'active'}
-							rightIconButton={
-								ProfileManagerOptions({
-									onEdit: () => openEditDialog(store, profile),
-									onRemove: () => openConfirmRemoval(store, profile),
-								})
-							}
-						/>
-					))}
+					{appStore.profiles.map((profile) => {
+						const isOpen = currentProfileId === profile.id;
+						const props: ProfileManagerOptionsProps = {
+							onEdit: () => openEditDialog(store, profile),
+						};
+
+						if(!isOpen) {
+							props.onOpenProfile = () => appStore.openProfile(profile.id);
+							props.onRemove = () => openConfirmRemoval(store, profile);
+						}
+
+						return (
+							<ListItem
+								key={profile.id}
+								primaryText={profile.name}
+								secondaryText={isOpen && 'active'}
+								rightIconButton={ProfileManagerOptions(props)}
+							/>
+						);
+					})}
 				</List>
 				<Dialog
 					modal
