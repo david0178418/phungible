@@ -10,7 +10,6 @@ import { getUserContext } from './shared/api';
 import ProfileStorage from './shared/profile-storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
-import Profile from './stores/profile';
 
 const {Component} = React;
 const TRANSITION_TIME = 500;
@@ -198,39 +197,21 @@ class App extends Component<Props, any> {
 
 		if(userCtx.name) {
 			appStore.handleLogin(userCtx.name);
-			ProfileStorage.sync(() => this.handleRefreshStore());
-
-			setInterval(
-				() => ProfileStorage.sync(() => this.handleRefreshStore()),
-				15000,
-			);
 		}
 	}
 
 	@action private async handleStorageInit() {
 		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
-		this.store.openProfile(currentProfileMeta.id);
-		// await this.handleRefreshStore();
+
+		if(currentProfileMeta) {
+			this.store.openProfile(currentProfileMeta.id);
+		} else {
+			this.store.createProfile();
+		}
 
 		this.store.currentProfile.runTransactionSinceLastUpdate();
 
 		this.handleLoggedIn(this.store);
 		this.store.profiles = await ProfileStorage.getProfiles();
-	}
-
-	private async handleRefreshStore() {
-		const [
-			profileData,
-			profiles,
-		] = await Promise.all([
-			ProfileStorage.getProfileData(this.store.currentProfile.id),
-			ProfileStorage.getProfiles(),
-		]);
-
-		this.store.profiles = profiles;
-
-		if(profileData) {
-			this.store.currentProfile = await Profile.deserialize(profileData);
-		}
 	}
 }

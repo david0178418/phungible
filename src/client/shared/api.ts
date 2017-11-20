@@ -21,8 +21,8 @@ interface UserCtx {
 }
 
 export
-function createDb(profileId: string) {
-	return api(`${API_URI}/create-profile/${profileId}`, 'put');
+function createDb(profileId: string, profileName: string) {
+	return api(`${API_URI}/create-profile/${profileId}/${profileName}`, 'put');
 }
 
 export

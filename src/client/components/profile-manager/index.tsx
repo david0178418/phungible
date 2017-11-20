@@ -99,6 +99,10 @@ class ProfileManager extends Component<Props, {}> {
 							props.onRemove = () => openConfirmRemoval(store, profile);
 						}
 
+						if(appStore.isLoggedIn) {
+							props.onSync = () => ProfileStorage.sync(profile.id);
+						}
+
 						return (
 							<ListItem
 								key={profile.id}

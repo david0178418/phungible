@@ -1,5 +1,6 @@
 import PouchDB from 'pouchdb';
 import { createDb, remoteDbExists } from '../shared/api';
+import Storage from './storage';
 
 type Database = PouchDB.Database;
 
@@ -13,8 +14,8 @@ interface PouchDocument {
 
 export default
 class PouchStorage {
-	public static async createRemoteDB(id: string) {
-		const response = await createDb(id);
+	public static async createRemoteDB(id: string, name: string) {
+		const response = await createDb(id, name);
 
 		return !!response.ok;
 	}
@@ -99,25 +100,21 @@ class PouchStorage {
 
 		return new Promise((resolve) => done = resolve);
 	}
-	public static async sync(db: Database, onChange?: () => void) {
-		const dbInfo = await db.info();
-		const profileId = dbInfo.db_name;
-
-		if(!(await remoteDbExists(profileId))) {
-			await PouchStorage.createRemoteDB(profileId);
+	public static async sync(dbId: string) {
+		if(!(await remoteDbExists(dbId))) {
+			const profileMetas = Storage.getItem('profiles') as ProfileMetaData[];
+			const profile = profileMetas.find((meta) => meta.id === dbId);
+			await PouchStorage.createRemoteDB(dbId, profile.name);
 		}
 
-		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(profileId)));
+		const db = PouchStorage.openDb(dbId);
+		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(dbId)));
 
 		// Why won't the sync stop on its own?
+		sync.then(() => console.log(111));
 		setTimeout(() => {
 			sync.cancel();
-
-			if(onChange) {
-				onChange();
-			}
-		}, 500);
-	}
+		}, 500);	}
 }
 
 (window as any).PouchStorage = PouchStorage;

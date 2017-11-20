@@ -22,6 +22,13 @@ const style = {
 @inject('appStore') @observer
 export default
 class PhungibleAccountManager extends Component<Props, State> {
+	constructor(props: Props) {
+		super(props);
+		this.state = {
+			loading: false,
+		};
+	}
+
 	public render() {
 		const appStore = this.props.appStore;
 
