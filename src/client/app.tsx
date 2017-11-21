@@ -209,9 +209,10 @@ class App extends Component<Props, any> {
 			this.store.createProfile();
 		}
 
+		this.store.loadProfiles();
+
 		this.store.currentProfile.runTransactionSinceLastUpdate();
 
 		this.handleLoggedIn(this.store);
-		this.store.profiles = await ProfileStorage.getProfiles();
 	}
 }

@@ -1,4 +1,4 @@
-import { getSyncedProfiles } from '../shared/api';
+import { getRemoteProfiles } from '../shared/api';
 import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
@@ -9,8 +9,11 @@ import Transaction from '../stores/transaction';
 
 let activeProfileDB: PouchDB.Database;
 
+const LOCAL_PROFILE_METADATA_KEY = 'profiles-local';
+const REMOTE_PROFILE_METADATA_KEY = 'profiles-remote';
+
 export default
-class Profiles {
+class ProfileStorage {
 	public static destroyCurrentProfile() {
 		return activeProfileDB.destroy();
 	}
@@ -19,18 +22,18 @@ class Profiles {
 	}
 	public static async getCurrentProfileMeta() {
 		let loadedProfile = null;
-		const profiles = Profiles.getProfiles();
+		const profiles = ProfileStorage.getLocalProfiles();
 
 		if(!profiles.length) {
-			const defaultProfile = Profiles.createDefaultProfileMeta();
+			const defaultProfile = ProfileStorage.createDefaultProfileMeta();
 			defaultProfile.id = generateUUID();
 
-			Profiles.saveProfiles([defaultProfile]);
-			Profiles.setCurrentActiveProfile(defaultProfile.id);
+			ProfileStorage.saveLocalProfiles([defaultProfile]);
+			ProfileStorage.setCurrentActiveProfile(defaultProfile.id);
 
 			loadedProfile = defaultProfile;
 		} else {
-			const lastLoadedId = Profiles.getLastProfileId();
+			const lastLoadedId = ProfileStorage.getLastProfileId();
 			loadedProfile = profiles.find((profile) => profile.id === lastLoadedId);
 
 			if(!loadedProfile) {
@@ -81,16 +84,44 @@ class Profiles {
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId');
 	}
-	public static getProfiles(): ProfileMetaData[] {
-		return Storage.getItem('profiles') || [];
+	public static getLocalProfiles(): ProfileMetaData[] {
+		return Storage.getItem(LOCAL_PROFILE_METADATA_KEY) || [];
 	}
-	public static async refreshProfiles() {
+	public static getRemoteProfiles(): ProfileMetaData[] {
+		return Storage.getItem(REMOTE_PROFILE_METADATA_KEY) || [];
+	}
+	public static async updateRemoteProfiles() {
 		try {
-			Profiles.saveProfiles(await getSyncedProfiles());
+			let remoteProfiles = await getRemoteProfiles();
+			remoteProfiles = remoteProfiles.map((profile) => {
+				profile.isRemote = true;
+				profile.isLocal = false;
+				return profile;
+			});
+
+			ProfileStorage.saveRemoteProfiles(remoteProfiles);
 			return true;
 		} catch {
 			return false;
 		}
+	}
+	public static updateLocalProfiles() {
+		const remoteProfiles = ProfileStorage.getRemoteProfiles();
+		const localProfiles = ProfileStorage.getLocalProfiles();
+		const updatedLocalProfiles = localProfiles
+			.filter(
+				(profileMeta) => {
+					const isSynced = !remoteProfiles.some((v) => v.id === profileMeta.id);
+
+					profileMeta.isRemote = isSynced;
+					profileMeta.isLocal = false;
+
+					return isSynced;
+				},
+			)
+			.concat(remoteProfiles);
+
+		ProfileStorage.saveLocalProfiles(updatedLocalProfiles);
 	}
 	public static removeDoc(doc: PouchDocument) {
 		PouchStorage.removeDoc(doc, activeProfileDB);
@@ -101,8 +132,11 @@ class Profiles {
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);
 	}
-	public static saveProfiles(profiles: ProfileMetaData[]) {
-		Storage.setItem('profiles', profiles);
+	public static saveLocalProfiles(profiles: ProfileMetaData[]) {
+		Storage.setItem(LOCAL_PROFILE_METADATA_KEY, profiles);
+	}
+	public static saveRemoteProfiles(profiles: ProfileMetaData[]) {
+		Storage.setItem(REMOTE_PROFILE_METADATA_KEY, profiles);
 	}
 	public static setCurrentActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);
@@ -110,10 +144,11 @@ class Profiles {
 	public static createDefaultProfileMeta() {
 		return {
 			id: '',
-			isSynced: false,
+			isLocal: true,
+			isRemote: false,
 			name: 'My Profile',
 		};
 	}
 }
 
-(window as any).Profiles = Profiles;
+(window as any).Profiles = ProfileStorage;

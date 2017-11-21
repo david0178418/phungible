@@ -4,6 +4,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FileCloud from 'material-ui/svg-icons/file/cloud';
 import TextField from 'material-ui/TextField';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
@@ -33,11 +34,10 @@ function closeConfirmRemoval(store: Store) {
 	store.deletionCandidate = null;
 }
 
-function createProfile(appStore: AppStore, profile: ProfileMetaData) {
+function createProfileMeta(appStore: AppStore, profile: ProfileMetaData) {
 	profile.id = generateUuid();
 	appStore.profiles.push(profile);
 }
-
 function openConfirmRemoval(store: Store, deletionCandidate: ProfileMetaData) {
 	store.deletionCandidate = null;
 }
@@ -93,6 +93,11 @@ class ProfileManager extends Component<Props, {}> {
 						const props: ProfileManagerOptionsProps = {
 							onEdit: () => openEditDialog(store, profile),
 						};
+						let icon = null;
+
+						if(!profile.isLocal) {
+							icon = <FileCloud/>;
+						}
 
 						if(!isOpen) {
 							props.onOpenProfile = () => appStore.openProfile(profile.id);
@@ -109,6 +114,7 @@ class ProfileManager extends Component<Props, {}> {
 								primaryText={profile.name}
 								secondaryText={isOpen && 'active'}
 								rightIconButton={ProfileManagerOptions(props)}
+								leftIcon={icon}
 							/>
 						);
 					})}
@@ -170,12 +176,10 @@ class ProfileManager extends Component<Props, {}> {
 
 	private handleSaveProfile() {
 		if(!this.store.editingProfile.id) {
-			createProfile(this.props.appStore, this.store.editingProfile.model);
+			createProfileMeta(this.props.appStore, this.store.editingProfile.model);
 		}
 
 		updateProfile(this.store);
-
-		ProfileStorage.saveProfiles(this.props.appStore.profiles);
 	}
 
 	private handleUpdateName(newName: string) {

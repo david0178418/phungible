@@ -26,7 +26,7 @@ function createDb(profileId: string, profileName: string) {
 }
 
 export
-function getSyncedProfiles(): Promise<ProfileMetaData[]> {
+function getRemoteProfiles(): Promise<ProfileMetaData[]> {
 	const username = localStorage.getItem('username');
 
 	if(!username) {
