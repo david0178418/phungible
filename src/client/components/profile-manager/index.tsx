@@ -93,11 +93,6 @@ class ProfileManager extends Component<Props, {}> {
 						const props: ProfileManagerOptionsProps = {
 							onEdit: () => openEditDialog(store, profile),
 						};
-						let icon = null;
-
-						if(!profile.isLocal) {
-							icon = <FileCloud/>;
-						}
 
 						if(!isOpen) {
 							props.onOpenProfile = () => appStore.openProfile(profile.id);
@@ -112,9 +107,30 @@ class ProfileManager extends Component<Props, {}> {
 							<ListItem
 								key={profile.id}
 								primaryText={profile.name}
+								rightIconButton={ProfileManagerOptions(props)}
+							/>
+						);
+					})}
+					{appStore.isLoggedIn && appStore.remoteProfiles.map((profile) => {
+						const isOpen = currentProfileId === profile.id;
+						const props: ProfileManagerOptionsProps = {
+							onEdit: () => openEditDialog(store, profile),
+						};
+
+						props.onOpenProfile = () => appStore.openProfile(profile.id);
+						props.onRemove = () => openConfirmRemoval(store, profile);
+
+						if(appStore.isLoggedIn) {
+							props.onSync = () => ProfileStorage.sync(profile.id);
+						}
+
+						return (
+							<ListItem
+								key={profile.id}
+								primaryText={profile.name}
 								secondaryText={isOpen && 'active'}
 								rightIconButton={ProfileManagerOptions(props)}
-								leftIcon={icon}
+								leftIcon={<FileCloud/>}
 							/>
 						);
 					})}

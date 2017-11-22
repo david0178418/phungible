@@ -14,8 +14,6 @@ function createProfileMeta(appStore: AppStore, profile: Profile) {
 
 	appStore.profiles.push({
 		id: profile.id,
-		isLocal: true,
-		isRemote: false,
 		name: profile.name,
 		owner,
 	});
@@ -44,41 +42,31 @@ class AppStore {
 	@action public dismissTransactionConfirmation() {
 		this.showTransactionConfirmation = false;
 	}
-	@action public async createProfile() {
+	@action public createProfile() {
 		this.currentProfile = new Profile();
 		createProfileMeta(this, this.currentProfile);
-		await this.refreshProfiles();
 		this.loadProfiles();
 	}
 	@action public async openProfile(profileId: string) {
 		const profileData = await ProfileStorage.getProfileData(profileId);
 		this.currentProfile = await Profile.deserialize(profileData);
 	}
-	public async refreshProfiles() {
-		const updated = await ProfileStorage.updateRemoteProfiles();
-
-		if(!updated) {
-			return false;
-		}
-
-		ProfileStorage.updateLocalProfiles();
-		return true;
-	}
-	@action public loadProfiles() {
-		this.remoteProfiles = observable(ProfileStorage.getRemoteProfiles());
+	@action public async loadProfiles() {
 		this.profiles = observable(ProfileStorage.getLocalProfiles());
+
+		if(this.isLoggedIn) {
+			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
+		}
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
 	}
-	@action public handleLogin(username: string) {
+	@action public async handleLogin(username: string) {
 		localStorage.setItem('username', username);
 		this.username = username;
 		this.isLoggedIn = true;
 
-		if(this.refreshProfiles()) {
-			this.loadProfiles();
-		}
+		this.loadProfiles();
 	}
 	@action public handleLogout() {
 		this.isLoggedIn = false;

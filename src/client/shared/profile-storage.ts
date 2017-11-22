@@ -9,8 +9,7 @@ import Transaction from '../stores/transaction';
 
 let activeProfileDB: PouchDB.Database;
 
-const LOCAL_PROFILE_METADATA_KEY = 'profiles-local';
-const REMOTE_PROFILE_METADATA_KEY = 'profiles-remote';
+const PROFILE_METADATA_KEY = 'profiles-local';
 
 export default
 class ProfileStorage {
@@ -85,43 +84,18 @@ class ProfileStorage {
 		return Storage.getItem('lastProfileId');
 	}
 	public static getLocalProfiles(): ProfileMetaData[] {
-		return Storage.getItem(LOCAL_PROFILE_METADATA_KEY) || [];
+		return Storage.getItem(PROFILE_METADATA_KEY) || [];
 	}
-	public static getRemoteProfiles(): ProfileMetaData[] {
-		return Storage.getItem(REMOTE_PROFILE_METADATA_KEY) || [];
-	}
-	public static async updateRemoteProfiles() {
+	public static async getRemoteProfiles() {
 		try {
 			let remoteProfiles = await getRemoteProfiles();
 			remoteProfiles = remoteProfiles.map((profile) => {
-				profile.isRemote = true;
-				profile.isLocal = false;
 				return profile;
 			});
-
-			ProfileStorage.saveRemoteProfiles(remoteProfiles);
-			return true;
+			return remoteProfiles;
 		} catch {
-			return false;
+			return null;
 		}
-	}
-	public static updateLocalProfiles() {
-		const remoteProfiles = ProfileStorage.getRemoteProfiles();
-		const localProfiles = ProfileStorage.getLocalProfiles();
-		const updatedLocalProfiles = localProfiles
-			.filter(
-				(profileMeta) => {
-					const isSynced = !remoteProfiles.some((v) => v.id === profileMeta.id);
-
-					profileMeta.isRemote = isSynced;
-					profileMeta.isLocal = false;
-
-					return isSynced;
-				},
-			)
-			.concat(remoteProfiles);
-
-		ProfileStorage.saveLocalProfiles(updatedLocalProfiles);
 	}
 	public static removeDoc(doc: PouchDocument) {
 		PouchStorage.removeDoc(doc, activeProfileDB);
@@ -133,10 +107,7 @@ class ProfileStorage {
 		PouchStorage.saveDoc(doc, activeProfileDB);
 	}
 	public static saveLocalProfiles(profiles: ProfileMetaData[]) {
-		Storage.setItem(LOCAL_PROFILE_METADATA_KEY, profiles);
-	}
-	public static saveRemoteProfiles(profiles: ProfileMetaData[]) {
-		Storage.setItem(REMOTE_PROFILE_METADATA_KEY, profiles);
+		Storage.setItem(PROFILE_METADATA_KEY, profiles);
 	}
 	public static setCurrentActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);
@@ -144,8 +115,6 @@ class ProfileStorage {
 	public static createDefaultProfileMeta() {
 		return {
 			id: '',
-			isLocal: true,
-			isRemote: false,
 			name: 'My Profile',
 		};
 	}

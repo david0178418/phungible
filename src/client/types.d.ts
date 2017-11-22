@@ -1,7 +1,5 @@
 interface ProfileMetaData {
 	id: string;
-	isRemote: boolean;
-	isLocal: boolean;
 	name: string;
 	owner?: User;
 }
