@@ -5,7 +5,7 @@ type DateRangeParam = Date | moment.Moment;
 export default
 function dateRange(from: DateRangeParam, to: DateRangeParam) {
 	if(from > to) {
-		[from, to] = [to, from];
+		[from, to] = [to, from] as any;
 	}
 
 	const fromMoment = moment(from);

@@ -101,7 +101,7 @@ class ProfileStorage {
 		PouchStorage.removeDoc(doc, activeProfileDB);
 	}
 	public static async sync(profileId: string) {
-		PouchStorage.sync(profileId);
+		return PouchStorage.sync(profileId);
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);
@@ -112,10 +112,11 @@ class ProfileStorage {
 	public static setCurrentActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);
 	}
-	public static createDefaultProfileMeta() {
+	public static createDefaultProfileMeta(id: string = '', name: string = '') {
+		name = name || 'My Profile';
 		return {
-			id: '',
-			name: 'My Profile',
+			id,
+			name,
 		};
 	}
 }

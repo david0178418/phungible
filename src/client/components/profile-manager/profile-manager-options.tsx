@@ -19,7 +19,7 @@ function ProfileManagerOptions({
 		>
 			<MenuItem
 				onClick={onEdit}
-				primaryText="Edit"
+				primaryText="Rename"
 			/>
 			{onOpenProfile && (
 				<MenuItem

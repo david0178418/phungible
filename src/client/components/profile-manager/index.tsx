@@ -100,28 +100,7 @@ class ProfileManager extends Component<Props, {}> {
 						}
 
 						if(appStore.isLoggedIn) {
-							props.onSync = () => ProfileStorage.sync(profile.id);
-						}
-
-						return (
-							<ListItem
-								key={profile.id}
-								primaryText={profile.name}
-								rightIconButton={ProfileManagerOptions(props)}
-							/>
-						);
-					})}
-					{appStore.isLoggedIn && appStore.remoteProfiles.map((profile) => {
-						const isOpen = currentProfileId === profile.id;
-						const props: ProfileManagerOptionsProps = {
-							onEdit: () => openEditDialog(store, profile),
-						};
-
-						props.onOpenProfile = () => appStore.openProfile(profile.id);
-						props.onRemove = () => openConfirmRemoval(store, profile);
-
-						if(appStore.isLoggedIn) {
-							props.onSync = () => ProfileStorage.sync(profile.id);
+							props.onSync = () => appStore.sync(profile.id);
 						}
 
 						return (
@@ -129,6 +108,23 @@ class ProfileManager extends Component<Props, {}> {
 								key={profile.id}
 								primaryText={profile.name}
 								secondaryText={isOpen && 'active'}
+								rightIconButton={ProfileManagerOptions(props)}
+							/>
+						);
+					})}
+					{appStore.isLoggedIn && appStore.remoteOnlyProfiles.map((profile) => {
+						const props: ProfileManagerOptionsProps = {
+							onEdit: () => openEditDialog(store, profile),
+						};
+
+						props.onOpenProfile = () => appStore.openProfile(profile.id);
+						props.onRemove = () => openConfirmRemoval(store, profile);
+						props.onSync = () => appStore.sync(profile.id);
+
+						return (
+							<ListItem
+								key={profile.id}
+								primaryText={profile.name}
 								rightIconButton={ProfileManagerOptions(props)}
 								leftIcon={<FileCloud/>}
 							/>

@@ -1,22 +1,14 @@
-import { action, observable} from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 import ProfileStorage from '../shared/profile-storage';
+
 import Profile from '../stores/profile';
 
-function createProfileMeta(appStore: AppStore, profile: Profile) {
-	let owner;
-
-	if(appStore.username) {
-		owner = {
-			username: appStore.username,
-		};
-	}
-
-	appStore.profiles.push({
+function createProfileMeta(appStore: AppStore, profile: Profile): ProfileMetaData {
+	return {
 		id: profile.id,
 		name: profile.name,
-		owner,
-	});
+	};
 }
 
 export default
@@ -27,6 +19,13 @@ class AppStore {
 	@observable public remoteProfiles: ProfileMetaData[];
 	@observable public username: string;
 	@observable public showTransactionConfirmation: boolean;
+	@computed get remoteOnlyProfiles() {
+		return this.remoteProfiles
+			.filter(
+				(remoteProfile) =>
+					!this.hasLocalProfileMeta(remoteProfile.id),
+			);
+	}
 
 	constructor(params: Partial<AppStore> = {}) {
 		Object.assign(this, {
@@ -44,18 +43,32 @@ class AppStore {
 	}
 	@action public createProfile() {
 		this.currentProfile = new Profile();
-		createProfileMeta(this, this.currentProfile);
+		const profile = createProfileMeta(this, this.currentProfile);
+
+		if(this.isLoggedIn) {
+			profile.owner = {
+				username: this.username,
+			};
+		}
+
+		this.profiles.push(profile);
 		this.loadProfiles();
 	}
-	@action public async openProfile(profileId: string) {
+	public async getProfile(profileId: string) {
 		const profileData = await ProfileStorage.getProfileData(profileId);
-		this.currentProfile = await Profile.deserialize(profileData);
+		return Profile.deserialize(profileData);
+	}
+	@action public async openProfile(profileId: string) {
+		this.currentProfile = await this.getProfile(profileId);
+		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
 	}
 	@action public async loadProfiles() {
 		this.profiles = observable(ProfileStorage.getLocalProfiles());
 
 		if(this.isLoggedIn) {
 			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
+		} else {
+			this.remoteProfiles = observable([]);
 		}
 	}
 	@action public openTransactionConfirmation() {
@@ -70,5 +83,17 @@ class AppStore {
 	}
 	@action public handleLogout() {
 		this.isLoggedIn = false;
+	}
+	public async sync(profileId: string) {
+		await ProfileStorage.sync(profileId);
+
+		if(!this.hasLocalProfileMeta(profileId)) {
+			const profileMeta = this.remoteProfiles.find((profile) => profile.id === profileId);
+			this.profiles.push(profileMeta);
+			ProfileStorage.saveLocalProfiles(this.profiles);
+		}
+	}
+	public hasLocalProfileMeta(profileId: string) {
+		return this.profiles.some((profile) => profile.id === profileId);
 	}
 }
