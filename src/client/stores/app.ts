@@ -58,6 +58,9 @@ class AppStore {
 		const profileData = await ProfileStorage.getProfileData(profileId);
 		return Profile.deserialize(profileData);
 	}
+	public profileIsSynced(profileId: string) {
+		return this.remoteProfiles.some((profile) => profile.id === profileId);
+	}
 	@action public async openProfile(profileId: string) {
 		this.currentProfile = await this.getProfile(profileId);
 		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);

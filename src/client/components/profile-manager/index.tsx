@@ -3,6 +3,7 @@ import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+import ActionSwapHorizontal from 'material-ui/svg-icons/action/swap-horiz';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FileCloud from 'material-ui/svg-icons/file/cloud';
 import TextField from 'material-ui/TextField';
@@ -89,6 +90,7 @@ class ProfileManager extends Component<Props, {}> {
 			<div>
 				<List>
 					{appStore.profiles.map((profile) => {
+						let icon;
 						const isOpen = currentProfileId === profile.id;
 						const props: ProfileManagerOptionsProps = {
 							onEdit: () => openEditDialog(store, profile),
@@ -101,6 +103,10 @@ class ProfileManager extends Component<Props, {}> {
 
 						if(appStore.isLoggedIn) {
 							props.onSync = () => appStore.sync(profile.id);
+
+							if(appStore.remoteProfiles.some((rP) => profile.id === rP.id)) {
+								icon = <ActionSwapHorizontal/>;
+							}
 						}
 
 						return (
@@ -109,6 +115,7 @@ class ProfileManager extends Component<Props, {}> {
 								primaryText={profile.name}
 								secondaryText={isOpen && 'active'}
 								rightIconButton={ProfileManagerOptions(props)}
+								leftIcon={icon}
 							/>
 						);
 					})}
