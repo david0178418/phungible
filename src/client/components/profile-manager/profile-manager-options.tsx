@@ -33,11 +33,13 @@ function ProfileManagerOptions({
 					primaryText="Sync"
 				/>
 			)}
-			<MenuItem
-				onClick={onRemove}
-				primaryText="Remove"
-				rightIcon={<ActionDelete/>}
-			/>
+			{onRemove && (
+				<MenuItem
+					onClick={onRemove}
+					primaryText="Remove"
+					rightIcon={<ActionDelete/>}
+				/>
+			)}
 		</IconMenu>
 	);
 }

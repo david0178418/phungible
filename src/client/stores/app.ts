@@ -54,6 +54,15 @@ class AppStore {
 		this.profiles.push(profile);
 		this.loadProfiles();
 	}
+	public async deleteProfile(profileId: string) {
+		if(this.hasLocalProfileMeta(profileId)) {
+			ProfileStorage.destroyProfile(profileId);
+			this.removeProfileMeta(profileId);
+		} else {
+			await ProfileStorage.destroyRemoteProfile(profileId);
+			this.removeRemoteProfileMeta(profileId);
+		}
+	}
 	public async getProfile(profileId: string) {
 		const profileData = await ProfileStorage.getProfileData(profileId);
 		return Profile.deserialize(profileData);
@@ -76,6 +85,16 @@ class AppStore {
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
+	}
+	@action public removeProfileMeta(profileId: string) {
+		this.profiles = this.profiles.filter(
+			(profile) => profile.id !== profileId,
+		);
+	}
+	@action public removeRemoteProfileMeta(profileId: string) {
+		this.remoteProfiles = this.remoteProfiles.filter(
+			(profile) => profile.id !== profileId,
+		);
 	}
 	@action public async handleLogin(username: string) {
 		localStorage.setItem('username', username);

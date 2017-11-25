@@ -1,4 +1,4 @@
-import { getRemoteProfiles } from '../shared/api';
+import { deleteDb, getRemoteProfiles } from '../shared/api';
 import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
@@ -18,6 +18,9 @@ class ProfileStorage {
 	}
 	public static destroyProfile(id: string) {
 		return PouchStorage.deleteDb(id);
+	}
+	public static destroyRemoteProfile(id: string) {
+		return deleteDb(id);
 	}
 	public static async getCurrentProfileMeta() {
 		let loadedProfile = null;

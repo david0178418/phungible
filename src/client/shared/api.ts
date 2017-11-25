@@ -26,6 +26,11 @@ function createDb(profileId: string, profileName: string) {
 }
 
 export
+function deleteDb(profileId: string) {
+	return api(`${API_URI}/delete-profile/${profileId}/`, 'delete');
+}
+
+export
 function getRemoteProfiles(): Promise<ProfileMetaData[]> {
 	const username = localStorage.getItem('username');
 

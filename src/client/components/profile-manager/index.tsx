@@ -40,7 +40,7 @@ function createProfileMeta(appStore: AppStore, profile: ProfileMetaData) {
 	appStore.profiles.push(profile);
 }
 function openConfirmRemoval(store: Store, deletionCandidate: ProfileMetaData) {
-	store.deletionCandidate = null;
+	store.deletionCandidate = deletionCandidate;
 }
 
 function closeEditDialog(store: Store) {
@@ -55,14 +55,6 @@ function updateProfile(store: Store) {
 function openEditDialog(store: Store, openProfile?: ProfileMetaData) {
 	openProfile = openProfile || observable(ProfileStorage.createDefaultProfileMeta());
 	store.editingProfile = createViewModel(openProfile);
-}
-
-function removalConfirmed(store: Store) {
-	const deleteProfile = store.deletionCandidate;
-
-	ProfileStorage.destroyProfile(deleteProfile.id);
-
-	store.deletionCandidate = null;
 }
 
 @inject('appStore') @observer
@@ -145,14 +137,13 @@ class ProfileManager extends Component<Props, {}> {
 					title={deletionCandidate && `Deleting '${deletionCandidate.name}' will delete related entries. Delete?`}
 					actions={[
 						<FlatButton
-							primary
 							label="Cancel"
 							onClick={() => closeConfirmRemoval(store)}
 						/>,
 						<FlatButton
 							primary
 							label="Delete"
-							onClick={() => removalConfirmed(store)}
+							onClick={() => this.handleDeleteProfile()}
 						/>,
 					]}
 				/>
@@ -191,6 +182,13 @@ class ProfileManager extends Component<Props, {}> {
 				</FloatingActionButton>
 			</div>
 		);
+	}
+
+	private handleDeleteProfile() {
+		this.props.appStore.deleteProfile(
+			this.store.deletionCandidate.id,
+		);
+		this.store.deletionCandidate = null;
 	}
 
 	private handleSaveProfile() {

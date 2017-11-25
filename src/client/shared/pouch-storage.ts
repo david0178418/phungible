@@ -47,6 +47,9 @@ class PouchStorage {
 	public static openDb(name: string) {
 		return new PouchDB(name);
 	}
+	public static openRemoteDb(profileId: string) {
+		return new PouchDB(PouchStorage.remoteDbUrl(profileId));
+	}
 	public static remoteDbUrl(profileId: string) {
 		return `${location.protocol}//${location.hostname}/api/sync/profile-${profileId}`;
 	}
@@ -108,7 +111,7 @@ class PouchStorage {
 		}
 
 		const db = PouchStorage.openDb(dbId);
-		const sync = PouchDB.sync(db, new PouchDB(PouchStorage.remoteDbUrl(dbId)));
+		const sync = PouchDB.sync(db, this.openRemoteDb(dbId));
 
 		// Why won't the sync stop on its own?
 		setTimeout(() => {
