@@ -1,8 +1,8 @@
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+import RaisedButton from 'material-ui/RaisedButton';
 import ActionSwapHorizontal from 'material-ui/svg-icons/action/swap-horiz';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FileCloud from 'material-ui/svg-icons/file/cloud';
@@ -14,7 +14,6 @@ import * as React from 'react';
 
 import ProfileStorage from '../../shared/profile-storage';
 import { dialogStyles, floatingActionButtonStyle } from '../../shared/styles';
-import { generateUuid } from '../../shared/utils/index';
 import AppStore from '../../stores/app';
 import ProfileManagerOptions from './profile-manager-options';
 
@@ -35,20 +34,11 @@ function closeConfirmRemoval(store: Store) {
 	store.deletionCandidate = null;
 }
 
-function createProfileMeta(appStore: AppStore, profile: ProfileMetaData) {
-	profile.id = generateUuid();
-	appStore.profiles.push(profile);
-}
 function openConfirmRemoval(store: Store, deletionCandidate: ProfileMetaData) {
 	store.deletionCandidate = deletionCandidate;
 }
 
 function closeEditDialog(store: Store) {
-	store.editingProfile = null;
-}
-
-function updateProfile(store: Store) {
-	store.editingProfile.submit();
 	store.editingProfile = null;
 }
 
@@ -96,7 +86,7 @@ class ProfileManager extends Component<Props, {}> {
 						if(appStore.isLoggedIn) {
 							props.onSync = () => appStore.sync(profile.id);
 
-							if(appStore.remoteProfiles.some((rP) => profile.id === rP.id)) {
+							if(appStore.remoteProfiles.find((rP) => profile.id === rP.id)) {
 								icon = <ActionSwapHorizontal/>;
 							}
 						}
@@ -136,11 +126,11 @@ class ProfileManager extends Component<Props, {}> {
 					open={!!deletionCandidate}
 					title={deletionCandidate && `Deleting '${deletionCandidate.name}' will delete related entries. Delete?`}
 					actions={[
-						<FlatButton
+						<RaisedButton
 							label="Cancel"
 							onClick={() => closeConfirmRemoval(store)}
 						/>,
-						<FlatButton
+						<RaisedButton
 							primary
 							label="Delete"
 							onClick={() => this.handleDeleteProfile()}
@@ -153,11 +143,11 @@ class ProfileManager extends Component<Props, {}> {
 					open={!!editingProfile}
 					title="Edit Profile Name"
 					actions={[
-						<FlatButton
+						<RaisedButton
 							label="Cancel"
 							onClick={() => closeEditDialog(store)}
 						/>,
-						<FlatButton
+						<RaisedButton
 							primary
 							label="Save"
 							onClick={() => this.handleSaveProfile()}
@@ -193,10 +183,13 @@ class ProfileManager extends Component<Props, {}> {
 
 	private handleSaveProfile() {
 		if(!this.store.editingProfile.id) {
-			createProfileMeta(this.props.appStore, this.store.editingProfile.model);
+			this.props.appStore.createProfile(this.store.editingProfile.model.name);
+		} else {
+			this.store.editingProfile.submit();
+			this.props.appStore.updateProfileMeta(this.store.editingProfile.model);
 		}
 
-		updateProfile(this.store);
+		closeEditDialog(this.store);
 	}
 
 	private handleUpdateName(newName: string) {

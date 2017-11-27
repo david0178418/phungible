@@ -2,15 +2,7 @@ import PouchDB from 'pouchdb';
 import { createDb, remoteDbExists } from '../shared/api';
 import Storage from './storage';
 
-type Database = PouchDB.Database;
-
-export
-interface PouchDocument {
-	id: string;
-	type?: string;
-	parent?: string;
-	serialize?(): any;
-}
+const META_ID = 'metaData';
 
 export default
 class PouchStorage {
@@ -44,6 +36,16 @@ class PouchStorage {
 		}
 		return doc ? doc.data : null;
 	}
+	public static async getMeta(dbId: string): Promise<DBMeta> {
+		const db = await PouchStorage.openDb(dbId);
+		let meta;
+
+		meta = await db.get(META_ID) as any;
+
+		return {
+			name: meta.name,
+		};
+	}
 	public static openDb(name: string) {
 		return new PouchDB(name);
 	}
@@ -54,64 +56,75 @@ class PouchStorage {
 		return `${location.protocol}//${location.hostname}/api/sync/profile-${profileId}`;
 	}
 	public static async removeDoc(data: PouchDocument, db: Database) {
-		let done: any;
 		const pouchId = `${data.type}:${data.id}`;
-
-		db
-			.get(pouchId)
-			.then((doc) => {
-				db
-					.remove({
-						_id: pouchId,
-						_rev: doc._rev,
-					})
-					.then(done)
-					.catch(done);
-			})
-			.catch(() => {
-				// We
-			});
-
-		return new Promise((resolve) => done = resolve);
+		const doc = await db.get(pouchId);
+		await db.remove({
+			_id: pouchId,
+			_rev: doc._rev,
+		});
 	}
 	public static async saveDoc(data: PouchDocument, db: Database) {
-		let done: any;
 		data = data.serialize ? data.serialize() : data;
-		const pouchId = data.type ? `${data.type}:${data.id}` : data.id;
+		let pouchId;
 
-		db
-			.get(pouchId)
-			.then((doc) => {
-				db
-					.put({
-						_id: pouchId,
-						_rev: doc._rev,
-						data,
-					})
-					.then(done)
-					.catch(done);
-			})
-			.catch(() => {
-				db
-					.put({
-						_id: pouchId,
-						data,
-					})
-					.then(done)
-					.catch(done);
+		if(data._id) {
+			pouchId = data._id;
+			delete data._id;
+		} else if(data.type) {
+			pouchId = `${data.type}:${data.id}`;
+		} else {
+			pouchId = data.id;
+		}
+		try {
+			const doc = await db.get(pouchId);
+
+			try {
+				await db.put({
+					_id: pouchId,
+					_rev: doc._rev,
+					data,
+				});
+			} catch {
+				//
+			}
+		} catch {
+			await db.put({
+				_id: pouchId,
+				data,
 			});
+		}
+	}
+	public static async saveMeta(dbId: string, data: DBMeta) {
+		const db = PouchStorage.openDb(dbId);
 
-		return new Promise((resolve) => done = resolve);
+		try {
+			const doc = await db.get(META_ID);
+
+			try {
+				await db.put({
+					_id: META_ID,
+					_rev: doc._rev,
+					...data,
+				});
+			} catch {
+				//
+			}
+		} catch {
+			await db.put({
+				_id: META_ID,
+				...data,
+			});
+		}
 	}
 	public static async sync(dbId: string) {
 		if(!(await remoteDbExists(dbId))) {
-			const profileMetas = Storage.getItem('profiles') as ProfileMetaData[];
+			const profileMetas = Storage.getItem('profiles-local') as ProfileMetaData[];
 			const profile = profileMetas.find((meta) => meta.id === dbId);
 			await PouchStorage.createRemoteDB(dbId, profile.name);
 		}
 
 		const db = PouchStorage.openDb(dbId);
-		const sync = PouchDB.sync(db, this.openRemoteDb(dbId));
+		const sync = PouchDB.sync(db, PouchStorage.openRemoteDb(dbId));
 
 		// Why won't the sync stop on its own?
 		setTimeout(() => {

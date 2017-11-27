@@ -1,5 +1,5 @@
 import { deleteDb, getRemoteProfiles } from '../shared/api';
-import PouchStorage, { PouchDocument } from '../shared/pouch-storage';
+import PouchStorage from '../shared/pouch-storage';
 import Storage from '../shared/storage';
 import generateUUID from '../shared/utils/generate-uuid';
 import Account from '../stores/account';
@@ -108,6 +108,11 @@ class ProfileStorage {
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);
+	}
+	public static async saveMeta(dbId: string, metaData: DBMeta) {
+		PouchStorage.saveMeta(dbId, {
+			name: metaData.name,
+		});
 	}
 	public static saveLocalProfiles(profiles: ProfileMetaData[]) {
 		Storage.setItem(PROFILE_METADATA_KEY, profiles);

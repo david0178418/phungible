@@ -41,16 +41,17 @@ class AppStore {
 	@action public dismissTransactionConfirmation() {
 		this.showTransactionConfirmation = false;
 	}
-	@action public createProfile() {
+	@action public createProfile(name?: string) {
 		this.currentProfile = new Profile();
-		const profile = createProfileMeta(this, this.currentProfile);
 
-		if(this.isLoggedIn) {
-			profile.owner = {
-				username: this.username,
-			};
+		if(name) {
+			this.currentProfile.name = name;
 		}
 
+		const profile = createProfileMeta(this, this.currentProfile);
+		ProfileStorage.saveMeta(profile.id, {
+			name: profile.name,
+		});
 		this.profiles.push(profile);
 		this.loadProfiles();
 	}
@@ -68,9 +69,13 @@ class AppStore {
 		return Profile.deserialize(profileData);
 	}
 	public profileIsSynced(profileId: string) {
-		return this.remoteProfiles.some((profile) => profile.id === profileId);
+		return !!this.remoteProfiles.find((profile) => profile.id === profileId);
 	}
 	@action public async openProfile(profileId: string) {
+		if(this.isLoggedIn && this.hasLocalProfileMeta(profileId)) {
+			await this.sync(profileId);
+		}
+
 		this.currentProfile = await this.getProfile(profileId);
 		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
 	}
@@ -115,7 +120,13 @@ class AppStore {
 			ProfileStorage.saveLocalProfiles(this.profiles);
 		}
 	}
+	public updateProfileMeta(profile: ProfileMetaData) {
+		ProfileStorage.saveMeta(profile.id, {
+			name: profile.name,
+		});
+		ProfileStorage.saveLocalProfiles(this.profiles);
+	}
 	public hasLocalProfileMeta(profileId: string) {
-		return this.profiles.some((profile) => profile.id === profileId);
+		return !!this.profiles.find((profile) => profile.id === profileId);
 	}
 }
