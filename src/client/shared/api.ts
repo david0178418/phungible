@@ -95,8 +95,11 @@ async function api(uri: string, method: HTTP_ACTION, data?: any) {
 			headers,
 			method,
 		});
+		if(response.status === 401) {
+			throw new Error('unauthorized');
+		}
 		return await response.json();
 	} catch(e) {
-		return e;
+		(window as any).store.logout();
 	}
 }

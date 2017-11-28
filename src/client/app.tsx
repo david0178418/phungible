@@ -196,7 +196,7 @@ class App extends Component<Props, any> {
 		}
 
 		if(userCtx.name) {
-			appStore.handleLogin(userCtx.name);
+			appStore.login(userCtx.name);
 		}
 	}
 

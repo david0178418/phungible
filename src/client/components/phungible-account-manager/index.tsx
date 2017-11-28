@@ -38,7 +38,7 @@ class PhungibleAccountManager extends Component<Props, State> {
 					<div>
 						<LoggedIn
 							username={appStore.username}
-							onLogout={() => appStore.handleLogout()}
+							onLogout={() => appStore.logout()}
 						/>
 						<div>
 							{this.state.loading && 'Syncing'}
@@ -47,8 +47,8 @@ class PhungibleAccountManager extends Component<Props, State> {
 				) : (
 					<SignUpForm
 						username={appStore.username}
-						onLogin={(e) => appStore.handleLogin(e)}
-						onCreation={(e) => appStore.handleLogin(e)}
+						onLogin={(e) => appStore.login(e)}
+						onCreation={(e) => appStore.login(e)}
 					/>
 				)}
 			</div>

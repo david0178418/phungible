@@ -101,14 +101,13 @@ class AppStore {
 			(profile) => profile.id !== profileId,
 		);
 	}
-	@action public async handleLogin(username: string) {
+	@action public async login(username: string) {
 		localStorage.setItem('username', username);
 		this.username = username;
 		this.isLoggedIn = true;
-
 		this.loadProfiles();
 	}
-	@action public handleLogout() {
+	@action public logout() {
 		this.isLoggedIn = false;
 	}
 	public async sync(profileId: string) {
