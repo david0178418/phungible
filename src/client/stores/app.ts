@@ -1,15 +1,7 @@
 import { action, computed, observable } from 'mobx';
 
 import ProfileStorage from '../shared/profile-storage';
-
 import Profile from '../stores/profile';
-
-function createProfileMeta(appStore: AppStore, profile: Profile): ProfileMetaData {
-	return {
-		id: profile.id,
-		name: profile.name,
-	};
-}
 
 export default
 class AppStore {
@@ -25,6 +17,9 @@ class AppStore {
 				(remoteProfile) =>
 					!this.hasLocalProfileMeta(remoteProfile.id),
 			);
+	}
+	@computed get currentProfileMeta() {
+		return this.findProfileMeta(this.currentProfile.id) || {} as ProfileMetaData;
 	}
 
 	constructor(params: Partial<AppStore> = {}) {
@@ -48,7 +43,7 @@ class AppStore {
 			this.currentProfile.name = name;
 		}
 
-		const profile = createProfileMeta(this, this.currentProfile);
+		const profile = this.createProfileMeta();
 		ProfileStorage.saveMeta(profile.id, {
 			name: profile.name,
 		});
@@ -63,6 +58,9 @@ class AppStore {
 			await ProfileStorage.destroyRemoteProfile(profileId);
 			this.removeRemoteProfileMeta(profileId);
 		}
+	}
+	public findProfileMeta(profileId: string) {
+		return this.profiles.find((profile) => profile.id === profileId);
 	}
 	public async getProfile(profileId: string) {
 		const profileData = await ProfileStorage.getProfileData(profileId);
@@ -126,6 +124,12 @@ class AppStore {
 		ProfileStorage.saveLocalProfiles(this.profiles);
 	}
 	public hasLocalProfileMeta(profileId: string) {
-		return !!this.profiles.find((profile) => profile.id === profileId);
+		return !!this.findProfileMeta(profileId);
+	}
+	private createProfileMeta(): ProfileMetaData {
+		return {
+			id: this.currentProfile.id,
+			name: this.currentProfile.name,
+		};
 	}
 }

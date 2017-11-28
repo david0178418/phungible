@@ -167,7 +167,7 @@ class Navigation extends React.Component<Props, any> {
 						href={`${ProfileManager.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						{ProfileManager.title}
+						{this.props.appStore.currentProfileMeta.name}
 					</NavItem>
 					<NavItem
 						leftIcon={<DateRangeIcon />}
