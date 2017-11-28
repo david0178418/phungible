@@ -128,21 +128,17 @@ class App extends Component<Props, any> {
 		(window as any).store = this.store;
 	}
 
-	@action public componentDidMount() {
+	public componentDidMount() {
 		this.handleStorageInit();
+
+		setInterval(() => this.store.checkOnlineStatus(), 500);
+		setInterval(() => this.store.checkSessionStatus(), 5000);
 	}
 
 	public render() {
 		return (
 			<MuiThemeProvider muiTheme={theme}>
 					<Layout>
-						{/* <PinPrompt
-							open={needUserPin}
-							busy={checkingPin}
-							pin={pin}
-							onClearPin={() => this.handleClearPin()}
-							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
-						/> */}
 						{this.store.currentProfile.transactions && (
 							<TransactionConfirmationPrompt
 								store={this.store}
@@ -168,25 +164,6 @@ class App extends Component<Props, any> {
 			</MuiThemeProvider>
 		);
 	}
-
-	// @action private handleClearPin() {
-	// 	this.initStore.pin = '';
-	// }
-
-	// @action private handlePinUpdate(pin: string) {
-	// 	this.initStore.pin = pin;
-
-	// 	if(this.initStore.checkingPin) {
-	// 		Storage.initLocalStorage(this.initStore.pin).then((success: boolean) => {
-	// 			if(success) {
-	// 				this.handleStorageInit();
-	// 				this.initStore.needUserPin = false;
-	// 			} else {
-	// 				this.initStore.pin = '';
-	// 			}
-	// 		});
-	// 	}
-	// }
 
 	private async handleLoggedIn(appStore: AppStore) {
 		const userCtx = await getUserContext();

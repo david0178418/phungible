@@ -60,7 +60,6 @@ class ProfileManager extends Component<Props, {}> {
 
 	public render() {
 		const appStore = this.props.appStore;
-		// const loggedIn = appStore.isLoggedIn;
 		const currentProfileId = appStore.currentProfile.id;
 		const store = this.store;
 		const {
@@ -83,7 +82,7 @@ class ProfileManager extends Component<Props, {}> {
 							props.onRemove = () => openConfirmRemoval(store, profile);
 						}
 
-						if(appStore.isLoggedIn) {
+						if(appStore.isConnected) {
 							props.onSync = () => appStore.sync(profile.id);
 
 							if(appStore.remoteProfiles.find((rP) => profile.id === rP.id)) {
@@ -101,7 +100,7 @@ class ProfileManager extends Component<Props, {}> {
 							/>
 						);
 					})}
-					{appStore.isLoggedIn && appStore.remoteOnlyProfiles.map((profile) => {
+					{appStore.isConnected && appStore.remoteOnlyProfiles.map((profile) => {
 						const props: ProfileManagerOptionsProps = {
 							onEdit: () => openEditDialog(store, profile),
 						};

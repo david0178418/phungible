@@ -156,20 +156,6 @@ class Navigation extends React.Component<Props, any> {
 						)}
 					/>
 					<NavItem
-						leftIcon={<AccountIcon />}
-						href={`${PhungibleAccountManagePage.path}`}
-						onClick={() => this.handleDrawerStateUpdate(false)}
-					>
-						{PhungibleAccountManagePage.title}
-					</NavItem>
-					<NavItem
-						leftIcon={<ProfileIcon />}
-						href={`${ProfileManager.path}`}
-						onClick={() => this.handleDrawerStateUpdate(false)}
-					>
-						{this.props.appStore.currentProfileMeta.name}
-					</NavItem>
-					<NavItem
 						leftIcon={<DateRangeIcon />}
 						href={`${DailyActivityPage.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
@@ -228,6 +214,20 @@ class Navigation extends React.Component<Props, any> {
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{SettingsPage.title}
+					</NavItem>
+					<NavItem
+						leftIcon={<ProfileIcon />}
+						href={`${ProfileManager.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{this.props.appStore.currentProfileMeta.name}
+					</NavItem>
+					<NavItem
+						leftIcon={<AccountIcon />}
+						href={`${PhungibleAccountManagePage.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{PhungibleAccountManagePage.title}
 					</NavItem>
 				</Drawer>
 			</AppBar>

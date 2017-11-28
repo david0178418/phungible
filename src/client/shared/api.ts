@@ -95,11 +95,14 @@ async function api(uri: string, method: HTTP_ACTION, data?: any) {
 			headers,
 			method,
 		});
+
 		if(response.status === 401) {
+			(window as any).store.logout();
 			throw new Error('unauthorized');
 		}
+
 		return await response.json();
 	} catch(e) {
-		(window as any).store.logout();
+		//
 	}
 }

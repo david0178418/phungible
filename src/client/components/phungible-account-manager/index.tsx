@@ -34,7 +34,7 @@ class PhungibleAccountManager extends Component<Props, State> {
 
 		return (
 			<div style={style}>
-				{appStore.isLoggedIn ? (
+				{appStore.isConnected ? (
 					<div>
 						<LoggedIn
 							username={appStore.username}

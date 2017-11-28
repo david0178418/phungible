@@ -1,15 +1,17 @@
 import { action, computed, observable } from 'mobx';
 
+import { getUserContext } from '../shared/api';
 import ProfileStorage from '../shared/profile-storage';
 import Profile from '../stores/profile';
 
 export default
 class AppStore {
 	@observable public currentProfile: Profile;
-	@observable public isLoggedIn: boolean;
+	@observable public isOnline: boolean;
 	@observable public profiles: ProfileMetaData[];
 	@observable public remoteProfiles: ProfileMetaData[];
 	@observable public username: string;
+	@observable public sessionValid: boolean;
 	@observable public showTransactionConfirmation: boolean;
 	@computed get remoteOnlyProfiles() {
 		return this.remoteProfiles
@@ -21,10 +23,13 @@ class AppStore {
 	@computed get currentProfileMeta() {
 		return this.findProfileMeta(this.currentProfile.id) || {} as ProfileMetaData;
 	}
-
+	@computed get isConnected() {
+		return this.isOnline && this.sessionValid;
+	}
 	constructor(params: Partial<AppStore> = {}) {
 		Object.assign(this, {
 			currentProfile: new Profile(),
+			isOnline: navigator.onLine,
 			username: localStorage.getItem('username') || '',
 		}, params);
 
@@ -50,6 +55,18 @@ class AppStore {
 		this.profiles.push(profile);
 		this.loadProfiles();
 	}
+	@action public checkOnlineStatus() {
+		this.isOnline = navigator.onLine;
+	}
+	@action public async checkSessionStatus() {
+		try {
+			const userCtx = await getUserContext();
+
+			this.sessionValid = !!userCtx.name;
+		} catch {
+			this.sessionValid = false;
+		}
+	}
 	public async deleteProfile(profileId: string) {
 		if(this.hasLocalProfileMeta(profileId)) {
 			ProfileStorage.destroyProfile(profileId);
@@ -70,7 +87,7 @@ class AppStore {
 		return !!this.remoteProfiles.find((profile) => profile.id === profileId);
 	}
 	@action public async openProfile(profileId: string) {
-		if(this.isLoggedIn && this.hasLocalProfileMeta(profileId)) {
+		if(this.sessionValid && this.hasLocalProfileMeta(profileId)) {
 			await this.sync(profileId);
 		}
 
@@ -80,7 +97,7 @@ class AppStore {
 	@action public async loadProfiles() {
 		this.profiles = observable(ProfileStorage.getLocalProfiles());
 
-		if(this.isLoggedIn) {
+		if(this.sessionValid) {
 			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
 		} else {
 			this.remoteProfiles = observable([]);
@@ -102,11 +119,11 @@ class AppStore {
 	@action public async login(username: string) {
 		localStorage.setItem('username', username);
 		this.username = username;
-		this.isLoggedIn = true;
+		this.sessionValid = true;
 		this.loadProfiles();
 	}
 	@action public logout() {
-		this.isLoggedIn = false;
+		this.sessionValid = false;
 	}
 	public async sync(profileId: string) {
 		await ProfileStorage.sync(profileId);
