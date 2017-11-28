@@ -17,7 +17,7 @@ type Props = {
 export default
 class PhungibleAccountManagePage extends Component<Props, {}> {
 	public static path = '/manage-sync';
-	public static title = 'Sign up';
+	public static title = 'Sign in';
 
 	public render() {
 		const {appStore} = this.props;

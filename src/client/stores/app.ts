@@ -87,7 +87,7 @@ class AppStore {
 		return !!this.remoteProfiles.find((profile) => profile.id === profileId);
 	}
 	@action public async openProfile(profileId: string) {
-		if(this.sessionValid && this.hasLocalProfileMeta(profileId)) {
+		if(this.isConnected) {
 			await this.sync(profileId);
 		}
 

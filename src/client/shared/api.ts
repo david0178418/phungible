@@ -43,9 +43,13 @@ function getRemoteProfiles(): Promise<ProfileMetaData[]> {
 
 export
 async function getUserContext(): Promise<UserCtx | null> {
-	const { userCtx } = await api(`${API_URI}/sync/_session`, 'get');
+	const response = await api(`${API_URI}/sync/_session`, 'get');
 
-	return userCtx;
+	if(response) {
+		return response.userCtx || null;
+	} else {
+		return null;
+	}
 }
 
 export
