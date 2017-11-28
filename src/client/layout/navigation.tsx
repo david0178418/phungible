@@ -10,7 +10,7 @@ import HelpIcon from 'material-ui/svg-icons/action/help';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import RepeatIcon from 'material-ui/svg-icons/av/repeat';
-import {inject} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import {
 	AccountEditPage,
@@ -103,7 +103,7 @@ function trendsProps(accountsCount: number) {
 	return props;
 }
 
-@inject('appStore')
+@inject('appStore') @observer
 export default
 class Navigation extends React.Component<Props, any> {
 	constructor(props: Props) {
