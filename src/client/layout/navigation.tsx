@@ -115,12 +115,13 @@ class Navigation extends React.Component<Props, any> {
 
 	// TODO dry this up
 	public render() {
+		const appStore = this.props.appStore;
 		let {
 			accounts,
 			budgets,
 			scheduledTransactions,
 			transactions,
-		} = (this.props.appStore.currentProfile);
+		} = appStore.currentProfile;
 
 		accounts = accounts || [];
 		budgets = budgets || [];
@@ -220,14 +221,18 @@ class Navigation extends React.Component<Props, any> {
 						href={`${ProfileManager.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						{this.props.appStore.currentProfileMeta.name}
+						{appStore.currentProfileMeta.name}
 					</NavItem>
 					<NavItem
 						leftIcon={<AccountIcon />}
 						href={`${PhungibleAccountManagePage.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						{PhungibleAccountManagePage.title}
+						{
+							appStore.isConnected ?
+								appStore.username :
+								PhungibleAccountManagePage.title
+						}
 					</NavItem>
 				</Drawer>
 			</AppBar>
