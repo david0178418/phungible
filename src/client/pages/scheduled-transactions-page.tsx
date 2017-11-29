@@ -25,7 +25,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 	public static title= 'Recurring Transactions';
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		this.props.appStore.removeScheduledTransaction(scheduledTransaction);
+		this.props.appStore.currentProfile.removeScheduledTransaction(scheduledTransaction);
 	}
 
 	public render() {
@@ -39,11 +39,11 @@ class ScheduledTransactions extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<ScheduledTransactionList
-						items={store.scheduledTransactions}
+						items={store.currentProfile.scheduledTransactions}
 						store={store}
 						onRemove={
 							(scheduledTransaction: ScheduledTransaction) =>
-								this.props.appStore.removeScheduledTransaction(scheduledTransaction)
+								this.props.appStore.currentProfile.removeScheduledTransaction(scheduledTransaction)
 						}
 					/>
 					<FloatingActionButton

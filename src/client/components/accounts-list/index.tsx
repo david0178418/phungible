@@ -44,7 +44,7 @@ class AcountsStore {
 			return;
 		}
 
-		this.appStore.saveAccount(this._openAccount);
+		this.appStore.currentProfile.saveAccount(this._openAccount);
 		this.closeOpenAccount();
 	}
 	@action public editAccount(account: Account) {
@@ -60,7 +60,7 @@ class AcountsStore {
 		this.deletionCandidate = null;
 	}
 	@computed get accounts() {
-		return this.appStore.accounts;
+		return this.appStore.currentProfile.accounts;
 	}
 	@computed get isOpen() {
 		return !!this._openAccount;
@@ -89,7 +89,7 @@ class AccountsList extends Component<Props, {}> {
 			showCreate,
 			store,
 		} = this.props;
-		const {deletionCandidate} = this.store;
+		const  {deletionCandidate} = this.store;
 		const today = new Date();
 
 		return (
@@ -112,8 +112,8 @@ class AccountsList extends Component<Props, {}> {
 					{items.map((account) => (
 						<ListItem
 							key={account.id}
-							primaryText={`${store.getBalanceAsOfDate(account, today).valFormatted} ${account.name}`}
-							secondaryText={`Pending: ${store.getPendingChange(account).valFormatted}`}
+							primaryText={`${store.currentProfile.getBalanceAsOfDate(account, today).valFormatted} ${account.name}`}
+							secondaryText={`Pending: ${store.currentProfile.getPendingChange(account).valFormatted}`}
 							leftIcon={
 								account.accountType === AccountType.Savings ?
 									<SavingsIcon/> :

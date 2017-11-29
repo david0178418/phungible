@@ -24,7 +24,7 @@ class TransactionEditStore {
 		this.appStore = appStore;
 
 		if(scheduledTransaction) {
-			this.transaction = appStore.findTransaction(scheduledTransaction);
+			this.transaction = appStore.currentProfile.findTransaction(scheduledTransaction);
 		} else {
 			this.transaction = new Transaction();
 		}
@@ -32,7 +32,7 @@ class TransactionEditStore {
 
 	public saveTransaction() {
 		if(this.transaction.isValid) {
-			this.appStore.saveTransaction(this.transaction);
+			this.appStore.currentProfile.saveTransaction(this.transaction);
 			this.transaction = new Transaction();
 			return true;
 		} else {
@@ -64,7 +64,7 @@ class TransactionEditPage extends Component<Props, {}> {
 		const {
 			accounts,
 			budgets,
-		} = this.props.appStore;
+		} = this.props.appStore.currentProfile;
 		const {
 			transaction,
 		} = this.store;

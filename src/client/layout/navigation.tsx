@@ -3,13 +3,14 @@ import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import HelpIcon from 'material-ui/svg-icons/action/help';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import TrendingUpIcon from 'material-ui/svg-icons/action/trending-up';
 import RepeatIcon from 'material-ui/svg-icons/av/repeat';
-import {inject} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import {
 	AccountEditPage,
@@ -19,6 +20,8 @@ import {
 	DailyActivityPage,
 	FeedbackPage,
 	Help,
+	PhungibleAccountManagePage,
+	ProfileManager,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
 	SettingsPage,
@@ -26,6 +29,7 @@ import {
 	TransactionsPage,
 	TrendsPage,
 } from '../pages';
+import {ProfileIcon} from '../shared/shared-components';
 import AppStore from '../stores/app';
 import NavItem from './nav-item';
 
@@ -99,7 +103,7 @@ function trendsProps(accountsCount: number) {
 	return props;
 }
 
-@inject('appStore')
+@inject('appStore') @observer
 export default
 class Navigation extends React.Component<Props, any> {
 	constructor(props: Props) {
@@ -111,17 +115,25 @@ class Navigation extends React.Component<Props, any> {
 
 	// TODO dry this up
 	public render() {
-		const {
-			accounts = [],
-			budgets = [],
-			scheduledTransactions = [],
-			transactions = [],
-		} = this.props.appStore;
+		const appStore = this.props.appStore;
+		let {
+			accounts,
+			budgets,
+			scheduledTransactions,
+			transactions,
+		} = appStore.currentProfile;
+
+		accounts = accounts || [];
+		budgets = budgets || [];
+		scheduledTransactions = scheduledTransactions || [];
+		transactions = transactions || [];
+
 		const appBarProps: Partial<Props> = {};
 
 		if(this.props.iconElementRight) {
 			appBarProps.iconElementRight = this.props.iconElementRight;
 		}
+
 		return (
 			<AppBar
 				{...appBarProps}
@@ -149,13 +161,13 @@ class Navigation extends React.Component<Props, any> {
 						href={`${DailyActivityPage.path}`}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Daily Activity
+						{DailyActivityPage.title}
 					</NavItem>
 					<NavItem
 						{...trendsProps(accounts.length)}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Trends
+						{TrendsPage.title}
 					</NavItem>
 					<NavItem
 						href={accountTarget(accounts.length)}
@@ -163,7 +175,7 @@ class Navigation extends React.Component<Props, any> {
 						rightIcon={<Badge badgeContent={accounts.length} primary />}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Accounts
+						{AccountEditPage.title}
 					</NavItem>
 					<NavItem
 						{...budgetProps(budgets.length, accounts.length)}
@@ -181,7 +193,7 @@ class Navigation extends React.Component<Props, any> {
 						{...transactionProps(transactions.length, accounts.length)}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						Transactions
+						{TransactionsPage.title}
 					</NavItem>
 					<NavItem
 						leftIcon={<HelpIcon />}
@@ -203,6 +215,24 @@ class Navigation extends React.Component<Props, any> {
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{SettingsPage.title}
+					</NavItem>
+					<NavItem
+						leftIcon={<ProfileIcon />}
+						href={`${ProfileManager.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{appStore.currentProfileMeta.name}
+					</NavItem>
+					<NavItem
+						leftIcon={<AccountIcon />}
+						href={`${PhungibleAccountManagePage.path}`}
+						onClick={() => this.handleDrawerStateUpdate(false)}
+					>
+						{
+							appStore.isConnected ?
+								appStore.username :
+								PhungibleAccountManagePage.title
+						}
 					</NavItem>
 				</Drawer>
 			</AppBar>

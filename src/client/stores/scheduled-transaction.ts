@@ -213,6 +213,10 @@ class ScheduledTransaction {
 		return this.occurancesInRange(fromDate, toDate).length;
 	}
 	public occurancesInRange(fromDate: Date, toDate: Date) {
+		if(!this.fromAccount) {
+			return [];
+		}
+
 		const from = moment(fromDate);
 		const to = moment(toDate);
 		const rangeSize = to.diff(from, 'days');

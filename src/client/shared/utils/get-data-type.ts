@@ -1,5 +1,5 @@
 import { deserialize } from 'serializr';
-import PouchStorage from '../../shared/pouch-storage';
+import ProfileStorage from '../profile-storage';
 
 export
 async function getAccount(id: string, callback: (err: any, result: any) => void) {
@@ -19,7 +19,7 @@ async function getScheduledTransaction(id: string, callback: (err: any, result: 
 export
 async function getType(Model: any, id: string, callback: (err: any, result: any) => void) {
 	try {
-		const data = await PouchStorage.getDoc(`${Model.type}:${id}`);
+		const data = await ProfileStorage.getDoc(`${Model.type}:${id}`);
 		deserialize(Model, data, callback);
 	} catch(e) {
 		callback(e, null);

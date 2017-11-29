@@ -6,9 +6,10 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
+import { getUserContext } from './shared/api';
+import ProfileStorage from './shared/profile-storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
-import ProfilesStore, {Profile} from './stores/profiles';
 
 const {Component} = React;
 const TRANSITION_TIME = 500;
@@ -117,40 +118,37 @@ const Styles = `
 @observer
 export default
 class App extends Component<Props, any> {
-	@observable public store: AppStore;
+	public store: AppStore;
 	public initStore: AppInitStore;
-	public currentProfile: Profile;
 
 	constructor(props: Props) {
 		super(props);
 		this.initStore = new AppInitStore();
+		this.store = new AppStore();
+		(window as any).store = this.store;
 	}
 
-	@action public componentDidMount() {
+	public componentDidMount() {
 		this.handleStorageInit();
+
+		setInterval(() => this.store.checkOnlineStatus(), 500);
+		setInterval(() => this.store.checkSessionStatus(), 5000);
 	}
 
 	public render() {
 		return (
 			<MuiThemeProvider muiTheme={theme}>
 					<Layout>
-						{/* <PinPrompt
-							open={needUserPin}
-							busy={checkingPin}
-							pin={pin}
-							onClearPin={() => this.handleClearPin()}
-							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
-						/> */}
-						{!!this.store && (
+						{this.store.currentProfile.transactions && (
 							<TransactionConfirmationPrompt
 								store={this.store}
-								open={this.store.showTransactionConfirmation}
-								transactions={this.store.unconfirmedTransactions}
+								open={!!this.store.showTransactionConfirmation}
+								transactions={this.store.currentProfile.unconfirmedTransactions}
 								onDone={() => this.store.dismissTransactionConfirmation()}
 							/>
 						)}
 						<style>{Styles}</style>
-						{!!this.store && (
+						{!!this.store && this.store.currentProfile && (
 							<Provider appStore={this.store}>
 								<CSSTransitionGroup
 									component="div"
@@ -167,42 +165,31 @@ class App extends Component<Props, any> {
 		);
 	}
 
-	// @action private handleClearPin() {
-	// 	this.initStore.pin = '';
-	// }
+	private async handleLoggedIn(appStore: AppStore) {
+		const userCtx = await getUserContext();
 
-	// @action private handlePinUpdate(pin: string) {
-	// 	this.initStore.pin = pin;
+		if(!userCtx) {
+			return;
+		}
 
-	// 	if(this.initStore.checkingPin) {
-	// 		Storage.initLocalStorage(this.initStore.pin).then((success: boolean) => {
-	// 			if(success) {
-	// 				this.handleStorageInit();
-	// 				this.initStore.needUserPin = false;
-	// 			} else {
-	// 				this.initStore.pin = '';
-	// 			}
-	// 		});
-	// 	}
-	// }
+		if(userCtx.name) {
+			appStore.login(userCtx.name);
+		}
+	}
 
 	@action private async handleStorageInit() {
-		this.currentProfile = await ProfilesStore.getCurrentProfile();
+		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
 
-		return ProfilesStore
-			.getProfileData(this.currentProfile.id)
-			.then(async (data) => {
-				if(data) {
-					this.store = await AppStore.deserialize(data);
-				} else {
-					this.store = new AppStore();
-				}
-				this.store.runTransactionSinceLastUpdate();
+		if(currentProfileMeta) {
+			this.store.openProfile(currentProfileMeta.id);
+		} else {
+			this.store.createProfile();
+		}
 
-				// Check every 5 minutes.  Runs transactions when day rolls over
-				setTimeout(() => {
-					this.store.runTransactionSinceLastUpdate();
-				}, 1000 * 60 * 5);
-			});
+		this.store.loadProfiles();
+
+		this.store.currentProfile.runTransactionSinceLastUpdate();
+
+		this.handleLoggedIn(this.store);
 	}
 }

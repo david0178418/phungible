@@ -60,6 +60,7 @@
           false
         ],
         "no-bitwise": false,
+        "no-empty-interface": false,
         "no-eval": true,
         "no-internal-module": true,
         "no-object-literal-type-assertion": false,

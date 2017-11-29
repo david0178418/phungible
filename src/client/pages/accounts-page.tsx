@@ -38,7 +38,7 @@ class Accounts extends Component<Props, {}> {
 					title="Accounts"
 					appStore={store}
 					iconElementRight={
-						store.unconfirmedTransactions.length && (
+						store.currentProfile.unconfirmedTransactions.length && (
 							<IconMenu
 								iconButtonElement={<IconButton><MoreVertical/></IconButton>}
 							>
@@ -52,8 +52,8 @@ class Accounts extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<AccountsList
-						items={store.accounts}
-						onRemove={(account: Account) => store.removeAccount(account)}
+						items={store.currentProfile.accounts}
+						onRemove={(account: Account) => store.currentProfile.removeAccount(account)}
 						store={store}
 					/>
 					<FloatingActionButton

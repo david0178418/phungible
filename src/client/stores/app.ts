@@ -1,443 +1,159 @@
-import {action, computed, observable} from 'mobx';
-import * as moment from 'moment';
-import 'moment-recur';
-import { serializable, serialize } from 'serializr';
+import { action, computed, observable } from 'mobx';
 
-import ItemTypeName from 'item-type-name';
-import PouchStorage from '../shared/pouch-storage';
-import {generateUuid, Money} from '../shared/utils';
-import Account from './account';
-import Budget from './budget';
-import ScheduledTransaction from './scheduled-transaction';
-import Transaction from './transaction';
-
-type ItemType = Account | Budget | ScheduledTransaction | Transaction;
+import { getUserContext } from '../shared/api';
+import ProfileStorage from '../shared/profile-storage';
+import Profile from '../stores/profile';
 
 export default
 class AppStore {
-	@action public static deserialize(data: any) {
-		const {
-			accounts = [] as any,
-			budgets = [] as any,
-			scheduledTransactions = [] as any,
-			transactions = [] as any,
-		} = data;
-		const x = [
-			accounts.map((a: any) => Account.deserialize(a)),
-			Promise.all(budgets.map((b: any) => Budget.deserialize(b))),
-			Promise.all(scheduledTransactions.map((s: any) => ScheduledTransaction.deserialize(s))),
-			Promise.all(transactions.map((t: any) => Transaction.deserialize(t))),
-		];
-
-		return Promise.all(x).then((vals) => {
-			return new AppStore({
-				accounts: vals[0],
-				budgets: vals[1],
-				id: data.id,
-				lastUpdatedDate: data.lastUpdatedDate,
-				scheduledTransactions: vals[2],
-				transactions: vals[3],
-			});
-		});
-	}
-	public id: string;
-	@observable public accounts: Account[];
-	@observable public budgets: Budget[];
-	@serializable
-	public lastUpdatedDate: string;
-	@observable public scheduledTransactions: ScheduledTransaction[];
+	@observable public currentProfile: Profile;
+	@observable public isOnline: boolean;
+	@observable public profiles: ProfileMetaData[];
+	@observable public remoteProfiles: ProfileMetaData[];
+	@observable public username: string;
+	@observable public sessionValid: boolean;
 	@observable public showTransactionConfirmation: boolean;
-	@observable public transactions: Transaction[];
-
-	@computed get unconfirmedTransactions() {
-		return this.transactions.filter((transaction) => transaction.needsConfirmation);
-	}
-
-	constructor(params: Partial<AppStore> = {}) {
-		Object.assign(this, {
-			accounts: observable([]),
-			budgets: observable([]),
-			id: generateUuid(),
-			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
-			scheduledTransactions: observable([]),
-			transactions: observable([]),
-		}, params);
-
-		(window as any).store = this;
-	}
-
-	public findAccount(accountId: string) {
-		// tslint:disable-next-line:triple-equals
-		return this.accounts.find((account) => accountId == account.id);
-	}
-	public findBudget(id: string) {
-		// tslint:disable-next-line:triple-equals
-		return this.budgets.find((budget) => budget.id == id);
-	}
-	public findRemainingBudgetBalance(id: string) {
-		const budget = this.findBudget(id);
-		const lastOccurance = moment(budget.lastOccurance);
-		const totalRemaining = this.transactions
-			.filter((transaction) => lastOccurance.isSameOrBefore(transaction.date, 'day'))
-			.filter((transaction) => transaction.generatedFromBudget)
-			.filter((transaction) => transaction.generatedFromBudget.id === budget.id)
-			.reduce((amount, transaction) => amount - transaction.amount.valCents, budget.amount.valCents);
-
-		return new Money(totalRemaining);
-	}
-	public findRelatedScheduledTransactions(accountId: string) {
-		return this.scheduledTransactions.filter((scheduledTrans) => scheduledTrans.affectsAccount(accountId));
-	}
-	public findScheduledTransaction(id: string) {
-		return this.scheduledTransactions.find((scheduledTransaction) => scheduledTransaction.id === id);
-	}
-	public findTransaction(id: string) {
-		return this.transactions.find((transaction) => transaction.id === id);
-	}
-	public findTransactionsOnDate(date: Date) {
-		const targetDate = moment(date);
-		const transactions = this.transactions.filter((transaction) => moment(transaction.date).isSame(targetDate, 'days'));
-
-		if(targetDate.isAfter(moment(), 'days')) {
-			return transactions.concat(this.findFutureTransactionsOnDate(date));
-		}
-
-		return transactions;
-	}
-	public serialize() {
-		return {
-			id: 'profile-data',
-			...serialize(this),
-		};
-	}
-	public debugString() {
-		return JSON.stringify(serialize(this));
-	}
-	@action public runTransactionSinceLastUpdate() {
-		const lastUpdate = this.lastUpdatedDate;
-
-		this.scheduledTransactions.forEach((scheduledTransaction) => {
-			const lastUpdateMoment = moment(this.lastUpdatedDate, 'MM/DD/YYYY');
-			this.runTransactions(scheduledTransaction, lastUpdateMoment.format('MM/DD/YYYY'));
-		});
-		this.showTransactionConfirmation = !!this.unconfirmedTransactions.length;
-		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
-		if(lastUpdate !== this.lastUpdatedDate) {
-			this.save();
-		}
-	}
-	@action public clearAllData() {
-		(this.accounts as any).clear();
-		(this.budgets as any).clear();
-		(this.scheduledTransactions as any).clear();
-		(this.transactions as any).clear();
-		PouchStorage
-			.deleteDb()
-			.then(() => PouchStorage.openDb(this.id));
-	}
-	@action public cleanScheduledTransactions() {
-		const accountIds = this.accounts.map((account) => account.id);
-		(this.scheduledTransactions as any).replace(
-			this.scheduledTransactions
-				.filter((schedTrans) => {
-					let updated = false;
-
-					if(schedTrans.fromAccount && accountIds.indexOf(schedTrans.fromAccount.id) === -1) {
-						schedTrans.fromAccount = null;
-						updated = true;
-					}
-
-					if(schedTrans.towardAccount && accountIds.indexOf(schedTrans.towardAccount.id) === -1) {
-						schedTrans.towardAccount = null;
-						updated = true;
-					}
-
-					if(!schedTrans.isValid) {
-						PouchStorage.removeDoc(schedTrans);
-					} else if(updated) {
-						PouchStorage.saveDoc(schedTrans);
-					}
-				}),
+	@computed get remoteOnlyProfiles() {
+		return this.remoteProfiles
+			.filter(
+				(remoteProfile) =>
+					!this.hasLocalProfileMeta(remoteProfile.id),
 			);
 	}
-	@action public cleanBudgets() {
-		const accountIds = this.accounts.map((account) => account.id);
-		this.budgets
-			.forEach((budget) => {
-				let updated = false;
-
-				if(budget.fromAccount && accountIds.indexOf(budget.fromAccount.id) === -1) {
-					budget.fromAccount = null;
-					updated = true;
-				}
-
-				if(budget.towardAccount && accountIds.indexOf(budget.towardAccount.id) === -1) {
-					budget.towardAccount = null;
-					updated = true;
-				}
-
-				if(updated) {
-					PouchStorage.saveDoc(budget);
-				}
-			});
-
-		(this.budgets as any).replace(
-			this.budgets.filter((budget) => budget.isValid),
-		);
+	@computed get currentProfileMeta() {
+		return this.findProfileMeta(this.currentProfile.id) || {} as ProfileMetaData;
 	}
-	@action public cleanTransactions() {
-		const accountIds = this.accounts.map((account) => account.id);
-		this.transactions
-			.forEach((transaction) => {
-				let updated = false;
+	@computed get isConnected() {
+		return this.isOnline && this.sessionValid;
+	}
+	constructor(params: Partial<AppStore> = {}) {
+		Object.assign(this, {
+			currentProfile: new Profile(),
+			isOnline: navigator.onLine,
+			username: localStorage.getItem('username') || '',
+		}, params);
 
-				if(transaction.fromAccount && accountIds.indexOf(transaction.fromAccount.id) === -1) {
-					transaction.fromAccount = null;
-					updated = true;
-				}
-
-				if(transaction.towardAccount && accountIds.indexOf(transaction.towardAccount.id) === -1) {
-					transaction.towardAccount = null;
-					updated = true;
-				}
-
-				if(updated) {
-					PouchStorage.saveDoc(transaction);
-				}
-			});
-
-		(this.transactions as any).replace(
-			this.transactions.filter((schedTrans) => schedTrans.isValid),
-		);
+		this.loadProfiles();
+	}
+	@action public clearAllData() {
+		// TODO Nuke all profiles
 	}
 	@action public dismissTransactionConfirmation() {
 		this.showTransactionConfirmation = false;
 	}
+	@action public createProfile(name?: string) {
+		this.currentProfile = new Profile();
+
+		if(name) {
+			this.currentProfile.name = name;
+		}
+
+		const profile = this.createProfileMeta();
+		ProfileStorage.saveMeta(profile.id, {
+			name: profile.name,
+		});
+		this.profiles.push(profile);
+		this.loadProfiles();
+	}
+	@action public checkOnlineStatus() {
+		this.isOnline = navigator.onLine;
+	}
+	@action public async checkSessionStatus() {
+		try {
+			const userCtx = await getUserContext();
+
+			this.sessionValid = !!userCtx.name;
+		} catch {
+			this.sessionValid = false;
+		}
+	}
+	public async deleteProfile(profileId: string) {
+		if(this.hasLocalProfileMeta(profileId)) {
+			ProfileStorage.destroyProfile(profileId);
+			this.removeProfileMeta(profileId);
+		} else {
+			await ProfileStorage.destroyRemoteProfile(profileId);
+			this.removeRemoteProfileMeta(profileId);
+		}
+	}
+	public findProfileMeta(profileId: string) {
+		return this.profiles.find((profile) => profile.id === profileId);
+	}
+	public async getProfile(profileId: string) {
+		const profileData = await ProfileStorage.getProfileData(profileId);
+		return Profile.deserialize(profileData);
+	}
+	public profileIsSynced(profileId: string) {
+		return !!this.remoteProfiles.find((profile) => profile.id === profileId);
+	}
+	@action public async openProfile(profileId: string) {
+		if(this.isConnected) {
+			await this.sync(profileId);
+		}
+
+		this.currentProfile = await this.getProfile(profileId);
+		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
+	}
+	@action public async loadProfiles() {
+		this.profiles = observable(ProfileStorage.getLocalProfiles());
+
+		if(this.sessionValid) {
+			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
+		} else {
+			this.remoteProfiles = observable([]);
+		}
+	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
 	}
-	public removeItem(item: ItemType, typeName: ItemTypeName) {
-		switch(typeName) {
-			case 'Account':
-				this.removeAccount(item as Account);
-				break;
-			case 'Budget':
-				this.removeBudget(item as Budget);
-				break;
-			case 'Recurring Transaction':
-				this.removeScheduledTransaction(item as ScheduledTransaction);
-				break;
-			case 'Transaction':
-				this.removeTransaction(item as Transaction);
-				break;
-		}
-	}
-	@action public removeAccount(account: Account) {
-		(this.accounts as any).remove(account);
-		this.cleanBudgets();
-		this.cleanScheduledTransactions();
-		this.cleanTransactions();
-		PouchStorage.removeDoc(account);
-	}
-	@action public removeBudget(budget: Budget) {
-		(this.budgets as any).remove(budget);
-		PouchStorage.removeDoc(budget);
-	}
-	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
-		(this.scheduledTransactions as any).remove(scheduledTransaction);
-		PouchStorage.removeDoc(scheduledTransaction);
-	}
-	@action public removeTransaction(transaction: Transaction) {
-		(this.transactions as any).remove(transaction);
-		PouchStorage.removeDoc(transaction);
-	}
-	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
-		const lastUpdate = moment(from, 'MM/DD/YYYY');
-		const daysSince = moment().diff(lastUpdate, 'days');
-
-		for(let x = 0; x < daysSince; x++) {
-			lastUpdate.add(1, 'day');
-			if(scheduledTransaction.occursOn(lastUpdate)) {
-				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
-				transaction.id = generateUuid();
-				this.transactions.push(transaction);
-				PouchStorage.saveDoc(transaction);
-			}
-		}
-
-		this.sortTransactions();
-	}
-	public save() {
-		PouchStorage.saveDoc(this);
-	}
-	public saveItem(newItem: ItemType, type: ItemTypeName) {
-		switch(type) {
-			case 'Account':
-				this.saveAccount(newItem as Account);
-				break;
-			case 'Budget':
-				this.saveBudget(newItem as Budget);
-				break;
-			case 'Recurring Transaction':
-				this.saveScheduledTransaction(newItem as ScheduledTransaction);
-				break;
-			case 'Transaction':
-				this.saveScheduledTransaction(newItem as ScheduledTransaction);
-				break;
-		}
-	}
-	@action public saveAccount(newAccount: Account) {
-		if(!newAccount.id) {
-			newAccount.id = generateUuid();
-			this.accounts.push(newAccount);
-		} else {
-			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
-			this.accounts[index] = newAccount;
-		}
-		PouchStorage.saveDoc(newAccount);
-	}
-	@action public saveBudget(newBudget: Budget) {
-		if(!newBudget.id) {
-			newBudget.id = generateUuid();
-			this.budgets.push(newBudget);
-		} else {
-			const index = this.budgets.findIndex(
-				(budget) => budget.id === newBudget.id,
-			);
-			this.budgets[index] = newBudget;
-		}
-		PouchStorage.saveDoc(newBudget);
-	}
-	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
-		if(!newScheduledTransaction.id) {
-			newScheduledTransaction.id = generateUuid();
-			this.scheduledTransactions.push(newScheduledTransaction);
-
-			if(moment().isSameOrAfter(newScheduledTransaction.startDate, 'days')) {
-				if(newScheduledTransaction.repeats) {
-					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString, false);
-				} else {
-					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate, false);
-					transaction.id = generateUuid();
-					this.transactions.push(transaction);
-				}
-			}
-		} else {
-			const index = this.scheduledTransactions.findIndex(
-				(scheduledTransaction) => scheduledTransaction.id === newScheduledTransaction.id,
-			);
-			this.scheduledTransactions[index] = newScheduledTransaction;
-			// TODO figure out how to handle "startDate" updates
-		}
-
-		this.sortTransactions();
-		PouchStorage.saveDoc(newScheduledTransaction);
-	}
-	@action public saveTransaction(newTransaction: Transaction) {
-		if(!newTransaction.id) {
-			newTransaction.id = generateUuid();
-			this.transactions.push(newTransaction);
-		} else {
-			const index = this.transactions.findIndex((transaction) => transaction.id === newTransaction.id);
-			this.transactions[index] = newTransaction;
-		}
-		this.sortTransactions();
-		PouchStorage.saveDoc(newTransaction);
-	}
-	@action public sortTransactions() {
-		(this.transactions as any).replace(this.transactions.sort((a, b) => {
-			return a.date.getTime() - b.date.getTime();
-		}));
-	}
-	public getBalanceAsOfDate(account: Account, date: Date) {
-		const lastBalanceUpdate = account.lastBalanceUpdateAsOf(date);
-
-		if(!lastBalanceUpdate) {
-			return null;
-		}
-
-		const transactions = this.transactions
-			.filter((transaction) => !transaction.needsConfirmation)
-			.filter((transaction) => {
-				return (
-					(transaction.fromAccount && transaction.fromAccount.id === account.id) ||
-					(transaction.towardAccount && transaction.towardAccount.id === account.id)
-				);
-			})
-			.filter((transaction) => (lastBalanceUpdate.date.isSameOrBefore(transaction.date, 'day')))
-			.filter((transaction) => (moment(transaction.date).isSameOrBefore(date, 'day')));
-
-		return account.applyTransactions(transactions, date);
-	}
-	public getBalanceExpectation(account: Account, date: Date) {
-		// yesterday's expectation plus given day's transactions
-		const dayPriorExpectation = this.getBalanceAsOfDate(account, moment(date).subtract(1, 'day').toDate());
-
-		if(!dayPriorExpectation) {
-			return  this.getBalanceAsOfDate(account, date);
-		}
-
-		const dateMoment = moment(date);
-
-		const dateTransactions = this.transactions
-			.filter((transaction) => dateMoment.isSame(transaction.date, 'day'));
-		const fromAmount = dateTransactions
-			.filter((transaction) => transaction.fromAccount)
-			.filter((transaction) => transaction.fromAccount.id === account.id)
-			.reduce((total, val) => total + val.amount.valCents, 0);
-		const towardAmount = dateTransactions
-			.filter((transaction) => transaction.towardAccount)
-			.filter((transaction) => transaction.towardAccount.id === account.id)
-			.reduce((total, val) => total + val.amount.valCents, 0);
-
-		dayPriorExpectation.addCents(
-			(fromAmount * account.fromBalanceDirection) +
-			(towardAmount * account.towardBalanceDirection),
-		);
-
-		return dayPriorExpectation;
-	}
-	public getBalanceExpectationDifference(account: Account, date: Date) {
-		const actualAmount = this.getBalanceAsOfDate(account, date);
-		const expectedAmount = this.getBalanceExpectation(account, date);
-
-		if(!actualAmount && expectedAmount) {
-			return expectedAmount;
-		}
-
-		if(!expectedAmount && actualAmount) {
-			return actualAmount;
-		}
-
-		if(!(expectedAmount || actualAmount)) {
-			// or null??
-			return new Money();
-		}
-
-		return new Money(actualAmount.valCents - expectedAmount.valCents);
-	}
-	public getPendingChange(account: Account) {
-		const pendingConfirmation = this.transactions
-			.filter((transaction) => !!transaction.needsConfirmation);
-
-		return new Money(
-			pendingConfirmation
-				.filter((transaction) => !!transaction.fromAccount)
-				.filter((transaction) => transaction.fromAccount.id === account.id)
-				.reduce((total, transaction) => total + transaction.amount.valCents, 0)
-				* account.fromBalanceDirection
-			+
-			pendingConfirmation
-				.filter((transaction) => !!transaction.towardAccount)
-				.filter((transaction) => transaction.towardAccount.id === account.id)
-				.reduce((total, transaction) => total + transaction.amount.valCents, 0)
-				* account.towardBalanceDirection,
+	@action public removeProfileMeta(profileId: string) {
+		this.profiles = this.profiles.filter(
+			(profile) => profile.id !== profileId,
 		);
 	}
-	private findFutureTransactionsOnDate(date: Date) {
-		const scheduledTransactions =
-			this.scheduledTransactions.filter((scheduledTransaction) => scheduledTransaction.occursOn(date));
+	@action public removeRemoteProfileMeta(profileId: string) {
+		this.remoteProfiles = this.remoteProfiles.filter(
+			(profile) => profile.id !== profileId,
+		);
+	}
+	@action public async login(username: string) {
+		localStorage.setItem('username', username);
+		this.username = username;
+		this.sessionValid = true;
+		this.loadProfiles();
+	}
+	@action public logout() {
+		this.sessionValid = false;
+	}
+	public async reloadProfile() {
+		return this.openProfile(this.currentProfileMeta.id);
+	}
+	public async sync(profileId: string, handler?: () => void) {
+		const updated = await ProfileStorage.sync(profileId);
 
-		return scheduledTransactions.map((scheduledTransaction) => scheduledTransaction.generateTransaction(date));
+		if(!this.hasLocalProfileMeta(profileId)) {
+			const profileMeta = this.remoteProfiles.find((profile) => profile.id === profileId);
+			this.profiles.push(profileMeta);
+			ProfileStorage.saveLocalProfiles(this.profiles);
+		}
+
+		if(updated) {
+			this.reloadProfile();
+		}
+	}
+	public updateProfileMeta(profile: ProfileMetaData) {
+		ProfileStorage.saveMeta(profile.id, {
+			name: profile.name,
+		});
+		ProfileStorage.saveLocalProfiles(this.profiles);
+	}
+	public hasLocalProfileMeta(profileId: string) {
+		return !!this.findProfileMeta(profileId);
+	}
+	private createProfileMeta(): ProfileMetaData {
+		return {
+			id: this.currentProfile.id,
+			name: this.currentProfile.name,
+		};
 	}
 }

@@ -1,11 +1,6 @@
 declare const API_URI: string;
 declare const VERSION: string;
 
-declare module 'item-type-name' {
-	type ItemTypeName = 'Account' | 'Budget' | 'Recurring Transaction' | 'Transaction';
-	export default ItemTypeName;
-}
-
 declare module 'recharts' {
 	export const Area: any;
 	export const AreaChart: any;

@@ -19,7 +19,7 @@ export default
 class Account {
 	public static type: TYPE = 'account';
 	@action public static deserialize(data: any) {
-		return deserialize(Account, data);
+		return deserialize(Account, data as {});
 	}
 	@action public static clone(originalEntry: Account) {
 		return Account.deserialize(serialize(originalEntry));

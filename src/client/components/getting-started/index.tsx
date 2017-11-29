@@ -62,9 +62,9 @@ class GettingStarted extends React.Component<Props, State> {
 		this.store = new State();
 		this.completedSteps = [
 			() => true, // intro
-			() => !!props.appStore.accounts.length,
-			() => !!props.appStore.scheduledTransactions.length,
-			() => !!props.appStore.budgets.length,
+			() => !!props.appStore.currentProfile.accounts.length,
+			() => !!props.appStore.currentProfile.scheduledTransactions.length,
+			() => !!props.appStore.currentProfile.budgets.length,
 			() => true, // done
 		];
 	}
@@ -79,7 +79,7 @@ class GettingStarted extends React.Component<Props, State> {
 			accounts,
 			budgets,
 			scheduledTransactions,
-		} = this.props.appStore;
+		} = this.props.appStore.currentProfile;
 		return (
 			<div>
 				<Stepper activeStep={stepIndex} orientation="vertical">

@@ -48,7 +48,7 @@ class CurrentBudgets extends Component<Props, {}> {
 		return (
 			<div>
 				<QuickEdit
-					accounts={store.accounts}
+					accounts={store.currentProfile.accounts}
 					date={this.date}
 					openButtonText="Add unplanned expense"
 					transaction={quickTransaction}
@@ -60,7 +60,7 @@ class CurrentBudgets extends Component<Props, {}> {
 						Remaing Budgeted Amounts
 					</Subheader>
 					{budgets.map((budget) => {
-						const amount = store.findRemainingBudgetBalance(budget.id);
+						const amount = store.currentProfile.findRemainingBudgetBalance(budget.id);
 						const color = amount.valCents > 0 ? Colors.Money : Colors.Debt;
 						return (
 							budget.lastOccurance ?

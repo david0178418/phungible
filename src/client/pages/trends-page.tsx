@@ -57,10 +57,10 @@ class TrendsPage extends Component<Props, State> {
 					>
 						{renderBody && (
 							<Trends
-								accounts={(appStore.accounts as any).toJS()}
-								budgets={(appStore.budgets as any).toJS()}
-								transactions={(appStore.transactions as any).toJS()}
-								scheduledTransactions={(appStore.scheduledTransactions as any).toJS()}
+								accounts={(appStore.currentProfile.accounts as any).toJS()}
+								budgets={(appStore.currentProfile.budgets as any).toJS()}
+								transactions={(appStore.currentProfile.transactions as any).toJS()}
+								scheduledTransactions={(appStore.currentProfile.scheduledTransactions as any).toJS()}
 							/>
 						)}
 					</CSSTransitionGroup>

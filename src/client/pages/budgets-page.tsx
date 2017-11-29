@@ -34,11 +34,11 @@ class Budgets extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<BudgetsList
-						budgets={store.budgets}
+						budgets={store.currentProfile.budgets}
 						store={store}
 						onRemove={
 							(budget: Budget) =>
-								this.props.appStore.removeBudget(budget)
+								this.props.appStore.currentProfile.removeBudget(budget)
 						}
 					/>
 					<FloatingActionButton

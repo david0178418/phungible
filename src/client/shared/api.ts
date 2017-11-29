@@ -2,18 +2,11 @@ if(!window.fetch) {
 	import('whatwg-fetch');
 }
 
-export
-function activate(activationCode: string) {
-	const headers = new Headers();
-	headers.append('Accept', 'application/json');
-	headers.append('Content-Type', 'application/json');
-	return fetch(`${API_URI}/activate/${activationCode}`, {
-			headers,
-		})
-		.then((response) => response.json())
-		.then((activationSuccessful) => activationSuccessful)
-		.catch((e) => true); // Just let them through if there is an error
-}
+type HTTP_ACTION =
+	'delete' |
+	'get' |
+	'post' |
+	'put';
 
 interface FeedbackData {
 	debugData: string;
@@ -22,18 +15,98 @@ interface FeedbackData {
 	isBug: boolean;
 }
 
+interface UserCtx {
+	name: string;
+	rolse: string[];
+}
+
+export
+function createDb(profileId: string, profileName: string) {
+	return api(`${API_URI}/create-profile/${profileId}/${profileName}`, 'put');
+}
+
+export
+function deleteDb(profileId: string) {
+	return api(`${API_URI}/delete-profile/${profileId}/`, 'delete');
+}
+
+export
+function getRemoteProfiles(): Promise<ProfileMetaData[]> {
+	const username = localStorage.getItem('username');
+
+	if(!username) {
+		return new Promise((resolve) => resolve([]));
+	}
+
+	return api(`${API_URI}/profiles/${username}`, 'get');
+}
+
+export
+async function getUserContext(): Promise<UserCtx | null> {
+	const response = await api(`${API_URI}/sync/_session`, 'get');
+
+	if(response) {
+		return response.userCtx || null;
+	} else {
+		return null;
+	}
+}
+
+export
+function login(username: string, password: string) {
+	return api(`${API_URI}/sync/_session`, 'post', {
+		name: username,
+		password,
+	});
+}
+
+export
+function logout() {
+	return api(`${API_URI}/sync/_session`, 'delete');
+}
+
+export
+function register(username: string, password: string) {
+	return api(`${API_URI}/register`, 'post', {
+		name: username,
+		password,
+	});
+}
+
+export
+async function remoteDbExists(profileId: string) {
+	try {
+		const response = await api(`${API_URI}/sync/profile-${profileId}`, 'get');
+		return !!response.db_name;
+	} catch {
+		return false;
+	}
+}
+
 export
 function submitFeedback(feedbackData: FeedbackData) {
+	return api(`${API_URI}/feedback`, 'post', feedbackData);
+}
+
+async function api(uri: string, method: HTTP_ACTION, data?: any) {
 	const headers = new Headers();
 	headers.append('Accept', 'application/json');
 	headers.append('Content-Type', 'application/json');
-
-	return fetch(`${API_URI}/feedback`, {
-			body: JSON.stringify(feedbackData),
+	try {
+		const response = await fetch(uri, {
+			body: JSON.stringify(data),
+			credentials: 'same-origin',
 			headers,
-			method: 'post',
-		})
-		.then((responseText) => responseText.json());
-}
+			method,
+		});
 
-(window as any).activate = activate;
+		if(response.status === 401) {
+			(window as any).store.logout();
+			throw new Error('unauthorized');
+		}
+
+		return await response.json();
+	} catch(e) {
+		//
+	}
+}

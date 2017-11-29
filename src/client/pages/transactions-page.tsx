@@ -36,7 +36,7 @@ class Transactions extends Component<Props, {}> {
 					title="Transactions"
 					appStore={store}
 					iconElementRight={
-						store.unconfirmedTransactions.length && (
+						store.currentProfile.unconfirmedTransactions.length && (
 							<IconMenu
 								iconButtonElement={<IconButton><MoreVertical/></IconButton>}
 							>
@@ -50,8 +50,8 @@ class Transactions extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<TransactionsList
-						items={store.transactions}
-						onRemove={(transaction: Transaction) => this.props.appStore.removeTransaction(transaction)}
+						items={store.currentProfile.transactions}
+						onRemove={(transaction: Transaction) => this.props.appStore.currentProfile.removeTransaction(transaction)}
 						store={store}
 					/>
 					<FloatingActionButton

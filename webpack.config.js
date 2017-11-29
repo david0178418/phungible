@@ -45,10 +45,7 @@ if(isProd) {
 	plugins.push(
 		new webpack.DefinePlugin({
 			VERSION,
-			API_URI: '"http://localhost:8081"',
-			'process.env': {
-				NODE_ENV: '"production"'
-			}
+			API_URI: '"/api"'
 		})
 	);
 }

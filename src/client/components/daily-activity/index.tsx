@@ -45,7 +45,7 @@ class DailyActivity extends Component<Props, {}> {
 						<CurrentBudgets
 							store={appStore}
 							budgets={
-								appStore.budgets
+								appStore.currentProfile.budgets
 									.filter((budget) => today.isSameOrAfter(budget.startDate, 'day'))
 							}
 							onAdd={onAdd}

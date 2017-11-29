@@ -1,6 +1,6 @@
 {
   "name": "phungible",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "description": "Phungible budget app",
   "engines": {
     "node": ">=6.10.3"
@@ -58,6 +58,7 @@
     "material-ui": "^0.19.4",
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.4",
+    "mobx-utils": "^3.2.1",
     "moment": "^2.19.1",
     "moment-recur": "^1.0.5",
     "navigo": "^5.3.3",
