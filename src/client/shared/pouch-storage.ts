@@ -123,13 +123,47 @@ class PouchStorage {
 			await PouchStorage.createRemoteDB(dbId, profile.name);
 		}
 
-		const db = PouchStorage.openDb(dbId);
-		const sync = PouchDB.sync(db, PouchStorage.openRemoteDb(dbId));
+		let updated = false;
+		let pushDone = false;
+		let pullDone = false;
+		let resolve: any;
 
-		// Why won't the sync stop on its own?
-		setTimeout(() => {
-			sync.cancel();
-		}, 500);	}
+		PouchDB.replicate(dbId, PouchStorage.remoteDbUrl(dbId))
+			.on('change', () => updated = true)
+			.then(() => {
+				if(pullDone) {
+					pushDone = true;
+				} else {
+					resolve(updated);
+				}
+			});
+
+		// Manually throttling due to some weird issue replicating
+		// from remote db.  Never seems
+		let lastChange = Date.now();
+
+		const remoteDbReplication = PouchDB.replicate(PouchStorage.remoteDbUrl(dbId), dbId);
+		remoteDbReplication.on('change', () => {
+				updated = true;
+				lastChange = Date.now();
+			})
+			.then(() => {
+				if(pushDone) {
+					pullDone = true;
+				} else {
+					resolve(updated);
+				}
+			});
+
+		const intervalCheck = setInterval(() => {
+			if(Date.now() - lastChange > 2000) {
+				remoteDbReplication.cancel();
+				clearInterval(intervalCheck);
+			}
+		}, 500);
+
+		return new Promise((res) => resolve = res);
+	}
 }
 
 (window as any).PouchStorage = PouchStorage;

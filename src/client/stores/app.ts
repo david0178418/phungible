@@ -125,13 +125,20 @@ class AppStore {
 	@action public logout() {
 		this.sessionValid = false;
 	}
-	public async sync(profileId: string) {
-		await ProfileStorage.sync(profileId);
+	public async reloadProfile() {
+		return this.openProfile(this.currentProfileMeta.id);
+	}
+	public async sync(profileId: string, handler?: () => void) {
+		const updated = await ProfileStorage.sync(profileId);
 
 		if(!this.hasLocalProfileMeta(profileId)) {
 			const profileMeta = this.remoteProfiles.find((profile) => profile.id === profileId);
 			this.profiles.push(profileMeta);
 			ProfileStorage.saveLocalProfiles(this.profiles);
+		}
+
+		if(updated) {
+			this.reloadProfile();
 		}
 	}
 	public updateProfileMeta(profile: ProfileMetaData) {
