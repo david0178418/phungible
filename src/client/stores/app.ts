@@ -8,7 +8,7 @@ export default
 class AppStore {
 	@observable public currentProfile: Profile;
 	@observable public isOnline: boolean;
-	@observable public profiles: ProfileMetaData[];
+	@observable public profileMetas: ProfileMetaData[];
 	@observable public remoteProfiles: ProfileMetaData[];
 	@observable public username: string;
 	@observable public sessionValid: boolean;
@@ -48,11 +48,13 @@ class AppStore {
 			this.currentProfile.name = name;
 		}
 
-		const profile = this.createProfileMeta();
-		ProfileStorage.saveMeta(profile.id, {
-			name: profile.name,
+		const profileMeta = this.createProfileMeta();
+		this.profileMetas.push(profileMeta);
+		ProfileStorage.saveMeta(profileMeta.id, {
+			name: profileMeta.name,
 		});
-		this.profiles.push(profile);
+		ProfileStorage.saveLocalProfileMetas(this.profileMetas);
+		ProfileStorage.setCurrentActiveProfile(profileMeta.id);
 		this.loadProfiles();
 	}
 	@action public checkOnlineStatus() {
@@ -77,7 +79,7 @@ class AppStore {
 		}
 	}
 	public findProfileMeta(profileId: string) {
-		return this.profiles.find((profile) => profile.id === profileId);
+		return this.profileMetas.find((profile) => profile.id === profileId);
 	}
 	public async getProfile(profileId: string) {
 		const profileData = await ProfileStorage.getProfileData(profileId);
@@ -95,7 +97,7 @@ class AppStore {
 		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
 	}
 	@action public async loadProfiles() {
-		this.profiles = observable(ProfileStorage.getLocalProfiles());
+		this.profileMetas = observable(ProfileStorage.getLocalProfiles());
 
 		if(this.sessionValid) {
 			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
@@ -107,7 +109,7 @@ class AppStore {
 		this.showTransactionConfirmation = true;
 	}
 	@action public removeProfileMeta(profileId: string) {
-		this.profiles = this.profiles.filter(
+		this.profileMetas = this.profileMetas.filter(
 			(profile) => profile.id !== profileId,
 		);
 	}
@@ -133,8 +135,8 @@ class AppStore {
 
 		if(!this.hasLocalProfileMeta(profileId)) {
 			const profileMeta = this.remoteProfiles.find((profile) => profile.id === profileId);
-			this.profiles.push(profileMeta);
-			ProfileStorage.saveLocalProfiles(this.profiles);
+			this.profileMetas.push(profileMeta);
+			ProfileStorage.saveLocalProfileMetas(this.profileMetas);
 		}
 
 		if(updated) {
@@ -145,7 +147,7 @@ class AppStore {
 		ProfileStorage.saveMeta(profile.id, {
 			name: profile.name,
 		});
-		ProfileStorage.saveLocalProfiles(this.profiles);
+		ProfileStorage.saveLocalProfileMetas(this.profileMetas);
 	}
 	public hasLocalProfileMeta(profileId: string) {
 		return !!this.findProfileMeta(profileId);

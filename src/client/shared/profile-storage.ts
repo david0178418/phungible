@@ -30,7 +30,7 @@ class ProfileStorage {
 			const defaultProfile = ProfileStorage.createDefaultProfileMeta();
 			defaultProfile.id = generateUUID();
 
-			ProfileStorage.saveLocalProfiles([defaultProfile]);
+			ProfileStorage.saveLocalProfileMetas([defaultProfile]);
 			ProfileStorage.setCurrentActiveProfile(defaultProfile.id);
 
 			loadedProfile = defaultProfile;
@@ -114,7 +114,7 @@ class ProfileStorage {
 			name: metaData.name,
 		});
 	}
-	public static saveLocalProfiles(profiles: ProfileMetaData[]) {
+	public static saveLocalProfileMetas(profiles: ProfileMetaData[]) {
 		Storage.setItem(PROFILE_METADATA_KEY, profiles);
 	}
 	public static setCurrentActiveProfile(profileId: string) {

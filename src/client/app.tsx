@@ -179,17 +179,17 @@ class App extends Component<Props, any> {
 
 	@action private async handleStorageInit() {
 		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
+		const store = this.store;
 
 		if(currentProfileMeta) {
-			this.store.openProfile(currentProfileMeta.id);
+			store.openProfile(currentProfileMeta.id);
 		} else {
-			this.store.createProfile();
+			store.createProfile();
+			store.openProfile(store.profileMetas[0].id);
 		}
 
-		this.store.loadProfiles();
-
-		this.store.currentProfile.runTransactionSinceLastUpdate();
-
-		this.handleLoggedIn(this.store);
+		store.loadProfiles();
+		store.currentProfile.runTransactionSinceLastUpdate();
+		this.handleLoggedIn(store);
 	}
 }

@@ -70,7 +70,7 @@ class ProfileManager extends Component<Props, {}> {
 		return (
 			<div>
 				<List>
-					{appStore.profiles.map((profile) => {
+					{appStore.profileMetas.map((profile) => {
 						let icon;
 						const isOpen = currentProfileId === profile.id;
 						const props: ProfileManagerOptionsProps = {
@@ -181,8 +181,9 @@ class ProfileManager extends Component<Props, {}> {
 	}
 
 	private handleSaveProfile() {
+
 		if(!this.store.editingProfile.id) {
-			this.props.appStore.createProfile(this.store.editingProfile.model.name);
+			this.props.appStore.createProfile(this.store.editingProfile.name);
 		} else {
 			this.store.editingProfile.submit();
 			this.props.appStore.updateProfileMeta(this.store.editingProfile.model);
