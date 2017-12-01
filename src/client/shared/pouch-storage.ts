@@ -1,6 +1,13 @@
-import PouchDB from 'pouchdb';
+import PouchDBAdapterHTTP from 'pouchdb-adapter-http';
+import PouchDBAdapterIDB from 'pouchdb-adapter-idb';
+import PouchDB from 'pouchdb-core';
+import PouchDBReplication from 'pouchdb-replication';
 import { createDb, remoteDbExists } from '../shared/api';
 import Storage from './storage';
+
+PouchDB.plugin(PouchDBAdapterIDB);
+PouchDB.plugin(PouchDBAdapterHTTP);
+PouchDB.plugin(PouchDBReplication);
 
 const META_ID = 'metaData';
 
@@ -47,10 +54,14 @@ class PouchStorage {
 		};
 	}
 	public static openDb(name: string) {
-		return new PouchDB(name);
+		return new PouchDB(name, {
+			adapter: 'idb',
+		});
 	}
 	public static openRemoteDb(profileId: string) {
-		return new PouchDB(PouchStorage.remoteDbUrl(profileId));
+		return new PouchDB(PouchStorage.remoteDbUrl(profileId), {
+			adapter: 'http',
+		});
 	}
 	public static remoteDbUrl(profileId: string) {
 		return `${location.protocol}//${location.hostname}/api/sync/profile-${profileId}`;
