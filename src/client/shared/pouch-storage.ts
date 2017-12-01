@@ -158,7 +158,7 @@ class PouchStorage {
 			});
 
 		const intervalCheck = setInterval(() => {
-			if(Date.now() - lastChange > 2000) {
+			if(Date.now() - lastChange > 4000) {
 				remoteDbReplication.cancel();
 				clearInterval(intervalCheck);
 			}
