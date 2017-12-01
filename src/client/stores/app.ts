@@ -130,7 +130,7 @@ class AppStore {
 	public async reloadProfile() {
 		return this.openProfile(this.currentProfileMeta.id);
 	}
-	public async sync(profileId: string, handler?: () => void) {
+	public async sync(profileId: string) {
 		const updated = await ProfileStorage.sync(profileId);
 
 		if(!this.hasLocalProfileMeta(profileId)) {
@@ -139,8 +139,8 @@ class AppStore {
 			ProfileStorage.saveLocalProfileMetas(this.profileMetas);
 		}
 
-		if(updated) {
-			this.reloadProfile();
+		if(this.currentProfile.id === profileId && updated) {
+			this.openProfile(profileId);
 		}
 	}
 	public updateProfileMeta(profile: ProfileMetaData) {

@@ -129,12 +129,14 @@ class PouchStorage {
 		let resolve: any;
 
 		PouchDB.replicate(dbId, PouchStorage.remoteDbUrl(dbId))
-			.on('change', () => updated = true)
+			.on('change', () => {
+				updated = true;
+			})
 			.then(() => {
 				if(pullDone) {
-					pushDone = true;
-				} else {
 					resolve(updated);
+				} else {
+					pushDone = true;
 				}
 			});
 
@@ -149,9 +151,9 @@ class PouchStorage {
 			})
 			.then(() => {
 				if(pushDone) {
-					pullDone = true;
-				} else {
 					resolve(updated);
+				} else {
+					pullDone = true;
 				}
 			});
 
