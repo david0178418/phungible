@@ -17,7 +17,7 @@
         "strict": true,
         "alwaysStrict": true,
         "strictNullChecks": false,
-        "target": "ES2016",
+        "target": "ES5",
         "jsx": "react"
     },
     "include": [
