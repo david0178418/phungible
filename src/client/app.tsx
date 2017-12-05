@@ -131,8 +131,8 @@ class App extends Component<Props, any> {
 	public componentDidMount() {
 		this.handleStorageInit();
 
-		setInterval(() => this.store.checkOnlineStatus(), 500);
-		setInterval(() => this.store.checkSessionStatus(), 5000);
+		this.store.checkOnlineStatus();
+		this.store.checkSessionStatus();
 	}
 
 	public render() {

@@ -55,7 +55,7 @@ class ProfileStorage {
 			info = await activeProfileDB.info();
 		}
 
-		if(info.db_name !== `profile-${id}`) {
+		if(info.db_name !== id) {
 			if(activeProfileDB) {
 				activeProfileDB.close();
 			}
@@ -105,6 +105,9 @@ class ProfileStorage {
 	}
 	public static async sync(profileId: string) {
 		return PouchStorage.sync(profileId);
+	}
+	public static async liveSyncCurrent(profileId: string) {
+		return PouchStorage.liveSync(profileId, activeProfileDB);
 	}
 	public static saveDoc(doc: PouchDocument) {
 		PouchStorage.saveDoc(doc, activeProfileDB);

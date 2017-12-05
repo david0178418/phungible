@@ -83,10 +83,15 @@ class ProfileManager extends Component<Props, {}> {
 						}
 
 						if(appStore.isConnected) {
-							props.onSync = () => appStore.sync(profile.id);
-
 							if(appStore.remoteProfiles.find((rP) => profile.id === rP.id)) {
 								icon = <ActionSwapHorizontal/>;
+
+								// TODO Dry up
+								if(!isOpen) {
+									props.onSync = () => appStore.sync(profile.id);
+								}
+							} else {
+								props.onSync = () => appStore.sync(profile.id);
 							}
 						}
 

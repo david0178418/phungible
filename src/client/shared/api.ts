@@ -43,7 +43,7 @@ function getRemoteProfiles(): Promise<ProfileMetaData[]> {
 
 export
 async function getUserContext(): Promise<UserCtx | null> {
-	const response = await api(`${API_URI}/sync/_session`, 'get');
+	const response = await api(`${SYNC_URI}/_session`, 'get');
 
 	if(response) {
 		return response.userCtx || null;
@@ -54,7 +54,7 @@ async function getUserContext(): Promise<UserCtx | null> {
 
 export
 function login(username: string, password: string) {
-	return api(`${API_URI}/sync/_session`, 'post', {
+	return api(`${SYNC_URI}/_session`, 'post', {
 		name: username,
 		password,
 	});
@@ -62,7 +62,7 @@ function login(username: string, password: string) {
 
 export
 function logout() {
-	return api(`${API_URI}/sync/_session`, 'delete');
+	return api(`${SYNC_URI}/_session`, 'delete');
 }
 
 export
@@ -76,7 +76,7 @@ function register(username: string, password: string) {
 export
 async function remoteDbExists(profileId: string) {
 	try {
-		const response = await api(`${API_URI}/sync/profile-${profileId}`, 'get');
+		const response = await api(`${SYNC_URI}/profile-${profileId}`, 'get');
 		return !!response.db_name;
 	} catch {
 		return false;

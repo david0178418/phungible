@@ -95,6 +95,10 @@ class AppStore {
 
 		this.currentProfile = await this.getProfile(profileId);
 		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
+
+		if(this.profileIsSynced(profileId)) {
+			ProfileStorage.liveSyncCurrent(profileId);
+		}
 	}
 	@action public async loadProfiles() {
 		this.profileMetas = observable(ProfileStorage.getLocalProfiles());
@@ -128,7 +132,7 @@ class AppStore {
 		this.sessionValid = false;
 	}
 	public async reloadProfile() {
-		return this.openProfile(this.currentProfileMeta.id);
+		this.currentProfile = await this.getProfile(this.currentProfileMeta.id);
 	}
 	public async sync(profileId: string) {
 		const updated = await ProfileStorage.sync(profileId);

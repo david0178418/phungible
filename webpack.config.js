@@ -45,7 +45,8 @@ if(isProd) {
 	plugins.push(
 		new webpack.DefinePlugin({
 			VERSION,
-			API_URI: '"/api"'
+			API_URI: '"/api"',
+			SYNC_URI: '"/sync"'
 		})
 	);
 }

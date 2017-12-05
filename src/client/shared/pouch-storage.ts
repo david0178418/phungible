@@ -53,7 +53,7 @@ class PouchStorage {
 		return new PouchDB(PouchStorage.remoteDbUrl(profileId));
 	}
 	public static remoteDbUrl(profileId: string) {
-		return `${location.protocol}//${location.hostname}/api/sync/profile-${profileId}`;
+		return `${location.protocol}//${location.hostname}${SYNC_URI}/profile-${profileId}`;
 	}
 	public static async removeDoc(data: PouchDocument, db: Database) {
 		const pouchId = `${data.type}:${data.id}`;
@@ -116,55 +116,26 @@ class PouchStorage {
 			});
 		}
 	}
-	public static async sync(dbId: string) {
+	public static async sync(dbId: string, db?: Database) {
 		if(!(await remoteDbExists(dbId))) {
 			const profileMetas = Storage.getItem('profiles-local') as ProfileMetaData[];
 			const profile = profileMetas.find((meta) => meta.id === dbId);
 			await PouchStorage.createRemoteDB(dbId, profile.name);
 		}
 
-		let updated = false;
-		let pushDone = false;
-		let pullDone = false;
-		let resolve: any;
+		return PouchDB.sync(dbId, PouchStorage.remoteDbUrl(dbId));
+	}
+	public static async liveSync(dbId: string, db: Database) {
+		db.sync(PouchStorage.remoteDbUrl(dbId), {
+			live: true,
+		})
+		.on('change', () => {
+			const store = (window as any).store;
 
-		PouchDB.replicate(dbId, PouchStorage.remoteDbUrl(dbId))
-			.on('change', () => {
-				updated = true;
-			})
-			.then(() => {
-				if(pullDone) {
-					resolve(updated);
-				} else {
-					pushDone = true;
-				}
-			});
-
-		// Manually throttling due to some weird issue replicating
-		// from remote db.  Never seems
-		let lastChange = Date.now();
-
-		const remoteDbReplication = PouchDB.replicate(PouchStorage.remoteDbUrl(dbId), dbId);
-		remoteDbReplication.on('change', () => {
-				updated = true;
-				lastChange = Date.now();
-			})
-			.then(() => {
-				if(pushDone) {
-					resolve(updated);
-				} else {
-					pullDone = true;
-				}
-			});
-
-		const intervalCheck = setInterval(() => {
-			if(Date.now() - lastChange > 4000) {
-				remoteDbReplication.cancel();
-				clearInterval(intervalCheck);
+			if(store) {
+				store.reloadProfile();
 			}
-		}, 500);
-
-		return new Promise((res) => resolve = res);
+		});
 	}
 }
 
