@@ -1,5 +1,4 @@
 declare const API_URI: string;
-declare const SYNC_URI: string;
 declare const VERSION: string;
 
 declare module 'recharts' {
@@ -122,10 +121,3 @@ declare class Navigo {
 
 	public destroy(): void;
 }
-
-declare module 'pouchdb-authentication' {
-	const x: any;
-	export = x;
-}
-
-declare module 'whatwg-fetch';

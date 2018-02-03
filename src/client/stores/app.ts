@@ -1,113 +1,59 @@
 import { action, computed, observable } from 'mobx';
 
-import { getUserContext } from '../shared/api';
 import ProfileStorage from '../shared/profile-storage';
-import Profile from '../stores/profile';
+import Profile, { ProfileMeta } from '../stores/profile';
 
 export default
 class AppStore {
 	@observable public currentProfile: Profile;
-	@observable public isOnline: boolean;
-	@observable public profileMetas: ProfileMetaData[];
-	@observable public remoteProfiles: ProfileMetaData[];
-	@observable public username: string;
-	@observable public sessionValid: boolean;
+	@observable public profileMetas: ProfileMeta[];
 	@observable public showTransactionConfirmation: boolean;
-	@computed get remoteOnlyProfiles() {
-		return this.remoteProfiles
-			.filter(
-				(remoteProfile) =>
-					!this.hasLocalProfileMeta(remoteProfile.id),
-			);
-	}
 	@computed get currentProfileMeta() {
-		return this.findProfileMeta(this.currentProfile.id) || {} as ProfileMetaData;
-	}
-	@computed get isConnected() {
-		return this.isOnline && this.sessionValid;
+		return this.findProfileMeta(this.currentProfile.id) || {} as ProfileMeta;
 	}
 	constructor(params: Partial<AppStore> = {}) {
-		Object.assign(this, {
-			currentProfile: new Profile(),
-			isOnline: navigator.onLine,
-			username: localStorage.getItem('username') || '',
-		}, params);
+		Object.assign(this, params);
 
-		this.loadProfiles();
+		this.init();
+	}
+	@action public async openLastProfile() {
+		const lastProfile = ProfileStorage.getLastProfileId();
+		await this.openProfile(lastProfile);
 	}
 	@action public clearAllData() {
 		// TODO Nuke all profiles
 	}
-	@action public dismissTransactionConfirmation() {
-		this.showTransactionConfirmation = false;
-	}
 	@action public createProfile(name?: string) {
 		this.currentProfile = new Profile();
+		const meta = this.currentProfile.getMeta();
 
 		if(name) {
 			this.currentProfile.name = name;
 		}
 
-		const profileMeta = this.createProfileMeta();
-		this.profileMetas.push(profileMeta);
-		ProfileStorage.saveMeta(profileMeta.id, {
-			name: profileMeta.name,
-		});
-		ProfileStorage.saveLocalProfileMetas(this.profileMetas);
-		ProfileStorage.setCurrentActiveProfile(profileMeta.id);
-		this.loadProfiles();
-	}
-	@action public checkOnlineStatus() {
-		this.isOnline = navigator.onLine;
-	}
-	@action public async checkSessionStatus() {
-		try {
-			const userCtx = await getUserContext();
-
-			this.sessionValid = !!userCtx.name;
-		} catch {
-			this.sessionValid = false;
-		}
+		ProfileStorage.saveDoc(meta);
+		this.profileMetas.push(meta);
 	}
 	public async deleteProfile(profileId: string) {
-		if(this.hasLocalProfileMeta(profileId)) {
-			ProfileStorage.destroyProfile(profileId);
-			this.removeProfileMeta(profileId);
-		} else {
-			await ProfileStorage.destroyRemoteProfile(profileId);
-			this.removeRemoteProfileMeta(profileId);
-		}
+		ProfileStorage.destroyProfile(profileId);
+		this.removeProfileMeta(profileId);
+	}
+	@action public dismissTransactionConfirmation() {
+		this.showTransactionConfirmation = false;
 	}
 	public findProfileMeta(profileId: string) {
 		return this.profileMetas.find((profile) => profile.id === profileId);
 	}
 	public async getProfile(profileId: string) {
-		const profileData = await ProfileStorage.getProfileData(profileId);
+		const profileData = await ProfileStorage.getProfile(profileId);
 		return Profile.deserialize(profileData);
 	}
-	public profileIsSynced(profileId: string) {
-		return !!this.remoteProfiles.find((profile) => profile.id === profileId);
-	}
 	@action public async openProfile(profileId: string) {
-		if(this.isConnected) {
-			await this.sync(profileId);
-		}
-
 		this.currentProfile = await this.getProfile(profileId);
 		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
-
-		if(this.profileIsSynced(profileId)) {
-			ProfileStorage.liveSyncCurrent(profileId);
-		}
 	}
 	@action public async loadProfiles() {
-		this.profileMetas = observable(ProfileStorage.getLocalProfiles());
-
-		if(this.sessionValid) {
-			this.remoteProfiles = observable(await ProfileStorage.getRemoteProfiles());
-		} else {
-			this.remoteProfiles = observable([]);
-		}
+		this.profileMetas = observable(ProfileStorage.getAllType(Profile.type));
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
@@ -117,49 +63,18 @@ class AppStore {
 			(profile) => profile.id !== profileId,
 		);
 	}
-	@action public removeRemoteProfileMeta(profileId: string) {
-		this.remoteProfiles = this.remoteProfiles.filter(
-			(profile) => profile.id !== profileId,
-		);
-	}
-	@action public async login(username: string) {
-		localStorage.setItem('username', username);
-		this.username = username;
-		this.sessionValid = true;
-		this.loadProfiles();
-	}
-	@action public logout() {
-		this.sessionValid = false;
-	}
 	public async reloadProfile() {
 		this.currentProfile = await this.getProfile(this.currentProfileMeta.id);
 	}
-	public async sync(profileId: string) {
-		const updated = await ProfileStorage.sync(profileId);
-
-		if(!this.hasLocalProfileMeta(profileId)) {
-			const profileMeta = this.remoteProfiles.find((profile) => profile.id === profileId);
-			this.profileMetas.push(profileMeta);
-			ProfileStorage.saveLocalProfileMetas(this.profileMetas);
-		}
-
-		if(this.currentProfile.id === profileId && updated) {
-			this.openProfile(profileId);
-		}
-	}
-	public updateProfileMeta(profile: ProfileMetaData) {
-		ProfileStorage.saveMeta(profile.id, {
-			name: profile.name,
-		});
-		ProfileStorage.saveLocalProfileMetas(this.profileMetas);
+	public updateProfileMeta(profile: ProfileMeta) {
+		ProfileStorage.saveDoc(profile);
 	}
 	public hasLocalProfileMeta(profileId: string) {
 		return !!this.findProfileMeta(profileId);
 	}
-	private createProfileMeta(): ProfileMetaData {
-		return {
-			id: this.currentProfile.id,
-			name: this.currentProfile.name,
-		};
+	private async init() {
+		this.loadProfiles();
+		await this.openLastProfile();
+		this.currentProfile.runTransactionSinceLastUpdate();
 	}
 }

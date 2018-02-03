@@ -7,7 +7,6 @@ import DailyActivityPage from './daily-activity-page';
 import FeedbackPage from './feedback-page';
 import GettingStartedPage from './getting-started-page';
 import Help from './help-page';
-import PhungibleAccountManagePage from './phungible-account-manage-page';
 import ProfileManager from './profile-manager-page';
 import ScheduledTransactionEditPage from './scheduled-transaction-edit-page';
 import ScheduledTransactionsPage from './scheduled-transactions-page';
@@ -28,7 +27,6 @@ export {
 	FeedbackPage,
 	GettingStartedPage,
 	Help,
-	PhungibleAccountManagePage,
 	ProfileManager,
 	SummaryPage,
 	ScheduledTransactionEditPage,

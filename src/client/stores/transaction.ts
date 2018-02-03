@@ -18,11 +18,12 @@ interface TransactionEffect {
 	date: Date;
 }
 
-type TYPE = 'transaction';
+export
+type TRANSACTION_TYPE = 'transaction';
 
 export default
 class Transaction {
-	public static type: TYPE = 'transaction';
+	public static readonly type: TRANSACTION_TYPE = 'transaction';
 	public static deserialize(data: any) {
 		return new Promise((resolve, reject) => {
 			deserialize(Transaction, data, (err: any, result: any) => {
@@ -37,6 +38,8 @@ class Transaction {
 	@action public static clone(originalTransaction: Transaction) {
 		return Transaction.deserialize(serialize(originalTransaction));
 	}
+	@serializable
+	public readonly type: TRANSACTION_TYPE = 'transaction';
 	@serializable(identifier())
 	@observable public id: string;
 	@serializable(object(Money))
@@ -59,8 +62,6 @@ class Transaction {
 	@observable public generatedFromSchedTrans: ScheduledTransaction | null = null;
 	@serializable(reference(Budget, getBudget))
 	@observable public generatedFromBudget: Budget | null = null;
-	@serializable
-	public type: TYPE = 'transaction';
 	@serializable
 	@observable private _dateString: string;
 

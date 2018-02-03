@@ -41,11 +41,12 @@ enum RepeatUnits {
 	None,
 }
 
-type TYPE = 'recurring-transaction';
+export
+type RECURRING_TRANSACTION_TYPE = 'recurring-transaction';
 
 export default
 class ScheduledTransaction {
-	public static type: TYPE = 'recurring-transaction';
+	public static readonly type: RECURRING_TRANSACTION_TYPE = 'recurring-transaction';
 	public static deserialize(data: any) {
 		return new Promise((resolve, reject) => {
 			deserialize(ScheduledTransaction, data, (err: any, result: any) => {
@@ -60,6 +61,8 @@ class ScheduledTransaction {
 	@action public static clone(originalEntry: ScheduledTransaction) {
 		return ScheduledTransaction.deserialize(serialize(originalEntry));
 	}
+	@serializable
+	public readonly type: RECURRING_TRANSACTION_TYPE = 'recurring-transaction';
 	@serializable(reference(Account, getAccount))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(reference(Account, getAccount))
@@ -83,8 +86,6 @@ class ScheduledTransaction {
 	public today: Date;
 	@serializable
 	@observable public transactionType: TransactionType = TransactionType.Expense;
-	@serializable
-	public type: TYPE = 'recurring-transaction';
 	@serializable
 	@observable private _repeatType: RepeatTypes = RepeatTypes.Days;
 	@serializable

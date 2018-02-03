@@ -29,7 +29,6 @@ class CreateAccountsStep extends React.Component<Props, {}> {
 				<CreateItemStep
 					appStore={appStore}
 					items={items}
-					typeName="Account"
 					modelClass={Account}
 					listComponent={AccountsList}
 					editComponent={AccountEditPage}

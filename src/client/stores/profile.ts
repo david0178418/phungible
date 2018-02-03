@@ -5,15 +5,41 @@ import { serializable, serialize } from 'serializr';
 
 import ProfileStorage from '../shared/profile-storage';
 import {generateUuid, Money} from '../shared/utils';
+import { ItemModel } from '../types';
 import Account from './account';
 import Budget from './budget';
 import ScheduledTransaction from './scheduled-transaction';
 import Transaction from './transaction';
 
-type ItemType = Account | Budget | ScheduledTransaction | Transaction;
+export
+type PROFILE_TYPE = 'profile';
+
+export
+class ProfileMeta {
+	public static readonly type: PROFILE_TYPE = 'profile';
+	public readonly type: PROFILE_TYPE = 'profile';
+	@serializable
+	@observable public name: string = 'My Profile';
+	@serializable
+	public lastUpdatedDate: string;
+	@serializable
+	public id: string;
+
+	constructor(params: Partial<ProfileMeta> = {}) {
+		Object.assign(this, {
+			id: generateUuid(),
+			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
+		}, params);
+	}
+	public serialize() {
+		return {
+			...serialize(this),
+		};
+	}
+}
 
 export default
-class Profile {
+class Profile extends ProfileMeta {
 	@action public static async deserialize(data: any): Promise<Profile> {
 		const {
 			accounts = [] as Account[],
@@ -21,14 +47,12 @@ class Profile {
 			scheduledTransactions = [] as ScheduledTransaction[],
 			transactions = [] as Transaction[],
 		} = data;
-		const x = [
+		const vals = await Promise.all([
 			accounts.map((a: any) => Account.deserialize(a)),
 			Promise.all(budgets.map((b: any) => Budget.deserialize(b))),
 			Promise.all(scheduledTransactions.map((s: any) => ScheduledTransaction.deserialize(s))),
 			Promise.all(transactions.map((t: any) => Transaction.deserialize(t))),
-		];
-
-		const vals = await Promise.all(x);
+		]);
 
 		return new Profile({
 				accounts: vals[0],
@@ -39,14 +63,8 @@ class Profile {
 				transactions: vals[3],
 			} as any);
 	}
-	@serializable
-	@observable public name: string;
-	@serializable
-	public id: string;
 	@observable public accounts: Account[];
 	@observable public budgets: Budget[];
-	@serializable
-	public lastUpdatedDate: string;
 	@observable public scheduledTransactions: ScheduledTransaction[];
 	@observable public transactions: Transaction[];
 
@@ -55,15 +73,12 @@ class Profile {
 	}
 
 	constructor(params: Partial<Profile> = {}) {
+		super(params);
 		Object.assign(this, {
 			accounts: observable([]),
 			budgets: observable([]),
-			id: generateUuid(),
-			lastUpdatedDate: moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY'),
-			profiles: observable([]),
 			scheduledTransactions: observable([]),
 			transactions: observable([]),
-			username: localStorage.getItem('username') || '',
 		}, params);
 	}
 
@@ -110,10 +125,11 @@ class Profile {
 
 		return transactions;
 	}
-	public serialize() {
-		return {
-			...serialize(this),
-		};
+	public getMeta() {
+		return new ProfileMeta({
+			id: this.id,
+			name: this.name,
+		});
 	}
 	public debugString() {
 		return JSON.stringify(serialize(this));
@@ -135,7 +151,7 @@ class Profile {
 		(this.budgets as any).clear();
 		(this.scheduledTransactions as any).clear();
 		(this.transactions as any).clear();
-		ProfileStorage.destroyCurrentProfile();
+		ProfileStorage.destroyProfile(this.id);
 	}
 	@action public cleanScheduledTransactions() {
 		const accountIds = this.accounts.map((account) => account.id);
@@ -155,9 +171,9 @@ class Profile {
 					}
 
 					if(!schedTrans.isValid) {
-						ProfileStorage.removeDoc(schedTrans);
+						ProfileStorage.removeDoc(schedTrans, this.id);
 					} else if(updated) {
-						ProfileStorage.saveDoc(schedTrans);
+						ProfileStorage.saveDoc(schedTrans, this.id);
 					}
 				}),
 			);
@@ -179,7 +195,7 @@ class Profile {
 				}
 
 				if(updated) {
-					ProfileStorage.saveDoc(budget);
+					ProfileStorage.saveDoc(budget, this.id);
 				}
 			});
 
@@ -204,7 +220,7 @@ class Profile {
 				}
 
 				if(updated) {
-					ProfileStorage.saveDoc(transaction);
+					ProfileStorage.saveDoc(transaction, this.id);
 				}
 			});
 
@@ -212,18 +228,18 @@ class Profile {
 			this.transactions.filter((schedTrans) => schedTrans.isValid),
 		);
 	}
-	public removeItem(item: ItemType, typeName: ItemTypeName) {
-		switch(typeName) {
-			case 'Account':
-				this.removeAccount(item as Account);
+	public removeItem(item: ItemModel) {
+		switch(item.type) {
+			case Account.type:
+				this.removeAccount(item);
 				break;
-			case 'Budget':
+			case Budget.type:
 				this.removeBudget(item as Budget);
 				break;
-			case 'Recurring Transaction':
+			case ScheduledTransaction.type:
 				this.removeScheduledTransaction(item as ScheduledTransaction);
 				break;
-			case 'Transaction':
+			case Transaction.type:
 				this.removeTransaction(item as Transaction);
 				break;
 		}
@@ -233,19 +249,19 @@ class Profile {
 		this.cleanBudgets();
 		this.cleanScheduledTransactions();
 		this.cleanTransactions();
-		ProfileStorage.removeDoc(account);
+		ProfileStorage.removeDoc(account, this.id);
 	}
 	@action public removeBudget(budget: Budget) {
 		(this.budgets as any).remove(budget);
-		ProfileStorage.removeDoc(budget);
+		ProfileStorage.removeDoc(budget, this.id);
 	}
 	@action public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		(this.scheduledTransactions as any).remove(scheduledTransaction);
-		ProfileStorage.removeDoc(scheduledTransaction);
+		ProfileStorage.removeDoc(scheduledTransaction, this.id);
 	}
 	@action public removeTransaction(transaction: Transaction) {
 		(this.transactions as any).remove(transaction);
-		ProfileStorage.removeDoc(transaction);
+		ProfileStorage.removeDoc(transaction, this.id);
 	}
 	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
@@ -257,28 +273,28 @@ class Profile {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
-				ProfileStorage.saveDoc(transaction);
+				ProfileStorage.saveDoc(transaction, this.id);
 			}
 		}
 
 		this.sortTransactions();
 	}
 	public save() {
-		ProfileStorage.saveDoc(this);
+		ProfileStorage.save(this);
 	}
-	public saveItem(newItem: ItemType, type: ItemTypeName) {
-		switch(type) {
-			case 'Account':
+	public saveItem(newItem: ItemModel) {
+		switch(newItem.type) {
+			case Account.type:
 				this.saveAccount(newItem as Account);
 				break;
-			case 'Budget':
+			case Budget.type:
 				this.saveBudget(newItem as Budget);
 				break;
-			case 'Recurring Transaction':
+			case ScheduledTransaction.type:
 				this.saveScheduledTransaction(newItem as ScheduledTransaction);
 				break;
-			case 'Transaction':
-				this.saveScheduledTransaction(newItem as ScheduledTransaction);
+			case Transaction.type:
+				this.saveTransaction(newItem as Transaction);
 				break;
 		}
 	}
@@ -290,7 +306,7 @@ class Profile {
 			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
 			this.accounts[index] = newAccount;
 		}
-		ProfileStorage.saveDoc(newAccount);
+		ProfileStorage.saveDoc(newAccount, this.id);
 	}
 	@action public saveBudget(newBudget: Budget) {
 		if(!newBudget.id) {
@@ -302,7 +318,7 @@ class Profile {
 			);
 			this.budgets[index] = newBudget;
 		}
-		ProfileStorage.saveDoc(newBudget);
+		ProfileStorage.saveDoc(newBudget, this.id);
 	}
 	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
@@ -327,7 +343,7 @@ class Profile {
 		}
 
 		this.sortTransactions();
-		ProfileStorage.saveDoc(newScheduledTransaction);
+		ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
@@ -338,7 +354,7 @@ class Profile {
 			this.transactions[index] = newTransaction;
 		}
 		this.sortTransactions();
-		ProfileStorage.saveDoc(newTransaction);
+		ProfileStorage.saveDoc(newTransaction, this.id);
 	}
 	@action public sortTransactions() {
 		(this.transactions as any).replace(this.transactions.sort((a, b) => {

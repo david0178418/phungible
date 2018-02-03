@@ -41,11 +41,12 @@ enum RepeatUnits {
 	None,
 }
 
-type TYPE = 'budget';
+export
+type BUDGET_TYPE = 'budget';
 
 export default
 class Budget {
-	public static type: TYPE = 'budget';
+	public static readonly type: BUDGET_TYPE = 'budget';
 	public static deserialize(data: any) {
 		return new Promise((resolve, reject) => {
 			deserialize(Budget, data, (err: any, result: any) => {
@@ -84,7 +85,7 @@ class Budget {
 	@serializable
 	@observable public transactionType: TransactionType = TransactionType.BudgetedExpense;
 	@serializable
-	public type: TYPE = 'budget';
+	public readonly type: BUDGET_TYPE = 'budget';
 	@serializable
 	@observable private _repeatType: RepeatTypes = RepeatTypes.Days;
 	@serializable

@@ -15,7 +15,6 @@ if(isProd) {
 		new webpack.DefinePlugin({
 			VERSION,
 			API_URI: '"/api"',
-			SYNC_URI: '"/sync"',
 			'process.env': {
 				NODE_ENV: '"production"'
 			}
@@ -47,7 +46,6 @@ if(isProd) {
 		new webpack.DefinePlugin({
 			VERSION,
 			API_URI: '"/api"',
-			SYNC_URI: '"/sync"'
 		})
 	);
 }

@@ -19,7 +19,7 @@ async function getScheduledTransaction(id: string, callback: (err: any, result: 
 export
 async function getType(Model: any, id: string, callback: (err: any, result: any) => void) {
 	try {
-		const data = await ProfileStorage.getDoc(`${Model.type}:${id}`);
+		const data = await ProfileStorage.getDoc(id, Model.type);
 		deserialize(Model, data, callback);
 	} catch(e) {
 		callback(e, null);

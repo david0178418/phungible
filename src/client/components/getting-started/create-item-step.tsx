@@ -29,7 +29,6 @@ interface Props<ModelType> {
 	editComponentProps?: any;
 	modelClass: any;
 	items: ModelType[];
-	typeName: ItemTypeName;
 	appStore?: AppStore;
 }
 
@@ -47,7 +46,6 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 		const {
 			appStore,
 			items,
-			typeName,
 		} = this.props;
 		const {
 			activeItem,
@@ -85,7 +83,7 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 					{...listComponentProps}
 					items={items}
 					showCreate
-					onRemove={(itemModel: ModelType) => appStore.currentProfile.removeItem(itemModel, typeName)}
+					onRemove={(itemModel: ModelType) => appStore.currentProfile.removeItem(itemModel)}
 					onEdit={(itemModel: ModelType) => this.handleOpenItem(itemModel)}
 					onOpenCreate={() => this.handleOpenItem()}
 					store={appStore}
@@ -105,7 +103,7 @@ class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<
 
 	private handleSaveItem() {
 		if(this.store.activeItem.isValid) {
-			this.props.appStore.currentProfile.saveItem(this.store.activeItem, this.props.typeName);
+			this.props.appStore.currentProfile.saveItem(this.store.activeItem);
 			this.store.closeItem();
 		}
 	}

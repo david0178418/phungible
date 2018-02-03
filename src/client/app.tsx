@@ -4,10 +4,10 @@ import {observer, Provider} from 'mobx-react';
 import * as React from 'react';
 import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
+import PinPrompt from './components/pin-prompt';
 import TransactionConfirmationPrompt from './components/transaction-confirmation-prompt';
 import Layout from './layout';
-import { getUserContext } from './shared/api';
-import ProfileStorage from './shared/profile-storage';
+import Storage from './shared/storage';
 import theme from './shared/theme';
 import AppStore from './stores/app';
 
@@ -127,19 +127,25 @@ class App extends Component<Props, any> {
 		this.store = new AppStore();
 		(window as any).store = this.store;
 	}
-
-	public componentDidMount() {
-		this.handleStorageInit();
-
-		this.store.checkOnlineStatus();
-		this.store.checkSessionStatus();
-	}
-
 	public render() {
+		const {
+			checkingPin,
+			needUserPin,
+			pin,
+		} = this.initStore;
+
 		return (
 			<MuiThemeProvider muiTheme={theme}>
 					<Layout>
-						{this.store.currentProfile.transactions && (
+						<PinPrompt
+							open={needUserPin}
+							busy={checkingPin}
+							pin={pin}
+							onClearPin={() => this.handleClearPin()}
+							onPinUpdate={(newPin: string) => this.handlePinUpdate(newPin)}
+						/>
+
+						{this.store.currentProfile && this.store.currentProfile.transactions && (
 							<TransactionConfirmationPrompt
 								store={this.store}
 								open={!!this.store.showTransactionConfirmation}
@@ -148,7 +154,7 @@ class App extends Component<Props, any> {
 							/>
 						)}
 						<style>{Styles}</style>
-						{!!this.store && this.store.currentProfile && (
+						{this.store.currentProfile && (
 							<Provider appStore={this.store}>
 								<CSSTransitionGroup
 									component="div"
@@ -165,31 +171,21 @@ class App extends Component<Props, any> {
 		);
 	}
 
-	private async handleLoggedIn(appStore: AppStore) {
-		const userCtx = await getUserContext();
-
-		if(!userCtx) {
-			return;
-		}
-
-		if(userCtx.name) {
-			appStore.login(userCtx.name);
-		}
+	@action private handleClearPin() {
+		this.initStore.pin = '';
 	}
 
-	@action private async handleStorageInit() {
-		const currentProfileMeta = await ProfileStorage.getCurrentProfileMeta();
-		const store = this.store;
+	@action private handlePinUpdate(pin: string) {
+		this.initStore.pin = pin;
 
-		if(currentProfileMeta) {
-			store.openProfile(currentProfileMeta.id);
-		} else {
-			store.createProfile();
-			store.openProfile(store.profileMetas[0].id);
+		if(this.initStore.checkingPin) {
+			Storage.initStorage((success: boolean) => {
+				if(success) {
+					this.initStore.needUserPin = false;
+				} else {
+					this.initStore.pin = '';
+				}
+			}, this.initStore.pin);
 		}
-
-		store.loadProfiles();
-		store.currentProfile.runTransactionSinceLastUpdate();
-		this.handleLoggedIn(store);
 	}
 }
