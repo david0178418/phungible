@@ -1,6 +1,7 @@
 import { action, computed, observable } from 'mobx';
 
 import ProfileStorage from '../shared/profile-storage';
+import Storage from '../shared/storage';
 import Profile, { ProfileMeta } from '../stores/profile';
 
 export default
@@ -18,12 +19,16 @@ class AppStore {
 	}
 	@action public async openLastProfile() {
 		const lastProfile = ProfileStorage.getLastProfileId();
-		await this.openProfile(lastProfile);
+		if(lastProfile) {
+			await this.openProfile(lastProfile);
+		} else {
+			await this.createDefaultProfile();
+		}
 	}
 	@action public clearAllData() {
 		// TODO Nuke all profiles
 	}
-	@action public createProfile(name?: string) {
+	@action public createDefaultProfile(name?: string) {
 		this.currentProfile = new Profile();
 		const meta = this.currentProfile.getMeta();
 
@@ -33,6 +38,7 @@ class AppStore {
 
 		ProfileStorage.saveDoc(meta);
 		this.profileMetas.push(meta);
+		ProfileStorage.setActiveProfile(this.currentProfile.id);
 	}
 	public async deleteProfile(profileId: string) {
 		ProfileStorage.destroyProfile(profileId);
@@ -45,15 +51,19 @@ class AppStore {
 		return this.profileMetas.find((profile) => profile.id === profileId);
 	}
 	public async getProfile(profileId: string) {
-		const profileData = await ProfileStorage.getProfile(profileId);
+		const profileData = await ProfileStorage.getProfileData(profileId);
 		return Profile.deserialize(profileData);
 	}
 	@action public async openProfile(profileId: string) {
 		this.currentProfile = await this.getProfile(profileId);
-		ProfileStorage.setCurrentActiveProfile(this.currentProfile.id);
+		ProfileStorage.setActiveProfile(this.currentProfile.id);
 	}
-	@action public async loadProfiles() {
-		this.profileMetas = observable(ProfileStorage.getAllType(Profile.type));
+	@action public async loadProfileMetas() {
+		this.profileMetas = observable(
+			ProfileStorage
+				.getAllType(Profile.type)
+				.map((meta) => new ProfileMeta(meta)),
+		);
 	}
 	@action public openTransactionConfirmation() {
 		this.showTransactionConfirmation = true;
@@ -73,7 +83,8 @@ class AppStore {
 		return !!this.findProfileMeta(profileId);
 	}
 	private async init() {
-		this.loadProfiles();
+		Storage.init();
+		this.loadProfileMetas();
 		await this.openLastProfile();
 		this.currentProfile.runTransactionSinceLastUpdate();
 	}

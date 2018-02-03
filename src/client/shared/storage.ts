@@ -10,29 +10,25 @@ class Storage {
 		return !!localStorage.getItem('encrypted');
 	}
 
-	public static initStorage(callback: (success: boolean) => void, key?: string) {
-		if(Storage.isEncrypted()) {
-			if(!key) {
-				callback(false);
-			}
-
+	public static init(key?: string) {
+		let result = false;
+		if(Storage.isEncrypted() && key) {
 			Storage.useEncryption(key);
 
 			try {
 				Storage.ls.get('lastProfileId');
-				callback(true);
+				result = true;
 			} catch(e) {
 				Storage.ls = null;
-				callback(false);
 			}
 		} else {
 			Storage.useNoEncryption();
-			callback(true);
+			result = true;
 		}
 
 		Storage.persist();
-
 		(window as any).Storage = Storage;
+		return result;
 	}
 
 	public static clearItem(key: string) {

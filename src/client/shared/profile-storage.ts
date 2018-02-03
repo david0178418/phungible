@@ -17,10 +17,16 @@ interface ProfileDoc {
 export default
 class ProfileStorage {
 	public static destroyProfile(id: string) {
-		//
+		const profile = new Profile(ProfileStorage.getDoc(id, Profile.type));
+		ProfileStorage.removeDoc(profile);
+		ProfileStorage.removeAllType(Account.type, id);
+		ProfileStorage.removeAllType(Budget.type, id);
+		ProfileStorage.removeAllType(ScheduledTransaction.type, id);
+		ProfileStorage.removeAllType(Transaction.type, id);
 	}
-	public static getAllType(type: string) {
-		const docList = Storage.getItem(type);
+	public static getAllType(type: ItemType, profileId?: string) {
+		const key = ProfileStorage.getKey(type, profileId);
+		const docList = Storage.getItem(key);
 
 		if(!docList) {
 			return [];
@@ -40,13 +46,13 @@ class ProfileStorage {
 
 		return docList[docId];
 	}
-	public static async getProfile(id: string) {
+	public static async getProfileData(id: string) {
 		return {
 			...ProfileStorage.getDoc(id, Profile.type),
-			accounts: ProfileStorage.getAllType(Account.type),
-			budgets: ProfileStorage.getAllType(Budget.type),
-			scheduledTransactions: ProfileStorage.getAllType(ScheduledTransaction.type),
-			transactions: ProfileStorage.getAllType(Transaction.type),
+			accounts: ProfileStorage.getAllType(Account.type, id),
+			budgets: ProfileStorage.getAllType(Budget.type, id),
+			scheduledTransactions: ProfileStorage.getAllType(ScheduledTransaction.type, id),
+			transactions: ProfileStorage.getAllType(Transaction.type, id),
 		};
 	}
 	public static getKey(type: ItemType, profileId?: string) {
@@ -55,8 +61,9 @@ class ProfileStorage {
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId') || '';
 	}
-	public static removeDoc(doc: ProfileDoc, profileId: string) {
-		const docList = Storage.getItem(ProfileStorage.getKey(doc.type, profileId));
+	public static removeDoc(doc: ProfileDoc, profileId?: string) {
+		const key = ProfileStorage.getKey(doc.type, profileId);
+		const docList = Storage.getItem(key);
 
 		if(!docList) {
 			return;
@@ -65,17 +72,15 @@ class ProfileStorage {
 		delete docList[doc.id];
 		Storage.setItem(doc.type, docList);
 	}
-	public static save(profile: Profile) {
-		ProfileStorage.saveDoc(profile, profile.id);
-	}
 	public static saveDoc(doc: ProfileDoc, profileId?: string) {
-		const docList = Storage.getItem(ProfileStorage.getKey(doc.type, profileId)) || {};
+		const key = ProfileStorage.getKey(doc.type, profileId);
+		const docList = Storage.getItem(key) || {};
 		docList[doc.id] = doc.serialize();
-		Storage.setItem(doc.type, docList);
+		Storage.setItem(key, docList);
 	}
-	public static setCurrentActiveProfile(profileId: string) {
+	public static setActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);
 	}
 }
 
-(window as any).Profiles = ProfileStorage;
+(window as any).ProfileStorage = ProfileStorage;

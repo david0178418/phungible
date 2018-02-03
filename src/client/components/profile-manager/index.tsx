@@ -153,7 +153,7 @@ class ProfileManager extends Component<Props, {}> {
 	private handleSaveProfile() {
 
 		if(!this.store.editingProfile.id) {
-			this.props.appStore.createProfile(this.store.editingProfile.name);
+			this.props.appStore.createDefaultProfile(this.store.editingProfile.name);
 		} else {
 			this.store.editingProfile.submit();
 			this.props.appStore.updateProfileMeta(this.store.editingProfile.model);

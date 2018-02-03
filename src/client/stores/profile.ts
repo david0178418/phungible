@@ -143,7 +143,7 @@ class Profile extends ProfileMeta {
 		});
 		this.lastUpdatedDate = moment(new Date(), 'MM/DD/YYYY').format('MM/DD/YYYY');
 		if(lastUpdate !== this.lastUpdatedDate) {
-			this.save();
+			ProfileStorage.saveDoc(this);
 		}
 	}
 	@action public clearAllData() {
@@ -278,9 +278,6 @@ class Profile extends ProfileMeta {
 		}
 
 		this.sortTransactions();
-	}
-	public save() {
-		ProfileStorage.save(this);
 	}
 	public saveItem(newItem: ItemModel) {
 		switch(newItem.type) {
