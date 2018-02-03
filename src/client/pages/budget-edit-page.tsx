@@ -96,7 +96,7 @@ class BudgetEditPage extends Component<Props, {}> {
 				style={style}
 			>
 				<AppBar
-					onLeftIconButtonTouchTap={() => this.routeBack()}
+					onLeftIconButtonClick={() => this.routeBack()}
 					title={`${action} ${BudgetEditPage.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>

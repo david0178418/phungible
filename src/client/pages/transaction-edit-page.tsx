@@ -73,7 +73,7 @@ class TransactionEditPage extends Component<Props, {}> {
 		return (
 			<Page animationDirection="horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => this.routeBack()}
+					onLeftIconButtonClick={() => this.routeBack()}
 					title={`${action} Transaction`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>

@@ -90,7 +90,7 @@ class ScheduledTransactionEditPage extends Component<Props, {}> {
 		return (
 			<Page animationDirection="horizontal" style={style}>
 				<AppBar
-					onLeftIconButtonTouchTap={() => this.routeBack()}
+					onLeftIconButtonClick={() => this.routeBack()}
 					title={`${action} ${ScheduledTransactionEditPage.title}`}
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>

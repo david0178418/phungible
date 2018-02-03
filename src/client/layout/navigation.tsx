@@ -136,7 +136,7 @@ class Navigation extends React.Component<Props, any> {
 			<AppBar
 				{...appBarProps}
 				className="app-title"
-				onLeftIconButtonTouchTap={() => this.handleDrawerStateUpdate(true)}
+				onLeftIconButtonClick={() => this.handleDrawerStateUpdate(true)}
 				title={this.props.title}
 			>
 				<Drawer

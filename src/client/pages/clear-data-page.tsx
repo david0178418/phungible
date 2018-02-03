@@ -32,7 +32,7 @@ class ClearDataPage extends Component<Props, {}> {
 		return (
 			<Page animationDirection="horizontal">
 				<AppBar
-					onLeftIconButtonTouchTap={() => this.routeBack()}
+					onLeftIconButtonClick={() => this.routeBack()}
 					title="Nuke All Data"
 					iconElementLeft={<IconButton><NavigationArrowBack /></IconButton>}
 				/>
