@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import {FormEvent} from 'react';
+// tslint:disable-next-line:no-duplicate-imports
 import * as React from 'react';
 
 import {DebtIcon, SavingsIcon} from '../../shared/shared-components';

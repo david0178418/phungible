@@ -3,7 +3,6 @@ import Badge from 'material-ui/Badge';
 import Drawer from 'material-ui/Drawer';
 import AccountBalanceIcon from 'material-ui/svg-icons/action/account-balance';
 import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
-import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import CompareIcon from 'material-ui/svg-icons/action/compare-arrows';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import HelpIcon from 'material-ui/svg-icons/action/help';
@@ -20,7 +19,6 @@ import {
 	DailyActivityPage,
 	FeedbackPage,
 	Help,
-	PhungibleAccountManagePage,
 	ProfileManager,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -222,17 +220,6 @@ class Navigation extends React.Component<Props, any> {
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{appStore.currentProfileMeta.name}
-					</NavItem>
-					<NavItem
-						leftIcon={<AccountIcon />}
-						href={`${PhungibleAccountManagePage.path}`}
-						onClick={() => this.handleDrawerStateUpdate(false)}
-					>
-						{
-							appStore.isConnected ?
-								appStore.username :
-								PhungibleAccountManagePage.title
-						}
 					</NavItem>
 				</Drawer>
 			</AppBar>

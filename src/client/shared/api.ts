@@ -1,7 +1,3 @@
-if(!window.fetch) {
-	import('whatwg-fetch');
-}
-
 type HTTP_ACTION =
 	'delete' |
 	'get' |
@@ -13,74 +9,6 @@ interface FeedbackData {
 	email: string;
 	feedback: string;
 	isBug: boolean;
-}
-
-interface UserCtx {
-	name: string;
-	rolse: string[];
-}
-
-export
-function createDb(profileId: string, profileName: string) {
-	return api(`${API_URI}/create-profile/${profileId}/${profileName}`, 'put');
-}
-
-export
-function deleteDb(profileId: string) {
-	return api(`${API_URI}/delete-profile/${profileId}/`, 'delete');
-}
-
-export
-function getRemoteProfiles(): Promise<ProfileMetaData[]> {
-	const username = localStorage.getItem('username');
-
-	if(!username) {
-		return new Promise((resolve) => resolve([]));
-	}
-
-	return api(`${API_URI}/profiles/${username}`, 'get');
-}
-
-export
-async function getUserContext(): Promise<UserCtx | null> {
-	const response = await api(`${SYNC_URI}/_session`, 'get');
-
-	if(response) {
-		return response.userCtx || null;
-	} else {
-		return null;
-	}
-}
-
-export
-function login(username: string, password: string) {
-	return api(`${SYNC_URI}/_session`, 'post', {
-		name: username,
-		password,
-	});
-}
-
-export
-function logout() {
-	return api(`${SYNC_URI}/_session`, 'delete');
-}
-
-export
-function register(username: string, password: string) {
-	return api(`${API_URI}/register`, 'post', {
-		name: username,
-		password,
-	});
-}
-
-export
-async function remoteDbExists(profileId: string) {
-	try {
-		const response = await api(`${SYNC_URI}/profile-${profileId}`, 'get');
-		return !!response.db_name;
-	} catch {
-		return false;
-	}
 }
 
 export

@@ -1,135 +1,86 @@
-import { deleteDb, getRemoteProfiles } from '../shared/api';
-import PouchStorage from '../shared/pouch-storage';
 import Storage from '../shared/storage';
-import generateUUID from '../shared/utils/generate-uuid';
 import Account from '../stores/account';
 import Budget from '../stores/budget';
+import Profile from '../stores/profile';
 import ScheduledTransaction from '../stores/scheduled-transaction';
 import Transaction from '../stores/transaction';
+import { ItemType } from '../types';
 
-let activeProfileDB: PouchDB.Database;
-
-const PROFILE_METADATA_KEY = 'profiles-local';
+export
+interface ProfileDoc {
+	id: string;
+	type: ItemType;
+	parent?: string;
+	serialize(): any;
+}
 
 export default
 class ProfileStorage {
-	public static destroyCurrentProfile() {
-		return activeProfileDB.destroy();
-	}
 	public static destroyProfile(id: string) {
-		return PouchStorage.deleteDb(id);
+		const profile = new Profile(ProfileStorage.getDoc(id, Profile.type));
+		ProfileStorage.removeDoc(profile);
+		ProfileStorage.removeAllType(Account.type, id);
+		ProfileStorage.removeAllType(Budget.type, id);
+		ProfileStorage.removeAllType(ScheduledTransaction.type, id);
+		ProfileStorage.removeAllType(Transaction.type, id);
 	}
-	public static destroyRemoteProfile(id: string) {
-		return deleteDb(id);
-	}
-	public static async getCurrentProfileMeta() {
-		let loadedProfile = null;
-		const profiles = ProfileStorage.getLocalProfiles();
+	public static getAllType(type: ItemType, profileId?: string) {
+		const key = ProfileStorage.getKey(type, profileId);
+		const docList = Storage.getItem(key);
 
-		if(!profiles.length) {
-			const defaultProfile = ProfileStorage.createDefaultProfileMeta();
-			defaultProfile.id = generateUUID();
-
-			ProfileStorage.saveLocalProfileMetas([defaultProfile]);
-			ProfileStorage.setCurrentActiveProfile(defaultProfile.id);
-
-			loadedProfile = defaultProfile;
-		} else {
-			const lastLoadedId = ProfileStorage.getLastProfileId();
-			loadedProfile = profiles.find((profile) => profile.id === lastLoadedId);
-
-			if(!loadedProfile) {
-				loadedProfile = profiles[0];
-			}
+		if(!docList) {
+			return [];
 		}
 
-		return loadedProfile || null;
+		return Object.keys(docList).map((docId) => docList[docId]);
 	}
-	public static getDoc(docId: string) {
-		PouchStorage.getDoc(docId, activeProfileDB);
+	public static removeAllType(type: ItemType, profileId: string) {
+		Storage.removeItem(ProfileStorage.getKey(type, profileId));
 	}
-	public static async getProfileData(id: string) {
-		let info: any = {};
+	public static getDoc(docId: string, type: ItemType, profileId?: string) {
+		const docList = Storage.getItem(ProfileStorage.getKey(type, profileId));
 
-		if(activeProfileDB) {
-			info = await activeProfileDB.info();
-		}
-
-		if(info.db_name !== id) {
-			if(activeProfileDB) {
-				activeProfileDB.close();
-			}
-
-			activeProfileDB = await PouchStorage.openDb(id);
-		}
-
-		const values = await Promise.all([
-			PouchStorage
-				.getAllType(Account.type, activeProfileDB),
-			PouchStorage
-				.getAllType(Budget.type, activeProfileDB),
-			PouchStorage
-				.getAllType(ScheduledTransaction.type, activeProfileDB),
-			PouchStorage
-				.getAllType(Transaction.type, activeProfileDB),
-		]);
-
-		return {
-			accounts: values[0],
-			budgets: values[1],
-			id,
-			scheduledTransactions: values[2],
-			transactions: values[3],
-			...values[4],
-		};
-	}
-	public static getLastProfileId() {
-		return Storage.getItem('lastProfileId');
-	}
-	public static getLocalProfiles(): ProfileMetaData[] {
-		return Storage.getItem(PROFILE_METADATA_KEY) || [];
-	}
-	public static async getRemoteProfiles() {
-		try {
-			let remoteProfiles = await getRemoteProfiles();
-			remoteProfiles = remoteProfiles.map((profile) => {
-				return profile;
-			});
-			return remoteProfiles;
-		} catch {
+		if(!docList) {
 			return null;
 		}
+
+		return docList[docId];
 	}
-	public static removeDoc(doc: PouchDocument) {
-		PouchStorage.removeDoc(doc, activeProfileDB);
-	}
-	public static async sync(profileId: string) {
-		return PouchStorage.sync(profileId);
-	}
-	public static async liveSyncCurrent(profileId: string) {
-		return PouchStorage.liveSync(profileId, activeProfileDB);
-	}
-	public static saveDoc(doc: PouchDocument) {
-		PouchStorage.saveDoc(doc, activeProfileDB);
-	}
-	public static async saveMeta(dbId: string, metaData: DBMeta) {
-		PouchStorage.saveMeta(dbId, {
-			name: metaData.name,
-		});
-	}
-	public static saveLocalProfileMetas(profiles: ProfileMetaData[]) {
-		Storage.setItem(PROFILE_METADATA_KEY, profiles);
-	}
-	public static setCurrentActiveProfile(profileId: string) {
-		Storage.setItem('lastProfileId', profileId);
-	}
-	public static createDefaultProfileMeta(id: string = '', name: string = '') {
-		name = name || 'My Profile';
+	public static async getProfileData(id: string) {
 		return {
-			id,
-			name,
+			...ProfileStorage.getDoc(id, Profile.type),
+			accounts: ProfileStorage.getAllType(Account.type, id),
+			budgets: ProfileStorage.getAllType(Budget.type, id),
+			scheduledTransactions: ProfileStorage.getAllType(ScheduledTransaction.type, id),
+			transactions: ProfileStorage.getAllType(Transaction.type, id),
 		};
+	}
+	public static getKey(type: ItemType, profileId?: string) {
+		return profileId ? `${profileId}:${type}` : type;
+	}
+	public static getLastProfileId() {
+		return Storage.getItem('lastProfileId') || '';
+	}
+	public static removeDoc(doc: ProfileDoc, profileId?: string) {
+		const key = ProfileStorage.getKey(doc.type, profileId);
+		const docList = Storage.getItem(key);
+
+		if(!docList) {
+			return;
+		}
+
+		delete docList[doc.id];
+		Storage.setItem(doc.type, docList);
+	}
+	public static saveDoc(doc: ProfileDoc, profileId?: string) {
+		const key = ProfileStorage.getKey(doc.type, profileId);
+		const docList = Storage.getItem(key) || {};
+		docList[doc.id] = doc.serialize();
+		Storage.setItem(key, docList);
+	}
+	public static setActiveProfile(profileId: string) {
+		Storage.setItem('lastProfileId', profileId);
 	}
 }
 
-(window as any).Profiles = ProfileStorage;
+(window as any).ProfileStorage = ProfileStorage;

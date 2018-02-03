@@ -118,11 +118,11 @@ class FeedbackForm extends Component<Props, {}> {
 			<div>
 				{open && (
 					<div>
-						<p>
+						<div>
 							Do you have some feedback?  Did you find a bug? Want to
 							share say something nice (or mean!) with us?
-						</p>
-						<p>
+						</div>
+						<div>
 							<TextField
 								floatingLabelText="Email address"
 								value={email}
@@ -143,8 +143,8 @@ class FeedbackForm extends Component<Props, {}> {
 								onCheck={(ev, val) => this.store.setIsBug(val)}
 								label="I'm reporting a bug"
 							/>
-						</p>
-						<p>
+						</div>
+						<div>
 							<RaisedButton
 								primary
 								fullWidth
@@ -152,7 +152,7 @@ class FeedbackForm extends Component<Props, {}> {
 								label="Submit"
 								onClick={() => this.handleSubmit()}
 							/>
-						</p>
+						</div>
 					</div>
 				) || (
 					<div>

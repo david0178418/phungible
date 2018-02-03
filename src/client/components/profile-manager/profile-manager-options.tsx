@@ -6,12 +6,18 @@ import MoreVertical from 'material-ui/svg-icons/navigation/more-vert';
 
 import * as React from 'react';
 
+export
+interface ProfileManagerOptionsProps {
+	onEdit(): void;
+	onRemove?(): void;
+	onOpenProfile?(): void;
+}
+
 export default
 function ProfileManagerOptions({
 	onEdit,
 	onRemove,
 	onOpenProfile,
-	onSync,
 }: ProfileManagerOptionsProps) {
 	return (
 		<IconMenu
@@ -25,12 +31,6 @@ function ProfileManagerOptions({
 				<MenuItem
 					onClick={onOpenProfile}
 					primaryText="Open"
-				/>
-			)}
-			{onSync && (
-				<MenuItem
-					onClick={onSync}
-					primaryText="Sync"
 				/>
 			)}
 			{onRemove && (

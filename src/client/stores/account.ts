@@ -13,11 +13,12 @@ enum AccountType {
 	Savings,
 }
 
-type TYPE = 'account';
+export
+type ACCOUNT_TYPE = 'account';
 
 export default
 class Account {
-	public static type: TYPE = 'account';
+	public static readonly type: ACCOUNT_TYPE = 'account';
 	@action public static deserialize(data: any) {
 		return deserialize(Account, data as {});
 	}
@@ -34,10 +35,10 @@ class Account {
 	@observable public name = '';
 	@serializable
 	@observable public accountType: AccountType = AccountType.Savings;
+	@serializable
+	public readonly type: ACCOUNT_TYPE = 'account';
 	@serializable(list(object(BalanceUpdate)))
 	@observable public balanceUpdateHistory: BalanceUpdate[];
-	@serializable
-	public type: TYPE = 'account';
 
 	constructor(params: Partial<Account> = {}) {
 		Object.assign(this, {

@@ -3,26 +3,24 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import ActionSwapHorizontal from 'material-ui/svg-icons/action/swap-horiz';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import FileCloud from 'material-ui/svg-icons/file/cloud';
 import TextField from 'material-ui/TextField';
 import { observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { createViewModel, IViewModel } from 'mobx-utils/lib/create-view-model';
 import * as React from 'react';
 
-import ProfileStorage from '../../shared/profile-storage';
 import { dialogStyles, floatingActionButtonStyle } from '../../shared/styles';
 import AppStore from '../../stores/app';
-import ProfileManagerOptions from './profile-manager-options';
+import { ProfileMeta } from '../../stores/profile';
+import ProfileManagerOptions, { ProfileManagerOptionsProps } from './profile-manager-options';
 
 const { Component } = React;
 
-type ProfileMetaDataViewModel = ProfileMetaData & IViewModel<ProfileMetaData>;
+type ProfileMetaDataViewModel = ProfileMeta & IViewModel<ProfileMeta>;
 
 class Store {
-	@observable public deletionCandidate: ProfileMetaData | null = null;
+	@observable public deletionCandidate: ProfileMeta | null = null;
 	@observable public editingProfile: ProfileMetaDataViewModel | null = null;
 }
 
@@ -34,7 +32,7 @@ function closeConfirmRemoval(store: Store) {
 	store.deletionCandidate = null;
 }
 
-function openConfirmRemoval(store: Store, deletionCandidate: ProfileMetaData) {
+function openConfirmRemoval(store: Store, deletionCandidate: ProfileMeta) {
 	store.deletionCandidate = deletionCandidate;
 }
 
@@ -42,8 +40,8 @@ function closeEditDialog(store: Store) {
 	store.editingProfile = null;
 }
 
-function openEditDialog(store: Store, openProfile?: ProfileMetaData) {
-	openProfile = openProfile || observable(ProfileStorage.createDefaultProfileMeta());
+function openEditDialog(store: Store, openProfile?: ProfileMeta) {
+	openProfile = openProfile || observable(new ProfileMeta());
 	store.editingProfile = createViewModel(openProfile);
 }
 
@@ -71,7 +69,6 @@ class ProfileManager extends Component<Props, {}> {
 			<div>
 				<List>
 					{appStore.profileMetas.map((profile) => {
-						let icon;
 						const isOpen = currentProfileId === profile.id;
 						const props: ProfileManagerOptionsProps = {
 							onEdit: () => openEditDialog(store, profile),
@@ -82,44 +79,12 @@ class ProfileManager extends Component<Props, {}> {
 							props.onRemove = () => openConfirmRemoval(store, profile);
 						}
 
-						if(appStore.isConnected) {
-							if(appStore.remoteProfiles.find((rP) => profile.id === rP.id)) {
-								icon = <ActionSwapHorizontal/>;
-
-								// TODO Dry up
-								if(!isOpen) {
-									props.onSync = () => appStore.sync(profile.id);
-								}
-							} else {
-								props.onSync = () => appStore.sync(profile.id);
-							}
-						}
-
 						return (
 							<ListItem
 								key={profile.id}
 								primaryText={profile.name}
 								secondaryText={isOpen && 'active'}
 								rightIconButton={ProfileManagerOptions(props)}
-								leftIcon={icon}
-							/>
-						);
-					})}
-					{appStore.isConnected && appStore.remoteOnlyProfiles.map((profile) => {
-						const props: ProfileManagerOptionsProps = {
-							onEdit: () => openEditDialog(store, profile),
-						};
-
-						props.onOpenProfile = () => appStore.openProfile(profile.id);
-						props.onRemove = () => openConfirmRemoval(store, profile);
-						props.onSync = () => appStore.sync(profile.id);
-
-						return (
-							<ListItem
-								key={profile.id}
-								primaryText={profile.name}
-								rightIconButton={ProfileManagerOptions(props)}
-								leftIcon={<FileCloud/>}
 							/>
 						);
 					})}
@@ -186,13 +151,10 @@ class ProfileManager extends Component<Props, {}> {
 	}
 
 	private handleSaveProfile() {
-
-		if(!this.store.editingProfile.id) {
-			this.props.appStore.createProfile(this.store.editingProfile.name);
-		} else {
-			this.store.editingProfile.submit();
-			this.props.appStore.updateProfileMeta(this.store.editingProfile.model);
-		}
+		// TODO Sort this out.  New profiles have ids, so new and old
+		// can't be distinguished
+		this.store.editingProfile.submit();
+		this.props.appStore.updateProfileMeta(this.store.editingProfile.model);
 
 		closeEditDialog(this.store);
 	}

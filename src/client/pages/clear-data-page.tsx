@@ -44,6 +44,7 @@ class ClearDataPage extends Component<Props, {}> {
 	}
 
 	private routeBack() {
+		this.props.appStore.clearAllData();
 		this.props.router.navigate(SettingsPage.path);
 	}
 }

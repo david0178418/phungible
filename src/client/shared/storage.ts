@@ -1,39 +1,59 @@
-export
-type Document = PouchDB.Core.IdMeta & PouchDB.Core.GetMeta & {
-	id: string;
-	type: string;
-	parentId?: string;
-};
+import * as SecureLS from 'secure-ls';
+(window as any).SecureLS = SecureLS;
 
 export default
 class Storage {
+	public static ls: any;
+
 	public static isEncrypted() {
-		return false;
+		// read directly since we use this to determine encryption status
+		return !!localStorage.getItem('encrypted');
 	}
 
-	public static async initLocalStorage(key?: string) {
+	public static init(key?: string) {
+		let result = false;
+		if(Storage.isEncrypted() && key) {
+			Storage.useEncryption(key);
+
+			try {
+				Storage.ls.get('lastProfileId');
+				result = true;
+			} catch(e) {
+				Storage.ls = null;
+			}
+		} else {
+			Storage.useNoEncryption();
+			result = true;
+		}
+
+		Storage.persist();
 		(window as any).Storage = Storage;
+		return result;
+	}
+
+	public static clearAll() {
+		Storage.ls.clear();
 	}
 
 	public static clearItem(key: string) {
 		localStorage.removeItem(key);
 	}
 
-	// public static disableEncryption() {
-	// 	Storage.useNoEncryption();
-	// 	localStorage.removeItem('encrypted');
-	// }
+	public static disableEncryption() {
+		Storage.useNoEncryption();
+		localStorage.removeItem('encrypted');
+	}
 
-	// public static enableEncryption(key: string) {
-	// 	Storage.useEncryption(key);
-	// 	localStorage.setItem('encrypted', 'true');
-	// }
+	public static enableEncryption(key: string) {
+		Storage.useEncryption(key);
+		localStorage.setItem('encrypted', 'true');
+	}
 
 	public static getItem(key: string): any {
 		let data;
 
 		try {
-			data = JSON.parse(localStorage.getItem(key));
+			data = Storage.ls.get(key);
 		} catch(e) {
 			return null;
 		}
@@ -57,8 +77,15 @@ class Storage {
 			}
 		});
 	}
+	public static removeItem(key: string) {
+		Storage.ls.remove(key);
+	}
 	public static setItem(key: string, value: any) {
-		localStorage.setItem(key, JSON.stringify(value));
+		try {
+			Storage.ls.set(key, value);
+		} catch(e) {
+			return;
+		}
 	}
 
 	private static shouldPersist() {
@@ -73,5 +100,20 @@ class Storage {
 				},
 			};
 		}
+	}
+
+	private static useEncryption(key: string) {
+		Storage.ls = new SecureLS({
+			encodingType: 'aes',
+			encryptionSecret: key,
+			isCompression: true,
+		});
+	}
+
+	private static useNoEncryption() {
+		Storage.ls = new SecureLS({
+			encodingType: '',
+			isCompression: false,
+		});
 	}
 }

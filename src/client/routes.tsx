@@ -17,7 +17,6 @@ import {
 	FeedbackPage,
 	GettingStartedPage,
 	Help,
-	PhungibleAccountManagePage,
 	ProfileManager,
 	ScheduledTransactionEditPage,
 	ScheduledTransactionsPage,
@@ -84,7 +83,6 @@ class Routes extends Component<Props, State> {
 			[FeedbackPage.path]: () => this.setPage(FeedbackPage),
 			[GettingStartedPage.path]: () => this.setPage(GettingStartedPage),
 			[Help.path]: () => this.setPage(Help),
-			[PhungibleAccountManagePage.path]: () => this.setPage(PhungibleAccountManagePage),
 			[ProfileManager.path]: () => this.setPage(ProfileManager),
 			[ScheduledTransactionEditPage.path]: () => this.setPage(ScheduledTransactionEditPage),
 			[ScheduledTransactionEditPage.pathParams]: (params) => this.setPage(ScheduledTransactionEditPage, params),
@@ -163,11 +161,6 @@ class Routes extends Component<Props, State> {
 					{page === Help.path &&
 						<Help
 							key={Help.path}
-						/>
-					}
-					{page === PhungibleAccountManagePage.path &&
-						<PhungibleAccountManagePage
-							key={PhungibleAccountManagePage.path}
 						/>
 					}{page === ProfileManager.path &&
 						<ProfileManager
