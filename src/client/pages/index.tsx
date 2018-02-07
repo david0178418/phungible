@@ -4,7 +4,6 @@ import BudgetEditPage from './budget-edit-page';
 import BudgetsPage from './budgets-page';
 import ClearDataPage from './clear-data-page';
 import DailyActivityPage from './daily-activity-page';
-import FeedbackPage from './feedback-page';
 import GettingStartedPage from './getting-started-page';
 import Help from './help-page';
 import ProfileManager from './profile-manager-page';
@@ -24,7 +23,6 @@ export {
 	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
-	FeedbackPage,
 	GettingStartedPage,
 	Help,
 	ProfileManager,

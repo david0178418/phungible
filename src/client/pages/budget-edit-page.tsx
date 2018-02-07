@@ -12,7 +12,6 @@ import {TransactionType} from '../constants';
 import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import Budget, {BudgetFacade} from '../stores/budget';
-import BudgetsPage from './budgets-page';
 import Page from './page';
 
 const {Component} = React;
@@ -123,7 +122,7 @@ class BudgetEditPage extends Component<Props, {}> {
 	private routeBack() {
 		this.props.onBack ?
 			this.props.onBack() :
-			this.props.router.navigate(BudgetsPage.path);
+			window.history.back();
 	}
 
 	private handleSaveBudget() {

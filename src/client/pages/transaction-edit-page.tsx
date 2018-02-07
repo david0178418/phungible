@@ -104,7 +104,7 @@ class TransactionEditPage extends Component<Props, {}> {
 	private handleSaveTransaction() {
 		setTimeout(() => {
 			this.store.saveTransaction();
-			this.routeBack();
+			window.history.back();
 		}, 100);
 	}
 }

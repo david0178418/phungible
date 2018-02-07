@@ -12,7 +12,6 @@ import {floatingActionButtonStyle} from '../shared/styles';
 import AppStore from '../stores/app';
 import ScheduledTransaction, {ScheduledTransactionFacade} from '../stores/scheduled-transaction';
 import Page from './page';
-import ScheduledTransactionsPage from './scheduled-transactions-page';
 
 const {Component} = React;
 
@@ -116,7 +115,7 @@ class ScheduledTransactionEditPage extends Component<Props, {}> {
 	private routeBack() {
 		this.props.onBack ?
 			this.props.onBack() :
-			this.props.router.navigate(ScheduledTransactionsPage.path);
+			window.history.back();
 	}
 
 	private handleSaveScheduledTransaction() {

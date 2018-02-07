@@ -11,7 +11,6 @@ import ContentArea from '../components/shared/content-area';
 import {floatingActionButtonStyle} from '../shared/styles';
 import Account from '../stores/account';
 import AppStore from '../stores/app';
-import AccountsPage from './accounts-page';
 import Page from './page';
 
 const { Component } = React;
@@ -107,7 +106,7 @@ class AccountEditPage extends Component<Props, {}> {
 	private routeBack() {
 		this.props.onBack ?
 			this.props.onBack() :
-			this.props.router.navigate(AccountsPage.path);
+			window.history.back();
 	}
 
 	private handleSaveAccount() {

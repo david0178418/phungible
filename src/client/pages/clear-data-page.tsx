@@ -8,7 +8,6 @@ import ClearData from '../components/clear-data';
 import ContentArea from '../components/shared/content-area';
 import AppStore from '../stores/app';
 import Page from './page';
-import SettingsPage from './settings-page';
 
 const {Component} = React;
 
@@ -45,6 +44,6 @@ class ClearDataPage extends Component<Props, {}> {
 
 	private routeBack() {
 		this.props.appStore.clearAllData();
-		this.props.router.navigate(SettingsPage.path);
+		window.history.back();
 	}
 }
