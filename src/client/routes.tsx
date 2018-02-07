@@ -7,6 +7,8 @@ import Analytics from './shared/analytics';
 
 const {Component} = React;
 
+const TOUR_VIEWED_KEY = 'tour-viewed';
+
 import {
 	AccountEditPage,
 	AccountsPage,
@@ -26,6 +28,7 @@ import {
 	TransactionsPage,
 	TrendsPage,
 } from './pages';
+
 interface Page {
 	path: string;
 	title: string;
@@ -94,6 +97,10 @@ class Routes extends Component<Props, State> {
 			[TrendsPage.path]: () => this.setPage(TrendsPage),
 		})
 		.resolve();
+		if(!localStorage.getItem(TOUR_VIEWED_KEY)) {
+			this.router.navigate(GettingStartedPage.path);
+			localStorage.setItem(TOUR_VIEWED_KEY, '1');
+		}
 	}
 
 	public setPage(page: Page, params: object = {}) {
