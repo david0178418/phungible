@@ -5,9 +5,10 @@ import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import Account from '../../stores/account';
 import AppStore from '../../stores/app';
+import Budget from '../../stores/budget';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 
-type Model = Account | ScheduledTransaction;
+type Model = Account | Budget | ScheduledTransaction;
 
 class State<ModelType> {
 	@observable public activeItem: ModelType | null = null;
