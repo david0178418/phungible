@@ -70,7 +70,7 @@ class ProfileStorage {
 		}
 
 		delete docList[doc.id];
-		Storage.setItem(doc.type, docList);
+		Storage.setItem(key, docList);
 	}
 	public static saveDoc(doc: ProfileDoc, profileId?: string) {
 		const key = ProfileStorage.getKey(doc.type, profileId);
