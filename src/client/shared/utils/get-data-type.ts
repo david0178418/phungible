@@ -7,13 +7,13 @@ async function getAccount(id: string, callback: (err: any, result: any) => void,
 }
 
 export
-async function getBudget(id: string, callback: (err: any, result: any) => void) {
-	getType(Budget, id, callback);
+async function getBudget(id: string, callback: (err: any, result: any) => void, ctx: any) {
+	getType(Budget, id, callback, ctx.target.profileId);
 }
 
 export
-async function getScheduledTransaction(id: string, callback: (err: any, result: any) => void) {
-	getType(ScheduledTransaction, id, callback);
+async function getScheduledTransaction(id: string, callback: (err: any, result: any) => void, ctx: any) {
+	getType(ScheduledTransaction, id, callback, ctx.target.profileId);
 }
 
 export

@@ -61,6 +61,10 @@ class Budget {
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));
 	}
+	@serializable(identifier())
+	public id: string;
+	@serializable
+	public profileId: string;
 	@serializable(reference(Account as any, getAccount as any))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(reference(Account as any, getAccount as any))
@@ -71,10 +75,6 @@ class Budget {
 	@observable public notes: string;
 	@serializable(list(primitive()))
 	@observable public exceptions: string[];
-	@serializable(identifier())
-	public id: string;
-	@serializable
-	public profileId: string;
 	@serializable(list(primitive()))
 	@observable public labels: string[];
 	@serializable
@@ -285,7 +285,7 @@ export
 class BudgetFacade extends Budget {
 	@observable public transactionPartials: BudgetPartial[];
 
-	constructor() {
+	constructor(public profileId: string) {
 		super();
 		this.transactionPartials = [];
 		this.addPartial();

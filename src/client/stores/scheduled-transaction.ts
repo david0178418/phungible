@@ -325,7 +325,7 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 					amount: transaction.amount,
 					name: transaction.name,
 				});
-			}, this.profileId),
+			}),
 		);
 	}
 }

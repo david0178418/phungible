@@ -60,9 +60,9 @@ class Transaction {
 	@observable public name = '';
 	@serializable
 	@observable public transactionType: TransactionType = TransactionType.Expense;
-	@serializable(reference(ScheduledTransaction, getScheduledTransaction))
+	@serializable(reference(ScheduledTransaction as any, getScheduledTransaction as any))
 	@observable public generatedFromSchedTrans: ScheduledTransaction | null = null;
-	@serializable(reference(Budget, getBudget))
+	@serializable(reference(Budget as any, getBudget as any))
 	@observable public generatedFromBudget: Budget | null = null;
 	@serializable
 	@observable private _dateString: string;

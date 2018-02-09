@@ -31,11 +31,11 @@ class BudgetEditStore {
 			if(this.budget instanceof BudgetFacade) {
 				(await this.budget.createBudgets()).map((transaction: any) => {
 					this.appStore.currentProfile.saveBudget(transaction);
-					this.budget = new BudgetFacade();
+					this.budget = new BudgetFacade(this.appStore.currentProfile.id);
 				});
 			} else {
 				this.appStore.currentProfile.saveBudget(this.budget);
-				this.budget = new BudgetFacade();
+				this.budget = new BudgetFacade(this.appStore.currentProfile.id);
 			}
 			return true;
 		} else {
@@ -77,7 +77,7 @@ class BudgetEditPage extends Component<Props, {}> {
 		}
 
 		if(!model) {
-			model = new BudgetFacade();
+			model = new BudgetFacade(props.appStore.currentProfile.id);
 			model.transactionType = TransactionType.BudgetedExpense;
 		}
 		this.store = new BudgetEditStore(props.appStore, model);
