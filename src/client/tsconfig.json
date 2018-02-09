@@ -4,6 +4,12 @@
         "experimentalDecorators": true,
         "outDir": "./build/client/",
         "sourceMap": true,
+        "lib": [
+            "dom",
+            "es5",
+            "es2015.promise",
+            "scripthost"
+        ],
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "module": "esnext",
@@ -11,7 +17,7 @@
         "strict": true,
         "alwaysStrict": true,
         "strictNullChecks": false,
-        "target": "ES6",
+        "target": "ES5",
         "jsx": "react"
     },
     "include": [
