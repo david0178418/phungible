@@ -16,17 +16,17 @@ interface ProfileDoc {
 
 export default
 class ProfileStorage {
-	public static destroyProfile(id: string) {
-		const profile = new Profile(ProfileStorage.getDoc(id, Profile.type));
+	public static async destroyProfile(id: string) {
+		const profile = new Profile(await ProfileStorage.getDoc(id, Profile.type));
 		ProfileStorage.removeDoc(profile);
 		ProfileStorage.removeAllType(Account.type, id);
 		ProfileStorage.removeAllType(Budget.type, id);
 		ProfileStorage.removeAllType(ScheduledTransaction.type, id);
 		ProfileStorage.removeAllType(Transaction.type, id);
 	}
-	public static getAllType(type: ItemType, profileId?: string) {
+	public static async getAllType(type: ItemType, profileId?: string) {
 		const key = ProfileStorage.getKey(type, profileId);
-		const docList = Storage.getItem(key);
+		const docList = await Storage.getItem(key);
 
 		if(!docList) {
 			return [];
@@ -37,8 +37,8 @@ class ProfileStorage {
 	public static removeAllType(type: ItemType, profileId: string) {
 		Storage.removeItem(ProfileStorage.getKey(type, profileId));
 	}
-	public static getDoc(docId: string, type: ItemType, profileId?: string) {
-		const docList = Storage.getItem(ProfileStorage.getKey(type, profileId));
+	public static async getDoc(docId: string, type: ItemType, profileId?: string) {
+		const docList = await Storage.getItem(ProfileStorage.getKey(type, profileId));
 
 		if(!docList) {
 			return null;
@@ -48,11 +48,11 @@ class ProfileStorage {
 	}
 	public static async getProfileData(id: string) {
 		return {
-			...ProfileStorage.getDoc(id, Profile.type),
-			accounts: ProfileStorage.getAllType(Account.type, id),
-			budgets: ProfileStorage.getAllType(Budget.type, id),
-			scheduledTransactions: ProfileStorage.getAllType(ScheduledTransaction.type, id),
-			transactions: ProfileStorage.getAllType(Transaction.type, id),
+			...(await ProfileStorage.getDoc(id, Profile.type)),
+			accounts: await ProfileStorage.getAllType(Account.type, id),
+			budgets: await ProfileStorage.getAllType(Budget.type, id),
+			scheduledTransactions: await ProfileStorage.getAllType(ScheduledTransaction.type, id),
+			transactions: await ProfileStorage.getAllType(Transaction.type, id),
 		};
 	}
 	public static getKey(type: ItemType, profileId?: string) {
@@ -61,9 +61,9 @@ class ProfileStorage {
 	public static getLastProfileId() {
 		return Storage.getItem('lastProfileId') || '';
 	}
-	public static removeDoc(doc: ProfileDoc, profileId?: string) {
+	public static async removeDoc(doc: ProfileDoc, profileId?: string) {
 		const key = ProfileStorage.getKey(doc.type, profileId);
-		const docList = Storage.getItem(key);
+		const docList = await Storage.getItem(key);
 
 		if(!docList) {
 			return;
@@ -72,9 +72,9 @@ class ProfileStorage {
 		delete docList[doc.id];
 		Storage.setItem(key, docList);
 	}
-	public static saveDoc(doc: ProfileDoc, profileId?: string) {
+	public static async saveDoc(doc: ProfileDoc, profileId?: string) {
 		const key = ProfileStorage.getKey(doc.type, profileId);
-		const docList = Storage.getItem(key) || {};
+		const docList = await Storage.getItem(key) || {};
 		docList[doc.id] = doc.serialize();
 		Storage.setItem(key, docList);
 	}

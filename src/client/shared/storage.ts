@@ -1,68 +1,35 @@
-import * as SecureLS from 'secure-ls';
-(window as any).SecureLS = SecureLS;
+import localForage from 'localforage';
+import cordovaSqliteDriver from 'localforage-cordovasqlitedriver';
 
 export default
 class Storage {
-	public static ls: any;
-
-	public static isEncrypted() {
-		// read directly since we use this to determine encryption status
-		return !!localStorage.getItem('encrypted');
-	}
-
-	public static init(key?: string) {
-		let result = false;
-		if(Storage.isEncrypted() && key) {
-			Storage.useEncryption(key);
-
-			try {
-				Storage.ls.get('lastProfileId');
-				result = true;
-			} catch(e) {
-				Storage.ls = null;
-			}
-		} else {
-			Storage.useNoEncryption();
-			result = true;
-		}
-
+	public static init() {
 		Storage.persist();
+
+		localForage.defineDriver(cordovaSqliteDriver).then(function() {
+			return localForage.setDriver([
+					// Try setting cordovaSQLiteDriver if available,
+				cordovaSqliteDriver._driver,
+				// otherwise use one of the default localforage drivers as a fallback.
+				// This should allow you to transparently do your tests in a browser
+				localForage.INDEXEDDB,
+				localForage.WEBSQL,
+				localForage.LOCALSTORAGE,
+			]);
+		});
 		(window as any).Storage = Storage;
-		return result;
 	}
 
 	public static clearAll() {
-		Storage.ls.clear();
+		return localForage.clear();
 	}
 
 	public static clearItem(key: string) {
-		localStorage.removeItem(key);
+		return localForage.removeItem(key);
 	}
 
-	public static disableEncryption() {
-		Storage.useNoEncryption();
-		localStorage.removeItem('encrypted');
-	}
-
-	public static enableEncryption(key: string) {
-		Storage.useEncryption(key);
-		localStorage.setItem('encrypted', 'true');
-	}
-
-	public static getItem(key: string): any {
-		let data;
-
-		try {
-			data = Storage.ls.get(key);
-		} catch(e) {
-			return null;
-		}
-
-		if(data) {
-			return data;
-		} else {
-			return null;
-		}
+	public static getItem(key: string): Promise<any> {
+		return localForage.getItem(key);
 	}
 
 	public static persist() {
@@ -78,14 +45,10 @@ class Storage {
 		});
 	}
 	public static removeItem(key: string) {
-		Storage.ls.remove(key);
+		return localForage.removeItem(key);
 	}
 	public static setItem(key: string, value: any) {
-		try {
-			Storage.ls.set(key, value);
-		} catch(e) {
-			return;
-		}
+		return localForage.setItem(key, value);
 	}
 
 	private static shouldPersist() {
@@ -100,20 +63,5 @@ class Storage {
 				},
 			};
 		}
-	}
-
-	private static useEncryption(key: string) {
-		Storage.ls = new SecureLS({
-			encodingType: 'aes',
-			encryptionSecret: key,
-			isCompression: true,
-		});
-	}
-
-	private static useNoEncryption() {
-		Storage.ls = new SecureLS({
-			encodingType: '',
-			isCompression: false,
-		});
 	}
 }

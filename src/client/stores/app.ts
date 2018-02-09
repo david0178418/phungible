@@ -23,7 +23,7 @@ class AppStore {
 		});
 	}
 	@action public async openLastProfile() {
-		const lastProfile = ProfileStorage.getLastProfileId();
+		const lastProfile = await ProfileStorage.getLastProfileId();
 		if(lastProfile) {
 			await this.openProfile(lastProfile);
 		} else {
@@ -65,10 +65,10 @@ class AppStore {
 		ProfileStorage.setActiveProfile(this.currentProfile.id);
 	}
 	@action public async loadProfileMetas() {
+		const all = await ProfileStorage
+			.getAllType(Profile.type);
 		this.profileMetas = observable(
-			ProfileStorage
-				.getAllType(Profile.type)
-				.map((meta) => new ProfileMeta(meta)),
+			all.map((meta) => new ProfileMeta(meta)),
 		);
 	}
 	@action public openTransactionConfirmation() {
