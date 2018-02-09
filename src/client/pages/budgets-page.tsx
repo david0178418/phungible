@@ -34,7 +34,7 @@ class Budgets extends Component<Props, {}> {
 				/>
 				<ContentArea>
 					<BudgetsList
-						budgets={store.currentProfile.budgets}
+						items={store.currentProfile.budgets}
 						store={store}
 						onRemove={
 							(budget: Budget) =>

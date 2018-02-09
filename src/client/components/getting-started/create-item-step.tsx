@@ -35,7 +35,7 @@ interface Props<ModelType> {
 
 @inject('appStore') @observer
 export default
-class CreateAccountsStep<ModelType extends Model> extends React.Component<Props<ModelType>, State<ModelType>> {
+class CreateItemsStep<ModelType extends Model> extends React.Component<Props<ModelType>, State<ModelType>> {
 	private store: State<ModelType>;
 
 	constructor(props: Props<ModelType>) {

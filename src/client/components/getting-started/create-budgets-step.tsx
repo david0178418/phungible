@@ -14,7 +14,7 @@ interface Props {
 
 @inject('appStore') @observer
 export default
-class CreateAccountsStep extends React.Component<Props, {}> {
+class CreateBudgetsStep extends React.Component<Props, {}> {
 	constructor(props: Props) {
 		super(props);
 	}
@@ -32,12 +32,8 @@ class CreateAccountsStep extends React.Component<Props, {}> {
 					modelClass={Budget}
 					listComponent={BudgetsList}
 					editComponent={BudgetEditPage}
-					listComponentProps={{
-						isBudget: true,
-					}}
 					editComponentProps={{
 						accounts: appStore.currentProfile.accounts,
-						isBudget: true,
 					}}
 				/>
 			</div>

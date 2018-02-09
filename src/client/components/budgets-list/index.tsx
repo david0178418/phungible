@@ -11,7 +11,7 @@ const {Component} = React;
 
 type Props = {
 	store: AppStore;
-	budgets: Budget[];
+	items: Budget[];
 	onRemove: (budget: Budget) => void;
 };
 
@@ -20,13 +20,13 @@ export default
 class BudgetsList extends Component<Props, {}> {
 	public render() {
 		const {
-			budgets,
+			items,
 			onRemove,
 			store,
 		} = this.props;
 		return (
 			<List>
-				{budgets.map((budget) => (
+				{items.map((budget) => (
 					<ListItem
 						key={budget.id}
 						primaryText={`${budget.amount.valFormatted} ${budget.name}`}
@@ -34,7 +34,7 @@ class BudgetsList extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<Budget>('budget', budget, onRemove)}
 					/>
 				))}
-				{!budgets.length && (
+				{!items.length && (
 					<ListItem
 						primaryText="No budgets available"
 					/>
