@@ -17,7 +17,6 @@ import {
 	BudgetEditPage,
 	BudgetsPage,
 	DailyActivityPage,
-	FeedbackPage,
 	Help,
 	ProfileManager,
 	ScheduledTransactionEditPage,
@@ -199,13 +198,6 @@ class Navigation extends React.Component<Props, any> {
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
 						{Help.title}
-					</NavItem>
-					<NavItem
-						leftIcon={<FeedbackPage.icon />}
-						href={FeedbackPage.path}
-						onClick={() => this.handleDrawerStateUpdate(false)}
-					>
-						{FeedbackPage.title}
 					</NavItem>
 					<NavItem
 						href={SettingsPage.path}

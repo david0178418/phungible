@@ -16,7 +16,6 @@ import {
 	BudgetsPage,
 	ClearDataPage,
 	DailyActivityPage,
-	FeedbackPage,
 	GettingStartedPage,
 	Help,
 	ProfileManager,
@@ -83,7 +82,6 @@ class Routes extends Component<Props, State> {
 			[ClearDataPage.path]: () => this.setPage(ClearDataPage),
 			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage),
 			[DailyActivityPage.path]: () => this.setPage(DailyActivityPage),
-			[FeedbackPage.path]: () => this.setPage(FeedbackPage),
 			[GettingStartedPage.path]: () => this.setPage(GettingStartedPage),
 			[Help.path]: () => this.setPage(Help),
 			[ProfileManager.path]: () => this.setPage(ProfileManager),
@@ -153,11 +151,6 @@ class Routes extends Component<Props, State> {
 					{page === DailyActivityPage.path &&
 						<DailyActivityPage
 							key={DailyActivityPage.path}
-						/>
-					}
-					{page === FeedbackPage.path &&
-						<FeedbackPage
-							key={FeedbackPage.path}
 						/>
 					}
 					{page === GettingStartedPage.path &&
