@@ -18,7 +18,6 @@ type Props = {
 @observer
 export default
 class BudgetsList extends Component<Props, {}> {
-
 	public render() {
 		const {
 			budgets,

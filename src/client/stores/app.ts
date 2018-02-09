@@ -15,7 +15,14 @@ class AppStore {
 	constructor(params: Partial<AppStore> = {}) {
 		Object.assign(this, params);
 
-		this.init();
+		Promise.all([
+			import('../shared/utils/recur-types'),
+			import('./transaction'),
+		]).then(() => {
+			setTimeout(() => {
+			this.init();
+			}, 50);
+		});
 	}
 	@action public async openLastProfile() {
 		const lastProfile = ProfileStorage.getLastProfileId();
