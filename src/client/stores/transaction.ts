@@ -42,11 +42,13 @@ class Transaction {
 	public readonly type: TRANSACTION_TYPE = 'transaction';
 	@serializable(identifier())
 	@observable public id: string;
+	@serializable
+	public profileId: string;
 	@serializable(object(Money))
 	public amount: Money;
-	@serializable(reference(Account, getAccount))
+	@serializable(reference(Account as any, getAccount as any))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable(reference(Account, getAccount))
+	@serializable(reference(Account as any, getAccount as any))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable
 	@observable public needsConfirmation = false;

@@ -36,6 +36,8 @@ class Account {
 	@serializable
 	@observable public accountType: AccountType = AccountType.Savings;
 	@serializable
+	public profileId: string;
+	@serializable
 	public readonly type: ACCOUNT_TYPE = 'account';
 	@serializable(list(object(BalanceUpdate)))
 	@observable public balanceUpdateHistory: BalanceUpdate[];

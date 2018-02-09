@@ -61,9 +61,9 @@ class Budget {
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));
 	}
-	@serializable(reference(Account, getAccount))
+	@serializable(reference(Account as any, getAccount as any))
 	@observable public fromAccount: Account | null = null;	// TODO Clean up setting and access
-	@serializable(reference(Account, getAccount))
+	@serializable(reference(Account as any, getAccount as any))
 	@observable public towardAccount: Account | null = null;	// TODO Clean up setting and access
 	@serializable(object(Money))
 	public amount: Money;
@@ -73,6 +73,8 @@ class Budget {
 	@observable public exceptions: string[];
 	@serializable(identifier())
 	public id: string;
+	@serializable
+	public profileId: string;
 	@serializable(list(primitive()))
 	@observable public labels: string[];
 	@serializable

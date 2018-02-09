@@ -2,8 +2,8 @@ import { deserialize } from 'serializr';
 import ProfileStorage from '../profile-storage';
 
 export
-async function getAccount(id: string, callback: (err: any, result: any) => void) {
-	getType(Account, id, callback);
+async function getAccount(id: string, callback: (err: any, result: any) => void, ctx: any) {
+	getType(Account, id, callback, ctx.target.profileId);
 }
 
 export
@@ -17,9 +17,9 @@ async function getScheduledTransaction(id: string, callback: (err: any, result: 
 }
 
 export
-async function getType(Model: any, id: string, callback: (err: any, result: any) => void) {
+async function getType(Model: any, id: string, callback: (err: any, result: any) => void, profileId?: string) {
 	try {
-		const data = await ProfileStorage.getDoc(id, Model.type);
+		const data = await ProfileStorage.getDoc(id, Model.type, profileId);
 		deserialize(Model, data, callback);
 	} catch(e) {
 		callback(e, null);

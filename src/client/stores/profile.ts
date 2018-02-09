@@ -298,6 +298,7 @@ class Profile extends ProfileMeta {
 	@action public saveAccount(newAccount: Account) {
 		if(!newAccount.id) {
 			newAccount.id = generateUuid();
+			newAccount.profileId = this.id;
 			this.accounts.push(newAccount);
 		} else {
 			const index = this.accounts.findIndex((account) => account.id === newAccount.id);
@@ -308,6 +309,7 @@ class Profile extends ProfileMeta {
 	@action public saveBudget(newBudget: Budget) {
 		if(!newBudget.id) {
 			newBudget.id = generateUuid();
+			newBudget.profileId = this.id;
 			this.budgets.push(newBudget);
 		} else {
 			const index = this.budgets.findIndex(
@@ -320,6 +322,7 @@ class Profile extends ProfileMeta {
 	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
 			newScheduledTransaction.id = generateUuid();
+			newScheduledTransaction.profileId = this.id;
 			this.scheduledTransactions.push(newScheduledTransaction);
 
 			if(moment().isSameOrAfter(newScheduledTransaction.startDate, 'days')) {
@@ -345,6 +348,7 @@ class Profile extends ProfileMeta {
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
 			newTransaction.id = generateUuid();
+			newTransaction.profileId = this.id;
 			this.transactions.push(newTransaction);
 		} else {
 			const index = this.transactions.findIndex((transaction) => transaction.id === newTransaction.id);
