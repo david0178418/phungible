@@ -1,6 +1,5 @@
-import {action, computed, observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import * as moment from 'moment';
-import {deserialize, list, object, serializable} from 'serializr';
 
 import {dateRange} from '../shared/utils';
 import Account from '../stores/account';
@@ -12,19 +11,12 @@ type Moment = moment.Moment;
 
 export default
 class TrendsStore {
-	@action public static deserialize(data: any) {
-		return deserialize(TrendsStore, data);
-	}
 	@observable public fromDate: Date;
 	@observable public toDate: Date;
-	@serializable(list(object(Account)))
 	public accounts: Account[];
-	@serializable(list(object(Budgets)))
 	public budgets: Budgets[];
-	@serializable(list(object(ScheduledTransaction)))
 	public scheduledTransactions: ScheduledTransaction[];
 	public today: Date;
-	@serializable(list(object(Transaction)))
 	public transactions: Transaction[];
 	@observable private selectedTrends: string[];
 

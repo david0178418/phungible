@@ -19,9 +19,7 @@ class AppStore {
 			import('../shared/utils/recur-types'),
 			import('./transaction'),
 		]).then(() => {
-			setTimeout(() => {
-			this.init();
-			}, 50);
+			setTimeout(() => this.init(), 50);
 		});
 	}
 	@action public async openLastProfile() {

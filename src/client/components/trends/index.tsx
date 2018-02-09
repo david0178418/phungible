@@ -1,6 +1,5 @@
 import Checkbox from 'material-ui/Checkbox';
-import CircularProgress from 'material-ui/CircularProgress';
-import { action, observable } from 'mobx';
+import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 
@@ -11,6 +10,7 @@ import Budget from '../../stores/budget';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import Transaction from '../../stores/transaction';
 import TrendsStore from '../../stores/trends';
+import TrendsChart from './trends-chart';
 
 const {Component} = React;
 
@@ -27,17 +27,9 @@ class Trends extends Component<Props, {}> {
 	private animateChart = true;
 	private store: TrendsStore;
 
-	@observable private TrendsChartComponent: any = null;
-
 	constructor(props: Props) {
 		super(props);
 		this.store = new TrendsStore(props);
-		import('./trends-chart')
-			.then((m: any) => {
-				setTimeout(action(() => {
-					this.TrendsChartComponent = m.default;
-				}), 500);
-			});
 	}
 
 	public render() {
@@ -87,25 +79,13 @@ class Trends extends Component<Props, {}> {
 						/>
 					))}
 				</div>
-				{this.TrendsChartComponent && (
-					<this.TrendsChartComponent
-						animate={this.animateChart}
-						data={store.selectedTrendData}
-						onAnimationEnd={() => this.handleAnimationEnd()}
-						trendNames={store.selectedTrendOptions}
-						allTrendNames={store.trendOptions}
-					/>
-				)}
-
-				{!this.TrendsChartComponent && (
-					<CircularProgress
-						style={{
-							marginTop: 51,
-							textAlign: 'center',
-							width: '100%',
-						}}
-					/>
-				)}
+				<TrendsChart
+					animate={this.animateChart}
+					data={store.selectedTrendData}
+					onAnimationEnd={() => this.handleAnimationEnd()}
+					trendNames={store.selectedTrendOptions}
+					allTrendNames={store.trendOptions}
+				/>
 			</div>
 		);
 	}

@@ -1,6 +1,5 @@
 import {inject} from 'mobx-react';
 import * as React from 'react';
-import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import ContentArea from '../components/shared/content-area';
 import Trends from '../components/trends';
@@ -14,34 +13,14 @@ type Props = {
 	appStore?: AppStore;
 };
 
-type State = {
-	renderBody: boolean;
-};
-
 @inject('appStore')
 export default
-class TrendsPage extends Component<Props, State> {
+class TrendsPage extends Component<Props, {}> {
 	public static path = '/trends/';
 	public static title = 'Trends';
 
-	constructor(props: Props) {
-		super(props);
-		this.state = {
-			renderBody: false,
-		};
-	}
-
-	public componentDidMount() {
-		setTimeout(() => {
-			this.setState({
-				renderBody: true,
-			});
-		}, 150);
-	}
-
 	public render() {
 		const {appStore} = this.props;
-		const {renderBody} = this.state;
 		return (
 			<Page animationDirection="vertical">
 				<Navigation
@@ -49,21 +28,12 @@ class TrendsPage extends Component<Props, State> {
 					appStore={appStore}
 				/>
 				<ContentArea>
-					<CSSTransitionGroup
-						component="div"
-						transitionName="page-content"
-						transitionEnterTimeout={400}
-						transitionLeaveTimeout={400}
-					>
-						{renderBody && (
-							<Trends
-								accounts={(appStore.currentProfile.accounts as any).toJS()}
-								budgets={(appStore.currentProfile.budgets as any).toJS()}
-								transactions={(appStore.currentProfile.transactions as any).toJS()}
-								scheduledTransactions={(appStore.currentProfile.scheduledTransactions as any).toJS()}
-							/>
-						)}
-					</CSSTransitionGroup>
+					<Trends
+						accounts={(appStore.currentProfile.accounts as any).toJS()}
+						budgets={(appStore.currentProfile.budgets as any).toJS()}
+						transactions={(appStore.currentProfile.transactions as any).toJS()}
+						scheduledTransactions={(appStore.currentProfile.scheduledTransactions as any).toJS()}
+					/>
 				</ContentArea>
 			</Page>
 		);
