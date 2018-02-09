@@ -15,7 +15,6 @@ const {Component} = React;
 type Props = {
 	store: AppStore;
 	showCreate?: boolean;
-	isBudget?: boolean;
 	items: ScheduledTransaction[];
 	onEdit?: (scheduledTransaction: ScheduledTransaction) => void;
 	onOpenCreate?: () => void;
@@ -33,7 +32,6 @@ class ScheduledTransactions extends Component<Props, {}> {
 		const {
 			onRemove,
 			items,
-			isBudget,
 			showCreate,
 			onOpenCreate,
 		} = this.props;
@@ -46,12 +44,12 @@ class ScheduledTransactions extends Component<Props, {}> {
 							<AddIcon/>
 						}
 						onClick={onOpenCreate}
-						primaryText={`Create ${isBudget ? 'Budget' : 'Recurring Transaction'}`}
+						primaryText="Create Recurring Transaction"
 					/>
 				)}
 				{!showCreate && !items.length && (
 					<ListItem
-						primaryText={`No ${isBudget ? 'budget' : 'recurring transaction'} available`}
+						primaryText="No recurring transaction available"
 					/>
 				)}
 				{items.map((scheduledTransaction) => (
