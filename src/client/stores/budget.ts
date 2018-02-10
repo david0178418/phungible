@@ -61,6 +61,10 @@ class Budget {
 	@action public static clone(originalEntry: Budget) {
 		return Budget.deserialize(serialize(originalEntry));
 	}
+	@serializable
+	@observable public transactionType: TransactionType = TransactionType.BudgetedExpense;
+	@serializable
+	public readonly type: BUDGET_TYPE = 'budget';
 	@serializable(identifier())
 	public id: string;
 	@serializable
@@ -84,10 +88,6 @@ class Budget {
 	@serializable(list(primitive()))
 	@observable public _repeatValues: number[];
 	public today: Date;
-	@serializable
-	@observable public transactionType: TransactionType = TransactionType.BudgetedExpense;
-	@serializable
-	public readonly type: BUDGET_TYPE = 'budget';
 	@serializable
 	@observable private _repeatType: RepeatTypes = RepeatTypes.Days;
 	@serializable
@@ -292,12 +292,18 @@ class BudgetFacade extends Budget {
 	}
 
 	@computed get isValid() {
-		const {BudgetedExpense, Expense, Income} = TransactionType;
+		const {
+			BudgetedExpense,
+			Expense,
+			Income,
+			TransferPayment,
+		} = TransactionType;
 
 		return !!(this.transactionsPopulated() && this._repeatValues.length && (
 			this.transactionType === Expense && this.fromAccount ||
 			this.transactionType === BudgetedExpense && this.fromAccount ||
-			this.transactionType === Income && this.towardAccount
+			this.transactionType === Income && this.towardAccount ||
+			this.transactionType === TransferPayment && this.towardAccount && this.fromAccount
 		));
 	}
 

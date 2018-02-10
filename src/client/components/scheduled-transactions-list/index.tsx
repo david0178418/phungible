@@ -4,8 +4,7 @@ import ListItem from 'material-ui/List/ListItem';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
-import {TransactionType} from '../../constants';
-import {AddIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
+import {AddIcon, TypeIcon} from '../../shared/shared-components';
 import AppStore from '../../stores/app';
 import ScheduledTransaction from '../../stores/scheduled-transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
@@ -52,24 +51,20 @@ class ScheduledTransactions extends Component<Props, {}> {
 						primaryText="No recurring transaction available"
 					/>
 				)}
-				{items.map((scheduledTransaction) => (
-					<ListItem
+				{items.map((scheduledTransaction) => {
+					return <ListItem
 						key={scheduledTransaction.id}
 						primaryText={`${scheduledTransaction.name}`}
 						secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
-						leftIcon={
-							scheduledTransaction.transactionType === TransactionType.Income ?
-								<IncomeIcon/> :
-								<ExpenseIcon/>
-						}
+						leftIcon={<TypeIcon type={scheduledTransaction.transactionType}/>}
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>(
 							'scheduled-transaction',
 							scheduledTransaction,
 							onRemove,
 							(this.props.onEdit ? () => this.props.onEdit(scheduledTransaction) : undefined),
 						)}
-					/>
-				))}
+					/>;
+				})}
 			</List>
 		);
 	}

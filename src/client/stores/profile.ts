@@ -157,7 +157,7 @@ class Profile extends ProfileMeta {
 		const accountIds = this.accounts.map((account) => account.id);
 		(this.scheduledTransactions as any).replace(
 			this.scheduledTransactions
-				.filter((schedTrans) => {
+				.filter(async (schedTrans) => {
 					let updated = false;
 
 					if(schedTrans.fromAccount && accountIds.indexOf(schedTrans.fromAccount.id) === -1) {
@@ -171,9 +171,9 @@ class Profile extends ProfileMeta {
 					}
 
 					if(!schedTrans.isValid) {
-						ProfileStorage.removeDoc(schedTrans, this.id);
+						await ProfileStorage.removeDoc(schedTrans, this.id);
 					} else if(updated) {
-						ProfileStorage.saveDoc(schedTrans, this.id);
+						await ProfileStorage.saveDoc(schedTrans, this.id);
 					}
 				}),
 			);
@@ -263,7 +263,9 @@ class Profile extends ProfileMeta {
 		(this.transactions as any).remove(transaction);
 		ProfileStorage.removeDoc(transaction, this.id);
 	}
-	@action public runTransactions(scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true) {
+	@action public async runTransactions(
+		scheduledTransaction: ScheduledTransaction, from: string, needsConfirmation = true,
+	) {
 		const lastUpdate = moment(from, 'MM/DD/YYYY');
 		const daysSince = moment().diff(lastUpdate, 'days');
 
@@ -273,7 +275,7 @@ class Profile extends ProfileMeta {
 				const transaction = scheduledTransaction.generateTransaction(lastUpdate.toDate(), needsConfirmation);
 				transaction.id = generateUuid();
 				this.transactions.push(transaction);
-				ProfileStorage.saveDoc(transaction, this.id);
+				await ProfileStorage.saveDoc(transaction, this.id);
 			}
 		}
 
@@ -328,10 +330,12 @@ class Profile extends ProfileMeta {
 			if(moment().isSameOrAfter(newScheduledTransaction.startDate, 'days')) {
 				if(newScheduledTransaction.repeats) {
 					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString, false);
+					// saved in runTransactions
 				} else {
 					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate, false);
 					transaction.id = generateUuid();
 					this.transactions.push(transaction);
+					ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 				}
 			}
 		} else {
@@ -340,10 +344,10 @@ class Profile extends ProfileMeta {
 			);
 			this.scheduledTransactions[index] = newScheduledTransaction;
 			// TODO figure out how to handle "startDate" updates
+			ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 		}
 
 		this.sortTransactions();
-		ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {

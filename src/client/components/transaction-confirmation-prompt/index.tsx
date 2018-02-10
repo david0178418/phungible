@@ -7,9 +7,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
-import {TransactionType} from '../../constants';
 import ProfileStorage from '../../shared/profile-storage';
-import {ConfirmIcon, ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
+import { ConfirmIcon, TypeIcon } from '../../shared/shared-components';
 import {dialogStyles} from '../../shared/styles';
 import AppStore from '../../stores/app';
 import Transaction from '../../stores/transaction';
@@ -62,12 +61,7 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 								(transaction.towardAccount ?
 									`Toward: ${transaction.towardAccount.name}` : '')
 							)}
-							leftIcon={(
-								// Hack for circular dep
-								transaction.transactionType === TransactionType.Income ?
-									<IncomeIcon/> :
-									<ExpenseIcon/>
-							)}
+							leftIcon={<TypeIcon type={transaction.transactionType} />}
 							rightIconButton={(
 								<IconButton
 									onClick={() => this.handleConfirm(transaction)}
@@ -92,9 +86,9 @@ class TransactionConfirmationPrompt extends Component<Props, {}> {
 	}
 
 	private handleConfirmAll() {
-		this.props.transactions.forEach((transaction) => {
+		this.props.transactions.forEach(async (transaction) => {
 			transaction.confirm();
-			ProfileStorage.saveDoc(transaction);
+			await ProfileStorage.saveDoc(transaction);
 		});
 		this.props.onDone();
 	}

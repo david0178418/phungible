@@ -70,13 +70,13 @@ class ProfileStorage {
 		}
 
 		delete docList[doc.id];
-		Storage.setItem(key, docList);
+		await Storage.setItem(key, docList);
 	}
 	public static async saveDoc(doc: ProfileDoc, profileId?: string) {
 		const key = ProfileStorage.getKey(doc.type, profileId);
 		const docList = await Storage.getItem(key) || {};
 		docList[doc.id] = doc.serialize();
-		Storage.setItem(key, docList);
+		await Storage.setItem(key, docList);
 	}
 	public static setActiveProfile(profileId: string) {
 		Storage.setItem('lastProfileId', profileId);

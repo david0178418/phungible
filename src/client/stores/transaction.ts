@@ -40,6 +40,8 @@ class Transaction {
 	}
 	@serializable
 	public readonly type: TRANSACTION_TYPE = 'transaction';
+	@serializable
+	@observable public transactionType: TransactionType = TransactionType.Expense;
 	@serializable(identifier())
 	@observable public id: string;
 	@serializable
@@ -58,8 +60,6 @@ class Transaction {
 	@observable public labels: string[];
 	@serializable
 	@observable public name = '';
-	@serializable
-	@observable public transactionType: TransactionType = TransactionType.Expense;
 	@serializable(reference(ScheduledTransaction as any, getScheduledTransaction as any))
 	@observable public generatedFromSchedTrans: ScheduledTransaction | null = null;
 	@serializable(reference(Budget as any, getBudget as any))

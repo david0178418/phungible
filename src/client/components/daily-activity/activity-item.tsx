@@ -1,10 +1,7 @@
 import {ListItem} from 'material-ui/List';
-import ActionTrendingDown from 'material-ui/svg-icons/navigation/arrow-downward';
-import ActionTrendingUp from 'material-ui/svg-icons/navigation/arrow-upward';
 import * as React from 'react';
+import { TypeIcon } from '../../shared/shared-components';
 
-import {TransactionType} from '../../constants';
-import Colors from '../../shared/colors';
 import Transaction from '../../stores/transaction';
 import EditRemoveMenu from '../shared/edit-remove-menu';
 
@@ -29,11 +26,7 @@ function ActivityItem({transaction, onRemove}: ActivityItemProps) {
 			primaryText={`${transaction.amount.valFormatted}`}
 			secondaryText={secondaryText}
 			rightIconButton={rightIconButton}
-			leftIcon={
-				transaction.transactionType === TransactionType.Income ?
-					<ActionTrendingUp color={Colors.Money} /> :
-					<ActionTrendingDown color={Colors.Debt} />
-			}
+			leftIcon={<TypeIcon type={transaction.transactionType}/>}
 		/>
 	);
 }

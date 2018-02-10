@@ -1,24 +1,26 @@
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
 import {TransactionType} from '../../constants';
-import {ExpenseIcon, IncomeIcon} from '../../shared/shared-components';
+import { FromTowardAccountSelector, TypeIcon, TypeSelect} from '../../shared/shared-components';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import Budget, {BudgetFacade, RepeatUnits} from '../../stores/budget';
-import AccountSelector from '../account-selector';
 import MoneyEdit from '../shared/money-edit';
 import NameAmountPartial from './name-amount-partial';
 import RepeatField from './repeat-field';
 
 type FormEvent = React.FormEvent<HTMLFormElement>;
 const { Component } = React;
+
+const ICON_STYLE: React.CSSProperties = {
+	bottom: 13,
+	position: 'absolute',
+};
 
 type Props = {
 	accounts: Account[];
@@ -42,8 +44,6 @@ class BudgetEdit extends Component<Props, any> {
 			onSubmit,
 		} = this.props;
 		const isFacade = model instanceof BudgetFacade;
-		const selectedTowardAccountId = model.towardAccount && model.towardAccount.id || null;
-		const selectedFromAccountId = model.fromAccount && model.fromAccount.id || null;
 
 		// TODO Simplify this to always use the facade
 		return (
@@ -87,38 +87,12 @@ class BudgetEdit extends Component<Props, any> {
 								width: 40,
 							}}
 						>
-							{model.transactionType === TransactionType.Income ?
-								<IncomeIcon
-									style={{
-										bottom: 13,
-										position: 'absolute',
-									}}
-								/> :
-								<ExpenseIcon
-									style={{
-										bottom: 13,
-										position: 'absolute',
-									}}
-								/>
-							}
+							<TypeIcon type={model.transactionType} style={ICON_STYLE} />
 						</div>
-						<SelectField
-							fullWidth
-							floatingLabelText="Type"
+						<TypeSelect
 							value={model.transactionType}
 							onChange={(ev, index, value) => this.handleUpdateType(value, model)}
-						>
-							<MenuItem
-								leftIcon={<IncomeIcon/>}
-								primaryText="Income"
-								value={TransactionType.Income}
-							/>
-							<MenuItem
-								leftIcon={<ExpenseIcon/>}
-								primaryText="Expense"
-								value={TransactionType.Expense}
-							/>
-						</SelectField>
+						/>
 					</div>
 				)}
 				<div>
@@ -133,26 +107,12 @@ class BudgetEdit extends Component<Props, any> {
 						value={model.startDate}
 					/>
 				</div>
-				{!!accounts.length && (
-					<div>
-						<AccountSelector
-							errorText={this.fromAccountErrText()}
-							accounts={accounts}
-							label="From Account"
-							onChange={(value) => this.handleUpdateFromAccount(value, model)}
-							selectedAccountId={selectedFromAccountId}
-						/>
-						{!isBudget && (
-							<AccountSelector
-								errorText={this.towardAccountErrText()}
-								accounts={accounts}
-								label="Towards Account"
-								onChange={(value) => this.handleUpdateTowardAccount(value, model)}
-								selectedAccountId={selectedTowardAccountId}
-							/>
-						)}
-					</div>
-				)}
+				<FromTowardAccountSelector
+					accounts={accounts}
+					model={model}
+					onFromChange={(value) => this.handleUpdateFromAccount(value, model)}
+					onTowardChange={(value) => this.handleUpdateTowardAccount(value, model)}
+				/>
 				<div style={{display: 'inline-block'}}>
 					<Checkbox
 						checked={model.repeats}
@@ -172,34 +132,6 @@ class BudgetEdit extends Component<Props, any> {
 				)}
 			</form>
 		);
-	}
-
-	private fromAccountErrText() {
-		let errorText = '';
-		const scheduledTransaction = this.props.model;
-
-		if(
-			!scheduledTransaction.fromAccount &&
-			scheduledTransaction.transactionType !== TransactionType.Income
-		) {
-			errorText = 'Expenses require an account to draw from';
-		}
-
-		return errorText;
-	}
-
-	private towardAccountErrText() {
-		let errorText = '';
-		const scheduledTransaction = this.props.model;
-
-		if(
-			!scheduledTransaction.towardAccount &&
-			scheduledTransaction.transactionType === TransactionType.Income
-		) {
-			errorText = 'Incomes require an account to deposit toward';
-		}
-
-		return errorText;
 	}
 
 	@action private handleSubmit(e: FormEvent, onSubmit: () => void) {
