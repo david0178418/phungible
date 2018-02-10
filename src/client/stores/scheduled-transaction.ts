@@ -296,12 +296,18 @@ class ScheduledTransactionFacade extends ScheduledTransaction {
 	}
 
 	@computed get isValid() {
-		const {BudgetedExpense, Expense, Income} = TransactionType;
+		const {
+			BudgetedExpense,
+			Expense,
+			Income,
+			TransferPayment,
+		} = TransactionType;
 
 		return !!(this.transactionsPopulated() && this._repeatValues.length && (
 			this.transactionType === Expense && this.fromAccount ||
 			this.transactionType === BudgetedExpense && this.fromAccount ||
-			this.transactionType === Income && this.towardAccount
+			this.transactionType === Income && this.towardAccount ||
+			this.transactionType === TransferPayment && this.towardAccount && this.fromAccount
 		));
 	}
 

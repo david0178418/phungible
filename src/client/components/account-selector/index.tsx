@@ -2,13 +2,13 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import * as React from 'react';
 
-interface Selectable {
-	id: string;
-	name: string;
-}
+import Account from '../../stores/account';
+import Budget from '../../stores/budget';
+
+type AccountBudget = Account | Budget;
 
 type AccountSelectorProps = {
-	accounts: Selectable[];
+	accounts: AccountBudget[];
 	errorText?: string;
 	label: string;
 	selectedAccountId: string | null;
@@ -17,7 +17,7 @@ type AccountSelectorProps = {
 };
 
 export default
-function AccountsSelector({
+function AccountSelector({
 	accounts,
 	errorText = '',
 	label,

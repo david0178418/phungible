@@ -54,11 +54,6 @@ class BudgetsList extends Component<Props, {}> {
 						rightIconButton={EditRemoveMenu<Budget>('budget', budget, onRemove)}
 					/>
 				))}
-				{!items.length && (
-					<ListItem
-						primaryText="No budgets available"
-					/>
-				)}
 			</List>
 		);
 	}

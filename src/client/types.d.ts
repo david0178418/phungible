@@ -5,6 +5,9 @@ import Transaction, { TRANSACTION_TYPE } from './stores/transaction';
 import { ProfileMeta, PROFILE_TYPE } from './stores/profile';
 
 export
+type AccountActionModel = Budget | ScheduledTransaction | Transaction;
+
+export
 type ItemModel = Account | Budget | ScheduledTransaction | ProfileMeta | Transaction;
 
 export

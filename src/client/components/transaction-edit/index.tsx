@@ -1,12 +1,11 @@
 import DatePicker from 'material-ui/DatePicker';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import * as React from 'react';
 
-import {TransactionType} from '../../constants';
+import { TransactionType } from '../../constants';
+import { FromTowardAccountSelector, TypeSelect} from '../../shared/shared-components';
 import formatDate from '../../shared/utils/format-date';
 import Account from '../../stores/account';
 import Budget from '../../stores/budget';
@@ -46,8 +45,6 @@ class TransactionEdit extends Component<Props, any> {
 			onSubmit,
 		} = this.props;
 		const budgetId = transaction.generatedFromBudget && transaction.generatedFromBudget.id;
-		const selectedTowardAccountId = transaction.towardAccount && transaction.towardAccount.id || null;
-		const selectedFromAccountId = transaction.fromAccount && transaction.fromAccount.id || null;
 		return (
 			<form className="edit-transaction content" onSubmit={(ev: any) => this.handleSubmit(ev, onSubmit)}>
 				<div
@@ -70,15 +67,10 @@ class TransactionEdit extends Component<Props, any> {
 				</div>
 				{!hideType && (
 					<div>
-						<SelectField
-							fullWidth
-							floatingLabelText="Type"
-							value={transaction.transactionType}
+						<TypeSelect
 							onChange={(ev, index, value) => this.handleUpdateType(value, transaction)}
-						>
-							<MenuItem value={TransactionType.Expense} primaryText="Expense" />
-							<MenuItem value={TransactionType.Income} primaryText="Income" />
-						</SelectField>
+							value={transaction.transactionType}
+						/>
 					</div>
 				)}
 				{!!(budgets && budgets.length) && (
@@ -89,26 +81,13 @@ class TransactionEdit extends Component<Props, any> {
 						selectedAccountId={budgetId}
 					/>
 				)}
-				{!!accounts.length && (
-					<div>
-						<AccountSelector
-							errorText={this.fromAccountErrText()}
-							accounts={accounts}
-							label="From Account"
-							onChange={(value, index) => this.handleUpdateFromAccount(value, transaction)}
-							selectedAccountId={selectedFromAccountId}
-						/>
-						{!hideTowardsAccount && (
-							<AccountSelector
-								errorText={this.towardAccountErrText()}
-								accounts={accounts}
-								label="Towards Account"
-								onChange={(value, index) => this.handleUpdateTowardAccount(value, transaction)}
-								selectedAccountId={selectedTowardAccountId}
-							/>
-						)}
-					</div>
-				)}
+				<FromTowardAccountSelector
+					hideTowardsAccount={hideTowardsAccount}
+					accounts={accounts}
+					model={transaction}
+					onFromChange={(value) => this.handleUpdateFromAccount(value, transaction)}
+					onTowardChange={(value) => this.handleUpdateTowardAccount(value, transaction)}
+				/>
 				{!hideDate && (
 					<div>
 						<DatePicker
@@ -135,34 +114,6 @@ class TransactionEdit extends Component<Props, any> {
 				)}
 			</form>
 		);
-	}
-
-	private fromAccountErrText() {
-		let errorText = '';
-		const transaction = this.props.transaction;
-
-		if(
-			!transaction.fromAccount &&
-			transaction.transactionType !== TransactionType.Income
-		) {
-			errorText = 'Expenses require an account to draw from';
-		}
-
-		return errorText;
-	}
-
-	private towardAccountErrText() {
-		let errorText = '';
-		const transaction = this.props.transaction;
-
-		if(
-			!transaction.towardAccount &&
-			transaction.transactionType === TransactionType.Income
-		) {
-			errorText = 'Incomes require an account to deposit toward';
-		}
-
-		return errorText;
 	}
 
 	// TODO refactor all this
