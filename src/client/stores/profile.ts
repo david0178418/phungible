@@ -321,7 +321,7 @@ class Profile extends ProfileMeta {
 		}
 		ProfileStorage.saveDoc(newBudget, this.id);
 	}
-	@action public saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
+	@action public async saveScheduledTransaction(newScheduledTransaction: ScheduledTransaction) {
 		if(!newScheduledTransaction.id) {
 			newScheduledTransaction.id = generateUuid();
 			newScheduledTransaction.profileId = this.id;
@@ -329,13 +329,14 @@ class Profile extends ProfileMeta {
 
 			if(moment().isSameOrAfter(newScheduledTransaction.startDate, 'days')) {
 				if(newScheduledTransaction.repeats) {
-					this.runTransactions(newScheduledTransaction, newScheduledTransaction.startDateString, false);
+					const dayBeforeStartDate =
+						moment(newScheduledTransaction.startDateString, 'MM/DD/YYYY').subtract(1, 'day').format('MM/DD/YYYY');
+					this.runTransactions(newScheduledTransaction, dayBeforeStartDate, false);
 					// saved in runTransactions
 				} else {
 					const transaction = newScheduledTransaction.generateTransaction(newScheduledTransaction.startDate, false);
 					transaction.id = generateUuid();
 					this.transactions.push(transaction);
-					ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 				}
 			}
 		} else {
@@ -344,10 +345,10 @@ class Profile extends ProfileMeta {
 			);
 			this.scheduledTransactions[index] = newScheduledTransaction;
 			// TODO figure out how to handle "startDate" updates
-			ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 		}
 
 		this.sortTransactions();
+		await ProfileStorage.saveDoc(newScheduledTransaction, this.id);
 	}
 	@action public saveTransaction(newTransaction: Transaction) {
 		if(!newTransaction.id) {
