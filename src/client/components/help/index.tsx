@@ -110,6 +110,15 @@ class Help extends Component<Props, State> {
 							</div>,
 						)}
 					/>
+					<ListItem
+						primaryText="Feedback"
+						onClick={() => this.handleOpen(
+							<div>
+								Have an issue you need fixed?  Want to help make Phungible better?
+								Reach out to us at <a href="mailto:contact@phungible.com">contact@phungible.com</a>
+							</div>,
+						)}
+					/>
 				</List>
 				<Dialog
 					{...dialogStyles}
