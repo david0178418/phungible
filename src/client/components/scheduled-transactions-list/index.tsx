@@ -29,6 +29,7 @@ class ScheduledTransactions extends Component<Props, {}> {
 
 	public render() {
 		const {
+			onEdit,
 			onRemove,
 			items,
 			showCreate,
@@ -57,8 +58,10 @@ class ScheduledTransactions extends Component<Props, {}> {
 						primaryText={`${scheduledTransaction.name}`}
 						secondaryText={`Amount: ${scheduledTransaction.amount.valFormatted}`}
 						leftIcon={<TypeIcon type={scheduledTransaction.transactionType}/>}
+						onClick={() => onEdit && onEdit(scheduledTransaction)}
+						href={!onEdit ? `#/${ScheduledTransaction.type}/edit/${scheduledTransaction.id}` : ''}
 						rightIconButton={EditRemoveMenu<ScheduledTransaction>(
-							'scheduled-transaction',
+							ScheduledTransaction.type,
 							scheduledTransaction,
 							onRemove,
 							(this.props.onEdit ? () => this.props.onEdit(scheduledTransaction) : undefined),

@@ -60,7 +60,7 @@ class DailyActivity extends Component<Props, State> {
 					autoOk
 					fullWidth
 					firstDayOfWeek={0}
-					floatingLabelText={`Transactions for:`}
+					floatingLabelText="Transactions for:"
 					formatDate={(d) => formatDate(d)}
 					value={date}
 					style={{

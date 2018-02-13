@@ -14,9 +14,11 @@ export default
 function ActivityItem({transaction, onRemove}: ActivityItemProps) {
 	let rightIconButton;
 	let secondaryText = transaction.name;
+	let href = '';
 
 	if(transaction.id) {
-		rightIconButton = EditRemoveMenu<Transaction>('transaction', transaction, onRemove);
+		rightIconButton = EditRemoveMenu<Transaction>(Transaction.type, transaction, onRemove);
+		href = `#/${Transaction.type}/edit/${transaction.id}`;
 	} else {
 		secondaryText += ' (pending)';
 	}
@@ -26,6 +28,7 @@ function ActivityItem({transaction, onRemove}: ActivityItemProps) {
 			primaryText={`${transaction.amount.valFormatted}`}
 			secondaryText={secondaryText}
 			rightIconButton={rightIconButton}
+			href={href}
 			leftIcon={<TypeIcon type={transaction.transactionType}/>}
 		/>
 	);

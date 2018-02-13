@@ -39,13 +39,14 @@ class TransactionsList extends Component<Props, {}> {
 							(transaction.towardAccount ?
 								`Toward: ${transaction.towardAccount.name}` : '')
 						)}
+						href={`#/${Transaction.type}/edit/${transaction.id}`}
 						leftIcon={(
 							// Hack for circular dep
 							transaction.transactionType === TransactionType.Income ?
 								<IncomeIcon/> :
 								<ExpenseIcon/>
 						)}
-						rightIconButton={EditRemoveMenu<Transaction>('transaction', transaction, onRemove)}
+						rightIconButton={EditRemoveMenu<Transaction>(Transaction.type, transaction, onRemove)}
 					/>
 				))}
 				{!items.length && (

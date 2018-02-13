@@ -25,6 +25,7 @@ class BudgetsList extends Component<Props, {}> {
 	public render() {
 		const {
 			items,
+			onEdit,
 			onRemove,
 			store,
 			showCreate,
@@ -51,7 +52,9 @@ class BudgetsList extends Component<Props, {}> {
 						key={budget.id}
 						primaryText={`${budget.amount.valFormatted} ${budget.name}`}
 						secondaryText={`Current Remaining: ${store.currentProfile.findRemainingBudgetBalance(budget.id).valFormatted}`}
-						rightIconButton={EditRemoveMenu<Budget>('budget', budget, onRemove)}
+						onClick={() => onEdit && onEdit(budget)}
+						href={!onEdit ? `#/${Budget.type}/edit/${budget.id}` : ''}
+						rightIconButton={EditRemoveMenu<Budget>(Budget.type, budget, onRemove)}
 					/>
 				))}
 			</List>

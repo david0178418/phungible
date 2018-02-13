@@ -84,6 +84,7 @@ class AccountsList extends Component<Props, {}> {
 	public render() {
 		const {
 			items,
+			onEdit,
 			onRemove,
 			onOpenCreate,
 			showCreate,
@@ -119,8 +120,10 @@ class AccountsList extends Component<Props, {}> {
 									<SavingsIcon/> :
 									<DebtIcon/>
 							}
+							onClick={() => onEdit && onEdit(account)}
+							href={!onEdit ? `#/${Account.type}/edit/${account.id}` : ''}
 							rightIconButton={EditRemoveMenu<Account>(
-								'account',
+								Account.type,
 								account,
 								() => this.store.confirmRemoval(account),
 								(this.props.onEdit ? () => this.props.onEdit(account) : undefined),
