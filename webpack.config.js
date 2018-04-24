@@ -8,7 +8,6 @@ let plugins = [
 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 	new webpack.optimize.ModuleConcatenationPlugin(),
 ];
-let devtool;
 
 if(isProd) {
 	plugins.push(
@@ -36,12 +35,11 @@ if(isProd) {
 				screw_ie8 : true,
 				comments: false,
 			},
-			sourceMap: false,
+			sourceMap: !!process.env.SOURCEMAPS,
 			warnings: false,
 		})
 	);
 } else {
-	devtool = 'source-map'
 	plugins.push(
 		new webpack.DefinePlugin({
 			VERSION,
@@ -72,7 +70,7 @@ plugins.push(
 
 module.exports = {
 	plugins,
-	devtool,
+	devtool: 'source-map',
 	entry: './src/client/index.ts',
 	module: {
 		rules: [
