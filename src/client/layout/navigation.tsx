@@ -172,7 +172,7 @@ class Navigation extends React.Component<Props, any> {
 						rightIcon={<Badge badgeContent={accounts.length} primary />}
 						onClick={() => this.handleDrawerStateUpdate(false)}
 					>
-						{AccountEditPage.title}
+						{AccountsPage.title}
 					</NavItem>
 					<NavItem
 						{...budgetProps(budgets.length, accounts.length)}
