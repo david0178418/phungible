@@ -22,7 +22,7 @@ interface Props {
 
 @observer
 export default
-class QuickEdit extends Component<Props, {}> {
+class QuickEdit extends Component<Props> {
 	constructor(props: Props) {
 		super(props);
 

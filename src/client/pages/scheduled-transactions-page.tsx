@@ -20,7 +20,7 @@ type Props = {
 
 @inject('appStore') @observer
 export default
-class ScheduledTransactions extends Component<Props, {}> {
+class ScheduledTransactions extends Component<Props> {
 	public static path = '/scheduled-transactions/';
 	public static title= 'Recurring Transactions';
 

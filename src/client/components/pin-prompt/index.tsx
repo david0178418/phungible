@@ -12,7 +12,7 @@ interface PinProps {
 }
 
 @observer
-class Pin extends Component<PinProps, {}> {
+class Pin extends Component<PinProps> {
 	public render() {
 		const {length} = this.props;
 		const digits = [];
@@ -65,7 +65,7 @@ interface Props {
 
 @observer
 export default
-class PinPrompt extends Component<Props, {}> {
+class PinPrompt extends Component<Props> {
 	public render() {
 		const {
 			title,

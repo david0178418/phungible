@@ -43,7 +43,7 @@ const defaultStyle: any = {
 
 @observer
 export default
-class Page extends Component<Props, {}> {
+class Page extends Component<Props> {
 	private store: Store;
 
 	constructor(props: Props) {

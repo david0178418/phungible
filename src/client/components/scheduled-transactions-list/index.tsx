@@ -22,7 +22,7 @@ type Props = {
 
 @observer
 export default
-class ScheduledTransactions extends Component<Props, {}> {
+class ScheduledTransactions extends Component<Props> {
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		this.props.store.currentProfile.removeScheduledTransaction(scheduledTransaction);
 	}

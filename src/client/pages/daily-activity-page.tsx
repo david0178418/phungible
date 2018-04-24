@@ -16,7 +16,7 @@ type Props = {
 
 @inject('appStore') @observer
 export default
-class DailyActivityPage extends Component<Props, {}> {
+class DailyActivityPage extends Component<Props> {
 	public static path = '/';
 	public static title = 'Daily Activity';
 

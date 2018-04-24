@@ -14,7 +14,7 @@ interface Props {
 
 @inject('appStore') @observer
 export default
-class CreateBudgetsStep extends React.Component<Props, {}> {
+class CreateBudgetsStep extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
 	}

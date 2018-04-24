@@ -19,7 +19,7 @@ type Props = {
 
 @inject('appStore', 'router')
 export default
-class ClearDataPage extends Component<Props, {}> {
+class ClearDataPage extends Component<Props> {
 	public static path = '/clear-data';
 	public static title = 'Nuke All Data';
 

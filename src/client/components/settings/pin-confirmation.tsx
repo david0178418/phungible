@@ -64,7 +64,7 @@ class PinConfirmationStore {
 
 @observer
 export default
-class PinConfirmation extends Component<Props, {}> {
+class PinConfirmation extends Component<Props> {
 	private store: PinConfirmationStore;
 	constructor(props: Props) {
 		super(props);

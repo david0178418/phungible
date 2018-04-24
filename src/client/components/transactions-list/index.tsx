@@ -19,7 +19,7 @@ type Props = {
 
 @observer
 export default
-class TransactionsList extends Component<Props, {}> {
+class TransactionsList extends Component<Props> {
 
 	public render() {
 		const {onRemove, items} = this.props;

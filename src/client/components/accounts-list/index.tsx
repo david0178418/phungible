@@ -72,7 +72,7 @@ class AcountsStore {
 
 @observer
 export default
-class AccountsList extends Component<Props, {}> {
+class AccountsList extends Component<Props> {
 	public static path = '/accounts/';
 	private store: AcountsStore;
 

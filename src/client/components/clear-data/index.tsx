@@ -15,7 +15,7 @@ type Props = {
 
 @inject('appStore', 'router')
 export default
-class ClearData extends Component<Props, {}> {
+class ClearData extends Component<Props> {
 	public render() {
 		return (
 			<div

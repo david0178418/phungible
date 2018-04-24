@@ -25,7 +25,7 @@ type Props = {
 @inject('appStore')
 @observer
 export default
-class Accounts extends Component<Props, {}> {
+class Accounts extends Component<Props> {
 	public static path = '/accounts/';
 	public static title = 'Accounts';
 

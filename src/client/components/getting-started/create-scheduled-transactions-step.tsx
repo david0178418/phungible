@@ -14,7 +14,7 @@ interface Props {
 
 @inject('appStore') @observer
 export default
-class CreateScheduledTransactionsStep extends React.Component<Props, {}> {
+class CreateScheduledTransactionsStep extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props);
 	}

@@ -22,7 +22,7 @@ type Props = {
 
 @inject('router')
 export default
-class NavItem extends Component<Props, {}> {
+class NavItem extends Component<Props> {
 	public render() {
 		const {
 			children,

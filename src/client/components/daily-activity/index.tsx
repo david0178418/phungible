@@ -19,7 +19,7 @@ type Props = {
 
 @inject('appStore') @observer
 export default
-class DailyActivity extends Component<Props, {}> {
+class DailyActivity extends Component<Props> {
 	constructor(props: Props) {
 		super(props);
 

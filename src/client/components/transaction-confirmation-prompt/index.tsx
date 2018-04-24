@@ -24,7 +24,7 @@ interface Props {
 
 @observer
 export default
-class TransactionConfirmationPrompt extends Component<Props, {}> {
+class TransactionConfirmationPrompt extends Component<Props> {
 	public render() {
 		const {
 			open,

@@ -26,7 +26,7 @@ class Store {
 
 @observer
 export default
-class CurrentBudgets extends Component<Props, {}> {
+class CurrentBudgets extends Component<Props> {
 	private date: Date;
 	private store: Store;
 

@@ -47,7 +47,7 @@ function openEditDialog(store: Store, openProfile?: ProfileMeta) {
 
 @inject('appStore') @observer
 export default
-class ProfileManager extends Component<Props, {}> {
+class ProfileManager extends Component<Props> {
 	private store: Store;
 
 	constructor(props: Props) {

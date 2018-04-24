@@ -15,7 +15,7 @@ type Props = {
 
 @inject('appStore')
 export default
-class HelpPage extends Component<Props, {}> {
+class HelpPage extends Component<Props> {
 	public static path = '/help';
 	public static title = 'Help';
 

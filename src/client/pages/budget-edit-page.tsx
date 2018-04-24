@@ -60,7 +60,7 @@ type Props = {
 
 @inject('appStore', 'router') @observer
 export default
-class BudgetEditPage extends Component<Props, {}> {
+class BudgetEditPage extends Component<Props> {
 	public static path = '/budget/edit/';
 	public static pathParams = '/budget/edit/:id';
 	public static title = 'Budget';

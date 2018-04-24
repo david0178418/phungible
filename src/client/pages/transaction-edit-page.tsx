@@ -49,7 +49,7 @@ interface Props {
 
 @inject('appStore', 'router') @observer
 export default
-class TransactionEditPage extends Component<Props, {}> {
+class TransactionEditPage extends Component<Props> {
 	public static path = '/transaction/edit/';
 	public static pathParams = '/transaction/edit/:id';
 	public static title = 'Tranasaction Edit';

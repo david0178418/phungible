@@ -23,7 +23,7 @@ interface Props {
 
 @observer
 export default
-class Trends extends Component<Props, {}> {
+class Trends extends Component<Props> {
 	private animateChart = true;
 	private store: TrendsStore;
 

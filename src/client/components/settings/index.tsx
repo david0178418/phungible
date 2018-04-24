@@ -41,7 +41,7 @@ class SettingsStore {
 
 @inject('appStore') @observer
 export default
-class Settings extends Component<Props, {}> {
+class Settings extends Component<Props> {
 	private store: SettingsStore;
 
 	constructor(props: Props) {
