@@ -22,7 +22,7 @@ type Props = {
 export default
 class ScheduledTransactions extends Component<Props> {
 	public static path = '/scheduled-transactions/';
-	public static title= 'Recurring Transactions';
+	public static title = 'Recurring Transactions';
 
 	public removeScheduledTransaction(scheduledTransaction: ScheduledTransaction) {
 		this.props.appStore.currentProfile.removeScheduledTransaction(scheduledTransaction);
