@@ -179,11 +179,13 @@ class App extends Component<Props, any> {
 		this.initStore.pin = pin;
 
 		if(this.initStore.checkingPin) {
-			if(Storage.init()) {
-				this.initStore.needUserPin = false;
-			} else {
-				this.initStore.pin = '';
-			}
+			// if(Storage.init()) {
+			// 	this.initStore.needUserPin = false;
+			// } else {
+			// 	this.initStore.pin = '';
+			// }
+			Storage.init();
+			this.initStore.pin = '';
 		}
 	}
 }

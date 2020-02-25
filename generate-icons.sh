@@ -13,7 +13,7 @@ sizes=(
 	"16x16"
 )
 
-cd ./src/client/static/images/icons/
+cd ./src/static/images/icons/
 
 for size in "${sizes[@]}"; do
 	convert phungible-pig.png -resize $size icon-$size.png

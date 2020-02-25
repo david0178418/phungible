@@ -1,4 +1,9 @@
-(window as any).ga('set', 'appVersion', VERSION);
+const {
+	// tslint:disable-next-line: no-empty
+	ga = (...args: any[]) => {},
+} = (window as any);
+
+ga('set', 'appVersion', VERSION);
 
 export default
 class Analytics {
@@ -8,6 +13,6 @@ class Analytics {
 			page: path,
 			title,
 		};
-		(window as any).ga('send', fields);
+		ga('send', fields);
 	}
 }

@@ -2,7 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
-        "outDir": "./build/client/",
+        "outDir": "./build/",
         "sourceMap": true,
         "lib": [
             "dom",
@@ -18,7 +18,8 @@
         "alwaysStrict": true,
         "strictNullChecks": false,
         "target": "ES5",
-        "jsx": "react"
+        "jsx": "react",
+        "resolveJsonModule": true
     },
     "include": [
         "./**/*"
