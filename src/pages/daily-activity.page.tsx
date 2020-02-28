@@ -21,7 +21,9 @@ import {
 	IonSelectOption,
 	IonTextarea,
 	IonDatetime,
+	IonIcon,
 } from '@ionic/react';
+import { arrowDown, cashOutline } from 'ionicons/icons';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -180,15 +182,30 @@ function HomePage() {
 								/>
 							</IonItem>
 							<IonItem onClick={() => console.log(111)}>
+								<IonIcon
+									icon={cashOutline}
+									className="money"
+									slot="start"
+								/>
 								<IonLabel>
-									Foo
+									$1.00
 									<p>
 										Renews Feb 20, 2021
 									</p>
 								</IonLabel>
-								<div className="money" slot="end">
-									$100
-								</div>
+							</IonItem>
+							<IonItem onClick={() => console.log(111)}>
+								<IonIcon
+									icon={arrowDown}
+									className="debt"
+									slot="start"
+								/>
+								<IonLabel>
+									$1.00
+									<p>
+										Renews Feb 20, 2021
+									</p>
+								</IonLabel>
 							</IonItem>
 						</IonList>
 					</div>
