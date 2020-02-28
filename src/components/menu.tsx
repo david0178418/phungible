@@ -13,7 +13,12 @@ import {
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import {
-	home, logIn,
+	trendingUp,
+	albumsOutline,
+	calendar,
+	wallet,
+	swapHorizontal,
+	settings,
 } from 'ionicons/icons';
 
 interface AppPage {
@@ -24,14 +29,34 @@ interface AppPage {
 
 const appPages: AppPage[] = [
 	{
-		title: 'Home',
+		title: 'Daily Activity',
 		url: '/',
-		icon: home,
+		icon: calendar,
 	},
 	{
-		title: 'Inbox',
-		url: '/login',
-		icon: logIn,
+		title: 'Trends',
+		url: '/trends',
+		icon: trendingUp,
+	},
+	{
+		title: 'Accounts',
+		url: '/accounts',
+		icon: albumsOutline,
+	},
+	{
+		title: 'Budgets',
+		url: '/budgets',
+		icon: wallet,
+	},
+	{
+		title: 'Recurring Transactions',
+		url: '/recurring-transactions',
+		icon: swapHorizontal,
+	},
+	{
+		title: 'Settings',
+		url: '/settings',
+		icon: settings,
 	},
 ];
 
