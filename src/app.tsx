@@ -23,7 +23,7 @@ import './global.scss';
 
 import { Route } from 'react-router-dom';
 
-const HomePage = lazy(() => import('./pages/home.page'));
+const DailyActivityPage = lazy(() => import('./pages/daily-activity.page'));
 const LoginPage = lazy(() => import('./pages/login.page'));
 
 export
@@ -57,7 +57,7 @@ function App() {
 								<Route
 									exact
 									path="/"
-									component={HomePage}
+									component={DailyActivityPage}
 								/>
 							</IonRouterOutlet>
 						</Suspense>

@@ -17,6 +17,21 @@
 // @import "~@ionic/react/css/flex-utils.css";
 // @import "~@ionic/react/css/display.css";
 
+:root {
+	--money-color: #4E9455;
+	--debt-color: #C61F0C;
+}
+
+.money {
+	color: var(--money-color);
+	font-weight: bold;
+}
+
+.debt {
+	color: var(--debt-color);
+	font-weight: bold;
+}
+
 html ion-app {
 	&,
 	* {

@@ -1,3 +1,11 @@
+// Original theme to port...
+// color: #FF9800;
+// color: #FF9800;
+// color: #00ff00;
+// color: #FFFFFF;
+// color: #0097A7;
+// color: #00BCD4;
+// color: #B2EBF2;
 :root {
 	/** primary **/
   //   --ion-color-primary: #3880ff;
@@ -7,12 +15,12 @@
   //   --ion-color-primary-shade: #3171e0;
   //   --ion-color-primary-tint: #4c8dff;
 
-  --ion-color-primary: #8bc34a;
+  --ion-color-primary: #0097A7;
   --ion-color-primary-rgb: 139,195,74;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255,255,255;
-  --ion-color-primary-shade: #7aac41;
-  --ion-color-primary-tint: #97c95c;
+  --ion-color-primary-shade: #3171e0;
+  --ion-color-primary-tint: #4c8dff;
 
 /** secondary **/
   // --ion-color-secondary: #0cd1e8;
@@ -22,12 +30,12 @@
   // --ion-color-secondary-shade: #0bb8cc;
   // --ion-color-secondary-tint: #24d6ea;
 
-  --ion-color-secondary: #ff4081;
+  --ion-color-secondary: #FF9800;
   --ion-color-secondary-rgb: 255,64,129;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255,255,255;
-  --ion-color-secondary-shade: #e03872;
-  --ion-color-secondary-tint: #ff538e;
+  --ion-color-secondary-shade: #e08600;
+  --ion-color-secondary-tint: #ffa21a;
 
   /** tertiary **/
   // --ion-color-tertiary: #7044ff;
