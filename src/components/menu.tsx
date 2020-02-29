@@ -15,10 +15,10 @@ import { useLocation } from 'react-router-dom';
 import {
 	trendingUp,
 	albumsOutline,
-	calendar,
-	wallet,
 	swapHorizontal,
-	settings,
+	walletOutline,
+	calendarOutline,
+	settingsOutline,
 } from 'ionicons/icons';
 
 interface AppPage {
@@ -31,7 +31,7 @@ const appPages: AppPage[] = [
 	{
 		title: 'Daily Activity',
 		url: '/',
-		icon: calendar,
+		icon: calendarOutline,
 	},
 	{
 		title: 'Trends',
@@ -46,7 +46,7 @@ const appPages: AppPage[] = [
 	{
 		title: 'Budgets',
 		url: '/budgets',
-		icon: wallet,
+		icon: walletOutline,
 	},
 	{
 		title: 'Recurring Transactions',
@@ -56,7 +56,7 @@ const appPages: AppPage[] = [
 	{
 		title: 'Settings',
 		url: '/settings',
-		icon: settings,
+		icon: settingsOutline,
 	},
 ];
 
