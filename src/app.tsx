@@ -34,6 +34,7 @@ const RecurringTransactions = lazy(() => import('./pages/recurring-transactions.
 const RecurringTransactionEdit = lazy(() => import('./pages/recurring-transaction-edit.page'));
 const SettingsPage = lazy(() => import('./pages/settings.page'));
 const TransactionsPage = lazy(() => import('./pages/transactions.page'));
+const TransactionEditPage = lazy(() => import('./pages/transaction-edit.page'));
 const TrendsPage = lazy(() => import('./pages/trends.page'));
 const WelcomePage = lazy(() => import('./pages/welcome.page'));
 
@@ -100,6 +101,10 @@ function App() {
 								<Route
 									path="/transactions"
 									component={TransactionsPage}
+								/>
+								<Route
+									path="/transaction/:id?"
+									component={TransactionEditPage}
 								/>
 								<Route
 									path="/trends"

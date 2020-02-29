@@ -74,7 +74,11 @@ function TransactionsPage() {
 					</IonItem>
 				</IonList>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton color="secondary">
+					<IonFabButton
+						color="secondary"
+						routerLink="/transaction"
+						routerDirection="forward"
+					>
 						<IonIcon icon={add} />
 					</IonFabButton>
 				</IonFab>
