@@ -24,6 +24,7 @@ import './global.scss';
 import { Route } from 'react-router-dom';
 
 const AccountsPage = lazy(() => import('./pages/accounts.page'));
+const AccountEditPage = lazy(() => import('./pages/account-edit.page'));
 const BudgetsPage = lazy(() => import('./pages/budgets.page'));
 const DailyActivityPage = lazy(() => import('./pages/daily-activity.page'));
 const HelpPage = lazy(() => import('./pages/help.page'));
@@ -63,8 +64,20 @@ function App() {
 									component={AccountsPage}
 								/>
 								<Route
+									path="/account/"
+									component={AccountEditPage}
+								/>
+								<Route
+									path="/account/:id"
+									component={AccountEditPage}
+								/>
+								<Route
 									path="/budgets"
 									component={BudgetsPage}
+								/>
+								<Route
+									path="/budget/:id"
+									component={WelcomePage}
 								/>
 								<Route
 									path="/help"

@@ -18,28 +18,37 @@
 // @import "~@ionic/react/css/display.css";
 
 :root {
-	--money-color: #4E9455;
-	--debt-color: #C61F0C;
+	--ion-color-money: #4E9455;
+	--ion-color-money-rgb: rgb(78, 148, 85);
+	--ion-color-money-contrast: #ffffff;
+	--ion-color-money-contrast-rgb: 255,255,255;
+	--ion-color-money-shade: #37683b;
+	--ion-color-money-tint: #83b488;
+
+	--ion-color-debt: #C61F0C;
+	--ion-color-debt-rgb: rgb(198, 31, 12);
+	--ion-color-debt-contrast: #ffffff;
+	--ion-color-debt-contrast-rgb: 255,255,255;
+	--ion-color-debt-shade: #8b1608;
+	--ion-color-debt-tint: #d76255;
 }
 
-.money {
-	color: var(--money-color);
-	font-weight: bold;
+.ion-color-money {
+	--ion-color-base: var(--ion-color-money);
+	--ion-color-base-rgb: var(--ion-color-money-rgb);
+	--ion-color-contrast: var(--ion-color-money-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-money-contrast-rgb);
+	--ion-color-shade: var(--ion-color-money-shade);
+	--ion-color-tint: var(--ion-color-money-tint);
 }
 
-// Precedence overrides
-ion-item.item {
-	& .money {
-		@extend .money;
-	}
-	& .debt {
-		@extend .debt;
-	}
-}
-
-.debt {
-	color: var(--debt-color);
-	font-weight: bold;
+.ion-color-debt {
+	--ion-color-base: var(--ion-color-debt);
+	--ion-color-base-rgb: var(--ion-color-debt-rgb);
+	--ion-color-contrast: var(--ion-color-debt-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-debt-contrast-rgb);
+	--ion-color-shade: var(--ion-color-debt-shade);
+	--ion-color-tint: var(--ion-color-debt-tint);
 }
 
 html ion-app {

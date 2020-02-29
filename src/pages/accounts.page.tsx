@@ -15,6 +15,10 @@ import {
 	IonNote,
 	IonFab,
 	IonFabButton,
+	IonItemSliding,
+	IonItemOptions,
+	IonItemOption,
+	IonText,
 } from '@ionic/react';
 import { cashOutline, card, add } from 'ionicons/icons';
 
@@ -30,43 +34,55 @@ function AccountsPage() {
 					<IonTitle>Accounts</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding">
+			<IonContent>
 				<IonList>
+
+					<IonItemSliding>
+						<IonItemOptions side="start">
+							<IonItemOption expandable color="danger" onClick={() => console.log(111)}>Delete</IonItemOption>
+						</IonItemOptions>
+						<IonItem
+							routerLink="/account/"
+							routerDirection="forward"
+						>
+							<IonIcon
+								slot="start"
+								color="money"
+								icon={cashOutline}
+							/>
+							<div>
+								<IonLabel>
+									Savings
+								</IonLabel>
+								<IonNote>
+									<em>
+										$2.00 pending
+									</em>
+								</IonNote>
+							</div>
+							<IonText color="green" slot="end">
+								$7.00
+							</IonText>
+						</IonItem>
+					</IonItemSliding>
 					<IonItem>
 						<IonIcon
 							slot="start"
-							className="money"
-							icon={cashOutline}
-						/>
-						<div>
-							<IonLabel>
-								Savings
-							</IonLabel>
-							<IonNote>
-								<em>
-									$2.00 pending
-								</em>
-							</IonNote>
-						</div>
-						<IonLabel slot="end">
-							$7.00
-						</IonLabel>
-					</IonItem>
-					<IonItem>
-						<IonIcon
-							slot="start"
-							className="debt"
+							color="debt"
 							icon={card}
 						/>
 						Credit Card
-						<IonLabel slot="end">
+						<IonText color="debt" slot="end">
 							$7.00
-						</IonLabel>
+						</IonText>
 					</IonItem>
-					<IonItem>
+					<IonItem
+						routerLink="/account/"
+						routerDirection="forward"
+					>
 						<IonIcon
 							slot="start"
-							className="money"
+							color="money"
 							icon={cashOutline}
 						/>
 						<div>
@@ -79,13 +95,17 @@ function AccountsPage() {
 								</em>
 							</IonNote>
 						</div>
-						<IonLabel slot="end">
+						<IonText color="money" slot="end">
 							$7.00
-						</IonLabel>
+						</IonText>
 					</IonItem>
 				</IonList>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton color="secondary">
+					<IonFabButton
+						color="secondary"
+						routerLink="/account/"
+						routerDirection="forward"
+					>
 						<IonIcon icon={add} />
 					</IonFabButton>
 				</IonFab>

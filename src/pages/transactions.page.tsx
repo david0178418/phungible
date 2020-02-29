@@ -14,6 +14,7 @@ import {
 	IonPage,
 	IonTitle,
 	IonToolbar,
+	IonText,
 } from '@ionic/react';
 import {
 	arrowUp,
@@ -38,7 +39,7 @@ function TransactionsPage() {
 					<IonItem>
 						<IonIcon
 							slot="start"
-							className="debt"
+							color="debt"
 							icon={arrowDown}
 						/>
 						<div>
@@ -49,14 +50,14 @@ function TransactionsPage() {
 								</p>
 							</IonLabel>
 						</div>
-						<div className="debt" slot="end">
+						<IonText color="debt" slot="end">
 							$500.00
-						</div>
+						</IonText>
 					</IonItem>
 					<IonItem>
 						<IonIcon
 							slot="start"
-							className="money"
+							color="money"
 							icon={arrowUp}
 						/>
 						<div>
@@ -67,9 +68,9 @@ function TransactionsPage() {
 								</p>
 							</IonLabel>
 						</div>
-						<div className="money" slot="end">
+						<IonText color="money" slot="end">
 							$100.00
-						</div>
+						</IonText>
 					</IonItem>
 				</IonList>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">

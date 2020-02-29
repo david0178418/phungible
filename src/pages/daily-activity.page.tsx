@@ -121,7 +121,7 @@ function HomePage() {
 										Renews Feb 20, 2021
 									</p>
 								</IonLabel>
-								<div className="money" slot="end">
+								<div color="money" slot="end">
 									$100
 								</div>
 							</IonItem>
@@ -197,7 +197,7 @@ function HomePage() {
 							<IonItem onClick={() => console.log(111)}>
 								<IonIcon
 									icon={arrowDown}
-									className="debt"
+									color="debt"
 									slot="start"
 								/>
 								<IonLabel>
