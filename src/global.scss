@@ -27,6 +27,16 @@
 	font-weight: bold;
 }
 
+// Precedence overrides
+ion-item.item {
+	& .money {
+		@extend .money;
+	}
+	& .debt {
+		@extend .debt;
+	}
+}
+
 .debt {
 	color: var(--debt-color);
 	font-weight: bold;

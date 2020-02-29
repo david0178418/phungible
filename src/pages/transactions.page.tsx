@@ -1,24 +1,28 @@
 import React, {
 } from 'react';
 import {
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonPage,
-	IonContent,
 	IonButtons,
-	IonMenuButton,
-	IonList,
-	IonItem,
-	IonIcon,
-	IonLabel,
+	IonContent,
 	IonFab,
 	IonFabButton,
+	IonHeader,
+	IonIcon,
+	IonItem,
+	IonLabel,
+	IonList,
+	IonMenuButton,
+	IonPage,
+	IonTitle,
+	IonToolbar,
 } from '@ionic/react';
-import { arrowUp, arrowDown, add } from 'ionicons/icons';
+import {
+	arrowUp,
+	add,
+	arrowDown,
+} from 'ionicons/icons';
 
 export
-function RecurringPage() {
+function TransactionsPage() {
 	return (
 		<IonPage>
 			<IonHeader>
@@ -26,29 +30,11 @@ function RecurringPage() {
 					<IonButtons slot="start">
 						<IonMenuButton />
 					</IonButtons>
-					<IonTitle>Recurring</IonTitle>
+					<IonTitle>Transactions</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
 				<IonList>
-					<IonItem>
-						<IonIcon
-							slot="start"
-							className="money"
-							icon={arrowUp}
-						/>
-						<div>
-							<IonLabel>
-								Pay Day
-								<p>
-									Next: 1 week
-								</p>
-							</IonLabel>
-						</div>
-						<div className="money" slot="end">
-							$500.00
-						</div>
-					</IonItem>
 					<IonItem>
 						<IonIcon
 							slot="start"
@@ -59,11 +45,29 @@ function RecurringPage() {
 							<IonLabel>
 								Rent
 								<p>
-									Next: 3 days
+									From: Savings
 								</p>
 							</IonLabel>
 						</div>
 						<div className="debt" slot="end">
+							$500.00
+						</div>
+					</IonItem>
+					<IonItem>
+						<IonIcon
+							slot="start"
+							className="money"
+							icon={arrowUp}
+						/>
+						<div>
+							<IonLabel>
+								Pay Day
+								<p>
+									To: Savings
+								</p>
+							</IonLabel>
+						</div>
+						<div className="money" slot="end">
 							$100.00
 						</div>
 					</IonItem>
@@ -78,4 +82,4 @@ function RecurringPage() {
 	);
 }
 
-export default RecurringPage;
+export default TransactionsPage;

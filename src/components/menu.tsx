@@ -19,6 +19,7 @@ import {
 	walletOutline,
 	calendarOutline,
 	settingsOutline,
+	repeat,
 } from 'ionicons/icons';
 
 interface AppPage {
@@ -51,6 +52,11 @@ const appPages: AppPage[] = [
 	{
 		title: 'Recurring Transactions',
 		url: '/recurring-transactions',
+		icon: repeat,
+	},
+	{
+		title: 'Transactions',
+		url: '/transactions',
 		icon: swapHorizontal,
 	},
 	{

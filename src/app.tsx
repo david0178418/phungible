@@ -30,6 +30,7 @@ const HelpPage = lazy(() => import('./pages/help.page'));
 const LoginPage = lazy(() => import('./pages/login.page'));
 const RecurringTransactions = lazy(() => import('./pages/recurring-transactions.page'));
 const SettingsPage = lazy(() => import('./pages/settings.page'));
+const TransactionsPage = lazy(() => import('./pages/transactions.page'));
 const TrendsPage = lazy(() => import('./pages/trends.page'));
 const WelcomePage = lazy(() => import('./pages/welcome.page'));
 
@@ -80,6 +81,10 @@ function App() {
 								<Route
 									path="/settings"
 									component={SettingsPage}
+								/>
+								<Route
+									path="/transactions"
+									component={TransactionsPage}
 								/>
 								<Route
 									path="/trends"
