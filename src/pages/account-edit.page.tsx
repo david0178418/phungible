@@ -19,9 +19,11 @@ import {
 	IonCol,
 	IonButton,
 	IonList,
+	IonFab,
+	IonFabButton,
 } from '@ionic/react';
 import { useParams } from 'react-router-dom';
-import { cashOutline, trash} from 'ionicons/icons';
+import { cashOutline, trash, checkmark} from 'ionicons/icons';
 
 export
 function AccountEditPage() {
@@ -128,6 +130,15 @@ function AccountEditPage() {
 						</IonButton>
 					</IonItem>
 				</IonList>
+				<IonFab vertical="bottom" horizontal="end" slot="fixed">
+					<IonFabButton
+						color="secondary"
+						routerLink="/accounts/"
+						routerDirection="back"
+					>
+						<IonIcon icon={checkmark} />
+					</IonFabButton>
+				</IonFab>
 			</IonContent>
 		</IonPage>
 	);

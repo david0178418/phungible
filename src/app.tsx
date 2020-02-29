@@ -26,6 +26,7 @@ import { Route } from 'react-router-dom';
 const AccountsPage = lazy(() => import('./pages/accounts.page'));
 const AccountEditPage = lazy(() => import('./pages/account-edit.page'));
 const BudgetsPage = lazy(() => import('./pages/budgets.page'));
+const BudgetEditPage = lazy(() => import('./pages/budget-edit.page'));
 const DailyActivityPage = lazy(() => import('./pages/daily-activity.page'));
 const HelpPage = lazy(() => import('./pages/help.page'));
 const LoginPage = lazy(() => import('./pages/login.page'));
@@ -64,11 +65,7 @@ function App() {
 									component={AccountsPage}
 								/>
 								<Route
-									path="/account/"
-									component={AccountEditPage}
-								/>
-								<Route
-									path="/account/:id"
+									path="/account/:id?"
 									component={AccountEditPage}
 								/>
 								<Route
@@ -76,8 +73,8 @@ function App() {
 									component={BudgetsPage}
 								/>
 								<Route
-									path="/budget/:id"
-									component={WelcomePage}
+									path="/budget/:id?"
+									component={BudgetEditPage}
 								/>
 								<Route
 									path="/help"
