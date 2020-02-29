@@ -8,7 +8,10 @@ import {
 	IonContent,
 	IonButtons,
 	IonMenuButton,
+	IonList,
+	IonItem,
 } from '@ionic/react';
+import { config } from '../config';
 
 export
 function SettingsPage() {
@@ -23,7 +26,11 @@ function SettingsPage() {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className="ion-padding">
-					Settings Page
+				<IonList>
+					<IonItem>
+						Version: {config.appVersion}
+					</IonItem>
+				</IonList>
 			</IonContent>
 		</IonPage>
 	);
