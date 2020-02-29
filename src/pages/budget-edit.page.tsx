@@ -10,7 +10,6 @@ import {
 	IonRow,
 	IonCol,
 	IonButton,
-	IonCheckbox,
 } from '@ionic/react';
 import { useParams } from 'react-router-dom';
 import { RepetitionSelector } from '../components/repetition-selector';
@@ -67,12 +66,6 @@ function BudgetEditPage() {
 						Credit Card
 					</IonSelectOption>
 				</IonSelect>
-			</IonItem>
-			<IonItem>
-				<IonLabel>
-					Repeats
-				</IonLabel>
-				<IonCheckbox slot="start" />
 			</IonItem>
 
 			<RepetitionSelector />

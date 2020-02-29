@@ -31,6 +31,7 @@ const DailyActivityPage = lazy(() => import('./pages/daily-activity.page'));
 const HelpPage = lazy(() => import('./pages/help.page'));
 const LoginPage = lazy(() => import('./pages/login.page'));
 const RecurringTransactions = lazy(() => import('./pages/recurring-transactions.page'));
+const RecurringTransactionEdit = lazy(() => import('./pages/recurring-transaction-edit.page'));
 const SettingsPage = lazy(() => import('./pages/settings.page'));
 const TransactionsPage = lazy(() => import('./pages/transactions.page'));
 const TrendsPage = lazy(() => import('./pages/trends.page'));
@@ -87,6 +88,10 @@ function App() {
 								<Route
 									path="/recurring-transactions"
 									component={RecurringTransactions}
+								/>
+								<Route
+									path="/recurring-transaction/:id?"
+									component={RecurringTransactionEdit}
 								/>
 								<Route
 									path="/settings"

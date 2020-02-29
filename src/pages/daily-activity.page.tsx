@@ -24,6 +24,7 @@ import {
 	IonIcon,
 } from '@ionic/react';
 import { arrowDown, cashOutline } from 'ionicons/icons';
+import { AccountSelector } from '../components/account-selector';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -90,13 +91,9 @@ function HomePage() {
 										</IonCol>
 									</IonRow>
 								</IonGrid>
-								<IonItem>
-									<IonLabel position="stacked">From Account</IonLabel>
-									<IonSelect value="">
-										<IonSelectOption value="">None</IonSelectOption>
-										<IonSelectOption value="m">My Acount</IonSelectOption>
-									</IonSelect>
-								</IonItem>
+
+								<AccountSelector/>
+
 								<IonItem>
 									<IonLabel position="stacked">Notes</IonLabel>
 									<IonTextarea />

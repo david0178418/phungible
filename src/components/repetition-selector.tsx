@@ -10,6 +10,7 @@ import {
 	IonCol,
 	IonSegment,
 	IonSegmentButton,
+	IonCheckbox,
 } from '@ionic/react';
 
 enum RepetitionTab {
@@ -24,6 +25,12 @@ function RepetitionSelector() {
 
 	return (
 		<>
+			<IonItem>
+				<IonLabel>
+					Repeats
+				</IonLabel>
+				<IonCheckbox slot="start" />
+			</IonItem>
 			<IonSegment
 				color="primary"
 				value={selectedTab}
