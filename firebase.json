@@ -4,6 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "phungible-app",
     "public": "build",
     "ignore": [
       "firebase.json",

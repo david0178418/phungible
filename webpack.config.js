@@ -17,7 +17,6 @@ const IS_DEV = NODE_ENV === 'development';
 */
 module.exports = {
 	mode: IS_DEV ? 'development' : 'production',
-	devtool: 'inline-source-map',
 	entry: [
 		'./src/main.ts',
 	],
@@ -28,11 +27,11 @@ module.exports = {
 	},
 	output: {
 		filename: '[name].bundle.js',
-		path: path.resolve(__dirname, 'www'),
+		path: path.resolve(__dirname, 'build'),
 		publicPath: '/',
 	},
 	devServer: {
-		contentBase: path.join(__dirname, 'www'),
+		contentBase: path.join(__dirname, 'build'),
 		hot: true,
 		historyApiFallback: true,
 		compress: true,
