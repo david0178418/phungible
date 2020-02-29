@@ -27,7 +27,7 @@ function RecurringPage() {
 					<IonButtons slot="start">
 						<IonMenuButton />
 					</IonButtons>
-					<IonTitle>Recurring</IonTitle>
+					<IonTitle>Recurring Transactions</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
