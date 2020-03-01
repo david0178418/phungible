@@ -15,6 +15,7 @@ import {
 import { checkmark } from 'ionicons/icons';
 
 interface Props {
+	canSave?: boolean;
 	children: JSX.Element | JSX.Element[];
 	defaultHref: string;
 	editing: boolean;
@@ -23,6 +24,7 @@ interface Props {
 export
 function EditPage(props: Props) {
 	const {
+		canSave,
 		children,
 		defaultHref,
 		editing,
@@ -49,6 +51,7 @@ function EditPage(props: Props) {
 						color="secondary"
 						routerLink={defaultHref}
 						routerDirection="back"
+						disabled={!canSave}
 					>
 						<IonIcon icon={checkmark} />
 					</IonFabButton>

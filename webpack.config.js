@@ -17,6 +17,7 @@ const IS_DEV = NODE_ENV === 'development';
 */
 module.exports = {
 	mode: IS_DEV ? 'development' : 'production',
+	devtool: IS_DEV && 'inline-source-map',
 	entry: [
 		'./src/main.ts',
 	],

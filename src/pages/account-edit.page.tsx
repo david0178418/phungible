@@ -1,5 +1,4 @@
-import React, {
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -14,22 +13,69 @@ import {
 	IonList,
 } from '@ionic/react';
 import { useParams } from 'react-router-dom';
+import equal from 'fast-deep-equal';
 import { cashOutline, trash } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
+import { createAccount, getDoc } from '../api';
+import { Collections, Account } from '../interfaces';
+
+function getErrors(account: Account) {
+	return !!(
+		account.name
+	);
+}
 
 export
 function AccountEditPage() {
+	const [originalAccount, setOriginalAccount] = useState<Account>(createAccount);
+	const [account, setAccount] = useState<Account>(createAccount);
+	const [hasChanged, setHasChanged] = useState(false);
+	const [isValid, setIsValid] = useState(false);
 	const {
 		id = '',
 	} = useParams();
 
+	useEffect(() => {
+		setHasChanged(!equal(account, originalAccount));
+	}, [account, originalAccount]);
+
+	useEffect(() => {
+		setIsValid(hasChanged && getErrors(account));
+	}, [hasChanged, account]);
+
+	useEffect(() => {
+		(async () => {
+			if(id) {
+				const a = await getDoc<Account>(`${Collections.Accounts}/${id}`);
+				if(a) {
+					setOriginalAccount(a);
+					setAccount(a);
+				}
+			}
+		})();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
-		<EditPage editing={!!id} defaultHref="/accounts">
+		<EditPage
+			editing={!!id}
+			defaultHref="/accounts"
+			canSave={isValid}
+		>
 			<IonItem>
 				<IonLabel position="stacked">
 					Name
 				</IonLabel>
-				<IonInput />
+				<IonInput
+					value={account.name}
+					onIonChange={({detail}) => {
+						detail.value &&
+						setAccount({
+							...account,
+							name: detail.value,
+						});
+					}}
+				/>
 			</IonItem>
 			<IonItem>
 				<IonIcon

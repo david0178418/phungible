@@ -1,12 +1,12 @@
 {
 	"name": "Phungible",
 	"short_name": "Phungible",
-	"theme_color": "#8BC34A",
-	"background_color": "#DCEDC8",
+	"theme_color": "#0097A7",
+	"background_color": "#FF9800",
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/",
-	"gcm_sender_id": "103953800507",
+	"gcm_sender_id": "",
 	"icons": [
 		{
 			"src": "assets/icons/icon-72x72.png",
