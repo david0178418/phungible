@@ -1,5 +1,4 @@
-import React, {
-} from 'react';
+import React, { ReactNode } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -16,9 +15,10 @@ import { checkmark } from 'ionicons/icons';
 
 interface Props {
 	canSave?: boolean;
-	children: JSX.Element | JSX.Element[];
+	children: ReactNode;
 	defaultHref: string;
 	editing: boolean;
+	handleSubmit(): void;
 }
 
 export
@@ -28,6 +28,7 @@ function EditPage(props: Props) {
 		children,
 		defaultHref,
 		editing,
+		handleSubmit,
 	} = props;
 
 	return (
@@ -52,6 +53,7 @@ function EditPage(props: Props) {
 						routerLink={defaultHref}
 						routerDirection="back"
 						disabled={!canSave}
+						onClick={handleSubmit}
 					>
 						<IonIcon icon={checkmark} />
 					</IonFabButton>

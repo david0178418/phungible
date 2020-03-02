@@ -11,19 +11,19 @@ import {
 	IonCol,
 	IonButton,
 	IonList,
+	IonItemSliding,
 } from '@ionic/react';
-import { useParams } from 'react-router-dom';
+import {
+	startOfDay,
+	format,
+	parse,
+} from 'date-fns';
+import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
-import { cashOutline, trash } from 'ionicons/icons';
+import { cashOutline, trash, cardOutline } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
-import { createAccount, getDoc } from '../api';
-import { Collections, Account } from '../interfaces';
-
-function getErrors(account: Account) {
-	return !!(
-		account.name
-	);
-}
+import { createAccount, getDoc, saveDoc } from '../api';
+import { Collections, Account, AccountType } from '../interfaces';
 
 export
 function AccountEditPage() {
@@ -31,6 +31,11 @@ function AccountEditPage() {
 	const [account, setAccount] = useState<Account>(createAccount);
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
+	const [balanceAmount, setBalanceAmount] = useState(0);
+	const [balanceDate, setBalanceDate] = useState(() =>
+		startOfDay(new Date()),
+	);
+	const {goBack} = useHistory();
 	const {
 		id = '',
 	} = useParams();
@@ -40,7 +45,8 @@ function AccountEditPage() {
 	}, [account, originalAccount]);
 
 	useEffect(() => {
-		setIsValid(hasChanged && getErrors(account));
+		setIsValid(hasChanged && canSave());
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasChanged, account]);
 
 	useEffect(() => {
@@ -56,11 +62,60 @@ function AccountEditPage() {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+
+	function canSave() {
+		const {
+			name,
+			balanceUpdateHistory,
+		} = account;
+		return !!(
+			name &&
+			balanceUpdateHistory.length
+		);
+	}
+
+	async function handleSubmit() {
+		if(!isValid) {
+			return;
+		}
+
+		const result = await saveDoc(account, Collections.Accounts);
+		result && goBack();
+	}
+
+	function addBalanceItem() {
+		setAccount({
+			...account,
+			balanceUpdateHistory: [
+				...account.balanceUpdateHistory,
+				{
+					balance: balanceAmount,
+					date: balanceDate.toISOString(),
+				},
+			].sort(
+				(a, b) => b.date.localeCompare(a.date),
+			),
+		});
+		setBalanceAmount(0);
+		setBalanceDate(startOfDay(new Date()));
+	}
+
+	function removeBalanceItem(index: number) {
+		console.log(index);
+		setAccount({
+			...account,
+			balanceUpdateHistory: account
+				.balanceUpdateHistory
+				.filter((a, i) => i !== index),
+		});
+	}
+
 	return (
 		<EditPage
 			editing={!!id}
 			defaultHref="/accounts"
 			canSave={isValid}
+			handleSubmit={handleSubmit}
 		>
 			<IonItem>
 				<IonLabel position="stacked">
@@ -69,7 +124,7 @@ function AccountEditPage() {
 				<IonInput
 					value={account.name}
 					onIonChange={({detail}) => {
-						detail.value &&
+						typeof detail.value === 'string' &&
 						setAccount({
 							...account,
 							name: detail.value,
@@ -78,16 +133,38 @@ function AccountEditPage() {
 				/>
 			</IonItem>
 			<IonItem>
-				<IonIcon
-					slot="start"
-					color="money"
-					icon={cashOutline}
-				/>
-				<IonSelect interface="popover" placeholder="Type">
-					<IonSelectOption value="brown">
-						Money
+				<div slot="start">
+					{account.type ===  AccountType.Savings && (
+						<IonIcon
+							slot="start"
+							color="money"
+							icon={cashOutline}
+						/>
+					)}
+					{account.type ===  AccountType.Debt && (
+						<IonIcon
+							slot="start"
+							color="debt"
+							icon={cardOutline}
+						/>
+					)}
+				</div>
+				<IonSelect
+					interface="popover"
+					placeholder="Type"
+					className="wide"
+					value={account.type}
+					onIonChange={({detail}) =>
+						setAccount({
+							...account,
+							type: detail.value,
+						})
+					}
+				>
+					<IonSelectOption value={AccountType.Savings}>
+						Available Cash
 					</IonSelectOption>
-					<IonSelectOption value="blonde">
+					<IonSelectOption value={AccountType.Debt}>
 						Debt
 					</IonSelectOption>
 				</IonSelect>
@@ -96,7 +173,16 @@ function AccountEditPage() {
 				<IonLabel position="stacked">
 					Notes
 				</IonLabel>
-				<IonInput />
+				<IonInput
+					value={account.notes}
+					onIonChange={({detail}) =>
+						typeof detail.value === 'string' &&
+						setAccount({
+							...account,
+							notes: detail.value,
+						})
+					}
+				/>
 			</IonItem>
 			<IonGrid>
 				<IonRow>
@@ -105,7 +191,18 @@ function AccountEditPage() {
 							<IonLabel position="stacked">
 								Balance at start of
 							</IonLabel>
-							<IonInput type="date" />
+							<IonInput
+								type="date"
+								value={format(balanceDate, 'yyyy-MM-dd')}
+								onIonChange={({detail}) =>{
+									if(typeof detail.value === 'string') {
+										//@ts-ignore
+										console.log(detail.value, new Date(detail.value), parse(detail.value, 'yyyy-MM-dd', new Date()));
+										//@ts-ignore
+										detail.value && setBalanceDate(parse(detail.value, 'yyyy-MM-dd', new Date()));
+									}
+								}}
+							/>
 						</IonItem>
 					</IonCol>
 					<IonCol size="3">
@@ -113,12 +210,25 @@ function AccountEditPage() {
 							<IonLabel position="stacked">
 								$
 							</IonLabel>
-							<IonInput type="number"/>
+							<IonInput
+								type="number"
+								value={balanceAmount}
+								onIonChange={({detail}) => {
+									let value = NaN;
+									if(typeof detail.value === 'string') {
+										value = +detail.value;
+									}
+
+									if(!isNaN(value)) {
+										setBalanceAmount(value);
+									}
+								}}
+							/>
 						</IonItem>
 					</IonCol>
 				</IonRow>
 			</IonGrid>
-			<IonButton expand="full">
+			<IonButton expand="full" onClick={addBalanceItem}>
 				Add Balance
 			</IonButton>
 			<IonItem lines="none">
@@ -128,34 +238,36 @@ function AccountEditPage() {
 					</p>
 				</IonLabel>
 			</IonItem>
-			<IonItem lines="none">
-				<IonLabel color="danger">
-					At least one account balance update required.
-				</IonLabel>
-			</IonItem>
+			{!account.balanceUpdateHistory.length && (
+				<IonItem lines="none">
+					<IonLabel color="danger">
+						At least one account balance update required.
+					</IonLabel>
+				</IonItem>
+			)}
 			<IonList>
-				<IonItem>
-					<IonLabel>
-						$10.00
-						<p>
-							as of 1/1/2020
-						</p>
-					</IonLabel>
-					<IonButton slot="end" fill="clear">
-						<IonIcon slot="icon-only" icon={trash} />
-					</IonButton>
-				</IonItem>
-				<IonItem>
-					<IonLabel>
-						$10.00
-						<p>
-							as of 1/1/2020
-						</p>
-					</IonLabel>
-					<IonButton slot="end" fill="clear">
-						<IonIcon slot="icon-only" icon={trash} />
-					</IonButton>
-				</IonItem>
+				{account.balanceUpdateHistory.map((a, i) => (
+					<IonItemSliding key={i}>
+						<IonItem>
+							<IonLabel>
+								{a.balance}
+								<p>
+									as of {a.date}
+								</p>
+							</IonLabel>
+							<IonButton
+								slot="end"
+								fill="clear"
+								onClick={() => removeBalanceItem(i)}
+							>
+								<IonIcon
+									slot="icon-only"
+									icon={trash}
+								/>
+							</IonButton>
+						</IonItem>
+					</IonItemSliding>
+				))}
 			</IonList>
 		</EditPage>
 	);

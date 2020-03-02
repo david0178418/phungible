@@ -21,7 +21,7 @@ function TransactionEditPage() {
 	} = useParams();
 
 	return (
-		<EditPage editing={!!id} defaultHref="/transactions">
+		<EditPage editing={!!id} defaultHref="/transactions" handleSubmit={() => {}}>
 			<IonGrid>
 				<IonRow>
 					<IonCol>

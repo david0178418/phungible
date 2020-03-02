@@ -59,6 +59,11 @@ html ion-app {
 	}
 }
 
+.in-item.wide {
+	max-width: 100%;
+	width: 100%;
+}
+
 .image-logo-icon {
 	background-color: white;
 	background-image: url('/assets/icons/icon-transparent-32.png');

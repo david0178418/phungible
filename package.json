@@ -17,6 +17,7 @@
 		"@ionic/react": "^5.0.4",
 		"@ionic/react-router": "^5.0.4",
 		"classnames": "^2.2.6",
+		"date-fns": "^2.10.0",
 		"eslint": "^6.8.0",
 		"fast-deep-equal": "^3.1.1",
 		"firebase": "^7.9.3",

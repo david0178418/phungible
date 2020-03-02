@@ -22,7 +22,7 @@ function BudgetEditPage() {
 	} = useParams();
 
 	return (
-		<EditPage defaultHref="/budgets" editing={!!id}>
+		<EditPage defaultHref="/budgets" editing={!!id} handleSubmit={() => {}}>
 			<IonGrid>
 				<IonRow>
 					<IonCol>

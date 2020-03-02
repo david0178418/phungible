@@ -37,10 +37,9 @@ interface Label {
 }
 
 export
-interface BalanceUpdateHistory {
+interface BalanceUpdateHistoryItem {
 	id?: string;
-	balance: Money;
-	parent: string;
+	balance: number;
 	date: string;
 }
 
@@ -53,4 +52,5 @@ interface Account {
 	type: AccountType;
 	profileId: string;
 	ownerId: string;
+	balanceUpdateHistory: BalanceUpdateHistoryItem[];
 }

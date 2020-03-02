@@ -53,11 +53,12 @@ async function saveDoc<T extends Docs>(doc: T, collection: Collections) {
 export
 function createAccount(): Account {
 	return {
+		balanceUpdateHistory: [],
+		labels: [],
 		name: '',
 		notes: '',
-		type: AccountType.Savings,
 		ownerId: '',
-		labels: [],
 		profileId: '',
+		type: AccountType.Savings,
 	};
 }

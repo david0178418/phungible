@@ -25,7 +25,7 @@ function RecurringTransactionEditPage() {
 	} = useParams();
 
 	return (
-		<EditPage editing={!!id} defaultHref="/recurring-transactions">
+		<EditPage editing={!!id} defaultHref="/recurring-transactions" handleSubmit={() => {}}>
 			<IonGrid>
 				<IonRow>
 					<IonCol>
