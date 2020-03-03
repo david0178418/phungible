@@ -101,7 +101,6 @@ function AccountEditPage() {
 	}
 
 	function removeBalanceItem(index: number) {
-		console.log(index);
 		setAccount({
 			...account,
 			balanceUpdateHistory: account

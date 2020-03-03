@@ -23,20 +23,42 @@ import './global.scss';
 
 import { Route } from 'react-router-dom';
 
-const AccountsPage = lazy(() => import('./pages/accounts.page'));
-const AccountEditPage = lazy(() => import('./pages/account-edit.page'));
-const BudgetsPage = lazy(() => import('./pages/budgets.page'));
-const BudgetEditPage = lazy(() => import('./pages/budget-edit.page'));
-const DailyActivityPage = lazy(() => import('./pages/daily-activity.page'));
-const HelpPage = lazy(() => import('./pages/help.page'));
-const LoginPage = lazy(() => import('./pages/login.page'));
-const RecurringTransactions = lazy(() => import('./pages/recurring-transactions.page'));
-const RecurringTransactionEdit = lazy(() => import('./pages/recurring-transaction-edit.page'));
-const SettingsPage = lazy(() => import('./pages/settings.page'));
-const TransactionsPage = lazy(() => import('./pages/transactions.page'));
-const TransactionEditPage = lazy(() => import('./pages/transaction-edit.page'));
-const TrendsPage = lazy(() => import('./pages/trends.page'));
-const WelcomePage = lazy(() => import('./pages/welcome.page'));
+type ComponentFactory = () => Promise<{
+    default: () => JSX.Element;
+}>;
+type LazyComponent = React.LazyExoticComponent<() => JSX.Element>;
+
+function prefetchFn(timing: number) {
+	const prefetchList: ComponentFactory[] = [];
+
+	setTimeout(async () => {
+		for(let component of prefetchList) {
+			await component();
+		}
+	}, timing);
+
+	return (componentImport: ComponentFactory): LazyComponent => {
+		prefetchList.push(componentImport);
+		return lazy(componentImport);
+	};
+}
+
+const prefetch = prefetchFn(5000);
+
+const AccountsPage = prefetch(() => import('./pages/accounts.page'));
+const AccountEditPage = prefetch(() => import('./pages/account-edit.page'));
+const BudgetsPage = prefetch(() => import('./pages/budgets.page'));
+const BudgetEditPage = prefetch(() => import('./pages/budget-edit.page'));
+const DailyActivityPage = prefetch(() => import('./pages/daily-activity.page'));
+const HelpPage = prefetch(() => import('./pages/help.page'));
+const LoginPage = prefetch(() => import('./pages/login.page'));
+const RecurringTransactions = prefetch(() => import('./pages/recurring-transactions.page'));
+const RecurringTransactionEdit = prefetch(() => import('./pages/recurring-transaction-edit.page'));
+const SettingsPage = prefetch(() => import('./pages/settings.page'));
+const TransactionsPage = prefetch(() => import('./pages/transactions.page'));
+const TransactionEditPage = prefetch(() => import('./pages/transaction-edit.page'));
+const TrendsPage = prefetch(() => import('./pages/trends.page'));
+const WelcomePage = prefetch(() => import('./pages/welcome.page'));
 
 export
 function App() {
