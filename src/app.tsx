@@ -33,8 +33,8 @@ function prefetchFn(timing: number) {
 	const prefetchList: ComponentFactory[] = [];
 
 	setTimeout(async () => {
-		for(let component of prefetchList) {
-			await component();
+		for(let factoryFn of prefetchList) {
+			await factoryFn();
 		}
 	}, timing);
 
