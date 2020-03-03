@@ -23,9 +23,10 @@ import './global.scss';
 
 import { Route } from 'react-router-dom';
 
-type ComponentFactory = () => Promise<{
+interface ComponentImport {
     default: () => JSX.Element;
-}>;
+}
+type ComponentFactory = () => Promise<ComponentImport>;
 type LazyComponent = React.LazyExoticComponent<() => JSX.Element>;
 
 function prefetchFn(timing: number) {
