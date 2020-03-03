@@ -45,13 +45,13 @@ function prefetchFn(timing: number) {
 
 const prefetch = prefetchFn(5000);
 
+const HelpPage = prefetch(() => import('./pages/help.page'));
+const LoginPage = prefetch(() => import('./pages/login.page'));
 const AccountsPage = prefetch(() => import('./pages/accounts.page'));
 const AccountEditPage = prefetch(() => import('./pages/account-edit.page'));
 const BudgetsPage = prefetch(() => import('./pages/budgets.page'));
 const BudgetEditPage = prefetch(() => import('./pages/budget-edit.page'));
 const DailyActivityPage = prefetch(() => import('./pages/daily-activity.page'));
-const HelpPage = prefetch(() => import('./pages/help.page'));
-const LoginPage = prefetch(() => import('./pages/login.page'));
 const RecurringTransactions = prefetch(() => import('./pages/recurring-transactions.page'));
 const RecurringTransactionEdit = prefetch(() => import('./pages/recurring-transaction-edit.page'));
 const SettingsPage = prefetch(() => import('./pages/settings.page'));
