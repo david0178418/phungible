@@ -33,8 +33,8 @@ function prefetchFn(timing: number) {
 	const prefetchList: ComponentFactory[] = [];
 
 	setTimeout(async () => {
-		for(let factoryFn of prefetchList) {
-			await factoryFn();
+		for(let component of prefetchList) {
+			await component();
 		}
 	}, timing);
 
@@ -46,8 +46,6 @@ function prefetchFn(timing: number) {
 
 const prefetch = prefetchFn(5000);
 
-const HelpPage = prefetch(() => import('./pages/help.page'));
-const LoginPage = prefetch(() => import('./pages/login.page'));
 const AccountsPage = prefetch(() => import('./pages/accounts.page'));
 const AccountEditPage = prefetch(() => import('./pages/account-edit.page'));
 const BudgetsPage = prefetch(() => import('./pages/budgets.page'));
@@ -60,6 +58,8 @@ const TransactionsPage = prefetch(() => import('./pages/transactions.page'));
 const TransactionEditPage = prefetch(() => import('./pages/transaction-edit.page'));
 const TrendsPage = prefetch(() => import('./pages/trends.page'));
 const WelcomePage = prefetch(() => import('./pages/welcome.page'));
+const HelpPage = prefetch(() => import('./pages/help.page'));
+const LoginPage = prefetch(() => import('./pages/login.page'));
 
 export
 function App() {
