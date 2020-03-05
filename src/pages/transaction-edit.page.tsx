@@ -61,9 +61,15 @@ function TransactionEditPage() {
 			</IonItem>
 
 
-			<AccountSelector />
-			
-			<AccountSelector />
+			<AccountSelector
+				value=""
+				onChange={() => null}
+			/>
+
+			<AccountSelector
+				value=""
+				onChange={() => null}
+			/>
 
 			<IonItem>
 				<IonLabel position="stacked">

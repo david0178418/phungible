@@ -104,7 +104,7 @@ function RecurringTransactionEditPage() {
 				</IonLabel>
 				<IonInput type="date" />
 			</IonItem>
-			<AccountSelector />
+			<AccountSelector value="" onChange={() => null} />
 
 			<RepetitionSelector/>
 		</EditPage>

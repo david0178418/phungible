@@ -27,8 +27,8 @@ import { Collection, Account, AccountType } from '../interfaces';
 
 export
 function AccountEditPage() {
-	const [originalAccount, setOriginalAccount] = useState<Account>(createAccount);
-	const [account, setAccount] = useState<Account>(createAccount);
+	const [originalAccount, setOriginalAccount] = useState(createAccount);
+	const [account, setAccount] = useState(createAccount);
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const [balanceAmount, setBalanceAmount] = useState(0);

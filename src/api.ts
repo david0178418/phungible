@@ -1,4 +1,4 @@
-import { Collection, Docs, Account, AccountType } from './interfaces';
+import { Collection, Docs, Account, AccountType, Budget, RepeatTypes, RepeatUnits, TransactionType } from './interfaces';
 import { firestore } from 'firebase/app';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
@@ -65,5 +65,26 @@ function createAccount(): Account {
 		ownerId: '',
 		profileId: '',
 		type: AccountType.Savings,
+	};
+}
+
+export
+function createBudget(): Budget {
+	return {
+		amount: 0,
+		exceptions: [],
+		fromAccountId: '',
+		id: '',
+		labels: [],
+		name: '',
+		notes: '',
+		ownerId: '',
+		profileId: '',
+		repeatType: RepeatTypes.Days,
+		repeatUnit: RepeatUnits.Week,
+		repeatValues: [],
+		startDate: '',
+		towardAccountId: '',
+		transactionType: TransactionType.BudgetedExpense,
 	};
 }

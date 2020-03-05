@@ -95,19 +95,20 @@ enum TransactionType {
 
 export
 interface Budget {
-	transactionType: TransactionType;
-	id?: string;
-	profileId: string;
-	fromAccountId: string | null;
-	towardAccountId: string | null;
+	// today: Date;
 	amount: number;
-	notes: string;
 	exceptions: string[];
+	fromAccountId: string | null;
+	id?: string;
 	labels: Label[];
 	name: string;
+	notes: string;
+	ownerId: string;
+	profileId: string;
+	repeatType: RepeatTypes;
 	repeatUnit: RepeatUnits;
 	repeatValues: number[];
-	// today: Date;
-	repeatType: RepeatTypes;
 	startDate: string;
+	towardAccountId: string | null;
+	transactionType: TransactionType;
 }
