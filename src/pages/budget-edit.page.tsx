@@ -58,9 +58,11 @@ function BudgetEditPage() {
 	function canSave() {
 		const {
 			name,
+			amount,
 		} = budget;
 		return !!(
-			name
+			name &&
+			amount
 		);
 	}
 
