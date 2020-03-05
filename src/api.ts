@@ -18,6 +18,12 @@ function createId(collectionPath: Collections) {
 	return db.collection(collectionPath).doc().id;
 }
 
+
+export
+async function deleteDoc(id: string, collection: Collections) {
+	await db.doc(`${collection}/${id}`).delete();
+}
+
 export
 function getDoc<T = any>(path: string) {
 	return formatDocument<T>(getDocRef(path));

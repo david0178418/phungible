@@ -50,8 +50,6 @@ function EditPage(props: Props) {
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
 					<IonFabButton
 						color="secondary"
-						routerLink={defaultHref}
-						routerDirection="back"
 						disabled={!canSave}
 						onClick={handleSubmit}
 					>
