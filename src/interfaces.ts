@@ -4,13 +4,16 @@ export
 type Docs = { id?: string };
 
 export
-enum Collections {
+enum Collection {
 	Accounts = 'accounts',
 	Budgets = 'budgets',
 	RecurringTransactions = 'recurring-transactions',
 	Transactions = 'transactions',
 	BalanceUpdateHistory = 'balance-update-history',
 }
+
+export
+type CollectionType = Account | Budget;
 
 export
 enum AccountType {
@@ -53,4 +56,58 @@ interface Account {
 	profileId: string;
 	ownerId: string;
 	balanceUpdateHistory: BalanceUpdateHistoryItem[];
+}
+
+export
+enum RepeatTypes {
+	Days,
+	Dates,
+	Interval,
+}
+
+export
+enum RepeatDays {
+	Su,
+	Mo,
+	Tu,
+	We,
+	Th,
+	Fr,
+	Sa,
+}
+
+export
+enum RepeatUnits {
+	Day,
+	Week,
+	Month,
+	Year,
+	None,
+}
+
+export
+enum TransactionType {
+	BudgetedExpense = 'budget',
+	Expense =  'expense',
+	Income = 'income',
+	TransferPayment = 'transfer',
+}
+
+export
+interface Budget {
+	transactionType: TransactionType;
+	id?: string;
+	profileId: string;
+	fromAccountId: string | null;
+	towardAccountId: string | null;
+	amount: number;
+	notes: string;
+	exceptions: string[];
+	labels: Label[];
+	name: string;
+	repeatUnit: RepeatUnits;
+	repeatValues: number[];
+	// today: Date;
+	repeatType: RepeatTypes;
+	startDate: string;
 }

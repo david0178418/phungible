@@ -23,7 +23,7 @@ import equal from 'fast-deep-equal';
 import { cashOutline, trash, cardOutline } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
 import { createAccount, getDoc, saveDoc } from '../api';
-import { Collections, Account, AccountType } from '../interfaces';
+import { Collection, Account, AccountType } from '../interfaces';
 
 export
 function AccountEditPage() {
@@ -52,7 +52,7 @@ function AccountEditPage() {
 	useEffect(() => {
 		(async () => {
 			if(id) {
-				const a = await getDoc<Account>(`${Collections.Accounts}/${id}`);
+				const a = await getDoc<Account>(`${Collection.Accounts}/${id}`);
 				if(a) {
 					setOriginalAccount(a);
 					setAccount(a);
@@ -79,7 +79,7 @@ function AccountEditPage() {
 			return;
 		}
 
-		const result = await saveDoc(account, Collections.Accounts);
+		const result = await saveDoc(account, Collection.Accounts);
 		result && goBack();
 	}
 

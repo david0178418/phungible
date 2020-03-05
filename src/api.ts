@@ -1,4 +1,4 @@
-import { Collections, Docs, Account, AccountType } from './interfaces';
+import { Collection, Docs, Account, AccountType } from './interfaces';
 import { firestore } from 'firebase/app';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
@@ -14,13 +14,12 @@ async function formatDocument<T = any>(request: DocReference) {
 }
 
 export
-function createId(collectionPath: Collections) {
+function createId(collectionPath: Collection) {
 	return db.collection(collectionPath).doc().id;
 }
 
-
 export
-async function deleteDoc(id: string, collection: Collections) {
+async function deleteDoc(id: string, collection: Collection) {
 	await db.doc(`${collection}/${id}`).delete();
 }
 
@@ -40,7 +39,7 @@ function getCollectionRef(path: string) {
 }
 
 export
-async function saveDoc<T extends Docs>(doc: T, collection: Collections) {
+async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
 	const id = doc.id || db.collection(collection).doc().id;
 
 	try {
