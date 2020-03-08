@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonRippleEffect, IonIcon } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
+import { RepeatDays } from '../../../interfaces';
 
 interface DayBlockProps {
 	label: string;
@@ -20,7 +21,7 @@ function DayBlock(props: DayBlockProps) {
 			{label}
 			<IonIcon
 				color="success"
-				hidden={checked}
+				hidden={!checked}
 				icon={checkmark}
 			/>
 			<IonRippleEffect/>
@@ -28,17 +29,29 @@ function DayBlock(props: DayBlockProps) {
 	);
 }
 
+
+interface Props {
+	checkedDays: number[];
+	onDayToggle: (dayIndex: number) => void;
+}
+
 export
-function WeekdaySelector() {
+function WeekdaySelector(props: Props) {
+	const {
+		checkedDays,
+		onDayToggle,
+	} = props;
+
 	return (
 		<div className="week-block">
-			<DayBlock label="Su"/>
-			<DayBlock label="Mo"/>
-			<DayBlock label="Tu"/>
-			<DayBlock label="We"/>
-			<DayBlock label="Th"/>
-			<DayBlock label="Fr"/>
-			<DayBlock label="Sa"/>
+			{Object.keys(RepeatDays).map((label, i) => (
+				<DayBlock
+					key={i}
+					label={label}
+					checked={checkedDays.includes(i)}
+					onClick={() => onDayToggle(i)}
+				/>
+			))}
 		</div>
 	);
 }

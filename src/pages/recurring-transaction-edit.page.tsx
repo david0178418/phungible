@@ -16,7 +16,7 @@ import { useParams } from 'react-router-dom';
 import { cashOutline, trash } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
 import { AccountSelector } from '../components/account-selector';
-import { RepetitionSelector } from '../components/repetition-selector';
+// import { RepetitionSelector } from '../components/repetition-selector';
 
 export
 function RecurringTransactionEditPage() {
@@ -106,7 +106,7 @@ function RecurringTransactionEditPage() {
 			</IonItem>
 			<AccountSelector value="" onChange={() => null} />
 
-			<RepetitionSelector/>
+			{/* <RepetitionSelector/> */}
 		</EditPage>
 	);
 }

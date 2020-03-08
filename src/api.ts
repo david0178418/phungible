@@ -1,4 +1,4 @@
-import { Collection, Docs, Account, AccountType, Budget, RepeatTypes, RepeatUnits, TransactionType } from './interfaces';
+import { Collection, Docs, Account, AccountType, Budget, RepeatType, RepeatUnits, TransactionType } from './interfaces';
 import { firestore } from 'firebase/app';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
@@ -80,7 +80,7 @@ function createBudget(): Budget {
 		notes: '',
 		ownerId: '',
 		profileId: '',
-		repeatType: RepeatTypes.Days,
+		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnits.Week,
 		repeatValues: [],
 		startDate: '',

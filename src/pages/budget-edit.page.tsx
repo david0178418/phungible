@@ -12,7 +12,7 @@ import equal from 'fast-deep-equal';
 import { RepetitionSelector } from '../components/repetition-selector';
 import { EditPage } from '../components/edit-page';
 import { createBudget, getDoc, saveDoc } from '../api';
-import { Budget, Collection } from '../interfaces';
+import { Budget, Collection, RepeatType } from '../interfaces';
 import { AccountSelector } from '../components/account-selector';
 
 export
@@ -75,6 +75,14 @@ function BudgetEditPage() {
 		result && goBack();
 	}
 
+	function handelBudgetUpdate(repeatType: RepeatType, repeatValues: number[]) {
+		setBudget({
+			...budget,
+			repeatType,
+			repeatValues,
+		});
+	}
+
 	return (
 		<EditPage
 			defaultHref="/budgets"
@@ -82,6 +90,7 @@ function BudgetEditPage() {
 			canSave={isValid}
 			handleSubmit={handleSubmit}
 		>
+			{JSON.stringify(budget)}
 			<IonGrid>
 				<IonRow>
 					<IonCol>
@@ -127,7 +136,11 @@ function BudgetEditPage() {
 				onChange={newId => setProp('fromAccountId', newId)}
 			/>
 
-			<RepetitionSelector />
+			<RepetitionSelector
+				type={budget.repeatType}
+				values={budget.repeatValues}
+				onUpdate={handelBudgetUpdate}
+			/>
 		</EditPage>
 	);
 }

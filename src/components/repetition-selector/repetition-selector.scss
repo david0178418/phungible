@@ -1,12 +1,13 @@
 .day-block {
 	border-right: 1px solid black;
-	text-align: center;
+	cursor: pointer;
 	flex-grow: 1;
 	font-size: 24px;
 	font-weight: bold;
-	position: relative;
 	overflow: hidden;
-	padding: 20px 0px;
+	padding-bottom: 25px;
+	position: relative;
+	text-align: center;
 
 	&:last-child {
 		border-right: none;
@@ -14,8 +15,8 @@
 
 	& ion-icon {
 		bottom: 5px;
-		right: 5px;
 		position: absolute;
+		right: 5px;
 	}
 }
 

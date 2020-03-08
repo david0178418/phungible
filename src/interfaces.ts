@@ -59,30 +59,30 @@ interface Account {
 }
 
 export
-enum RepeatTypes {
-	Days,
-	Dates,
-	Interval,
+enum RepeatType {
+	Days = 'days',
+	Dates = 'dates',
+	Interval = 'interval',
 }
 
 export
 enum RepeatDays {
-	Su,
-	Mo,
-	Tu,
-	We,
-	Th,
-	Fr,
-	Sa,
+	Su = 'Su',
+	Mo = 'Mo',
+	Tu = 'Tu',
+	We = 'We',
+	Th = 'Th',
+	Fr = 'Fr',
+	Sa = 'Sa',
 }
 
 export
 enum RepeatUnits {
-	Day,
-	Week,
-	Month,
-	Year,
-	None,
+	Day = 'day',
+	Week = 'week',
+	Month = 'month',
+	Year = 'year',
+	None = 'none',
 }
 
 export
@@ -105,10 +105,15 @@ interface Budget {
 	notes: string;
 	ownerId: string;
 	profileId: string;
-	repeatType: RepeatTypes;
+	repeatType: RepeatType;
 	repeatUnit: RepeatUnits;
 	repeatValues: number[];
 	startDate: string;
 	towardAccountId: string | null;
 	transactionType: TransactionType;
+}
+
+export
+enum DayOfWeek {
+	Sunday
 }

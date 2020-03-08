@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -15,16 +15,37 @@ import {
 import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
+import { RepeatType } from '../../interfaces';
 
-enum RepetitionTab {
-	DayOfWeek = 'dayofweek',
-	Date = 'date',
-	Interval = 'interval',
+interface Props {
+	type: RepeatType;
+	values: number[];
+	onUpdate: (type: RepeatType, values: number[]) => void;
 }
 
 export
-function RepetitionSelector() {
-	const [selectedTab, setSelectedTab] = useState<RepetitionTab>(RepetitionTab.DayOfWeek);
+function RepetitionSelector(props: Props) {
+	const {
+		type,
+		values,
+		onUpdate,
+	} = props;
+
+	function handleValueToggle(toggleValue: number) {
+		let newVal = values.includes(toggleValue) ?
+			values.filter(v => v !== toggleValue) :
+			[...values, toggleValue];
+			
+		onUpdate(type, newVal.sort());
+	}
+
+	function handleTypeUpdate(newType: RepeatType) {
+		if(newType === type) {
+			return;
+		}
+
+		onUpdate(newType, []);
+	}
 
 	return (
 		<>
@@ -36,27 +57,30 @@ function RepetitionSelector() {
 			</IonItem>
 			<IonSegment
 				color="primary"
-				value={selectedTab}
-				onIonChange={e => setSelectedTab(e.detail.value as RepetitionTab)}
+				value={type}
+				onIonChange={({detail}) => handleTypeUpdate(detail.value as RepeatType)}
 			>
-				<IonSegmentButton value={RepetitionTab.DayOfWeek}>
+				<IonSegmentButton value={RepeatType.Days}>
 					Day
 				</IonSegmentButton>
-				<IonSegmentButton value={RepetitionTab.Date}>
+				<IonSegmentButton value={RepeatType.Dates}>
 					Date
 				</IonSegmentButton>
-				<IonSegmentButton value={RepetitionTab.Interval}>
+				<IonSegmentButton value={RepeatType.Interval}>
 					Interval
 				</IonSegmentButton>
 			</IonSegment>
 
-			{selectedTab === RepetitionTab.DayOfWeek && (
-				<WeekdaySelector />
+			{RepeatType.Days === type && (
+				<WeekdaySelector
+					checkedDays={values}
+					onDayToggle={handleValueToggle}
+				/>
 			)}
-			{selectedTab === RepetitionTab.Date && (
+			{RepeatType.Dates === type && (
 				'Date View'
 			)}
-			{selectedTab === RepetitionTab.Interval && (
+			{RepeatType.Interval === type && (
 				<>
 					<IonLabel>
 						<p>
@@ -74,7 +98,7 @@ function RepetitionSelector() {
 								<IonItem>
 									<IonSelect>
 										<IonSelectOption>
-											<WeekdaySelector />
+											Day
 										</IonSelectOption>
 										<IonSelectOption>
 											Week
