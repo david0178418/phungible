@@ -90,7 +90,6 @@ function BudgetEditPage() {
 			canSave={isValid}
 			handleSubmit={handleSubmit}
 		>
-			{JSON.stringify(budget)}
 			<IonGrid>
 				<IonRow>
 					<IonCol>
