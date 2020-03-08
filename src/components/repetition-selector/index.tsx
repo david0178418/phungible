@@ -18,9 +18,9 @@ import './repetition-selector.scss';
 import { RepeatType } from '../../interfaces';
 
 interface Props {
-	type: RepeatType;
+	type: RepeatType | null;
 	values: number[];
-	onUpdate: (type: RepeatType, values: number[]) => void;
+	onUpdate: (type: RepeatType | null, values: number[]) => void;
 }
 
 export
@@ -47,73 +47,87 @@ function RepetitionSelector(props: Props) {
 		onUpdate(newType, []);
 	}
 
+	function handleRepeatToggle() {
+		const newType = type ? null : RepeatType.Days;
+
+		onUpdate(newType, []);
+	}
+
 	return (
 		<>
 			<IonItem>
 				<IonLabel>
 					Repeats
 				</IonLabel>
-				<IonCheckbox slot="start" />
-			</IonItem>
-			<IonSegment
-				color="primary"
-				value={type}
-				onIonChange={({detail}) => handleTypeUpdate(detail.value as RepeatType)}
-			>
-				<IonSegmentButton value={RepeatType.Days}>
-					Day
-				</IonSegmentButton>
-				<IonSegmentButton value={RepeatType.Dates}>
-					Date
-				</IonSegmentButton>
-				<IonSegmentButton value={RepeatType.Interval}>
-					Interval
-				</IonSegmentButton>
-			</IonSegment>
-
-			{RepeatType.Days === type && (
-				<WeekdaySelector
-					checkedDays={values}
-					onDayToggle={handleValueToggle}
+				<IonCheckbox
+					slot="start"
+					checked={!!type}
+					onIonChange={() => handleRepeatToggle()}
 				/>
-			)}
-			{RepeatType.Dates === type && (
-				'Date View'
-			)}
-			{RepeatType.Interval === type && (
+			</IonItem>
+			{type && (
 				<>
-					<IonLabel>
-						<p>
-							Every
-						</p>
-					</IonLabel>
-					<IonGrid>
-						<IonRow>
-							<IonCol size="2">
-								<IonItem>
-									<IonInput value={0} type="number" />
-								</IonItem>
-							</IonCol>
-							<IonCol>
-								<IonItem>
-									<IonSelect>
-										<IonSelectOption>
-											Day
-										</IonSelectOption>
-										<IonSelectOption>
-											Week
-										</IonSelectOption>
-										<IonSelectOption>
-											Month
-										</IonSelectOption>
-										<IonSelectOption>
-											Year
-										</IonSelectOption>
-									</IonSelect>
-								</IonItem>
-							</IonCol>
-						</IonRow>
-					</IonGrid>
+					<IonSegment
+						color="primary"
+						value={type}
+						onIonChange={({detail}) => handleTypeUpdate(detail.value as RepeatType)}
+					>
+						<IonSegmentButton value={RepeatType.Days}>
+							Day
+						</IonSegmentButton>
+						<IonSegmentButton value={RepeatType.Dates}>
+							Date
+						</IonSegmentButton>
+						<IonSegmentButton value={RepeatType.Interval}>
+							Interval
+						</IonSegmentButton>
+					</IonSegment>
+
+					{RepeatType.Days === type && (
+						<WeekdaySelector
+							checkedDays={values}
+							onDayToggle={handleValueToggle}
+						/>
+					)}
+					{RepeatType.Dates === type && (
+						'Date View'
+					)}
+					{RepeatType.Interval === type && (
+						<>
+							<IonLabel>
+								<p>
+									Every
+								</p>
+							</IonLabel>
+							<IonGrid>
+								<IonRow>
+									<IonCol size="2">
+										<IonItem>
+											<IonInput value={0} type="number" />
+										</IonItem>
+									</IonCol>
+									<IonCol>
+										<IonItem>
+											<IonSelect>
+												<IonSelectOption>
+													Day
+												</IonSelectOption>
+												<IonSelectOption>
+													Week
+												</IonSelectOption>
+												<IonSelectOption>
+													Month
+												</IonSelectOption>
+												<IonSelectOption>
+													Year
+												</IonSelectOption>
+											</IonSelect>
+										</IonItem>
+									</IonCol>
+								</IonRow>
+							</IonGrid>
+						</>
+					)}
 				</>
 			)}
 		</>

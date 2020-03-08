@@ -75,7 +75,7 @@ function BudgetEditPage() {
 		result && goBack();
 	}
 
-	function handelBudgetUpdate(repeatType: RepeatType, repeatValues: number[]) {
+	function handelBudgetUpdate(repeatType: RepeatType | null, repeatValues: number[]) {
 		setBudget({
 			...budget,
 			repeatType,

@@ -105,7 +105,7 @@ interface Budget {
 	notes: string;
 	ownerId: string;
 	profileId: string;
-	repeatType: RepeatType;
+	repeatType: RepeatType | null;
 	repeatUnit: RepeatUnits;
 	repeatValues: number[];
 	startDate: string;
