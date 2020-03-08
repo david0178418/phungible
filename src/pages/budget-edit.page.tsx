@@ -60,6 +60,7 @@ function BudgetEditPage() {
 			name,
 			amount,
 		} = budget;
+
 		return !!(
 			name &&
 			amount
@@ -75,11 +76,12 @@ function BudgetEditPage() {
 		result && goBack();
 	}
 
-	function handelBudgetUpdate(repeatType: RepeatType | null, repeatValues: number[]) {
+	function handelBudgetUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = budget.repeatUnit) {
 		setBudget({
 			...budget,
 			repeatType,
 			repeatValues,
+			repeatUnit,
 		});
 	}
 
@@ -90,6 +92,7 @@ function BudgetEditPage() {
 			canSave={isValid}
 			handleSubmit={handleSubmit}
 		>
+			{JSON.stringify(budget)}
 			<IonGrid>
 				<IonRow>
 					<IonCol>
@@ -138,6 +141,7 @@ function BudgetEditPage() {
 			<RepetitionSelector
 				type={budget.repeatType}
 				values={budget.repeatValues}
+				unit={budget.repeatUnit}
 				onUpdate={handelBudgetUpdate}
 			/>
 		</EditPage>

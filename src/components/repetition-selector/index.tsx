@@ -2,26 +2,22 @@ import React from 'react';
 import {
 	IonItem,
 	IonLabel,
-	IonInput,
-	IonSelect,
-	IonSelectOption,
-	IonGrid,
-	IonRow,
-	IonCol,
 	IonSegment,
 	IonSegmentButton,
 	IonCheckbox,
 } from '@ionic/react';
+import { RepeatType, RepeatUnit } from '../../interfaces';
+import { DateSelector } from './components/date-selector';
+import { IntervalSelector } from './components/interval-selector';
 import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
-import { RepeatType } from '../../interfaces';
-import { DateSelector } from './components/date-selector';
 
 interface Props {
 	type: RepeatType | null;
 	values: number[];
-	onUpdate: (type: RepeatType | null, values: number[]) => void;
+	unit: RepeatUnit;
+	onUpdate: (type: RepeatType | null, values: number[], units?: RepeatUnit) => void;
 }
 
 export
@@ -29,6 +25,7 @@ function RepetitionSelector(props: Props) {
 	const {
 		type,
 		values,
+		unit,
 		onUpdate,
 	} = props;
 
@@ -45,13 +42,23 @@ function RepetitionSelector(props: Props) {
 			return;
 		}
 
-		onUpdate(newType, []);
+		const vals = newType === RepeatType.Interval ? [1] : [];
+
+		onUpdate(newType, vals);
 	}
 
 	function handleRepeatToggle() {
 		const newType = type ? null : RepeatType.Days;
 
 		onUpdate(newType, []);
+	}
+
+	function handleIntervalValueChange(val: number) {
+		onUpdate(type, [val]);
+	}
+
+	function handleUnitChange(newUnit: RepeatUnit) {
+		onUpdate(type, values, newUnit);
 	}
 
 	return (
@@ -98,38 +105,12 @@ function RepetitionSelector(props: Props) {
 					)}
 					{RepeatType.Interval === type && (
 						<>
-							<IonLabel>
-								<p>
-									Every
-								</p>
-							</IonLabel>
-							<IonGrid>
-								<IonRow>
-									<IonCol size="2">
-										<IonItem>
-											<IonInput value={0} type="number" />
-										</IonItem>
-									</IonCol>
-									<IonCol>
-										<IonItem>
-											<IonSelect>
-												<IonSelectOption>
-													Day
-												</IonSelectOption>
-												<IonSelectOption>
-													Week
-												</IonSelectOption>
-												<IonSelectOption>
-													Month
-												</IonSelectOption>
-												<IonSelectOption>
-													Year
-												</IonSelectOption>
-											</IonSelect>
-										</IonItem>
-									</IonCol>
-								</IonRow>
-							</IonGrid>
+							<IntervalSelector
+								value={values[0]}
+								unit={unit}
+								onValueChange={handleIntervalValueChange}
+								onUnitChange={handleUnitChange}
+							/>
 						</>
 					)}
 				</>

@@ -77,7 +77,7 @@ enum RepeatDays {
 }
 
 export
-enum RepeatUnits {
+enum RepeatUnit {
 	Day = 'day',
 	Week = 'week',
 	Month = 'month',
@@ -106,7 +106,7 @@ interface Budget {
 	ownerId: string;
 	profileId: string;
 	repeatType: RepeatType | null;
-	repeatUnit: RepeatUnits;
+	repeatUnit: RepeatUnit;
 	repeatValues: number[];
 	startDate: string;
 	towardAccountId: string | null;
