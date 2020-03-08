@@ -1,7 +1,8 @@
 .day-block {
-	border-right: 1px solid black;
+	background-color: white;
+	border: 1px solid black;
 	cursor: pointer;
-	flex-grow: 1;
+	flex: 0 0 (100%/7);
 	font-size: 24px;
 	font-weight: bold;
 	overflow: hidden;
@@ -20,7 +21,9 @@
 	}
 }
 
-.week-block {
+.day-container {
+	background-color: #1b1b1b;
 	border: 1px solid black;
 	display: flex;
+	flex-wrap: wrap;
 }

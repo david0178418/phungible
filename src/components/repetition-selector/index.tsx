@@ -16,6 +16,7 @@ import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
 import { RepeatType } from '../../interfaces';
+import { DateSelector } from './components/date-selector';
 
 interface Props {
 	type: RepeatType | null;
@@ -90,7 +91,10 @@ function RepetitionSelector(props: Props) {
 						/>
 					)}
 					{RepeatType.Dates === type && (
-						'Date View'
+						<DateSelector
+							checkedDays={values}
+							onDateToggle={handleValueToggle}
+						/>
 					)}
 					{RepeatType.Interval === type && (
 						<>
