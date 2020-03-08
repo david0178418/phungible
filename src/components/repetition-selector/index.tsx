@@ -12,6 +12,9 @@ import {
 	IonSegmentButton,
 	IonCheckbox,
 } from '@ionic/react';
+import { WeekdaySelector } from './components/weekday-selector';
+
+import './repetition-selector.scss';
 
 enum RepetitionTab {
 	DayOfWeek = 'dayofweek',
@@ -48,7 +51,7 @@ function RepetitionSelector() {
 			</IonSegment>
 
 			{selectedTab === RepetitionTab.DayOfWeek && (
-				'Week View'
+				<WeekdaySelector />
 			)}
 			{selectedTab === RepetitionTab.Date && (
 				'Date View'
@@ -71,7 +74,7 @@ function RepetitionSelector() {
 								<IonItem>
 									<IonSelect>
 										<IonSelectOption>
-											Day
+											<WeekdaySelector />
 										</IonSelectOption>
 										<IonSelectOption>
 											Week

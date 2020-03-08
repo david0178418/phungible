@@ -1,0 +1,25 @@
+.day-block {
+	border-right: 1px solid black;
+	text-align: center;
+	flex-grow: 1;
+	font-size: 24px;
+	font-weight: bold;
+	position: relative;
+	overflow: hidden;
+	padding: 20px 0px;
+
+	&:last-child {
+		border-right: none;
+	}
+
+	& ion-icon {
+		bottom: 5px;
+		right: 5px;
+		position: absolute;
+	}
+}
+
+.week-block {
+	border: 1px solid black;
+	display: flex;
+}
