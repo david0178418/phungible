@@ -86,7 +86,7 @@ function BudgetEditPage() {
 		result && goBack();
 	}
 
-	function handelBudgetUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = budget.repeatUnit) {
+	function handelRepetitionUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = budget.repeatUnit) {
 		setBudget({
 			...budget,
 			repeatType,
@@ -160,7 +160,7 @@ function BudgetEditPage() {
 				type={budget.repeatType}
 				values={budget.repeatValues}
 				unit={budget.repeatUnit}
-				onUpdate={handelBudgetUpdate}
+				onUpdate={handelRepetitionUpdate}
 			/>
 		</EditPage>
 	);

@@ -10,7 +10,6 @@ import { CollectionPage } from '../components/collection-page';
 export
 function BudgetsPage() {
 	return (
-		<>
 		<CollectionPage<Budget>
 			collectionType={Collection.Budgets}
 			label="Budget"
@@ -33,7 +32,6 @@ function BudgetsPage() {
 				</>
 			)}
 		/>
-		</>
 	);
 }
 

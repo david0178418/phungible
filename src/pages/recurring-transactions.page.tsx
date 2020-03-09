@@ -1,85 +1,57 @@
 import React, {
 } from 'react';
 import {
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonPage,
-	IonContent,
-	IonButtons,
-	IonMenuButton,
-	IonList,
-	IonItem,
 	IonIcon,
 	IonLabel,
-	IonFab,
-	IonFabButton,
 	IonText,
 } from '@ionic/react';
-import { arrowUp, arrowDown, add } from 'ionicons/icons';
+import {
+	Collection,
+	RecurringTransaction,
+	TransactionType,
+} from '../interfaces';
+import { arrowUp, arrowDown } from 'ionicons/icons';
+import { CollectionPage } from '../components/collection-page';
 
 export
 function RecurringPage() {
 	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar color="primary">
-					<IonButtons slot="start">
-						<IonMenuButton />
-					</IonButtons>
-					<IonTitle>Recurring Transactions</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent>
-				<IonList>
-					<IonItem>
+		<CollectionPage<RecurringTransaction>
+			collectionType={Collection.RecurringTransactions}
+			label="Recurring Transactions"
+			editHref="/recurring-transaction/"
+			itemRenderFn={(doc) => (
+				<>
+					{doc.type === TransactionType.Income ? (
 						<IonIcon
 							slot="start"
 							color="money"
 							icon={arrowUp}
 						/>
-						<div>
-							<IonLabel>
-								Pay Day
-								<p>
-									Next: 1 week
-								</p>
-							</IonLabel>
-						</div>
-						<IonText color="money" slot="end">
-							$500.00
-						</IonText>
-					</IonItem>
-					<IonItem>
+					) : (
 						<IonIcon
 							slot="start"
 							color="debt"
 							icon={arrowDown}
 						/>
-						<div>
-							<IonLabel>
-								Rent
-								<p>
-									Next: 3 days
-								</p>
-							</IonLabel>
-						</div>
-						<IonText color="debt" slot="end">
-							$100.00
-						</IonText>
-					</IonItem>
-				</IonList>
-				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton
-						color="secondary"
-						routerLink="/recurring-transaction/"
-						routerDirection="forward"
+					)}
+					<div>
+						<IonLabel>
+							{doc.name}
+							<p>
+								Next: ???
+							</p>
+						</IonLabel>
+					</div>
+					<IonText
+						slot="end"
+						color={doc.type === TransactionType.Income ? 'money' : 'debt'}
 					>
-						<IonIcon icon={add} />
-					</IonFabButton>
-				</IonFab>
-			</IonContent>
-		</IonPage>
+						${doc.amount}
+					</IonText>
+				</>
+			)}
+		/>
 	);
 }
 

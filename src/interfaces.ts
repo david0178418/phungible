@@ -13,7 +13,7 @@ enum Collection {
 }
 
 export
-type CollectionType = Account | Budget;
+type CollectionType = Account | Budget | RecurringTransaction;
 
 export
 enum AccountType {
@@ -59,6 +59,45 @@ interface Account {
 }
 
 export
+interface Budget {
+	amount: number;
+	exceptions: string[];
+	fromAccountId: string | null;
+	id?: string;
+	labels: Label[];
+	name: string;
+	notes: string;
+	ownerId: string;
+	profileId: string;
+	repeatType: RepeatType | null;
+	repeatUnit: RepeatUnit;
+	repeatValues: number[];
+	startDate: string;
+	transactionType: TransactionType;
+	// Needed??
+	// today: Date;
+	// towardAccountId: string | null;
+}
+
+export
+interface RecurringTransaction {
+	id?: string;
+	profileId: string;
+	fromAccountId: string;
+	towardAccountId: string;
+	amount: number;
+	notes: string;
+	exceptions: string[];
+	labels: string[];
+	name: string;
+	repeatUnit: RepeatUnit;
+	repeatValues: number[];
+	type: TransactionType;
+	repeatType: RepeatType | null;
+	startDate: string;
+}
+
+export
 enum RepeatType {
 	Days = 'days',
 	Dates = 'dates',
@@ -91,27 +130,6 @@ enum TransactionType {
 	Expense =  'expense',
 	Income = 'income',
 	TransferPayment = 'transfer',
-}
-
-export
-interface Budget {
-	amount: number;
-	exceptions: string[];
-	fromAccountId: string | null;
-	id?: string;
-	labels: Label[];
-	name: string;
-	notes: string;
-	ownerId: string;
-	profileId: string;
-	repeatType: RepeatType | null;
-	repeatUnit: RepeatUnit;
-	repeatValues: number[];
-	startDate: string;
-	transactionType: TransactionType;
-	// Needed??
-	// today: Date;
-	// towardAccountId: string | null;
 }
 
 export
