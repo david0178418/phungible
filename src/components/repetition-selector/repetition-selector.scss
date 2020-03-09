@@ -10,10 +10,6 @@
 	position: relative;
 	text-align: center;
 
-	&:last-child {
-		border-right: none;
-	}
-
 	& ion-icon {
 		bottom: 5px;
 		position: absolute;

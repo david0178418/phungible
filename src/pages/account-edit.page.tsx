@@ -195,9 +195,6 @@ function AccountEditPage() {
 								value={format(balanceDate, 'yyyy-MM-dd')}
 								onIonChange={({detail}) =>{
 									if(typeof detail.value === 'string') {
-										//@ts-ignore
-										console.log(detail.value, new Date(detail.value), parse(detail.value, 'yyyy-MM-dd', new Date()));
-										//@ts-ignore
 										detail.value && setBalanceDate(parse(detail.value, 'yyyy-MM-dd', new Date()));
 									}
 								}}

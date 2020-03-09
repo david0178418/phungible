@@ -95,7 +95,6 @@ enum TransactionType {
 
 export
 interface Budget {
-	// today: Date;
 	amount: number;
 	exceptions: string[];
 	fromAccountId: string | null;
@@ -109,8 +108,10 @@ interface Budget {
 	repeatUnit: RepeatUnit;
 	repeatValues: number[];
 	startDate: string;
-	towardAccountId: string | null;
 	transactionType: TransactionType;
+	// Needed??
+	// today: Date;
+	// towardAccountId: string | null;
 }
 
 export

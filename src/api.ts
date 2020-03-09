@@ -74,7 +74,6 @@ function createBudget(): Budget {
 		amount: 0,
 		exceptions: [],
 		fromAccountId: '',
-		id: '',
 		labels: [],
 		name: '',
 		notes: '',
@@ -83,8 +82,7 @@ function createBudget(): Budget {
 		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnit.Week,
 		repeatValues: [],
-		startDate: '',
-		towardAccountId: '',
+		startDate: (new Date()).toISOString(),
 		transactionType: TransactionType.BudgetedExpense,
 	};
 }

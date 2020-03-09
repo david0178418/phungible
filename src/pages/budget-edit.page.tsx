@@ -14,6 +14,7 @@ import { EditPage } from '../components/edit-page';
 import { createBudget, getDoc, saveDoc } from '../api';
 import { Budget, Collection, RepeatType } from '../interfaces';
 import { AccountSelector } from '../components/account-selector';
+import { format, parse } from 'date-fns';
 
 export
 function BudgetEditPage() {
@@ -57,13 +58,22 @@ function BudgetEditPage() {
 
 	function canSave() {
 		const {
-			name,
 			amount,
+			fromAccountId,
+			name,
+			repeatType,
+			repeatValues,
+			startDate,
 		} = budget;
 
 		return !!(
+			amount &&
+			fromAccountId &&
 			name &&
-			amount
+			startDate && (
+				!repeatType ||
+				repeatValues.length
+			)
 		);
 	}
 
@@ -92,7 +102,6 @@ function BudgetEditPage() {
 			canSave={isValid}
 			handleSubmit={handleSubmit}
 		>
-			{JSON.stringify(budget)}
 			<IonGrid>
 				<IonRow>
 					<IonCol>
@@ -111,11 +120,12 @@ function BudgetEditPage() {
 					</IonCol>
 					<IonCol size="3">
 						<IonItem>
-							<IonLabel position="stacked">
+							<IonLabel position="stacked" color="money">
 								$
 							</IonLabel>
 							<IonInput
 								type="number"
+								value={budget.amount}
 								onIonChange={({detail}) => {
 									typeof detail.value === 'string' &&
 									setProp('amount', +detail.value);
@@ -130,7 +140,15 @@ function BudgetEditPage() {
 				<IonLabel position="stacked">
 					Starts
 				</IonLabel>
-				<IonInput type="date" />
+				<IonInput
+					type="date"
+					value={format(new Date(budget.startDate), 'yyyy-MM-dd')}
+					onIonChange={({detail}) => {
+						if(typeof detail.value === 'string') {
+							detail.value && setProp('startDate', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+						}
+					}}
+				/>
 			</IonItem>
 
 			<AccountSelector

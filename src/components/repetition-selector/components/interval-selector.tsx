@@ -29,15 +29,13 @@ function IntervalSelector(props: Props) {
 
 	return (
 		<>
-			<IonLabel>
-				<p>
-					Every
-				</p>
-			</IonLabel>
 			<IonGrid>
 				<IonRow>
-					<IonCol size="2">
+					<IonCol size="3">
 						<IonItem>
+							<IonLabel position="stacked">
+								Every
+							</IonLabel>
 							<IonInput
 								value={value}
 								type="number"
@@ -48,6 +46,7 @@ function IntervalSelector(props: Props) {
 					</IonCol>
 					<IonCol>
 						<IonItem>
+							<IonLabel position="stacked"></IonLabel>
 							<IonSelect
 								value={unit}
 								onIonChange={({detail}) => onUnitChange(detail.value)}
