@@ -16,11 +16,11 @@ import { CollectionPage } from '../components/collection-page';
 export
 function RecurringPage() {
 	return (
-		<CollectionPage<RecurringTransaction>
+		<CollectionPage
 			collectionType={Collection.RecurringTransactions}
 			label="Recurring Transactions"
 			editPath="/recurring-transaction"
-			itemRenderFn={(doc) => (
+			itemRenderFn={(doc: RecurringTransaction) => (
 				<>
 					{doc.type === TransactionType.Income ? (
 						<IonIcon

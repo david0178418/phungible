@@ -20,11 +20,11 @@ import { CollectionPage } from '../components/collection-page';
 export
 function AccountsPage() {
 	return (
-		<CollectionPage<Account>
+		<CollectionPage
 			collectionType={Collection.Accounts}
 			label="Accounts"
 			editPath="/account"
-			itemRenderFn={(doc) => (
+			itemRenderFn={(doc: Account) => (
 				<>
 					{doc.type === AccountType.Savings ? (
 						<IonIcon

@@ -10,11 +10,11 @@ import { CollectionPage } from '../components/collection-page';
 export
 function BudgetsPage() {
 	return (
-		<CollectionPage<Budget>
+		<CollectionPage
 			collectionType={Collection.Budgets}
 			label="Budget"
 			editPath="/budget"
-			itemRenderFn={(doc) => (
+			itemRenderFn={(doc: Budget) => (
 				<>
 					<div slot="start">
 						${doc.amount}
