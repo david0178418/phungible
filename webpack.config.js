@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const {
 	NODE_ENV = '',
@@ -65,7 +65,7 @@ module.exports = {
 		new DefinePlugin({}),
 		// TODO The copy plugin contents are being blown
 		// away on rebuild for some reason
-		// new CleanWebpackPlugin(),
+		new CleanWebpackPlugin(),
 		new CopyPlugin([
 			{
 				from: 'src/static',
