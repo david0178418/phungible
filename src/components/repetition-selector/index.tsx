@@ -63,15 +63,18 @@ function RepetitionSelector(props: Props) {
 
 	return (
 		<>
-			<IonItem>
-				<IonLabel>
-					Repeats
-				</IonLabel>
+			<IonItem lines="none">
 				<IonCheckbox
 					slot="start"
 					checked={!!type}
-					onIonChange={() => handleRepeatToggle()}
+					onIonChange={handleRepeatToggle}
 				/>
+				<IonLabel>
+					Repeats
+					<p>
+						Next Occurance: N/A
+					</p>
+				</IonLabel>
 			</IonItem>
 			{type && (
 				<>

@@ -39,6 +39,7 @@ function AccountEditPage() {
 	const {
 		id = '',
 	} = useParams();
+	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {
 		setHasChanged(!equal(account, originalAccount));
@@ -58,6 +59,7 @@ function AccountEditPage() {
 					setAccount(a);
 				}
 			}
+			setLoading(false);
 		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -114,6 +116,7 @@ function AccountEditPage() {
 			editing={!!id}
 			defaultHref="/accounts"
 			canSave={isValid}
+			loading={loading}
 			handleSubmit={handleSubmit}
 		>
 			<IonItem>

@@ -19,7 +19,7 @@ function RecurringPage() {
 		<CollectionPage<RecurringTransaction>
 			collectionType={Collection.RecurringTransactions}
 			label="Recurring Transactions"
-			editHref="/recurring-transaction/"
+			editPath="/recurring-transaction"
 			itemRenderFn={(doc) => (
 				<>
 					{doc.type === TransactionType.Income ? (

@@ -13,7 +13,7 @@ function BudgetsPage() {
 		<CollectionPage<Budget>
 			collectionType={Collection.Budgets}
 			label="Budget"
-			editHref="/budget/"
+			editPath="/budget"
 			itemRenderFn={(doc) => (
 				<>
 					<div slot="start">

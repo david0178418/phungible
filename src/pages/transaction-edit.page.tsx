@@ -21,7 +21,12 @@ function TransactionEditPage() {
 	} = useParams();
 
 	return (
-		<EditPage editing={!!id} defaultHref="/transactions" handleSubmit={() => {}}>
+		<EditPage
+			canSave={false}
+			editing={!!id}
+			defaultHref="/transactions"
+			handleSubmit={() => {}}
+		>
 			<IonGrid>
 				<IonRow>
 					<IonCol>
@@ -62,11 +67,13 @@ function TransactionEditPage() {
 
 
 			<AccountSelector
+				label="From Account"
 				value=""
 				onChange={() => null}
 			/>
 
 			<AccountSelector
+				label="Label Account"
 				value=""
 				onChange={() => null}
 			/>

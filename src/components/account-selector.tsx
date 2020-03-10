@@ -1,31 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import { getCollectionRef } from '../api';
-import { Collection, Account } from '../interfaces';
+import { AccountsContext } from '../contexts';
 
 interface Props {
+	label: string;
 	value: string;
 	onChange(id: string): void;
 }
 
 export
 function AccountSelector(props: Props) {
-	const [accounts, setAccounts] = useState<Account[]>([]);
+	const accounts = useContext(AccountsContext);
 	const {
+		label,
 		value,
 		onChange,
 	} = props;
 
-	useEffect(() => {
-		(async () => {
-			const col = await getCollectionRef(Collection.Accounts).get();
-			setAccounts(col.docs.map(y => y.data() as Account));
-		})();
-	}, []);
-
 	return (
 		<IonItem>
-			<IonLabel position="stacked">From Account</IonLabel>
+			<IonLabel position="stacked">{label}</IonLabel>
 			<IonSelect value={value} onIonChange={({detail}) => onChange(detail.value)}>
 				<IonSelectOption value="">None</IonSelectOption>
 				{accounts.map(account => (

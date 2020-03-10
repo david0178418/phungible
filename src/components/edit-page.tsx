@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -12,12 +12,14 @@ import {
 	IonFabButton,
 } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
+import { loadingController } from '@ionic/core';
 
 interface Props {
-	canSave?: boolean;
+	canSave: boolean;
 	children: ReactNode;
 	defaultHref: string;
 	editing: boolean;
+	loading?: boolean;
 	handleSubmit(): void;
 }
 
@@ -29,7 +31,20 @@ function EditPage(props: Props) {
 		defaultHref,
 		editing,
 		handleSubmit,
+		loading,
 	} = props;
+	const loaderRef = useRef<HTMLIonLoadingElement | null>(null);
+
+	useEffect(() => {
+		(async () => {
+			if(loading && !loaderRef.current) {
+				loaderRef.current = await loadingController.create({});
+				loaderRef.current.present();
+			} else if(!loading && loaderRef.current) {
+				loaderRef.current.dismiss();
+			}
+		})();
+	}, [loading]);
 
 	return (
 		<IonPage>
@@ -45,7 +60,7 @@ function EditPage(props: Props) {
 			</IonHeader>
 			<IonContent className="ion-padding">
 
-				{children}
+				{!loading && children}
 
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
 					<IonFabButton

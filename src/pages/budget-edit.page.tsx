@@ -26,6 +26,7 @@ function BudgetEditPage() {
 	const {
 		id = '',
 	} = useParams();
+	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {
 		setHasChanged(!equal(budget, originalBudget));
@@ -45,6 +46,7 @@ function BudgetEditPage() {
 					setBudget(a);
 				}
 			}
+			setLoading(false);
 		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -100,6 +102,7 @@ function BudgetEditPage() {
 			defaultHref="/budgets"
 			editing={!!id}
 			canSave={isValid}
+			loading={loading}
 			handleSubmit={handleSubmit}
 		>
 			<IonGrid>
@@ -152,6 +155,7 @@ function BudgetEditPage() {
 			</IonItem>
 
 			<AccountSelector
+				label="From Account"
 				value={budget.fromAccountId || ''}
 				onChange={newId => setProp('fromAccountId', newId)}
 			/>

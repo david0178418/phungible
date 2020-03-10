@@ -23,7 +23,7 @@ function AccountsPage() {
 		<CollectionPage<Account>
 			collectionType={Collection.Accounts}
 			label="Accounts"
-			editHref="/account/"
+			editPath="/account"
 			itemRenderFn={(doc) => (
 				<>
 					{doc.type === AccountType.Savings ? (

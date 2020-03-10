@@ -28,7 +28,7 @@ interface Props<T> {
 	itemRenderFn: ItemRenderFn<T>;
 	collectionType: Collection;
 	label: string;
-	editHref: string;
+	editPath: string;
 }
 
 export
@@ -36,7 +36,7 @@ function CollectionPage<T extends CollectionType>(props: Props<T>) {
 	const {
 		collectionType,
 		label,
-		editHref,
+		editPath,
 		itemRenderFn,
 	} = props;
 	const collection = useCollection<T>(collectionType);
@@ -86,7 +86,7 @@ function CollectionPage<T extends CollectionType>(props: Props<T>) {
 								</IonItemOption>
 							</IonItemOptions>
 							<IonItem
-								routerLink={`/budget/${doc.id}`}
+								routerLink={`${editPath}/${doc.id}`}
 								routerDirection="forward"
 							>
 								{itemRenderFn(doc)}
@@ -97,7 +97,7 @@ function CollectionPage<T extends CollectionType>(props: Props<T>) {
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
 					<IonFabButton
 						color="secondary"
-						routerLink={editHref}
+						routerLink={editPath}
 						routerDirection="forward"
 					>
 						<IonIcon icon={add} />

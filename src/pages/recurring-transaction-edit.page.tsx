@@ -3,63 +3,68 @@ import {
 	IonItem,
 	IonLabel,
 	IonInput,
-	IonSelect,
-	IonSelectOption,
-	IonIcon,
 	IonGrid,
 	IonRow,
 	IonCol,
+	IonTextarea,
 } from '@ionic/react';
-import { RecurringTransaction, Collection, RepeatType } from '../interfaces';
+import {
+	RecurringTransaction,
+	Collection,
+	RepeatType,
+	TransactionType,
+} from '../interfaces';
+import {
+	createRecurringTransaction,
+	getDoc,
+	saveDoc,
+} from '../api';
 import equal from 'fast-deep-equal';
 import { useParams, useHistory } from 'react-router-dom';
-import { cashOutline } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
 import { AccountSelector } from '../components/account-selector';
-import { createRecurringTransaction, getDoc, saveDoc } from '../api';
 import { RepetitionSelector } from '../components/repetition-selector';
-// import { RepetitionSelector } from '../components/repetition-selector';
+import { TransactionTypeSelector } from '../components/transaction-type-selector';
+import { format, parse } from 'date-fns';
 
 export
 function RecurringTransactionEditPage() {
-	const [originalRecurringTransaction, setOriginalRecurringTransaction] = useState(createRecurringTransaction);
-	const [recurringTransaction, setRecurringTransaction] = useState(createRecurringTransaction);
+	const [original, setOriginal] = useState(createRecurringTransaction);
+	const [transaction, setTransaction] = useState(createRecurringTransaction);
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const {goBack} = useHistory();
 	const {
 		id = '',
 	} = useParams();
-
-
-
-
+	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {
-		setHasChanged(!equal(recurringTransaction, originalRecurringTransaction));
-	}, [recurringTransaction, originalRecurringTransaction]);
+		setHasChanged(!equal(transaction, original));
+	}, [transaction, original]);
 
 	useEffect(() => {
 		setIsValid(hasChanged && canSave());
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hasChanged, recurringTransaction]);
+	}, [hasChanged, transaction]);
 
 	useEffect(() => {
 		(async () => {
 			if(id) {
 				const a = await getDoc<RecurringTransaction>(`${Collection.RecurringTransactions}/${id}`);
 				if(a) {
-					setOriginalRecurringTransaction(a);
-					setRecurringTransaction(a);
+					setTransaction({...a});
+					setOriginal({...a});
 				}
 			}
+			setLoading(false);
 		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	function setProp<T extends keyof RecurringTransaction>(prop: T, value: RecurringTransaction[T]) {
-		setRecurringTransaction({
-			...recurringTransaction,
+		setTransaction({
+			...transaction,
 			[prop]: value,
 		});
 	}
@@ -68,19 +73,28 @@ function RecurringTransactionEditPage() {
 		const {
 			amount,
 			fromAccountId,
+			towardAccountId,
+			type,
 			name,
 			repeatType,
 			repeatValues,
 			startDate,
-		} = recurringTransaction;
+		} = transaction;
 
 		return !!(
 			amount &&
-			fromAccountId &&
 			name &&
 			startDate && (
 				!repeatType ||
 				repeatValues.length
+			) && (
+				fromAccountId || (
+					type === TransactionType.Income
+				)
+			) && (
+				towardAccountId || (
+					type === TransactionType.Expense
+				)
 			)
 		);
 	}
@@ -90,13 +104,30 @@ function RecurringTransactionEditPage() {
 			return;
 		}
 
-		const result = await saveDoc(recurringTransaction, Collection.RecurringTransactions);
+		const result = await saveDoc(transaction, Collection.RecurringTransactions);
 		result && goBack();
 	}
 
-	function handelRepetitionUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = recurringTransaction.repeatUnit) {
-		setRecurringTransaction({
-			...recurringTransaction,
+	function handleTransactionTypeUpdate(type: TransactionType) {
+		const fromAccountId = type === TransactionType.Income ?
+			'' :
+			transaction.fromAccountId;
+
+		const towardAccountId = type === TransactionType.Expense ?
+			'' :
+			transaction.towardAccountId;
+		
+		setTransaction({
+			...transaction,
+			type,
+			towardAccountId,
+			fromAccountId,
+		});
+	}
+
+	function handelRepetitionUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = transaction.repeatUnit) {
+		setTransaction({
+			...transaction,
 			repeatType,
 			repeatValues,
 			repeatUnit,
@@ -105,9 +136,11 @@ function RecurringTransactionEditPage() {
 
 	return (
 		<EditPage
-			editing={!!id}
 			defaultHref="/recurring-transactions"
+			editing={!!id}
+			canSave={isValid}
 			handleSubmit={handleSubmit}
+			loading={loading}
 		>
 			<IonGrid>
 				<IonRow>
@@ -117,7 +150,7 @@ function RecurringTransactionEditPage() {
 								Name
 							</IonLabel>
 							<IonInput
-								value={recurringTransaction.name}
+								value={transaction.name}
 								onIonChange={({detail}) => {
 									typeof detail.value === 'string' &&
 									setProp('name', detail.value);
@@ -132,7 +165,7 @@ function RecurringTransactionEditPage() {
 							</IonLabel>
 							<IonInput
 								type="number"
-								value={recurringTransaction.amount}
+								value={transaction.amount}
 								onIonChange={({detail}) => {
 									typeof detail.value === 'string' &&
 									setProp('amount', +detail.value);
@@ -142,39 +175,52 @@ function RecurringTransactionEditPage() {
 					</IonCol>
 				</IonRow>
 			</IonGrid>
-			<IonItem>
-				<IonIcon
-					slot="start"
-					color="money"
-					icon={cashOutline}
-				/>
-				<IonSelect interface="popover" placeholder="Type">
-					<IonSelectOption value="brown">
-						Money
-					</IonSelectOption>
-					<IonSelectOption value="blonde">
-						Debt
-					</IonSelectOption>
-				</IonSelect>
-			</IonItem>
+			<TransactionTypeSelector
+				type={transaction.type}
+				onSelect={handleTransactionTypeUpdate}
+			/>
 			<IonItem>
 				<IonLabel position="stacked">
 					Notes
 				</IonLabel>
-				<IonInput />
+				<IonTextarea
+					onIonChange={({detail}) => setProp('notes', detail.value || '')}
+				/>
 			</IonItem>
 			<IonItem>
 				<IonLabel position="stacked">
 					Starts
 				</IonLabel>
-				<IonInput type="date" />
+				<IonInput
+					type="date"
+					value={format(new Date(transaction.startDate), 'yyyy-MM-dd')}
+					onIonChange={({detail}) => {
+						if(typeof detail.value === 'string') {
+							detail.value && setProp('startDate', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+						}
+					}}
+				/>
 			</IonItem>
-			<AccountSelector value="" onChange={() => null} />
+			{transaction.type !== TransactionType.Income && (
+				<AccountSelector
+					label="From Account"
+					value={transaction.fromAccountId}
+					onChange={account => setProp('fromAccountId', account)}
+				/>
+			)}
+
+			{transaction.type !== TransactionType.Expense && (
+				<AccountSelector
+					label="Toward Account"
+					value={transaction.towardAccountId}
+					onChange={account => setProp('towardAccountId', account)}
+				/>
+			)}
 
 			<RepetitionSelector
-				type={recurringTransaction.repeatType}
-				values={recurringTransaction.repeatValues}
-				unit={recurringTransaction.repeatUnit}
+				type={transaction.repeatType}
+				values={transaction.repeatValues}
+				unit={transaction.repeatUnit}
 				onUpdate={handelRepetitionUpdate}
 			/>
 		</EditPage>

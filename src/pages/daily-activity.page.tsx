@@ -92,7 +92,11 @@ function HomePage() {
 									</IonRow>
 								</IonGrid>
 
-								<AccountSelector value="" onChange={() => null} />
+								<AccountSelector
+									label="From Account"
+									value=""
+									onChange={() => null}
+								/>
 
 								<IonItem>
 									<IonLabel position="stacked">Notes</IonLabel>

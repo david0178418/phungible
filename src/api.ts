@@ -100,7 +100,7 @@ function createRecurringTransaction(): RecurringTransaction {
 		repeatType: RepeatType.Dates,
 		repeatUnit: RepeatUnit.Month,
 		repeatValues: [],
-		startDate: '',
+		startDate: (new Date()).toISOString(),
 		towardAccountId: '',
 		type: TransactionType.Income,
 	};
