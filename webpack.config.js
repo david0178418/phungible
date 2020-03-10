@@ -27,7 +27,7 @@ module.exports = {
 		},
 	},
 	output: {
-		filename: '[name].[contenthash].js',
+		filename: IS_DEV ? '[name].bundle.js' : '[name].[contenthash].js',
 		path: path.resolve(__dirname, 'build'),
 		publicPath: '/',
 	},
