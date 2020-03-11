@@ -13,7 +13,7 @@ enum Collection {
 }
 
 export
-type CollectionType = Account | Budget | RecurringTransaction;
+type CollectionType = Account | Budget | RecurringTransaction | Transaction;
 
 export
 enum AccountType {
@@ -80,19 +80,24 @@ interface Budget {
 }
 
 export
-interface RecurringTransaction {
+interface Transaction {
 	id?: string;
 	profileId: string;
 	fromAccountId: string;
 	towardAccountId: string;
 	amount: number;
 	notes: string;
-	exceptions: string[];
 	labels: string[];
 	name: string;
+	type: TransactionType;
+}
+
+export
+// TODO Should transaction be a property?
+interface RecurringTransaction extends Transaction {
+	exceptions: string[];
 	repeatUnit: RepeatUnit;
 	repeatValues: number[];
-	type: TransactionType;
 	repeatType: RepeatType | null;
 	startDate: string;
 }
