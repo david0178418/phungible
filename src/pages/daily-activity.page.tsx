@@ -23,6 +23,7 @@ import {
 	IonDatetime,
 	IonSpinner,
 	IonNote,
+	IonText,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import { AccountSelector } from '../components/account-selector';
@@ -150,9 +151,9 @@ function HomePage() {
 							)}
 							{!loading && budgets.map(budget => (
 								<IonItem key={budget.id} routerLink={`/budget/${budget.id}`}>
-									<div slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
+									<IonText slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
 										${moneyFormat(budget.amount)}
-									</div>
+									</IonText>
 									<div>
 										<IonLabel>
 											{budget.name}
