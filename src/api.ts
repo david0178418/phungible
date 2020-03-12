@@ -1,4 +1,15 @@
-import { Collection, Docs, Account, AccountType, Budget, RepeatType, RepeatUnit, TransactionType, RecurringTransaction, Transaction } from './interfaces';
+import {
+	Collection,
+	Docs,
+	Account,
+	AccountType,
+	Budget,
+	RepeatType,
+	RepeatUnit,
+	TransactionType,
+	RecurringTransaction,
+	Transaction,
+} from './interfaces';
 import { firestore } from 'firebase/app';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
@@ -26,6 +37,15 @@ async function deleteDoc(id: string, collection: Collection) {
 export
 function getDoc<T = any>(path: string) {
 	return formatDocument<T>(getDocRef(path));
+}
+
+export
+async function getCollection<T = any>(path: Collection) {
+	const results = await db.collection(path).get();
+
+	return results
+		.docs
+		.map(doc => doc.data() as T);
 }
 
 export

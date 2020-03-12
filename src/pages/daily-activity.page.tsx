@@ -22,12 +22,14 @@ import {
 	IonTextarea,
 	IonDatetime,
 	IonSpinner,
+	IonNote,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import { AccountSelector } from '../components/account-selector';
 import { TransactionItem } from '../components/transaction-item';
-import { Transaction, Collection } from '../interfaces';
-import { getCollectionRef } from '../api';
+import { Transaction, Collection, Budget } from '../interfaces';
+import { getCollectionRef, getCollection } from '../api';
+import { moneyFormat } from '../utils';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -41,21 +43,25 @@ function HomePage() {
 	const [showQuickExpense, setShowQuickExpense] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(() => (new Date()).toISOString());
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
+	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		(async () => {
-			if(selectedTab !== PageTab.Transactions) {
-				return;
+			setLoading(true);
+			if(selectedTab === PageTab.Budgets) {
+				setBudgets(await getCollection<Budget>(Collection.Budgets));
 			}
 
-			setLoading(true);
-			const collection = await getCollectionRef(Collection.Transactions)
-				.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
-				.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
-				.get();
+			if(selectedTab === PageTab.Transactions) {
+				const collection = await getCollectionRef(Collection.Transactions)
+					.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
+					.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
+					.get();
+	
+				setTransactions(collection.docs.map(y => y.data() as Transaction));
+			}
 
-			setTransactions(collection.docs.map(y => y.data() as Transaction));
 			setLoading(false);
 		})();
 	}, [selectedDate, selectedTab]);
@@ -137,17 +143,31 @@ function HomePage() {
 									<p>Remaining Budgeted Amounts</p>
 								</IonLabel>
 							</IonItem>
-							<IonItem onClick={() => console.log(111)}>
-								<IonLabel>
-									Foo
-									<p>
-										Renews Feb 20, 2021
-									</p>
-								</IonLabel>
-								<div color="money" slot="end">
-									$100
-								</div>
-							</IonItem>
+							{loading && (
+								<IonItem>
+									<IonSpinner/>
+								</IonItem>
+							)}
+							{!loading && budgets.map(budget => (
+								<IonItem key={budget.id} routerLink={`/budget/${budget.id}`}>
+									<div slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
+										${moneyFormat(budget.amount)}
+									</div>
+									<div>
+										<IonLabel>
+											{budget.name}
+											<p>
+												Renews Feb 20, 2021
+											</p>
+										</IonLabel>
+										<IonNote>
+											<em>
+												$X.XX Currently Remaining
+											</em>
+										</IonNote>
+									</div>
+								</IonItem>
+							))}
 						</IonList>
 					</div>
 				)}
