@@ -17,6 +17,7 @@ import { createTransaction, saveDoc, getDoc } from '../api';
 import { Collection, TransactionType, Transaction } from '../interfaces';
 import { useStatePropSetter } from '../hooks';
 import { TransactionTypeSelector } from '../components/transaction-type-selector';
+import { MoneyInput } from '../components/money-input';
 
 export
 function TransactionEditPage() {
@@ -134,19 +135,12 @@ function TransactionEditPage() {
 						</IonItem>
 					</IonCol>
 					<IonCol size="3">
-						<IonItem>
-							<IonLabel position="stacked" color="money">
-								$
-							</IonLabel>
-							<IonInput
-								type="number"
-								value={transaction.amount}
-								onIonChange={({detail}) => {
-									typeof detail.value === 'string' &&
-									setProp('amount', +detail.value);
-								}}
-							/>
-						</IonItem>
+						<MoneyInput
+							amount={transaction.amount}
+							onUpdate={(amount) => {
+								setProp('amount', amount);
+							}}
+						/>
 					</IonCol>
 				</IonRow>
 			</IonGrid>

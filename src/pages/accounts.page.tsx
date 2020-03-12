@@ -16,6 +16,7 @@ import {
 	AccountType,
 } from '../interfaces';
 import { CollectionPage } from '../components/collection-page';
+import { moneyFormat } from '../utils';
 
 export
 function AccountsPage() {
@@ -53,7 +54,7 @@ function AccountsPage() {
 						slot="end"
 						color={doc.type === AccountType.Savings ? 'money' : 'debt'}
 					>
-						${doc.balanceUpdateHistory[0].balance}
+						${moneyFormat(doc.balanceUpdateHistory[0].balance)}
 					</IonText>
 				</>
 			)}

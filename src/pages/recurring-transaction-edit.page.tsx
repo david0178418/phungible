@@ -8,6 +8,8 @@ import {
 	IonCol,
 	IonTextarea,
 } from '@ionic/react';
+import equal from 'fast-deep-equal';
+import { useParams, useHistory } from 'react-router-dom';
 import {
 	RecurringTransaction,
 	Collection,
@@ -19,14 +21,13 @@ import {
 	getDoc,
 	saveDoc,
 } from '../api';
-import equal from 'fast-deep-equal';
-import { useParams, useHistory } from 'react-router-dom';
+import { format, parse } from 'date-fns';
 import { EditPage } from '../components/edit-page';
 import { AccountSelector } from '../components/account-selector';
 import { RepetitionSelector } from '../components/repetition-selector';
 import { TransactionTypeSelector } from '../components/transaction-type-selector';
-import { format, parse } from 'date-fns';
 import { useStatePropSetter } from '../hooks';
+import { MoneyInput } from '../components/money-input';
 
 export
 function RecurringTransactionEditPage() {
@@ -157,19 +158,12 @@ function RecurringTransactionEditPage() {
 						</IonItem>
 					</IonCol>
 					<IonCol size="3">
-						<IonItem>
-							<IonLabel position="stacked" color="money">
-								$
-							</IonLabel>
-							<IonInput
-								type="number"
-								value={transaction.amount}
-								onIonChange={({detail}) => {
-									typeof detail.value === 'string' &&
-									setProp('amount', +detail.value);
-								}}
-							/>
-						</IonItem>
+						<MoneyInput
+							amount={transaction.amount}
+							onUpdate={(amount) => {
+								setProp('amount', amount);
+							}}
+						/>
 					</IonCol>
 				</IonRow>
 			</IonGrid>

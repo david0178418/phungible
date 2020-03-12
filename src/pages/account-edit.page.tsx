@@ -24,6 +24,8 @@ import { cashOutline, trash, cardOutline } from 'ionicons/icons';
 import { EditPage } from '../components/edit-page';
 import { createAccount, getDoc, saveDoc } from '../api';
 import { Collection, Account, AccountType } from '../interfaces';
+import { MoneyInput } from '../components/money-input';
+import { moneyFormat } from '../utils';
 
 export
 function AccountEditPage() {
@@ -205,25 +207,12 @@ function AccountEditPage() {
 						</IonItem>
 					</IonCol>
 					<IonCol size="3">
-						<IonItem>
-							<IonLabel position="stacked">
-								$
-							</IonLabel>
-							<IonInput
-								type="number"
-								value={balanceAmount}
-								onIonChange={({detail}) => {
-									let value = NaN;
-									if(typeof detail.value === 'string') {
-										value = +detail.value;
-									}
-
-									if(!isNaN(value)) {
-										setBalanceAmount(value);
-									}
-								}}
-							/>
-						</IonItem>
+						<MoneyInput
+							amount={balanceAmount}
+							onUpdate={amount => {
+								setBalanceAmount(amount);
+							}}
+						/>
 					</IonCol>
 				</IonRow>
 			</IonGrid>
@@ -249,7 +238,7 @@ function AccountEditPage() {
 					<IonItemSliding key={i}>
 						<IonItem>
 							<IonLabel>
-								{a.balance}
+								${moneyFormat(a.balance)}
 								<p>
 									as of {a.date}
 								</p>

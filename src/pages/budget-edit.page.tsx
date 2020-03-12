@@ -15,6 +15,7 @@ import { createBudget, getDoc, saveDoc } from '../api';
 import { Budget, Collection, RepeatType } from '../interfaces';
 import { AccountSelector } from '../components/account-selector';
 import { format, parse } from 'date-fns';
+import { MoneyInput } from '../components/money-input';
 
 export
 function BudgetEditPage() {
@@ -122,19 +123,12 @@ function BudgetEditPage() {
 						</IonItem>
 					</IonCol>
 					<IonCol size="3">
-						<IonItem>
-							<IonLabel position="stacked" color="money">
-								$
-							</IonLabel>
-							<IonInput
-								type="number"
-								value={budget.amount}
-								onIonChange={({detail}) => {
-									typeof detail.value === 'string' &&
-									setProp('amount', +detail.value);
-								}}
-							/>
-						</IonItem>
+						<MoneyInput
+							amount={budget.amount}
+							onUpdate={amount => {
+								setProp('amount', amount);
+							}}
+						/>
 					</IonCol>
 				</IonRow>
 			</IonGrid>

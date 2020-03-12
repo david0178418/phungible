@@ -15,11 +15,7 @@ import {
 } from '../interfaces';
 import { CollectionPage } from '../components/collection-page';
 import { AccountsContext } from '../contexts';
-import { Account } from '../interfaces';
-
-function findAccount(id: string, accounts: Account[]) {
-	return accounts.find(a => a.id === id);
-}
+import { moneyFormat, findById } from '../utils';
 
 export
 function TransactionsPage() {
@@ -30,8 +26,8 @@ function TransactionsPage() {
 			label="Transactions"
 			editPath="/transaction"
 			itemRenderFn={(doc: Transaction) => {
-				const fromAccount = findAccount(doc.fromAccountId, accounts);
-				const towardAccount = findAccount(doc.towardAccountId, accounts);
+				const fromAccount = findById(doc.fromAccountId, accounts);
+				const towardAccount = findById(doc.towardAccountId, accounts);
 				return (
 					<>
 						
@@ -58,7 +54,7 @@ function TransactionsPage() {
 								)}
 								{towardAccount && (
 									<p>
-										From: {towardAccount.name}
+										Toward: {towardAccount.name}
 									</p>
 								)}
 							</IonLabel>
@@ -67,7 +63,7 @@ function TransactionsPage() {
 							slot="end"
 							color={doc.type === TransactionType.Income ? 'money' : 'debt'}
 						>
-							${doc.amount}
+							${moneyFormat(doc.amount)}
 						</IonText>
 					</>
 				);
