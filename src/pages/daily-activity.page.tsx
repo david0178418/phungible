@@ -150,7 +150,7 @@ function HomePage() {
 								</IonItem>
 							)}
 							{!loading && budgets.map(budget => (
-								<IonItem key={budget.id} routerLink={`/budget/${budget.id}`}>
+								<IonItem key={budget.id} onClick={() => console.log('open budget entry')}>
 									<IonText slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
 										${moneyFormat(budget.amount)}
 									</IonText>
