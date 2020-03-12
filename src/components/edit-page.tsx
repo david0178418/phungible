@@ -38,6 +38,12 @@ function EditPage(props: Props) {
 	useEffect(() => {
 		(async () => {
 			if(loading && !loaderRef.current) {
+				const top = await loadingController.getTop();
+
+				if(top) {
+					return;
+				}
+
 				loaderRef.current = await loadingController.create({});
 				loaderRef.current.present();
 			} else if(!loading && loaderRef.current) {
