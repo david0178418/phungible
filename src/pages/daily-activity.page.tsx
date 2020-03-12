@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -21,10 +21,13 @@ import {
 	IonSelectOption,
 	IonTextarea,
 	IonDatetime,
-	IonIcon,
+	IonSpinner,
 } from '@ionic/react';
-import { arrowDown, cashOutline } from 'ionicons/icons';
+import { startOfDay, endOfDay } from 'date-fns';
 import { AccountSelector } from '../components/account-selector';
+import { TransactionItem } from '../components/transaction-item';
+import { Transaction, Collection } from '../interfaces';
+import { getCollectionRef } from '../api';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -37,6 +40,25 @@ function HomePage() {
 	const [showExpense, setShowExpense] = useState(false);
 	const [showQuickExpense, setShowQuickExpense] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(() => (new Date()).toISOString());
+	const [transactions, setTransactions] = useState<Transaction[]>([]);
+	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		(async () => {
+			if(selectedTab !== PageTab.Transactions) {
+				return;
+			}
+
+			setLoading(true);
+			const collection = await getCollectionRef(Collection.Transactions)
+				.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
+				.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
+				.get();
+
+			setTransactions(collection.docs.map(y => y.data() as Transaction));
+			setLoading(false);
+		})();
+	}, [selectedDate, selectedTab]);
 
 	return (
 		<IonPage>
@@ -182,32 +204,18 @@ function HomePage() {
 									onIonChange={({detail}) => detail.value && setSelectedDate(detail.value)}
 								/>
 							</IonItem>
-							<IonItem onClick={() => console.log(111)}>
-								<IonIcon
-									icon={cashOutline}
-									className="money"
-									slot="start"
-								/>
-								<IonLabel>
-									$1.00
-									<p>
-										Renews Feb 20, 2021
-									</p>
-								</IonLabel>
-							</IonItem>
-							<IonItem onClick={() => console.log(111)}>
-								<IonIcon
-									icon={arrowDown}
-									color="debt"
-									slot="start"
-								/>
-								<IonLabel>
-									$1.00
-									<p>
-										Renews Feb 20, 2021
-									</p>
-								</IonLabel>
-							</IonItem>
+							{loading && (
+								<IonItem>
+									<IonSpinner/>
+								</IonItem>
+							)}
+							{!loading && transactions.map(transaction => (
+								<IonItem key={transaction.id} routerLink={`/transaction/${transaction.id}`}>
+									<TransactionItem
+										transaction={transaction}
+									/>
+								</IonItem>
+							))}
 						</IonList>
 					</div>
 				)}
