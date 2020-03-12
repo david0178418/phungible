@@ -5,7 +5,7 @@ import {
 	IonSelectOption,
 	IonIcon,
 } from '@ionic/react';
-import { cashOutline, card, swapHorizontal } from 'ionicons/icons';
+import { cashOutline, card, swapHorizontal, checkmark } from 'ionicons/icons';
 import { TransactionType } from '../../interfaces';
 import './transaction-type-selector.scss';
 
@@ -62,7 +62,7 @@ function TransactionTypeSelector(props: Props) {
 				onIonChange={({detail}) => onSelect(detail.value)}
 			>
 				<IonSelectOption value={TransactionType.Income}>
-					<IonIcon name="checkmark"/>Income
+					<IonIcon icon={checkmark}/>Income
 				</IonSelectOption>
 				<IonSelectOption value={TransactionType.Transfer}>
 					Transfer
