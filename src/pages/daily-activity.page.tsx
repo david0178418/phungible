@@ -22,15 +22,13 @@ import {
 	IonTextarea,
 	IonDatetime,
 	IonSpinner,
-	IonNote,
-	IonText,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import { AccountSelector } from '../components/account-selector';
 import { TransactionItem } from '../components/transaction-item';
 import { Transaction, Collection, Budget } from '../interfaces';
 import { getCollectionRef, getCollection } from '../api';
-import { moneyFormat } from '../utils';
+import { BudgetItem } from '../components/budget-item';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -151,22 +149,7 @@ function HomePage() {
 							)}
 							{!loading && budgets.map(budget => (
 								<IonItem key={budget.id} onClick={() => console.log('open budget entry')}>
-									<IonText slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
-										${moneyFormat(budget.amount)}
-									</IonText>
-									<div>
-										<IonLabel>
-											{budget.name}
-											<p>
-												Renews Feb 20, 2021
-											</p>
-										</IonLabel>
-										<IonNote>
-											<em>
-												$X.XX Currently Remaining
-											</em>
-										</IonNote>
-									</div>
+									<BudgetItem budget={budget} />
 								</IonItem>
 							))}
 						</IonList>
