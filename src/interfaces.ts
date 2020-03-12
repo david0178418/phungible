@@ -83,6 +83,7 @@ export
 interface Transaction {
 	id?: string;
 	profileId: string;
+	date: string;
 	fromAccountId: string;
 	towardAccountId: string;
 	amount: number;
@@ -99,7 +100,6 @@ interface RecurringTransaction extends Transaction {
 	repeatUnit: RepeatUnit;
 	repeatValues: number[];
 	repeatType: RepeatType | null;
-	startDate: string;
 }
 
 export

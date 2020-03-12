@@ -6,7 +6,8 @@ import {
 	IonIcon,
 } from '@ionic/react';
 import { cashOutline, card, swapHorizontal } from 'ionicons/icons';
-import { TransactionType } from '../interfaces';
+import { TransactionType } from '../../interfaces';
+import './transaction-type-selector.scss';
 
 const TransactionIcon = {
 	[TransactionType.Income]: (
@@ -52,7 +53,7 @@ function TransactionTypeSelector(props: Props) {
 	} = props;
 
 	return (
-		<IonItem>
+		<IonItem className="transaction-type-selector">
 			{TransactionIcon[type]}
 			<IonSelect
 				interface="popover"

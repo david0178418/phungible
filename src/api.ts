@@ -1,4 +1,4 @@
-import { Collection, Docs, Account, AccountType, Budget, RepeatType, RepeatUnit, TransactionType, RecurringTransaction } from './interfaces';
+import { Collection, Docs, Account, AccountType, Budget, RepeatType, RepeatUnit, TransactionType, RecurringTransaction, Transaction } from './interfaces';
 import { firestore } from 'firebase/app';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
@@ -100,7 +100,22 @@ function createRecurringTransaction(): RecurringTransaction {
 		repeatType: RepeatType.Dates,
 		repeatUnit: RepeatUnit.Month,
 		repeatValues: [],
-		startDate: (new Date()).toISOString(),
+		date: (new Date()).toISOString(),
+		towardAccountId: '',
+		type: TransactionType.Income,
+	};
+}
+
+export
+function createTransaction(): Transaction {
+	return {
+		amount: 0,
+		fromAccountId: '',
+		labels: [],
+		name: '',
+		date: (new Date()).toISOString(),
+		notes: '',
+		profileId: '',
 		towardAccountId: '',
 		type: TransactionType.Income,
 	};

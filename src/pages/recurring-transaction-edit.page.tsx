@@ -26,11 +26,16 @@ import { AccountSelector } from '../components/account-selector';
 import { RepetitionSelector } from '../components/repetition-selector';
 import { TransactionTypeSelector } from '../components/transaction-type-selector';
 import { format, parse } from 'date-fns';
+import { useStatePropSetter } from '../hooks';
 
 export
 function RecurringTransactionEditPage() {
 	const [original, setOriginal] = useState(createRecurringTransaction);
-	const [transaction, setTransaction] = useState(createRecurringTransaction);
+	const [
+		transaction,
+		setTransaction,
+		setProp,
+	] = useStatePropSetter(createRecurringTransaction);
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const {goBack} = useHistory();
@@ -62,13 +67,6 @@ function RecurringTransactionEditPage() {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	function setProp<T extends keyof RecurringTransaction>(prop: T, value: RecurringTransaction[T]) {
-		setTransaction({
-			...transaction,
-			[prop]: value,
-		});
-	}
-
 	function canSave() {
 		const {
 			amount,
@@ -78,16 +76,13 @@ function RecurringTransactionEditPage() {
 			name,
 			repeatType,
 			repeatValues,
-			startDate,
+			date,
 		} = transaction;
 
 		return !!(
 			amount &&
 			name &&
-			startDate && (
-				!repeatType ||
-				repeatValues.length
-			) && (
+			date && (
 				fromAccountId || (
 					type === TransactionType.Income
 				)
@@ -95,6 +90,9 @@ function RecurringTransactionEditPage() {
 				towardAccountId || (
 					type === TransactionType.Expense
 				)
+			)&& (
+				!repeatType ||
+				repeatValues.length
 			)
 		);
 	}
@@ -125,7 +123,7 @@ function RecurringTransactionEditPage() {
 		});
 	}
 
-	function handelRepetitionUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = transaction.repeatUnit) {
+	function handleRepetitionUpdate(repeatType: RepeatType | null, repeatValues: number[], repeatUnit = transaction.repeatUnit) {
 		setTransaction({
 			...transaction,
 			repeatType,
@@ -193,10 +191,10 @@ function RecurringTransactionEditPage() {
 				</IonLabel>
 				<IonInput
 					type="date"
-					value={format(new Date(transaction.startDate), 'yyyy-MM-dd')}
+					value={format(new Date(transaction.date), 'yyyy-MM-dd')}
 					onIonChange={({detail}) => {
 						if(typeof detail.value === 'string') {
-							detail.value && setProp('startDate', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+							detail.value && setProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
 						}
 					}}
 				/>
@@ -221,7 +219,7 @@ function RecurringTransactionEditPage() {
 				type={transaction.repeatType}
 				values={transaction.repeatValues}
 				unit={transaction.repeatUnit}
-				onUpdate={handelRepetitionUpdate}
+				onUpdate={handleRepetitionUpdate}
 			/>
 		</EditPage>
 	);
