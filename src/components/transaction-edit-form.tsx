@@ -51,77 +51,96 @@ function TransactionEditForm(props: Props) {
 	}
 
 	return (
-		<>
-			<IonGrid>
-				<IonRow>
-					<IonCol>
-						<IonItem>
-							<IonLabel position="stacked">
-								Name
-							</IonLabel>
-							<IonInput
-								value={transaction.name}
-								onIonChange={({detail}) => {
-									typeof detail.value === 'string' &&
-									updateProp('name', detail.value);
-								}}
-							/>
-						</IonItem>
-					</IonCol>
-					<IonCol size="3">
-						<MoneyInput
-							amount={transaction.amount}
-							onUpdate={(amount) => {
-								updateProp('amount', amount);
+		<IonGrid>
+			<IonRow>
+				<IonCol>
+					<IonItem>
+						<IonLabel position="stacked">
+							Name
+						</IonLabel>
+						<IonInput
+							value={transaction.name}
+							onIonChange={({detail}) => {
+								typeof detail.value === 'string' &&
+								updateProp('name', detail.value);
 							}}
 						/>
-					</IonCol>
-				</IonRow>
-			</IonGrid>
+					</IonItem>
+				</IonCol>
+				<IonCol size="3">
+					<MoneyInput
+						amount={transaction.amount}
+						onUpdate={(amount) => updateProp('amount', amount)}
+					/>
+				</IonCol>
+			</IonRow>
+		
+			<IonRow>
+				<IonCol>
+					<TransactionTypeSelector
+						type={transaction.type}
+						onSelect={handleTransactionTypeUpdate}
+					/>
+				</IonCol>
+			</IonRow>
 
-			<TransactionTypeSelector
-				type={transaction.type}
-				onSelect={handleTransactionTypeUpdate}
-			/>
+			<IonRow>
+				<IonCol>
+					<IonItem>
+						<IonLabel position="stacked">
+							Notes
+						</IonLabel>
+						<IonTextarea
+							onIonChange={({detail}) => updateProp('notes', detail.value || '')}
+						/>
+					</IonItem>
+				</IonCol>
+			</IonRow>
 
-			<IonItem>
-				<IonLabel position="stacked">
-					Notes
-				</IonLabel>
-				<IonTextarea
-					onIonChange={({detail}) => updateProp('notes', detail.value || '')}
-				/>
-			</IonItem>
-			<IonItem>
-				<IonLabel position="stacked">
-					Starts
-				</IonLabel>
-				<IonInput
-					type="date"
-					value={format(new Date(transaction.date), 'yyyy-MM-dd')}
-					onIonChange={({detail}) => {
-						if(typeof detail.value === 'string') {
-							detail.value && updateProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
-						}
-					}}
-				/>
-			</IonItem>
-			{transaction.type !== TransactionType.Income && (
-				<AccountSelector
-					label="From Account"
-					value={transaction.fromAccountId}
-					onChange={account => updateProp('fromAccountId', account)}
-				/>
-			)}
+			<IonRow>
+				<IonCol>
+					<IonItem>
+						<IonLabel position="stacked">
+							Starts
+						</IonLabel>
+						<IonInput
+							type="date"
+							value={format(new Date(transaction.date), 'yyyy-MM-dd')}
+							onIonChange={({detail}) => {
+								if(typeof detail.value === 'string') {
+									detail.value && updateProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+								}
+							}}
+						/>
+					</IonItem>
+				</IonCol>
+			</IonRow>
+			
+			<IonRow>
+				<IonCol>
+					{transaction.type !== TransactionType.Income && (
+						<AccountSelector
+							label="From Account"
+							value={transaction.fromAccountId}
+							onChange={account => updateProp('fromAccountId', account)}
+						/>
+					)}
+				</IonCol>
+			</IonRow>
 
-			{transaction.type !== TransactionType.Expense && (
-				<AccountSelector
-					label="Toward Account"
-					value={transaction.towardAccountId}
-					onChange={account => updateProp('towardAccountId', account)}
-				/>
-			)}
-		</>
+			<IonRow>
+				<IonCol>
+					{transaction.type !== TransactionType.Expense && (
+						<AccountSelector
+							label="Toward Account"
+							value={transaction.towardAccountId}
+							onChange={account => updateProp('towardAccountId', account)}
+						/>
+					)}
+				</IonCol>
+			</IonRow>
+
+		</IonGrid>
 	);
 }
 
