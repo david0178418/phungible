@@ -13,11 +13,6 @@ import {
 	IonButton,
 	IonList,
 	IonItem,
-	IonGrid,
-	IonRow,
-	IonCol,
-	IonInput,
-	IonTextarea,
 	IonDatetime,
 	IonSpinner,
 	IonModal,
@@ -34,10 +29,10 @@ import {
 	Collection,
 	Transaction,
 } from '../interfaces';
-import { AccountSelector } from '../components/account-selector';
 import { TransactionItem } from '../components/transaction-item';
 import { BudgetItem } from '../components/budget-item';
 import { close } from 'ionicons/icons';
+import { TransactionEditForm } from '../components/transaction-edit-form';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -179,43 +174,12 @@ function HomePage() {
 							</IonButtons>
 						</IonToolbar>
 					</IonHeader>
-					<IonGrid>
-						<IonRow>
-							<IonCol>
-								<IonItem>
-									<IonLabel position="stacked">
-										Name
-									</IonLabel>
-									<IonInput />
-								</IonItem>
-							</IonCol>
-							<IonCol size="3">
-								<IonItem>
-									<IonLabel position="stacked">
-										$
-									</IonLabel>
-									<IonInput type="number"/>
-								</IonItem>
-							</IonCol>
-						</IonRow>
-						<IonRow>
-							<IonCol>
-								<AccountSelector
-									label="From Account"
-									value=""
-									onChange={() => null}
-								/>
-							</IonCol>
-						</IonRow>
-						<IonRow>
-							<IonCol>
-								<IonItem>
-									<IonLabel position="stacked">Notes</IonLabel>
-									<IonTextarea />
-								</IonItem>
-							</IonCol>
-						</IonRow>
-					</IonGrid>
+					{activeTransaction &&  (
+						<TransactionEditForm
+							transaction={activeTransaction}
+							onUpdate={console.log}
+						/>
+					)}
 				</IonModal>
 			</IonContent>
 		</IonPage>

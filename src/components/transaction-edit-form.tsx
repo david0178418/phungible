@@ -53,7 +53,7 @@ function TransactionEditForm(props: Props) {
 	return (
 		<>
 			<IonGrid>
-			<IonRow>
+				<IonRow>
 					<IonCol>
 						<IonItem>
 							<IonLabel position="stacked">
