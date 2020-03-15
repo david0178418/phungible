@@ -68,6 +68,13 @@ function HomePage() {
 		})();
 	}, [selectedDate, selectedTab]);
 
+	function createTransactionForSelectedDate(): Transaction {
+		return {
+			...createTransaction(),
+			date: selectedDate,
+		};
+	}
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -117,6 +124,7 @@ function HomePage() {
 							)}
 							{!loading && budgets.map(budget => (
 								<IonItem
+									button
 									key={budget.id}
 									onClick={
 										() => setActiveTransaction(createTransaction(budget))
@@ -132,8 +140,8 @@ function HomePage() {
 				{(selectedTab === PageTab.Transactions) && (
 					<div>
 						<p>
-							<IonButton expand="full" onClick={() => setActiveTransaction(createTransaction())}>
-								Add Quick Expense
+							<IonButton expand="full" onClick={() => setActiveTransaction(createTransactionForSelectedDate())}>
+								Add Expense
 							</IonButton>
 						</p>
 						<IonList>

@@ -75,14 +75,16 @@ function TransactionEditForm(props: Props) {
 				</IonCol>
 			</IonRow>
 		
-			<IonRow>
-				<IonCol>
-					<TransactionTypeSelector
-						type={transaction.type}
-						onSelect={handleTransactionTypeUpdate}
-					/>
-				</IonCol>
-			</IonRow>
+			{!transaction.parentBudgetId && (
+				<IonRow>
+					<IonCol>
+						<TransactionTypeSelector
+							type={transaction.type}
+							onSelect={handleTransactionTypeUpdate}
+						/>
+					</IonCol>
+				</IonRow>
+			)}
 
 			<IonRow>
 				<IonCol>
@@ -101,7 +103,7 @@ function TransactionEditForm(props: Props) {
 				<IonCol>
 					<IonItem>
 						<IonLabel position="stacked">
-							Starts
+							Date
 						</IonLabel>
 						<IonInput
 							type="date"

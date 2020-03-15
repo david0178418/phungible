@@ -137,7 +137,7 @@ function createTransaction(budget?: Budget): Transaction {
 		notes: '',
 		profileId: budget?.profileId || '',
 		towardAccountId: '',
-		type: TransactionType.Income,
+		type: TransactionType.Expense,
 		parentBudgetId: budget?.id || '',
 		parentScheduledTransactionId: '',
 	};
