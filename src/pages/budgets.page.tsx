@@ -1,11 +1,8 @@
 import React, {
 } from 'react';
-import {
-	IonLabel,
-	IonNote,
-} from '@ionic/react';
 import { Budget, Collection } from '../interfaces';
 import { CollectionPage } from '../components/collection-page';
+import { BudgetItem } from '../components/budget-item';
 
 export
 function BudgetsPage() {
@@ -14,22 +11,8 @@ function BudgetsPage() {
 			collectionType={Collection.Budgets}
 			label="Budget"
 			editPath="/budget"
-			itemRenderFn={(doc: Budget) => (
-				<>
-					<div slot="start">
-						${doc.amount}
-					</div>
-					<div>
-						<IonLabel>
-							{doc.name}
-						</IonLabel>
-						<IonNote>
-							<em>
-								$X.XX Currently Remaining
-							</em>
-						</IonNote>
-					</div>
-				</>
+			itemRenderFn={(budget: Budget) => (
+				<BudgetItem budget={budget} />
 			)}
 		/>
 	);
