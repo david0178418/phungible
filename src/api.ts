@@ -127,16 +127,18 @@ function createRecurringTransaction(): RecurringTransaction {
 }
 
 export
-function createTransaction(): Transaction {
+function createTransaction(budget?: Budget): Transaction {
 	return {
 		amount: 0,
-		fromAccountId: '',
+		fromAccountId: budget?.fromAccountId || '',
 		labels: [],
-		name: '',
+		name: budget ? `${budget.name} Expense` : '',
 		date: (new Date()).toISOString(),
 		notes: '',
-		profileId: '',
+		profileId: budget?.profileId || '',
 		towardAccountId: '',
 		type: TransactionType.Income,
+		parentBudgetId: budget?.id || '',
+		parentScheduledTransactionId: '',
 	};
 }

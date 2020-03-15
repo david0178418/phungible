@@ -79,8 +79,7 @@ interface Budget {
 	// towardAccountId: string | null;
 }
 
-export
-interface Transaction {
+interface CommonTransaction {
 	id?: string;
 	profileId: string;
 	date: string;
@@ -94,8 +93,14 @@ interface Transaction {
 }
 
 export
+interface Transaction extends CommonTransaction {
+	parentScheduledTransactionId: string;
+	parentBudgetId: string;
+}
+
+export
 // TODO Should transaction be a property?
-interface RecurringTransaction extends Transaction {
+interface RecurringTransaction extends CommonTransaction {
 	exceptions: string[];
 	repeatUnit: RepeatUnit;
 	repeatValues: number[];

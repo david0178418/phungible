@@ -17,18 +17,27 @@ import {
 	IonRow,
 	IonCol,
 	IonInput,
-	IonSelect,
-	IonSelectOption,
 	IonTextarea,
 	IonDatetime,
 	IonSpinner,
+	IonModal,
+	IonIcon,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
+import {
+	createTransaction,
+	getCollection,
+	getCollectionRef,
+} from '../api';
+import {
+	Budget,
+	Collection,
+	Transaction,
+} from '../interfaces';
 import { AccountSelector } from '../components/account-selector';
 import { TransactionItem } from '../components/transaction-item';
-import { Transaction, Collection, Budget } from '../interfaces';
-import { getCollectionRef, getCollection } from '../api';
 import { BudgetItem } from '../components/budget-item';
+import { close } from 'ionicons/icons';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -38,11 +47,10 @@ enum PageTab {
 export
 function HomePage() {
 	const [selectedTab, setSelectedTab] = useState<PageTab>(PageTab.Budgets);
-	const [showExpense, setShowExpense] = useState(false);
-	const [showQuickExpense, setShowQuickExpense] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(() => (new Date()).toISOString());
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
+	const [activeTransaction, setActiveTransaction] = useState<Transaction | null>(null);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
@@ -96,43 +104,8 @@ function HomePage() {
 				</IonSegment>
 				{(selectedTab === PageTab.Budgets) && (
 					<div>
-						{showExpense && (
-							<>
-								<IonGrid>
-									<IonRow>
-										<IonCol>
-											<IonItem>
-												<IonLabel position="stacked">
-													Label
-												</IonLabel>
-												<IonInput/>
-											</IonItem>
-										</IonCol>
-										<IonCol size="3">
-											<IonItem>
-												<IonLabel position="stacked">
-													$
-												</IonLabel>
-												<IonInput type="number"/>
-											</IonItem>
-										</IonCol>
-									</IonRow>
-								</IonGrid>
-
-								<AccountSelector
-									label="From Account"
-									value=""
-									onChange={() => null}
-								/>
-
-								<IonItem>
-									<IonLabel position="stacked">Notes</IonLabel>
-									<IonTextarea />
-								</IonItem>
-							</>
-						)}
 						<p>
-							<IonButton expand="full" onClick={() => setShowExpense(!showExpense)}>
+							<IonButton expand="full" onClick={() => setActiveTransaction(createTransaction())}>
 								Add Unplanned Expense
 							</IonButton>
 						</p>
@@ -148,7 +121,12 @@ function HomePage() {
 								</IonItem>
 							)}
 							{!loading && budgets.map(budget => (
-								<IonItem key={budget.id} onClick={() => console.log('open budget entry')}>
+								<IonItem
+									key={budget.id}
+									onClick={
+										() => setActiveTransaction(createTransaction(budget))
+									}
+								>
 									<BudgetItem budget={budget} />
 								</IonItem>
 							))}
@@ -158,43 +136,8 @@ function HomePage() {
 
 				{(selectedTab === PageTab.Transactions) && (
 					<div>
-						{showQuickExpense && (
-							<>
-								<IonGrid>
-									<IonRow>
-										<IonCol>
-											<IonItem>
-												<IonLabel position="stacked">
-													Label
-												</IonLabel>
-												<IonInput/>
-											</IonItem>
-										</IonCol>
-										<IonCol size="3">
-											<IonItem>
-												<IonLabel position="stacked">
-													$
-												</IonLabel>
-												<IonInput type="number"/>
-											</IonItem>
-										</IonCol>
-									</IonRow>
-								</IonGrid>
-								<IonItem>
-									<IonLabel position="stacked">From Account</IonLabel>
-									<IonSelect value="">
-										<IonSelectOption value="">None</IonSelectOption>
-										<IonSelectOption value="m">My Acount</IonSelectOption>
-									</IonSelect>
-								</IonItem>
-								<IonItem>
-									<IonLabel position="stacked">Notes</IonLabel>
-									<IonTextarea />
-								</IonItem>
-							</>
-						)}
 						<p>
-							<IonButton expand="full" onClick={() => setShowQuickExpense(!showQuickExpense)}>
+							<IonButton expand="full" onClick={() => setActiveTransaction(createTransaction())}>
 								Add Quick Expense
 							</IonButton>
 						</p>
@@ -223,6 +166,57 @@ function HomePage() {
 						</IonList>
 					</div>
 				)}
+				<IonModal isOpen={!!activeTransaction}>
+					<IonHeader>
+						<IonToolbar color="primary">
+							<IonTitle>
+								Title
+							</IonTitle>
+							<IonButtons slot="end">
+								<IonButton onClick={() => setActiveTransaction(null)}>
+									<IonIcon icon={close}/>
+								</IonButton>
+							</IonButtons>
+						</IonToolbar>
+					</IonHeader>
+					<IonGrid>
+						<IonRow>
+							<IonCol>
+								<IonItem>
+									<IonLabel position="stacked">
+										Name
+									</IonLabel>
+									<IonInput />
+								</IonItem>
+							</IonCol>
+							<IonCol size="3">
+								<IonItem>
+									<IonLabel position="stacked">
+										$
+									</IonLabel>
+									<IonInput type="number"/>
+								</IonItem>
+							</IonCol>
+						</IonRow>
+						<IonRow>
+							<IonCol>
+								<AccountSelector
+									label="From Account"
+									value=""
+									onChange={() => null}
+								/>
+							</IonCol>
+						</IonRow>
+						<IonRow>
+							<IonCol>
+								<IonItem>
+									<IonLabel position="stacked">Notes</IonLabel>
+									<IonTextarea />
+								</IonItem>
+							</IonCol>
+						</IonRow>
+					</IonGrid>
+				</IonModal>
 			</IonContent>
 		</IonPage>
 	);
