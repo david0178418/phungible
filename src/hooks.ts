@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCollectionRef } from './api';
 import { tuple } from './utils';
-import { Transaction } from './interfaces';
+import { Transaction, TransactionType } from './interfaces';
 import equal from 'fast-deep-equal';
 
 export
@@ -43,8 +43,34 @@ function useCollection<T>(path: string) {
 	return collection;
 }
 
+// TODO Should this go somewhere else
+function canSaveTransation(transaction: Transaction) {
+	const {
+		amount,
+		fromAccountId,
+		towardAccountId,
+		type,
+		name,
+		date,
+	} = transaction;
+
+	return !!(
+		amount &&
+		name &&
+		date && (
+			fromAccountId || (
+				type === TransactionType.Income
+			)
+		) && (
+			towardAccountId || (
+				type === TransactionType.Expense
+			)
+		)
+	);
+}
+
 export
-function useTransactionEdit(transaction: Transaction | (() => Transaction), validation: (t: Transaction) => boolean) {
+function useTransactionEdit(transaction: Transaction | (() => Transaction)) {
 	const [original, setOriginal] = useState(transaction);
 	const [
 		editedTransaction,
@@ -58,7 +84,7 @@ function useTransactionEdit(transaction: Transaction | (() => Transaction), vali
 	}, [editedTransaction, original]);
 
 	useEffect(() => {
-		setIsValid(hasChanged && validation(editedTransaction));
+		setIsValid(hasChanged && canSaveTransation(editedTransaction));
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasChanged, editedTransaction]);
 

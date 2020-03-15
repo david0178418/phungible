@@ -1,35 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createTransaction, saveDoc, getDoc } from '../api';
-import { Collection, TransactionType, Transaction } from '../interfaces';
+import { Collection, Transaction } from '../interfaces';
 import { TransactionEditForm } from '../components/transaction-edit-form';
 import { EditPage } from '../components/edit-page';
 import { useTransactionEdit } from '../hooks';
-
-function canSave(transaction: Transaction) {
-	const {
-		amount,
-		fromAccountId,
-		towardAccountId,
-		type,
-		name,
-		date,
-	} = transaction;
-
-	return !!(
-		amount &&
-		name &&
-		date && (
-			fromAccountId || (
-				type === TransactionType.Income
-			)
-		) && (
-			towardAccountId || (
-				type === TransactionType.Expense
-			)
-		)
-	);
-}
 
 export
 function TransactionEditPage() {
@@ -38,7 +13,7 @@ function TransactionEditPage() {
 		setTransaction,
 		resetTransaction,
 		isValid,
-	] = useTransactionEdit(createTransaction, canSave);
+	] = useTransactionEdit(createTransaction);
 	const {goBack} = useHistory();
 	const {
 		id = '',
