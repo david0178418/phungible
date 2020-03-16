@@ -16,6 +16,9 @@ import {
 	IonDatetime,
 	IonSpinner,
 	IonModal,
+	IonIcon,
+	IonFab,
+	IonFabButton,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import {
@@ -32,9 +35,9 @@ import {
 import { TransactionItem } from '../components/transaction-item';
 import { BudgetItem } from '../components/budget-item';
 import { TransactionEditForm } from '../components/transaction-edit-form';
-import { EditPage } from '../components/edit-page';
 import { useEditItem } from '../hooks';
 import { canSaveTransaction } from '../validations';
+import { close, checkmark } from 'ionicons/icons';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -149,7 +152,6 @@ function HomePage() {
 							{!loading && budgets.map(budget => (
 								<IonItem
 									button
-									routerDirection="none"
 									key={budget.id}
 									onClick={() => setActiveTransaction(createTransaction(budget))}
 								>
@@ -185,7 +187,6 @@ function HomePage() {
 							{!loading && transactions.map(transaction => (
 								<IonItem
 									button
-									routerDirection="none"
 									key={transaction.id}
 									onClick={() => resetActiveTransaction(transaction)}
 								>
@@ -199,17 +200,33 @@ function HomePage() {
 				)}
 				<IonModal isOpen={!!activeTransaction}>
 					{activeTransaction &&  (
-						<EditPage
-							canSave={isValid}
-							editing={!!activeTransaction.id}
-							onClose={() => resetActiveTransaction(null)}
-							onSubmit={handleSubmit}
-						>
+						<>
+							<IonHeader>
+								<IonToolbar color="primary">
+									<IonButtons slot="start">
+										<IonButton onClick={() => resetActiveTransaction(null)}>
+											<IonIcon icon={close}/>
+										</IonButton>
+									</IonButtons>
+									<IonTitle>
+										{activeTransaction.id ? activeTransaction.name : 'Add Transaction'}
+									</IonTitle>
+								</IonToolbar>
+							</IonHeader>
 							<TransactionEditForm
 								transaction={activeTransaction}
 								onUpdate={(t => setActiveTransaction(t))}
 							/>
-						</EditPage>
+							<IonFab vertical="bottom" horizontal="end" slot="fixed">
+								<IonFabButton
+									color="secondary"
+									disabled={!isValid}
+									onClick={handleSubmit}
+								>
+									<IonIcon icon={checkmark} />
+								</IonFabButton>
+							</IonFab>
+						</>
 					)}
 				</IonModal>
 			</IonContent>
