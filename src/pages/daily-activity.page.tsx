@@ -16,13 +16,13 @@ import {
 	IonDatetime,
 	IonSpinner,
 	IonModal,
-	IonIcon,
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import {
 	createTransaction,
 	getCollection,
 	getCollectionRef,
+	saveDoc,
 } from '../api';
 import {
 	Budget,
@@ -31,8 +31,10 @@ import {
 } from '../interfaces';
 import { TransactionItem } from '../components/transaction-item';
 import { BudgetItem } from '../components/budget-item';
-import { close } from 'ionicons/icons';
 import { TransactionEditForm } from '../components/transaction-edit-form';
+import { EditPage } from '../components/edit-page';
+import { useEditItem } from '../hooks';
+import { canSaveTransaction } from '../validations';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -41,31 +43,24 @@ enum PageTab {
 
 export
 function HomePage() {
+	const [
+		activeTransaction,
+		setActiveTransaction,
+		resetActiveTransaction,
+		isValid,
+	] = useEditItem<Transaction | null>(null, (t) => {
+		return !!t && canSaveTransaction(t);
+	});
+
 	const [selectedTab, setSelectedTab] = useState<PageTab>(PageTab.Budgets);
 	const [selectedDate, setSelectedDate] = useState(() => (new Date()).toISOString());
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
-	const [activeTransaction, setActiveTransaction] = useState<Transaction | null>(null);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		(async () => {
-			setLoading(true);
-			if(selectedTab === PageTab.Budgets) {
-				setBudgets(await getCollection<Budget>(Collection.Budgets));
-			}
-
-			if(selectedTab === PageTab.Transactions) {
-				const collection = await getCollectionRef(Collection.Transactions)
-					.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
-					.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
-					.get();
-	
-				setTransactions(collection.docs.map(y => y.data() as Transaction));
-			}
-
-			setLoading(false);
-		})();
+		refreshPage();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedDate, selectedTab]);
 
 	function createTransactionForSelectedDate(): Transaction {
@@ -73,6 +68,35 @@ function HomePage() {
 			...createTransaction(),
 			date: selectedDate,
 		};
+	}
+
+	async function handleSubmit() {
+		if(!(isValid && activeTransaction)) {
+			return;
+		}
+
+		const result = await saveDoc(activeTransaction, Collection.Transactions);
+
+		result && resetActiveTransaction(null);
+		refreshPage();
+	}
+
+	async function refreshPage() {
+		setLoading(true);
+		if(selectedTab === PageTab.Budgets) {
+			setBudgets(await getCollection<Budget>(Collection.Budgets));
+		}
+
+		if(selectedTab === PageTab.Transactions) {
+			const collection = await getCollectionRef(Collection.Transactions)
+				.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
+				.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
+				.get();
+
+			setTransactions(collection.docs.map(y => y.data() as Transaction));
+		}
+
+		setLoading(false);
 	}
 
 	return (
@@ -125,10 +149,9 @@ function HomePage() {
 							{!loading && budgets.map(budget => (
 								<IonItem
 									button
+									routerDirection="none"
 									key={budget.id}
-									onClick={
-										() => setActiveTransaction(createTransaction(budget))
-									}
+									onClick={() => setActiveTransaction(createTransaction(budget))}
 								>
 									<BudgetItem budget={budget} />
 								</IonItem>
@@ -160,7 +183,12 @@ function HomePage() {
 								</IonItem>
 							)}
 							{!loading && transactions.map(transaction => (
-								<IonItem key={transaction.id} routerLink={`/transaction/${transaction.id}`}>
+								<IonItem
+									button
+									routerDirection="none"
+									key={transaction.id}
+									onClick={() => resetActiveTransaction(transaction)}
+								>
 									<TransactionItem
 										transaction={transaction}
 									/>
@@ -170,23 +198,18 @@ function HomePage() {
 					</div>
 				)}
 				<IonModal isOpen={!!activeTransaction}>
-					<IonHeader>
-						<IonToolbar color="primary">
-							<IonTitle>
-								Title
-							</IonTitle>
-							<IonButtons slot="end">
-								<IonButton onClick={() => setActiveTransaction(null)}>
-									<IonIcon icon={close}/>
-								</IonButton>
-							</IonButtons>
-						</IonToolbar>
-					</IonHeader>
 					{activeTransaction &&  (
-						<TransactionEditForm
-							transaction={activeTransaction}
-							onUpdate={console.log}
-						/>
+						<EditPage
+							canSave={isValid}
+							editing={!!activeTransaction.id}
+							onClose={() => resetActiveTransaction(null)}
+							onSubmit={handleSubmit}
+						>
+							<TransactionEditForm
+								transaction={activeTransaction}
+								onUpdate={(t => setActiveTransaction(t))}
+							/>
+						</EditPage>
 					)}
 				</IonModal>
 			</IonContent>

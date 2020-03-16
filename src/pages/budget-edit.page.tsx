@@ -104,7 +104,7 @@ function BudgetEditPage() {
 			editing={!!id}
 			canSave={isValid}
 			loading={loading}
-			handleSubmit={handleSubmit}
+			onSubmit={handleSubmit}
 		>
 			<IonGrid>
 				<IonRow>

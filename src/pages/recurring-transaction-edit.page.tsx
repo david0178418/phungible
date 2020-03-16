@@ -138,7 +138,7 @@ function RecurringTransactionEditPage() {
 			defaultHref="/recurring-transactions"
 			editing={!!id}
 			canSave={isValid}
-			handleSubmit={handleSubmit}
+			onSubmit={handleSubmit}
 			loading={loading}
 		>
 			<IonGrid>

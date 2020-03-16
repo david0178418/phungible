@@ -48,6 +48,7 @@ interface BalanceUpdateHistoryItem {
 
 export
 interface Account {
+	date: string;
 	id?: string;
 	notes : string;
 	labels: Label[];

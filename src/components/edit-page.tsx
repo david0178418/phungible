@@ -10,17 +10,19 @@ import {
 	IonFab,
 	IonIcon,
 	IonFabButton,
+	IonButton,
 } from '@ionic/react';
-import { checkmark } from 'ionicons/icons';
+import { checkmark, close } from 'ionicons/icons';
 import { loadingController } from '@ionic/core';
 
 interface Props {
 	canSave: boolean;
 	children: ReactNode;
-	defaultHref: string;
+	defaultHref?: string;
 	editing: boolean;
 	loading?: boolean;
-	handleSubmit(): void;
+	onSubmit(): void;
+	onClose?(): void;
 }
 
 export
@@ -30,7 +32,8 @@ function EditPage(props: Props) {
 		children,
 		defaultHref,
 		editing,
-		handleSubmit,
+		onSubmit,
+		onClose,
 		loading,
 	} = props;
 	const loaderRef = useRef<HTMLIonLoadingElement | null>(null);
@@ -57,7 +60,14 @@ function EditPage(props: Props) {
 			<IonHeader>
 				<IonToolbar color="primary">
 					<IonButtons slot="start">
-						<IonBackButton defaultHref={defaultHref} />
+						{defaultHref && (
+							<IonBackButton defaultHref={defaultHref} />
+						)}
+						{onClose && (
+							<IonButton onClick={onClose}>
+								<IonIcon icon={close}/>
+							</IonButton>
+						)}
 					</IonButtons>
 					<IonTitle>
 						{editing ? 'Edit' : 'Create'}
@@ -72,7 +82,7 @@ function EditPage(props: Props) {
 					<IonFabButton
 						color="secondary"
 						disabled={!canSave}
-						onClick={handleSubmit}
+						onClick={onSubmit}
 					>
 						<IonIcon icon={checkmark} />
 					</IonFabButton>

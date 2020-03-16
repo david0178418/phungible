@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCollectionRef } from './api';
 import { tuple } from './utils';
-import { Transaction, TransactionType } from './interfaces';
 import equal from 'fast-deep-equal';
 
 export
@@ -29,6 +28,7 @@ function useCollection<T>(path: string) {
 	useEffect(() => (
 		getCollectionRef(path)
 			// .where('ownerId', '==', user?.uid)
+			.orderBy('date', 'desc')
 			.onSnapshot(snap =>
 				setCollection(
 					snap.docs.map(doc =>
@@ -43,60 +43,34 @@ function useCollection<T>(path: string) {
 	return collection;
 }
 
-// TODO Should this go somewhere else
-function canSaveTransation(transaction: Transaction) {
-	const {
-		amount,
-		fromAccountId,
-		towardAccountId,
-		type,
-		name,
-		date,
-	} = transaction;
-
-	return !!(
-		amount &&
-		name &&
-		date && (
-			fromAccountId || (
-				type === TransactionType.Income
-			)
-		) && (
-			towardAccountId || (
-				type === TransactionType.Expense
-			)
-		)
-	);
-}
-
 export
-function useTransactionEdit(transaction: Transaction | (() => Transaction)) {
-	const [original, setOriginal] = useState(transaction);
+function useEditItem<T>(item: T | (() => T), validationFn: (item: T) => boolean) {
+	const [original, setOriginal] = useState(item);
 	const [
-		editedTransaction,
-		setTransaction,
-	] = useState(transaction);
+		editedItem,
+		setItem,
+	] = useState(item);
 	const [isValid, setIsValid] = useState(false);
 	const [hasChanged, setHasChanged] = useState(false);
 
 	useEffect(() => {
-		setHasChanged(!equal(editedTransaction, original));
-	}, [editedTransaction, original]);
+		setHasChanged(!equal(editedItem, original));
+	}, [editedItem, original]);
 
 	useEffect(() => {
-		setIsValid(hasChanged && canSaveTransation(editedTransaction));
+		setIsValid(hasChanged && validationFn(editedItem));
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hasChanged, editedTransaction]);
+	}, [hasChanged, editedItem]);
 
-	function resetTransaction(updatedTransaction: Transaction) {
-		setTransaction(updatedTransaction);
-		setOriginal(updatedTransaction);
+	function resetItem(updatedItem: T) {
+		setItem(updatedItem);
+		setOriginal(updatedItem);
 	}
 
 	return tuple(
-		editedTransaction,
-		setTransaction,
-		resetTransaction,
+		editedItem,
+		setItem,
+		resetItem,
 		isValid,
 	);
 }

@@ -4,7 +4,8 @@ import { createTransaction, saveDoc, getDoc } from '../api';
 import { Collection, Transaction } from '../interfaces';
 import { TransactionEditForm } from '../components/transaction-edit-form';
 import { EditPage } from '../components/edit-page';
-import { useTransactionEdit } from '../hooks';
+import { useEditItem } from '../hooks';
+import { canSaveTransaction } from '../validations';
 
 export
 function TransactionEditPage() {
@@ -13,7 +14,7 @@ function TransactionEditPage() {
 		setTransaction,
 		resetTransaction,
 		isValid,
-	] = useTransactionEdit(createTransaction);
+	] = useEditItem(createTransaction, canSaveTransaction);
 	const {goBack} = useHistory();
 	const {
 		id = '',
@@ -34,7 +35,7 @@ function TransactionEditPage() {
 	}, []);
 
 	async function handleSubmit() {
-		if(!isValid) {
+		if(!(isValid && transaction)) {
 			return;
 		}
 
@@ -48,7 +49,7 @@ function TransactionEditPage() {
 			canSave={isValid}
 			editing={!!id}
 			loading={loading}
-			handleSubmit={handleSubmit}
+			onSubmit={handleSubmit}
 		>
 			<TransactionEditForm
 				transaction={transaction}

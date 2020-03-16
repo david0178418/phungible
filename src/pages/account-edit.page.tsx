@@ -119,7 +119,7 @@ function AccountEditPage() {
 			defaultHref="/accounts"
 			canSave={isValid}
 			loading={loading}
-			handleSubmit={handleSubmit}
+			onSubmit={handleSubmit}
 		>
 			<IonItem>
 				<IonLabel position="stacked">

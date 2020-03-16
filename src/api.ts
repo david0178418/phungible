@@ -78,6 +78,7 @@ async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
 export
 function createAccount(): Account {
 	return {
+		date: (new Date()).toISOString(),
 		balanceUpdateHistory: [],
 		labels: [],
 		name: '',
