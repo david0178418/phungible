@@ -66,14 +66,14 @@ function BudgetEditPage() {
 			name,
 			repeatType,
 			repeatValues,
-			startDate,
+			date,
 		} = budget;
 
 		return !!(
 			amount &&
 			fromAccountId &&
 			name &&
-			startDate && (
+			date && (
 				!repeatType ||
 				repeatValues.length
 			)
@@ -139,10 +139,10 @@ function BudgetEditPage() {
 				</IonLabel>
 				<IonInput
 					type="date"
-					value={format(new Date(budget.startDate), 'yyyy-MM-dd')}
+					value={format(new Date(budget.date), 'yyyy-MM-dd')}
 					onIonChange={({detail}) => {
 						if(typeof detail.value === 'string') {
-							detail.value && setProp('startDate', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+							detail.value && setProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
 						}
 					}}
 				/>

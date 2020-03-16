@@ -103,7 +103,7 @@ function createBudget(): Budget {
 		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnit.Week,
 		repeatValues: [],
-		startDate: (new Date()).toISOString(),
+		date: (new Date()).toISOString(),
 		transactionType: TransactionType.BudgetedExpense,
 	};
 }

@@ -73,7 +73,7 @@ interface Budget {
 	repeatType: RepeatType | null;
 	repeatUnit: RepeatUnit;
 	repeatValues: number[];
-	startDate: string;
+	date: string;
 	transactionType: TransactionType;
 	// Needed??
 	// today: Date;
