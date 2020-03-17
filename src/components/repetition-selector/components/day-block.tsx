@@ -2,6 +2,8 @@ import React from 'react';
 import { IonRippleEffect, IonIcon } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
 
+import '../../../budget-fns';
+
 interface Props {
 	label: string;
 	checked?: boolean;

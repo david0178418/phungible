@@ -12,8 +12,10 @@ import { IntervalSelector } from './components/interval-selector';
 import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
+import { nextOccuranceText } from '../../budget-fns';
 
 interface Props {
+	date: string,
 	type: RepeatType | null;
 	values: number[];
 	unit: RepeatUnit;
@@ -23,6 +25,7 @@ interface Props {
 export
 function RepetitionSelector(props: Props) {
 	const {
+		date,
 		type,
 		values,
 		unit,
@@ -72,7 +75,12 @@ function RepetitionSelector(props: Props) {
 				<IonLabel>
 					Repeats
 					<p>
-						Next Occurance: N/A
+						Next occurance in {nextOccuranceText({
+							date,
+							repeatType: type,
+							repeatUnit: unit,
+							repeatValues: values,
+						})}
 					</p>
 				</IonLabel>
 			</IonItem>

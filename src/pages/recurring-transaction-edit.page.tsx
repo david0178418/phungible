@@ -210,6 +210,7 @@ function RecurringTransactionEditPage() {
 			)}
 
 			<RepetitionSelector
+				date={transaction.date}
 				type={transaction.repeatType}
 				values={transaction.repeatValues}
 				unit={transaction.repeatUnit}

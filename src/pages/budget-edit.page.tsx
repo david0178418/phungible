@@ -155,6 +155,7 @@ function BudgetEditPage() {
 			/>
 
 			<RepetitionSelector
+				date={budget.date}
 				type={budget.repeatType}
 				values={budget.repeatValues}
 				unit={budget.repeatUnit}

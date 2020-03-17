@@ -2,6 +2,7 @@ import React from 'react';
 import { IonLabel, IonText, IonNote } from '@ionic/react';
 import { Budget } from '../interfaces';
 import { moneyFormat } from '../utils';
+import { nextOccuranceText } from '../budget-fns';
 
 interface Props {
 	budget: Budget;
@@ -22,7 +23,7 @@ function BudgetItem(props: Props) {
 				<IonLabel>
 					{budget.name}
 					<p>
-						Renews Feb XX, 202X
+						Renews in {nextOccuranceText(budget)}
 					</p>
 				</IonLabel>
 				<IonNote>
