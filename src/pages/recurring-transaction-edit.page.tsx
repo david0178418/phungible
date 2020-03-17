@@ -21,7 +21,7 @@ import {
 	getDoc,
 	saveDoc,
 } from '../api';
-import { format, parse } from 'date-fns';
+import { format, parse, startOfDay } from 'date-fns';
 import { EditPage } from '../components/edit-page';
 import { AccountSelector } from '../components/account-selector';
 import { RepetitionSelector } from '../components/repetition-selector';
@@ -188,7 +188,7 @@ function RecurringTransactionEditPage() {
 					value={format(new Date(transaction.date), 'yyyy-MM-dd')}
 					onIonChange={({detail}) => {
 						if(typeof detail.value === 'string') {
-							detail.value && setProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+							detail.value && setProp('date', startOfDay(parse(detail.value, 'yyyy-MM-dd', new Date())).toISOString());
 						}
 					}}
 				/>

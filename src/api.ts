@@ -11,6 +11,7 @@ import {
 	Transaction,
 } from './interfaces';
 import { firestore } from 'firebase/app';
+import { startOfDay } from 'date-fns';
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
 let db = firestore();
@@ -78,7 +79,7 @@ async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
 export
 function createAccount(): Account {
 	return {
-		date: (new Date()).toISOString(),
+		date: startOfDay(new Date()).toISOString(),
 		balanceUpdateHistory: [],
 		labels: [],
 		name: '',
@@ -103,7 +104,7 @@ function createBudget(): Budget {
 		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnit.Week,
 		repeatValues: [],
-		date: (new Date()).toISOString(),
+		date: startOfDay(new Date()).toISOString(),
 		transactionType: TransactionType.BudgetedExpense,
 	};
 }
@@ -121,7 +122,7 @@ function createRecurringTransaction(): RecurringTransaction {
 		repeatType: RepeatType.Dates,
 		repeatUnit: RepeatUnit.Month,
 		repeatValues: [],
-		date: (new Date()).toISOString(),
+		date: startOfDay(new Date()).toISOString(),
 		towardAccountId: '',
 		type: TransactionType.Income,
 	};
@@ -134,7 +135,7 @@ function createTransaction(budget?: Budget): Transaction {
 		fromAccountId: budget?.fromAccountId || '',
 		labels: [],
 		name: budget ? `${budget.name} Expense` : '',
-		date: (new Date()).toISOString(),
+		date: startOfDay(new Date()).toISOString(),
 		notes: '',
 		profileId: budget?.profileId || '',
 		towardAccountId: '',

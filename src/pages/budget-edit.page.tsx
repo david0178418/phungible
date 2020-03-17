@@ -14,7 +14,7 @@ import { EditPage } from '../components/edit-page';
 import { createBudget, getDoc, saveDoc } from '../api';
 import { Budget, Collection, RepeatType } from '../interfaces';
 import { AccountSelector } from '../components/account-selector';
-import { format, parse } from 'date-fns';
+import { format, parse, startOfDay } from 'date-fns';
 import { MoneyInput } from '../components/money-input';
 
 export
@@ -142,7 +142,7 @@ function BudgetEditPage() {
 					value={format(new Date(budget.date), 'yyyy-MM-dd')}
 					onIonChange={({detail}) => {
 						if(typeof detail.value === 'string') {
-							detail.value && setProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+							detail.value && setProp('date', startOfDay(parse(detail.value, 'yyyy-MM-dd', new Date())).toISOString());
 						}
 					}}
 				/>

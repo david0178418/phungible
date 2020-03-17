@@ -1,11 +1,13 @@
 import { RRule } from 'rrule';
 import {
+	isBefore,
+	formatDistance,
+	startOfDay,
+} from 'date-fns';
+import {
 	RepeatType,
 	RepeatUnit,
 } from './interfaces';
-import { isBefore, formatDistance } from 'date-fns';
-
-(window as any).RRule = RRule;
 
 const RepeatDaysToRRuleDays = [
 	RRule.SU,
@@ -43,8 +45,9 @@ function nextOccurance(repeatRuleProps: RepeatRuleProps) {
 
 	if(repeatType === RepeatType.Dates) {
 		return new RRule({
-			dtstart: new Date(date),
+			dtstart: startOfDay(new Date(date)),
 			freq: RRule.MONTHLY,
+			bymonthday: repeatValues,
 			interval: 1,
 		})
 		.after(new Date())
@@ -54,7 +57,7 @@ function nextOccurance(repeatRuleProps: RepeatRuleProps) {
 
 	if(repeatType === RepeatType.Days) {
 		return new RRule({
-			dtstart: new Date(date),
+			dtstart: startOfDay(new Date(date)),
 			freq: RRule.WEEKLY,
 			byweekday: repeatValues.map(val => RepeatDaysToRRuleDays[val]),
 			interval: 1,
@@ -65,7 +68,7 @@ function nextOccurance(repeatRuleProps: RepeatRuleProps) {
 
 	if(repeatType === RepeatType.Interval) {
 		const RRuleInterval = RepeatUnitToRRuleInterval[repeatUnit];
-		const startDate = new Date(date);
+		const startDate = startOfDay(new Date(date));
 
 		if(!RRuleInterval) {
 			return isBefore(new Date(), startDate) ?
@@ -89,9 +92,9 @@ export
 function nextOccuranceText(repeatRuleProps: RepeatRuleProps) {
 	const next = nextOccurance(repeatRuleProps);
 
-	if(!next) {
+	if(!(next && repeatRuleProps.repeatValues.length)) {
 		return 'N/A';
 	}
 
-	return formatDistance(new Date(), new Date(next));
+	return formatDistance(startOfDay(new Date()), new Date(next));
 }
