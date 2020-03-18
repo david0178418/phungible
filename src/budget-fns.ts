@@ -98,3 +98,65 @@ function nextOccuranceText(repeatRuleProps: RepeatRuleProps) {
 
 	return formatDistance(startOfDay(new Date()), new Date(next));
 }
+
+export
+function previousOccurance(repeatRuleProps: RepeatRuleProps) {
+	const {
+		date,
+		repeatType,
+		repeatUnit,
+		repeatValues,
+	} = repeatRuleProps;
+
+	if(repeatType === RepeatType.Dates) {
+		return new RRule({
+			dtstart: startOfDay(new Date(date)),
+			freq: RRule.MONTHLY,
+			bymonthday: repeatValues,
+			interval: 1,
+		})
+		.before(new Date())
+		.toISOString();
+	}
+
+
+	if(repeatType === RepeatType.Days) {
+		return new RRule({
+			dtstart: startOfDay(new Date(date)),
+			freq: RRule.WEEKLY,
+			byweekday: repeatValues.map(val => RepeatDaysToRRuleDays[val]),
+			interval: 1,
+		})
+		.before(new Date())
+		.toISOString();
+	}
+
+	if(repeatType === RepeatType.Interval) {
+		const RRuleInterval = RepeatUnitToRRuleInterval[repeatUnit];
+		const startDate = startOfDay(new Date(date));
+
+		if(!RRuleInterval) {
+			return isBefore(new Date(), startDate) ?
+				startDate.toISOString() :
+				'';
+		}
+
+		return new RRule({
+			dtstart: startDate,
+			freq: RRuleInterval,
+			interval: repeatValues[0],
+		})
+		.before(new Date())
+		.toISOString();
+	}
+
+	return '';
+}
+
+export
+function currentPeriod(repeatRuleProps: RepeatRuleProps) {
+	return [
+		previousOccurance(repeatRuleProps),
+		nextOccurance(repeatRuleProps),
+	];
+}
