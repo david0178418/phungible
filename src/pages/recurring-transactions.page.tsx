@@ -13,6 +13,7 @@ import { arrowUp, arrowDown } from 'ionicons/icons';
 import { CollectionPage } from '../components/collection-page';
 import { moneyFormat, findById } from '../utils';
 import { AccountsContext } from '../contexts';
+import { nextOccuranceText } from '../budget-fns';
 
 export
 function RecurringPage() {
@@ -44,7 +45,7 @@ function RecurringPage() {
 							<IonLabel>
 								{doc.name}
 								<p>
-									Next: ???
+									Next occurance in {nextOccuranceText(doc)}
 								</p>
 								{fromAccount && (
 									<p>
