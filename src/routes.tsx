@@ -1,5 +1,5 @@
-import React, { lazy } from 'react';
-import { IonRouterOutlet } from '@ionic/react';
+import React, { lazy, Suspense } from 'react';
+import { IonRouterOutlet, IonLoading } from '@ionic/react';
 import { Route } from 'react-router-dom';
 
 interface ComponentImport {
@@ -46,72 +46,74 @@ const LoginPage = prefetch(() => import('./pages/login.page'));
 export
 function Routes() {
 	return (
-		<IonRouterOutlet id="main">
-			<Route
-				path="/accounts"
-				component={AccountsPage}
-			/>
-			<Route
-				path="/account/:id?"
-				component={AccountEditPage}
-			/>
-			<Route
-				path="/budgets"
-				component={BudgetsPage}
-			/>
-			<Route
-				path="/budget/:id?"
-				component={BudgetEditPage}
-			/>
-			<Route
-				path="/help"
-				component={HelpPage}
-			/>
-			<Route
-				path="/login"
-				component={LoginPage}
-			/>
-			<Route
-				path="/recurring-transactions"
-				component={RecurringTransactions}
-			/>
-			<Route
-				path="/recurring-transaction/:id?"
-				component={RecurringTransactionEdit}
-			/>
-			<Route
-				path="/settings"
-				component={SettingsPage}
-			/>
-			<Route
-				path="/profiles"
-				component={ProfilesPage}
-			/>
-			<Route
-				path="/profile/:id?"
-				component={ProfileEditPage}
-			/>
-			<Route
-				path="/transactions"
-				component={TransactionsPage}
-			/>
-			<Route
-				path="/transaction/:id?"
-				component={TransactionEditPage}
-			/>
-			<Route
-				path="/trends"
-				component={TrendsPage}
-			/>
-			<Route
-				path="/welcome"
-				component={WelcomePage}
-			/>
-			<Route
-				exact
-				path="/"
-				component={DailyActivityPage}
-			/>
-		</IonRouterOutlet>
+		<Suspense fallback={<IonLoading isOpen />}>
+			<IonRouterOutlet id="main">
+				<Route
+					path="/accounts"
+					component={AccountsPage}
+				/>
+				<Route
+					path="/account/:id?"
+					component={AccountEditPage}
+				/>
+				<Route
+					path="/budgets"
+					component={BudgetsPage}
+				/>
+				<Route
+					path="/budget/:id?"
+					component={BudgetEditPage}
+				/>
+				<Route
+					path="/help"
+					component={HelpPage}
+				/>
+				<Route
+					path="/login"
+					component={LoginPage}
+				/>
+				<Route
+					path="/recurring-transactions"
+					component={RecurringTransactions}
+				/>
+				<Route
+					path="/recurring-transaction/:id?"
+					component={RecurringTransactionEdit}
+				/>
+				<Route
+					path="/settings"
+					component={SettingsPage}
+				/>
+				<Route
+					path="/profiles"
+					component={ProfilesPage}
+				/>
+				<Route
+					path="/profile/:id?"
+					component={ProfileEditPage}
+				/>
+				<Route
+					path="/transactions"
+					component={TransactionsPage}
+				/>
+				<Route
+					path="/transaction/:id?"
+					component={TransactionEditPage}
+				/>
+				<Route
+					path="/trends"
+					component={TrendsPage}
+				/>
+				<Route
+					path="/welcome"
+					component={WelcomePage}
+				/>
+				<Route
+					exact
+					path="/"
+					component={DailyActivityPage}
+				/>
+			</IonRouterOutlet>
+		</Suspense>
 	);
 }

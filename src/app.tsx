@@ -1,11 +1,8 @@
 
-import React, {
-	Suspense,
-} from 'react';
+import React from 'react';
 import {
 	IonApp,
 	IonSplitPane,
-	IonLoading,
 } from '@ionic/react';
 import { Menu } from './components/menu';
 import { IonReactRouter } from '@ionic/react-router';
@@ -24,9 +21,7 @@ function App() {
 				<IonReactRouter>
 					<IonSplitPane contentId="main">
 						<Menu />
-						<Suspense fallback={<IonLoading isOpen />}>
-							<Routes />
-						</Suspense>
+						<Routes />
 					</IonSplitPane>
 				</IonReactRouter>
 			</IonApp>
