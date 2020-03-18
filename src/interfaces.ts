@@ -6,15 +6,27 @@ type Docs = { id?: string };
 export
 enum Collection {
 	Accounts = 'accounts',
-	Budgets = 'budgets',
-	RecurringTransactions = 'recurring-transactions',
-	Profiles = 'profiles',
-	Transactions = 'transactions',
 	BalanceUpdateHistory = 'balance-update-history',
+	Budgets = 'budgets',
+	Profiles = 'profiles',
+	RecurringTransactions = 'recurring-transactions',
+	Transactions = 'transactions',
+	UserMetas = 'user-metas',
 }
 
 export
-type CollectionType = Account | Budget | RecurringTransaction | Transaction | Profile;
+type CollectionType = Account |
+	Budget |
+	RecurringTransaction |
+	Transaction |
+	Profile;
+
+export
+interface UserMeta {
+	id: string;
+	userId: string;
+	currentProfileId: string;
+}
 
 export
 enum AccountType {
@@ -49,10 +61,11 @@ interface BalanceUpdateHistoryItem {
 
 export
 interface Profile {
+	date: string;
 	id?: string;
 	name: string;
-	date: string;
 	notes: string;
+	ownerId: string;
 	sharedUsers: string[];
 }
 

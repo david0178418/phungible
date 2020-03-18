@@ -1,29 +1,22 @@
 
 import React, {
-	// Suspense,
-	useState,
-	useEffect,
 	lazy,
 	Suspense,
 } from 'react';
+import { Route } from 'react-router-dom';
 import {
 	IonApp,
-	// IonLoading,
 	IonRouterOutlet,
 	IonSplitPane,
 	IonLoading,
 } from '@ionic/react';
-import { auth, User } from 'firebase/app';
-import { UserContext, AccountsContext } from './contexts';
 import { Menu } from './components/menu';
 import { IonReactRouter } from '@ionic/react-router';
 
 import './config';
 import './global.scss';
 
-import { Route } from 'react-router-dom';
-import { Account, Collection } from './interfaces';
-import { getCollectionRef } from './api';
+import { ContextProvider } from './context-provider';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -67,107 +60,84 @@ const LoginPage = prefetch(() => import('./pages/login.page'));
 
 export
 function App() {
-	const [authLoaded, setAuthLoaded] = useState(false);
-	const [user, setUser] = useState<User | null>(null);
-	const [accounts, setAccounts] = useState<Account[]>([]);
-
-	useEffect(() => {
-		auth().onAuthStateChanged(newUser => {
-			setUser(newUser);
-			setAuthLoaded(true);
-		});
-		getCollectionRef(Collection.Accounts)
-			.get()
-			.then(collection => {
-				setAccounts(collection.docs.map(y => y.data() as Account));
-			});
-			
-	}, []);
-
-	if(!authLoaded) {
-		return null;
-	}
-
 	return (
-		<IonApp>
-			<IonReactRouter>
-				<AccountsContext.Provider value={accounts}>
-					<UserContext.Provider value={user}>
-						<IonSplitPane contentId="main">
-							<Menu />
-							<Suspense fallback={<IonLoading isOpen />}>
-								<IonRouterOutlet id="main">
-									<Route
-										path="/accounts"
-										component={AccountsPage}
-									/>
-									<Route
-										path="/account/:id?"
-										component={AccountEditPage}
-									/>
-									<Route
-										path="/budgets"
-										component={BudgetsPage}
-									/>
-									<Route
-										path="/budget/:id?"
-										component={BudgetEditPage}
-									/>
-									<Route
-										path="/help"
-										component={HelpPage}
-									/>
-									<Route
-										path="/login"
-										component={LoginPage}
-									/>
-									<Route
-										path="/recurring-transactions"
-										component={RecurringTransactions}
-									/>
-									<Route
-										path="/recurring-transaction/:id?"
-										component={RecurringTransactionEdit}
-									/>
-									<Route
-										path="/settings"
-										component={SettingsPage}
-									/>
-									<Route
-										path="/profiles"
-										component={ProfilesPage}
-									/>
-									<Route
-										path="/profile/:id?"
-										component={ProfileEditPage}
-									/>
-									<Route
-										path="/transactions"
-										component={TransactionsPage}
-									/>
-									<Route
-										path="/transaction/:id?"
-										component={TransactionEditPage}
-									/>
-									<Route
-										path="/trends"
-										component={TrendsPage}
-									/>
-									<Route
-										path="/welcome"
-										component={WelcomePage}
-									/>
-									<Route
-										exact
-										path="/"
-										component={DailyActivityPage}
-									/>
-								</IonRouterOutlet>
-							</Suspense>
-						</IonSplitPane>
-					</UserContext.Provider>
-				</AccountsContext.Provider>
-			</IonReactRouter>
-		</IonApp>
+		<ContextProvider>
+			<IonApp>
+				<IonReactRouter>
+					<IonSplitPane contentId="main">
+						<Menu />
+						<Suspense fallback={<IonLoading isOpen />}>
+							<IonRouterOutlet id="main">
+								<Route
+									path="/accounts"
+									component={AccountsPage}
+								/>
+								<Route
+									path="/account/:id?"
+									component={AccountEditPage}
+								/>
+								<Route
+									path="/budgets"
+									component={BudgetsPage}
+								/>
+								<Route
+									path="/budget/:id?"
+									component={BudgetEditPage}
+								/>
+								<Route
+									path="/help"
+									component={HelpPage}
+								/>
+								<Route
+									path="/login"
+									component={LoginPage}
+								/>
+								<Route
+									path="/recurring-transactions"
+									component={RecurringTransactions}
+								/>
+								<Route
+									path="/recurring-transaction/:id?"
+									component={RecurringTransactionEdit}
+								/>
+								<Route
+									path="/settings"
+									component={SettingsPage}
+								/>
+								<Route
+									path="/profiles"
+									component={ProfilesPage}
+								/>
+								<Route
+									path="/profile/:id?"
+									component={ProfileEditPage}
+								/>
+								<Route
+									path="/transactions"
+									component={TransactionsPage}
+								/>
+								<Route
+									path="/transaction/:id?"
+									component={TransactionEditPage}
+								/>
+								<Route
+									path="/trends"
+									component={TrendsPage}
+								/>
+								<Route
+									path="/welcome"
+									component={WelcomePage}
+								/>
+								<Route
+									exact
+									path="/"
+									component={DailyActivityPage}
+								/>
+							</IonRouterOutlet>
+						</Suspense>
+					</IonSplitPane>
+				</IonReactRouter>
+			</IonApp>
+		</ContextProvider>
 	);
 }

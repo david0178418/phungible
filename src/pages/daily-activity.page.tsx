@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -23,12 +23,10 @@ import {
 import { startOfDay, endOfDay } from 'date-fns';
 import {
 	createTransaction,
-	getCollection,
 	getCollectionRef,
 	saveDoc,
 } from '../api';
 import {
-	Budget,
 	Collection,
 	Transaction,
 } from '../interfaces';
@@ -38,6 +36,7 @@ import { TransactionEditForm } from '../components/transaction-edit-form';
 import { useEditItem } from '../hooks';
 import { canSaveTransaction } from '../validations';
 import { close, checkmark } from 'ionicons/icons';
+import { BudgetContext } from '../contexts';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -58,8 +57,8 @@ function HomePage() {
 	const [selectedTab, setSelectedTab] = useState<PageTab>(PageTab.Budgets);
 	const [selectedDate, setSelectedDate] = useState(() => (new Date()).toISOString());
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
-	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [loading, setLoading] = useState(false);
+	const budgets = useContext(BudgetContext);
 
 	useEffect(() => {
 		refreshPage();
@@ -86,9 +85,6 @@ function HomePage() {
 
 	async function refreshPage() {
 		setLoading(true);
-		if(selectedTab === PageTab.Budgets) {
-			setBudgets(await getCollection<Budget>(Collection.Budgets));
-		}
 
 		if(selectedTab === PageTab.Transactions) {
 			const collection = await getCollectionRef(Collection.Transactions)
