@@ -16,15 +16,15 @@ import { Routes } from './routes';
 export
 function App() {
 	return (
-		<ContextProvider>
-			<IonApp>
-				<IonReactRouter>
-					<IonSplitPane contentId="main">
+		<IonApp>
+			<IonReactRouter>
+				<IonSplitPane contentId="main">
+					<ContextProvider>
 						<Menu />
 						<Routes />
-					</IonSplitPane>
-				</IonReactRouter>
-			</IonApp>
-		</ContextProvider>
+					</ContextProvider>
+				</IonSplitPane>
+			</IonReactRouter>
+		</IonApp>
 	);
 }
