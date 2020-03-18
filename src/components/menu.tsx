@@ -20,6 +20,7 @@ import {
 	calendarOutline,
 	settingsOutline,
 	repeat,
+	peopleOutline,
 } from 'ionicons/icons';
 
 interface AppPage {
@@ -58,6 +59,11 @@ const appPages: AppPage[] = [
 		title: 'Transactions',
 		url: '/transactions',
 		icon: swapHorizontal,
+	},
+	{
+		title: 'Profiles',
+		url: '/profiles',
+		icon: peopleOutline,
 	},
 	{
 		title: 'Settings',

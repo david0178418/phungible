@@ -8,12 +8,13 @@ enum Collection {
 	Accounts = 'accounts',
 	Budgets = 'budgets',
 	RecurringTransactions = 'recurring-transactions',
+	Profiles = 'profiles',
 	Transactions = 'transactions',
 	BalanceUpdateHistory = 'balance-update-history',
 }
 
 export
-type CollectionType = Account | Budget | RecurringTransaction | Transaction;
+type CollectionType = Account | Budget | RecurringTransaction | Transaction | Profile;
 
 export
 enum AccountType {
@@ -44,6 +45,14 @@ interface BalanceUpdateHistoryItem {
 	id?: string;
 	balance: number;
 	date: string;
+}
+
+export
+interface Profile {
+	id?: string;
+	name: string;
+	notes: string;
+	sharedUsers: string[];
 }
 
 export
