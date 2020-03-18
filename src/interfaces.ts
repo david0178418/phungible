@@ -51,6 +51,7 @@ export
 interface Profile {
 	id?: string;
 	name: string;
+	date: string;
 	notes: string;
 	sharedUsers: string[];
 }

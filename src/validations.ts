@@ -1,4 +1,4 @@
-import { TransactionType, Transaction } from './interfaces';
+import { TransactionType, Transaction, Profile } from './interfaces';
 
 export
 function canSaveTransaction(transaction: Transaction) {
@@ -23,5 +23,12 @@ function canSaveTransaction(transaction: Transaction) {
 				type === TransactionType.Expense
 			)
 		)
+	);
+}
+
+export
+function canSaveProfile(profile: Profile) {
+	return !!(
+		profile.name
 	);
 }

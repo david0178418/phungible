@@ -9,6 +9,7 @@ import {
 	TransactionType,
 	RecurringTransaction,
 	Transaction,
+	Profile,
 } from './interfaces';
 import { firestore } from 'firebase/app';
 import { startOfDay } from 'date-fns';
@@ -142,5 +143,15 @@ function createTransaction(budget?: Budget): Transaction {
 		type: TransactionType.Expense,
 		parentBudgetId: budget?.id || '',
 		parentScheduledTransactionId: '',
+	};
+}
+
+export
+function createProfile(): Profile {
+	return {
+		name: '',
+		notes: '',
+		date: new Date().toISOString(),
+		sharedUsers: [],
 	};
 }

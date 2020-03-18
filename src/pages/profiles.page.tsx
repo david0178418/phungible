@@ -23,7 +23,14 @@ function ProfilesPage() {
 						<IonLabel>
 							{profile.name}
 						</IonLabel>
-						{profile.sharedUsers.length && (
+						{profile.notes && (
+							<IonNote>
+								<em>
+									{profile.notes}
+								</em>
+							</IonNote>
+						)}
+						{!!profile.sharedUsers.length && (
 							<IonNote>
 								<em>
 									Shared with {profile.sharedUsers.join(', ')}

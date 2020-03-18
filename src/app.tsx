@@ -57,6 +57,7 @@ const RecurringTransactions = prefetch(() => import('./pages/recurring-transacti
 const RecurringTransactionEdit = prefetch(() => import('./pages/recurring-transaction-edit.page'));
 const SettingsPage = prefetch(() => import('./pages/settings.page'));
 const ProfilesPage = prefetch(() => import('./pages/profiles.page'));
+const ProfileEditPage = prefetch(() => import('./pages/profile-edit.page'));
 const TransactionsPage = prefetch(() => import('./pages/transactions.page'));
 const TransactionEditPage = prefetch(() => import('./pages/transaction-edit.page'));
 const TrendsPage = prefetch(() => import('./pages/trends.page'));
@@ -135,6 +136,10 @@ function App() {
 									<Route
 										path="/profiles"
 										component={ProfilesPage}
+									/>
+									<Route
+										path="/profile/:id?"
+										component={ProfileEditPage}
 									/>
 									<Route
 										path="/transactions"
