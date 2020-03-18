@@ -90,7 +90,7 @@ function Menu() {
 							<IonMenuToggle key={index} autoHide={false}>
 								<IonItem
 									{...routerProps}
-									routerDirection="none"
+									routerDirection="root"
 									lines="none"
 								>
 									<IonIcon slot="start" icon={appPage.icon} />
