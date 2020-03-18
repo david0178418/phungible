@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IonLabel, IonText, IonNote } from '@ionic/react';
+import { IonLabel, IonText, IonNote, IonSpinner } from '@ionic/react';
 import { Budget, Collection, Transaction } from '../interfaces';
 import { moneyFormat } from '../utils';
 import { nextOccuranceText, currentPeriod } from '../budget-fns';
@@ -11,6 +11,7 @@ interface Props {
 
 export
 function BudgetItem(props: Props) {
+	const [loading, setLoading] = useState(false);
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const {
 		budget,
@@ -19,20 +20,37 @@ function BudgetItem(props: Props) {
 		.reduce((total, t) =>  total + t.amount, 0);
 
 	useEffect(() => {
+		let isMounted = true;
 		const [start, end] = currentPeriod(budget);
+
+		setLoading(true);
+
 		getCollectionRef(Collection.Transactions)
 			.where('date', '>=', start)
 			.where('date', '<', end)
 			.get()
 			.then(collection => {
-				setTransactions(collection.docs.map(y => y.data() as Transaction));
+				if(isMounted) {
+					setTransactions(collection.docs.map(t => t.data() as Transaction));
+					setLoading(false);
+				}
 			});
+		
+		return () => {
+			isMounted = false;
+		};
 	}, [budget]);
 
 	return (
 		<>
 			<IonText slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
-				${moneyFormat(remaningAmount)}
+				{loading ? (
+					<IonSpinner />
+				) : (
+					<>
+						${moneyFormat(remaningAmount)}
+					</>
+				)}
 			</IonText>
 			<div>
 				<IonLabel>
