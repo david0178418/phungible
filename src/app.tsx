@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	IonApp,
 	IonSplitPane,
@@ -15,16 +15,21 @@ import { Routes } from './routes';
 
 export
 function App() {
+	const [paneDisabled, setPaneDisabled] = useState(false);
+
 	return (
-		<IonApp>
-			<IonReactRouter>
-				<IonSplitPane contentId="main">
-					<ContextProvider>
+		<ContextProvider>
+			<IonApp>
+				<IonReactRouter>
+					<IonSplitPane
+						contentId="main"
+						disabled={paneDisabled}
+					>
 						<Menu />
-						<Routes />
-					</ContextProvider>
-				</IonSplitPane>
-			</IonReactRouter>
-		</IonApp>
+						<Routes onPathChange={setPaneDisabled} />
+					</IonSplitPane>
+				</IonReactRouter>
+			</IonApp>
+		</ContextProvider>
 	);
 }

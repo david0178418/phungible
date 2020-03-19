@@ -1,6 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, useEffect, Suspense } from 'react';
 import { IonRouterOutlet, IonLoading } from '@ionic/react';
-import { Route } from 'react-router-dom';
+import { Route, useLocation } from 'react-router-dom';
+import { GettingStartedPage } from './pages/getting-started.page';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -42,11 +43,28 @@ const WelcomePage = prefetch(() => import('./pages/welcome.page'));
 const HelpPage = prefetch(() => import('./pages/help.page'));
 const LoginPage = prefetch(() => import('./pages/login.page'));
 
+const fullScreenRoutes = [
+	'/getting-started',
+];
+
+interface Props {
+	onPathChange?: (paneDisabled: boolean) => void;
+}
 
 export
-function Routes() {
+function Routes(props: Props) {
+	const {pathname} = useLocation();
+	const {
+		onPathChange = () => null,
+	} = props;
+
+	useEffect(() => {
+		onPathChange(fullScreenRoutes.includes(pathname));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pathname]);
 	return (
 		<Suspense fallback={<IonLoading isOpen />}>
+
 			<IonRouterOutlet id="main">
 				<Route
 					path="/accounts"
@@ -103,6 +121,10 @@ function Routes() {
 				<Route
 					path="/trends"
 					component={TrendsPage}
+				/>
+				<Route
+					path="/getting-started"
+					component={GettingStartedPage}
 				/>
 				<Route
 					path="/welcome"
