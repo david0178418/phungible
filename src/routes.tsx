@@ -1,7 +1,6 @@
 import React, { lazy, useEffect, Suspense } from 'react';
 import { IonRouterOutlet, IonLoading } from '@ionic/react';
 import { Route, useLocation } from 'react-router-dom';
-import { GettingStartedPage } from './pages/getting-started.page';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -42,6 +41,7 @@ const TrendsPage = prefetch(() => import('./pages/trends.page'));
 const WelcomePage = prefetch(() => import('./pages/welcome.page'));
 const HelpPage = prefetch(() => import('./pages/help.page'));
 const LoginPage = prefetch(() => import('./pages/login.page'));
+const GettingStartedPage = lazy(() => import('./pages/getting-started.page'));
 
 const fullScreenRoutes = [
 	'/getting-started',

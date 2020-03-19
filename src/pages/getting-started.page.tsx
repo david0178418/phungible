@@ -33,3 +33,5 @@ function GettingStartedPage() {
 		</IonPage>
 	);
 }
+
+export default GettingStartedPage;
