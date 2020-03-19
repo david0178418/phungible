@@ -64,7 +64,6 @@ function Routes(props: Props) {
 	}, [pathname]);
 	return (
 		<Suspense fallback={<IonLoading isOpen />}>
-
 			<IonRouterOutlet id="main">
 				<Route
 					path="/accounts"
