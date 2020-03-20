@@ -27,6 +27,9 @@ function SettingsPage() {
 			</IonHeader>
 			<IonContent className="ion-padding">
 				<IonList>
+					<IonItem routerLink="/getting-started" routerDirection="forward">
+						Run Getting Started
+					</IonItem>
 					<IonItem>
 						Version: {config.appVersion}
 					</IonItem>
