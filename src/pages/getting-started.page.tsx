@@ -14,6 +14,9 @@ import { peopleOutline, walletOutline, repeat } from 'ionicons/icons';
 import { AccountsContext, BudgetContext } from '@common/contexts';
 import { useCollection } from '@common/hooks';
 import { Collection, RecurringTransaction } from '@common/interfaces';
+import { RecurringTransactionItem } from '@components/recurring-transaction-item';
+import { BudgetItem } from '@components/budget-item';
+import { AccountItem } from '@components/account-item';
 
 export
 function GettingStartedPage() {
@@ -30,36 +33,44 @@ function GettingStartedPage() {
 			</IonHeader>
 			<IonContent>
 				<IonItem button>
-					<IonIcon slot="start" icon={peopleOutline}/>
+					<IonIcon slot="end" icon={peopleOutline}/>
 					<IonLabel>
 						Accounts
 					</IonLabel>
 				</IonItem>
 				<IonList>
 					{accounts.map(account => (
-						account.name
+						<IonItem key={account.id}>
+							<AccountItem account={account} />
+						</IonItem>
 					))}
 				</IonList>
 				<IonItem button>
-					<IonIcon slot="start" icon={walletOutline}/>
+					<IonIcon slot="end" icon={walletOutline}/>
 					<IonLabel>
 						Budgets
 					</IonLabel>
 				</IonItem>
 				<IonList>
 					{budgets.map(budget => (
-						budget.name
+						<IonItem key={budget.id}>
+							<BudgetItem budget={budget} />
+						</IonItem>
 					))}
 				</IonList>
 				<IonItem button>
-					<IonIcon slot="start" icon={repeat}/>
+					<IonIcon slot="end" icon={repeat}/>
 					<IonLabel>
 						Recurring Transactions
 					</IonLabel>
 				</IonItem>
 				<IonList>
-					{recurringTransactions.map(recurringTransaction => (
-						recurringTransaction.name
+					{recurringTransactions.map(rt => (
+						<IonItem key={rt.id}>
+							<RecurringTransactionItem
+								recurringTransaction={rt}
+							/>
+						</IonItem>
 					))}
 				</IonList>
 			</IonContent>
