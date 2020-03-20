@@ -1,22 +1,11 @@
 import React, {
 } from 'react';
 import {
-	IonNote,
-	IonText,
-	IonIcon,
-	IonLabel,
-} from '@ionic/react';
-import {
-	cashOutline,
-	card,
-} from 'ionicons/icons';
-import {
 	Collection,
 	Account,
-	AccountType,
 } from '../interfaces';
 import { CollectionPage } from '../components/collection-page';
-import { moneyFormat } from '../utils';
+import { AccountItem } from '../components/account-item';
 
 export
 function AccountsPage() {
@@ -25,38 +14,8 @@ function AccountsPage() {
 			collectionType={Collection.Accounts}
 			label="Accounts"
 			editPath="/account"
-			itemRenderFn={(doc: Account) => (
-				<>
-					{doc.type === AccountType.Savings ? (
-						<IonIcon
-							slot="start"
-							color="money"
-							icon={cashOutline}
-						/>
-					) : (
-						<IonIcon
-							slot="start"
-							color="debt"
-							icon={card}
-						/>
-					)}
-					<div>
-						<IonLabel>
-							{doc.name}
-						</IonLabel>
-						<IonNote>
-							<em>
-								$X.XX pending
-							</em>
-						</IonNote>
-					</div>
-					<IonText
-						slot="end"
-						color={doc.type === AccountType.Savings ? 'money' : 'debt'}
-					>
-						${moneyFormat(doc.balanceUpdateHistory[0].balance)}
-					</IonText>
-				</>
+			itemRenderFn={(account: Account) => (
+				<AccountItem account={account} />
 			)}
 		/>
 	);
