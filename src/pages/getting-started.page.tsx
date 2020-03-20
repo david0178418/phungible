@@ -11,9 +11,9 @@ import {
 	IonList,
 } from '@ionic/react';
 import { peopleOutline, walletOutline, repeat } from 'ionicons/icons';
-import { AccountsContext, BudgetContext } from '../contexts';
-import { useCollection } from '../hooks';
-import { Collection, RecurringTransaction } from '../interfaces';
+import { AccountsContext, BudgetContext } from '@common/contexts';
+import { useCollection } from '@common/hooks';
+import { Collection, RecurringTransaction } from '@common/interfaces';
 
 export
 function GettingStartedPage() {

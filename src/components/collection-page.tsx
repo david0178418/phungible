@@ -18,9 +18,9 @@ import {
 } from '@ionic/react';
 import { alertController } from '@ionic/core';
 import { add } from 'ionicons/icons';
-import { useCollection } from '../hooks';
-import { Collection, CollectionType } from '../interfaces';
-import { deleteDoc } from '../api';
+import { useCollection } from '@common/hooks';
+import { Collection, CollectionType } from '@common/interfaces';
+import { deleteDoc } from '@common/api';
 
 type ItemRenderFn<T> = (doc: T) => ReactNode;
 

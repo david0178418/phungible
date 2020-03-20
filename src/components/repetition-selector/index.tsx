@@ -6,13 +6,13 @@ import {
 	IonSegmentButton,
 	IonCheckbox,
 } from '@ionic/react';
-import { RepeatType, RepeatUnit } from '../../interfaces';
+import { RepeatType, RepeatUnit } from '@common/interfaces';
 import { DateSelector } from './components/date-selector';
 import { IntervalSelector } from './components/interval-selector';
 import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
-import { nextOccuranceText } from '../../budget-fns';
+import { nextOccuranceText } from '@common/budget-fns';
 
 interface Props {
 	date: string,

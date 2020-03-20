@@ -21,11 +21,11 @@ import {
 import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
 import { cashOutline, trash, cardOutline } from 'ionicons/icons';
-import { EditPage } from '../components/edit-page';
-import { createAccount, getDoc, saveDoc } from '../api';
-import { Collection, Account, AccountType } from '../interfaces';
-import { MoneyInput } from '../components/money-input';
-import { moneyFormat } from '../utils';
+import { EditPage } from '@components/edit-page';
+import { createAccount, getDoc, saveDoc } from '@common/api';
+import { Collection, Account, AccountType } from '@common/interfaces';
+import { MoneyInput } from '@components/money-input';
+import { moneyFormat } from '@common/utils';
 
 export
 function AccountEditPage() {

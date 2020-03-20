@@ -1,5 +1,5 @@
 import React from 'react';
-import { RepeatDays } from '../../../interfaces';
+import { RepeatDays } from '@common/interfaces';
 import { DayBlock } from './day-block';
 
 interface Props {

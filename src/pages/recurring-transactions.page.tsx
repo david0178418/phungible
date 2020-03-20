@@ -8,12 +8,12 @@ import {
 	Collection,
 	RecurringTransaction,
 	TransactionType,
-} from '../interfaces';
+} from '@common/interfaces';
 import { arrowUp, arrowDown } from 'ionicons/icons';
-import { CollectionPage } from '../components/collection-page';
-import { moneyFormat, findById } from '../utils';
-import { AccountsContext } from '../contexts';
-import { nextOccuranceText } from '../budget-fns';
+import { CollectionPage } from '@components/collection-page';
+import { moneyFormat, findById } from '@common/utils';
+import { AccountsContext } from '@common/contexts';
+import { nextOccuranceText } from '@common/budget-fns';
 
 export
 function RecurringPage() {

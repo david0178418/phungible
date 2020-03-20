@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { IonIcon, IonLabel, IonText } from '@ionic/react';
 import { arrowUp, arrowDown } from 'ionicons/icons';
-import { Transaction, TransactionType } from '../interfaces';
-import { AccountsContext } from '../contexts';
-import { findById, moneyFormat } from '../utils';
+import { Transaction, TransactionType } from '@common/interfaces';
+import { AccountsContext } from '@common/contexts';
+import { findById, moneyFormat } from '@common/utils';
 
 interface Props {
 	transaction: Transaction;

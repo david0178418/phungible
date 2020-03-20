@@ -4,7 +4,7 @@ import {
 	IonLabel,
 	IonInput,
 } from '@ionic/react';
-import { moneyFormat, moneyParse } from '../utils';
+import { moneyFormat, moneyParse } from '@common/utils';
 
 interface Props {
 	amount: number;

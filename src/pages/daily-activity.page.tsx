@@ -25,18 +25,18 @@ import {
 	createTransaction,
 	getCollectionRef,
 	saveDoc,
-} from '../api';
+} from '@common/api';
 import {
 	Collection,
 	Transaction,
-} from '../interfaces';
-import { TransactionItem } from '../components/transaction-item';
-import { BudgetItem } from '../components/budget-item';
-import { TransactionEditForm } from '../components/transaction-edit-form';
-import { useEditItem } from '../hooks';
-import { canSaveTransaction } from '../validations';
+} from '@common/interfaces';
+import { TransactionItem } from '@components/transaction-item';
+import { BudgetItem } from '@components/budget-item';
+import { TransactionEditForm } from '@components/transaction-edit-form';
+import { useEditItem } from '@common/hooks';
+import { canSaveTransaction } from '@common/validations';
 import { close, checkmark } from 'ionicons/icons';
-import { BudgetContext } from '../contexts';
+import { BudgetContext } from '@common/contexts';
 
 enum PageTab {
 	Budgets = 'budgets',

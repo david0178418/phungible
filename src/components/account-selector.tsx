@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import { AccountsContext } from '../contexts';
+import { AccountsContext } from '@common/contexts';
 
 interface Props {
 	label: string;

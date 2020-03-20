@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createProfile, saveDoc, getDoc } from '../api';
-import { Collection, Profile } from '../interfaces';
-import { EditPage } from '../components/edit-page';
-import { useEditItem } from '../hooks';
-import { canSaveProfile } from '../validations';
+import { createProfile, saveDoc, getDoc } from '@common/api';
+import { Collection, Profile } from '@common/interfaces';
+import { EditPage } from '@components/edit-page';
+import { useEditItem } from '@common/hooks';
+import { canSaveProfile } from '@common/validations';
 import { IonItem, IonLabel, IonInput, IonTextarea } from '@ionic/react';
 
 export

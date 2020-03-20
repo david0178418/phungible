@@ -11,7 +11,7 @@ import {
 	IonList,
 	IonItem,
 } from '@ionic/react';
-import { config } from '../config';
+import { config } from '@root/config';
 
 export
 function SettingsPage() {

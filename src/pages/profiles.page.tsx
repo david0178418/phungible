@@ -7,8 +7,8 @@ import {
 import {
 	Collection,
 	Profile,
-} from '../interfaces';
-import { CollectionPage } from '../components/collection-page';
+} from '@common/interfaces';
+import { CollectionPage } from '@components/collection-page';
 
 export
 function ProfilesPage() {

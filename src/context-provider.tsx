@@ -1,9 +1,26 @@
 import React, { ReactNode, useState, useEffect } from 'react';
 import { auth, User } from 'firebase/app';
 
-import { UserContext, AccountsContext, ProfileContext, UserMetaContext, BudgetContext } from './contexts';
-import { Account, Collection, UserMeta, Profile, Budget } from './interfaces';
-import { getCollectionRef, getUserMeta, getDoc, formatCollection } from './api';
+import {
+	UserContext,
+	AccountsContext,
+	ProfileContext,
+	UserMetaContext,
+	BudgetContext,
+} from '@common/contexts';
+import {
+	Account,
+	Collection,
+	UserMeta,
+	Profile,
+	Budget,
+} from '@common/interfaces';
+import {
+	getCollectionRef,
+	getUserMeta,
+	getDoc,
+	formatCollection,
+} from '@common/api';
 
 interface Props {
 	children: ReactNode;

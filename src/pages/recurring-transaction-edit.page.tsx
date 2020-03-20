@@ -15,19 +15,19 @@ import {
 	Collection,
 	RepeatType,
 	TransactionType,
-} from '../interfaces';
+} from '@common/interfaces';
 import {
 	createRecurringTransaction,
 	getDoc,
 	saveDoc,
-} from '../api';
+} from '@common/api';
 import { format, parse, startOfDay } from 'date-fns';
-import { EditPage } from '../components/edit-page';
-import { AccountSelector } from '../components/account-selector';
-import { RepetitionSelector } from '../components/repetition-selector';
-import { TransactionTypeSelector } from '../components/transaction-type-selector';
-import { useStatePropSetter } from '../hooks';
-import { MoneyInput } from '../components/money-input';
+import { EditPage } from '@components/edit-page';
+import { AccountSelector } from '@components/account-selector';
+import { RepetitionSelector } from '@components/repetition-selector';
+import { TransactionTypeSelector } from '@components/transaction-type-selector';
+import { useStatePropSetter } from '@common/hooks';
+import { MoneyInput } from '@components/money-input';
 
 export
 function RecurringTransactionEditPage() {

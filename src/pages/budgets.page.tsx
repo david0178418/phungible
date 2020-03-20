@@ -1,8 +1,8 @@
 import React, {
 } from 'react';
-import { Budget, Collection } from '../interfaces';
-import { CollectionPage } from '../components/collection-page';
-import { BudgetItem } from '../components/budget-item';
+import { Budget, Collection } from '@common/interfaces';
+import { CollectionPage } from '@components/collection-page';
+import { BudgetItem } from '@components/budget-item';
 
 export
 function BudgetsPage() {

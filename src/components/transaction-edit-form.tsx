@@ -9,10 +9,10 @@ import {
 	IonTextarea,
 } from '@ionic/react';
 import { format, parse } from 'date-fns';
-import { AccountSelector } from '../components/account-selector';
-import { TransactionType, Transaction } from '../interfaces';
-import { TransactionTypeSelector } from '../components/transaction-type-selector';
-import { MoneyInput } from '../components/money-input';
+import { AccountSelector } from '@components/account-selector';
+import { TransactionType, Transaction } from '@common/interfaces';
+import { TransactionTypeSelector } from '@components/transaction-type-selector';
+import { MoneyInput } from '@components/money-input';
 
 interface Props {
 	transaction: Transaction;

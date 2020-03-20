@@ -12,8 +12,8 @@ import {
 } from 'ionicons/icons';
 import {
 	AccountType, Account,
-} from '../interfaces';
-import { moneyFormat } from '../utils';
+} from '@common/interfaces';
+import { moneyFormat } from '@common/utils';
 
 interface Props {
 	account: Account;

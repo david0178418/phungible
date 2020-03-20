@@ -3,9 +3,9 @@ import React, {
 import {
 	Collection,
 	Account,
-} from '../interfaces';
-import { CollectionPage } from '../components/collection-page';
-import { AccountItem } from '../components/account-item';
+} from '@common/interfaces';
+import { CollectionPage } from '@components/collection-page';
+import { AccountItem } from '@components/account-item';
 
 export
 function AccountsPage() {

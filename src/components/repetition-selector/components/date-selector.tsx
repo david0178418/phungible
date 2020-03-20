@@ -1,6 +1,6 @@
 import React from 'react';
 import { DayBlock } from './day-block';
-import { range } from '../../../utils';
+import { range } from '@common/utils';
 
 const Dates = range(1, 31);
 

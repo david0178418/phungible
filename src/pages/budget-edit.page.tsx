@@ -9,13 +9,13 @@ import {
 } from '@ionic/react';
 import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
-import { RepetitionSelector } from '../components/repetition-selector';
-import { EditPage } from '../components/edit-page';
-import { createBudget, getDoc, saveDoc } from '../api';
-import { Budget, Collection, RepeatType } from '../interfaces';
-import { AccountSelector } from '../components/account-selector';
+import { RepetitionSelector } from '@components/repetition-selector';
+import { EditPage } from '@components/edit-page';
+import { createBudget, getDoc, saveDoc } from '@common/api';
+import { Budget, Collection, RepeatType } from '@common/interfaces';
+import { AccountSelector } from '@components/account-selector';
 import { format, parse, startOfDay } from 'date-fns';
-import { MoneyInput } from '../components/money-input';
+import { MoneyInput } from '@components/money-input';
 
 export
 function BudgetEditPage() {

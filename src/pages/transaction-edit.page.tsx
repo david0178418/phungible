@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createTransaction, saveDoc, getDoc } from '../api';
-import { Collection, Transaction } from '../interfaces';
-import { TransactionEditForm } from '../components/transaction-edit-form';
-import { EditPage } from '../components/edit-page';
-import { useEditItem } from '../hooks';
-import { canSaveTransaction } from '../validations';
+import { createTransaction, saveDoc, getDoc } from '@common/api';
+import { Collection, Transaction } from '@common/interfaces';
+import { TransactionEditForm } from '@components/transaction-edit-form';
+import { EditPage } from '@components/edit-page';
+import { useEditItem } from '@common/hooks';
+import { canSaveTransaction } from '@common/validations';
 
 export
 function TransactionEditPage() {

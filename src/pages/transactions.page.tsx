@@ -2,9 +2,9 @@ import React from 'react';
 import {
 	Transaction,
 	Collection,
-} from '../interfaces';
-import { CollectionPage } from '../components/collection-page';
-import { TransactionItem } from '../components/transaction-item';
+} from '@common/interfaces';
+import { CollectionPage } from '@components/collection-page';
+import { TransactionItem } from '@components/transaction-item';
 
 export
 function TransactionsPage() {
