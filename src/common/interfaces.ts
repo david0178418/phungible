@@ -1,12 +1,16 @@
 // import { firestore } from 'firebase/app';
 
 export
-type Docs = { id?: string };
+type Docs = Account |
+	Budget |
+	RecurringTransaction |
+	Transaction |
+	Profile |
+	UserMeta;
 
 export
 enum Collection {
 	Accounts = 'accounts',
-	BalanceUpdateHistory = 'balance-update-history',
 	Budgets = 'budgets',
 	Profiles = 'profiles',
 	RecurringTransactions = 'recurring-transactions',
@@ -15,7 +19,7 @@ enum Collection {
 }
 
 export
-type CollectionType = Account |
+type CollectionPageType = Account |
 	Budget |
 	RecurringTransaction |
 	Transaction |

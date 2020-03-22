@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getCollectionRef } from './api';
 import { tuple } from './utils';
 import equal from 'fast-deep-equal';
+import { ProfileContext } from './contexts';
 
 export
 function useStatePropSetter<T>(createFn: T | (() => T)) {
@@ -24,10 +25,16 @@ function useStatePropSetter<T>(createFn: T | (() => T)) {
 export
 function useCollection<T>(path: string) {
 	const [collection, setCollection] = useState<T[]>([]);
+	const profile = useContext(ProfileContext);
 
-	useEffect(() => (
-		getCollectionRef(path)
-			// .where('ownerId', '==', user?.uid)
+
+	useEffect(() => {
+		if(!profile) {
+			return;
+		}
+
+		const unsub = getCollectionRef(path)
+			.where('profileId', '==', profile?.id)
 			.orderBy('date', 'desc')
 			.onSnapshot(snap =>
 				setCollection(
@@ -35,10 +42,12 @@ function useCollection<T>(path: string) {
 						doc.data() as T,
 					),
 				),
-			)
-	),
+			);
+
+		return unsub;
+	},
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	[]);
+	[profile]);
 
 	return collection;
 }

@@ -19,7 +19,7 @@ import {
 import { alertController } from '@ionic/core';
 import { add } from 'ionicons/icons';
 import { useCollection } from '@common/hooks';
-import { Collection, CollectionType } from '@common/interfaces';
+import { Collection, CollectionPageType } from '@common/interfaces';
 import { deleteDoc } from '@common/api';
 
 type ItemRenderFn<T> = (doc: T) => ReactNode;
@@ -32,7 +32,7 @@ interface Props<T> {
 }
 
 export
-function CollectionPage<T extends CollectionType>(props: Props<T>) {
+function CollectionPage<T extends CollectionPageType>(props: Props<T>) {
 	const {
 		collectionType,
 		label,
