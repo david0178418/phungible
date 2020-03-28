@@ -1,6 +1,7 @@
 import React, { lazy, useEffect, Suspense } from 'react';
 import { IonRouterOutlet, IonLoading } from '@ionic/react';
 import { Route, useLocation } from 'react-router-dom';
+import { ActiveProfileGuard } from '@components/route-guards';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -66,60 +67,8 @@ function Routes(props: Props) {
 		<Suspense fallback={<IonLoading isOpen />}>
 			<IonRouterOutlet id="main">
 				<Route
-					path="/accounts"
-					component={AccountsPage}
-				/>
-				<Route
-					path="/account/:id?"
-					component={AccountEditPage}
-				/>
-				<Route
-					path="/budgets"
-					component={BudgetsPage}
-				/>
-				<Route
-					path="/budget/:id?"
-					component={BudgetEditPage}
-				/>
-				<Route
 					path="/help"
 					component={HelpPage}
-				/>
-				<Route
-					path="/login"
-					component={LoginPage}
-				/>
-				<Route
-					path="/recurring-transactions"
-					component={RecurringTransactions}
-				/>
-				<Route
-					path="/recurring-transaction/:id?"
-					component={RecurringTransactionEdit}
-				/>
-				<Route
-					path="/settings"
-					component={SettingsPage}
-				/>
-				<Route
-					path="/profiles"
-					component={ProfilesPage}
-				/>
-				<Route
-					path="/profile/:id?"
-					component={ProfileEditPage}
-				/>
-				<Route
-					path="/transactions"
-					component={TransactionsPage}
-				/>
-				<Route
-					path="/transaction/:id?"
-					component={TransactionEditPage}
-				/>
-				<Route
-					path="/trends"
-					component={TrendsPage}
 				/>
 				<Route
 					path="/getting-started"
@@ -129,11 +78,69 @@ function Routes(props: Props) {
 					path="/welcome"
 					component={WelcomePage}
 				/>
-				<Route
-					exact
-					path="/"
-					component={DailyActivityPage}
-				/>
+				<ActiveProfileGuard negate>
+					<Route
+						path="/login"
+						component={LoginPage}
+					/>
+				</ActiveProfileGuard>
+				<ActiveProfileGuard>
+					<>
+						<Route
+							path="/accounts"
+							component={AccountsPage}
+						/>
+						<Route
+							path="/account/:id?"
+							component={AccountEditPage}
+						/>
+						<Route
+							path="/budgets"
+							component={BudgetsPage}
+						/>
+						<Route
+							path="/budget/:id?"
+							component={BudgetEditPage}
+						/>
+						<Route
+							path="/recurring-transactions"
+							component={RecurringTransactions}
+						/>
+						<Route
+							path="/recurring-transaction/:id?"
+							component={RecurringTransactionEdit}
+						/>
+						<Route
+							path="/settings"
+							component={SettingsPage}
+						/>
+						<Route
+							path="/profiles"
+							component={ProfilesPage}
+						/>
+						<Route
+							path="/profile/:id?"
+							component={ProfileEditPage}
+						/>
+						<Route
+							path="/transactions"
+							component={TransactionsPage}
+						/>
+						<Route
+							path="/transaction/:id?"
+							component={TransactionEditPage}
+						/>
+						<Route
+							path="/trends"
+							component={TrendsPage}
+						/>
+						<Route
+							exact
+							path="/"
+							component={DailyActivityPage}
+						/>
+					</>
+				</ActiveProfileGuard>
 			</IonRouterOutlet>
 		</Suspense>
 	);
