@@ -15,12 +15,16 @@ function ActiveProfileGuard(props: Props) {
 	} = props;
 	const profile = useContext(ProfileContext);
 
-	return (
-		(profile && !negate) ?
-			children : (
+	if(
+		(negate && profile) ||
+		(!negate && !profile)
+	) {
+		return (
 			<Redirect
 				to="/getting-started"
 			/>
-		)
-	);
+		);
+	}
+
+	return children;
 }

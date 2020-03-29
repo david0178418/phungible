@@ -78,69 +78,111 @@ function Routes(props: Props) {
 					path="/welcome"
 					component={WelcomePage}
 				/>
-				<ActiveProfileGuard negate>
-					<Route
-						path="/login"
-						component={LoginPage}
-					/>
-				</ActiveProfileGuard>
-				<ActiveProfileGuard>
-					<>
-						<Route
-							path="/accounts"
-							component={AccountsPage}
-						/>
-						<Route
-							path="/account/:id?"
-							component={AccountEditPage}
-						/>
-						<Route
-							path="/budgets"
-							component={BudgetsPage}
-						/>
-						<Route
-							path="/budget/:id?"
-							component={BudgetEditPage}
-						/>
-						<Route
-							path="/recurring-transactions"
-							component={RecurringTransactions}
-						/>
-						<Route
-							path="/recurring-transaction/:id?"
-							component={RecurringTransactionEdit}
-						/>
-						<Route
-							path="/settings"
-							component={SettingsPage}
-						/>
-						<Route
-							path="/profiles"
-							component={ProfilesPage}
-						/>
-						<Route
-							path="/profile/:id?"
-							component={ProfileEditPage}
-						/>
-						<Route
-							path="/transactions"
-							component={TransactionsPage}
-						/>
-						<Route
-							path="/transaction/:id?"
-							component={TransactionEditPage}
-						/>
-						<Route
-							path="/trends"
-							component={TrendsPage}
-						/>
-						<Route
-							exact
-							path="/"
-							component={DailyActivityPage}
-						/>
-					</>
-				</ActiveProfileGuard>
+				<Route
+					path="/login"
+					render={() => (
+						<ActiveProfileGuard negate>
+							<LoginPage />
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/accounts"
+					render={() => (
+						<ActiveProfileGuard>
+							<AccountsPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/account/:id?"
+					component={AccountEditPage}
+				/>
+				<Route
+					path="/budgets"
+					render={() => (
+						<ActiveProfileGuard>
+							<BudgetsPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/budget/:id?"
+					render={() => (
+						<ActiveProfileGuard>
+							<BudgetEditPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/recurring-transactions"
+					render={() => (
+						<ActiveProfileGuard>
+							<RecurringTransactions/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/recurring-transaction/:id?"
+					render={() => (
+						<ActiveProfileGuard>
+							<RecurringTransactionEdit/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/settings"
+					render={() => (
+						<ActiveProfileGuard>
+							<SettingsPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/profiles"
+					render={() => (
+						<ActiveProfileGuard>
+							<ProfilesPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/profile/:id?"
+					render={() => (
+						<ActiveProfileGuard>
+							<ProfileEditPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/transactions"
+					render={() => (
+						<ActiveProfileGuard>
+							<TransactionsPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/transaction/:id?"
+					render={() => (
+						<ActiveProfileGuard>
+							<TransactionEditPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					path="/trends"
+					render={() => (
+						<ActiveProfileGuard>
+							<TrendsPage/>
+						</ActiveProfileGuard>
+					)}
+				/>
+				<Route
+					exact
+					path="/"
+					component={DailyActivityPage}
+				/>
 			</IonRouterOutlet>
 		</Suspense>
 	);
