@@ -1,10 +1,13 @@
 // import { firestore } from 'firebase/app';
 
 export
-type Docs = Account |
+type ProfileDocs = Account |
 	Budget |
 	RecurringTransaction |
-	Transaction |
+	Transaction;
+
+export
+type Docs = ProfileDocs |
 	Profile |
 	UserMeta;
 

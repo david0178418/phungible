@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
-import { getCollectionRef } from './api';
+import { getCollectionRef, getDocRef } from './api';
 import { tuple } from './utils';
 import equal from 'fast-deep-equal';
 import { ProfileContext } from './contexts';
+import { Collection, UserMeta } from './interfaces';
 
 export
 function useStatePropSetter<T>(createFn: T | (() => T)) {
@@ -27,7 +28,6 @@ function useCollection<T>(path: string) {
 	const [collection, setCollection] = useState<T[]>([]);
 	const profile = useContext(ProfileContext);
 
-
 	useEffect(() => {
 		if(!profile) {
 			return;
@@ -50,6 +50,29 @@ function useCollection<T>(path: string) {
 	[profile]);
 
 	return collection;
+}
+
+export
+function useUserMetaDoc(userId: string) {
+	const [userMeta, setUserMeta] = useState<UserMeta | null>(null);
+
+	useEffect(() => {
+		if(!userId) {
+			return;
+		}
+
+		const unsub = getDocRef(`${Collection.UserMetas}/${userId}`)
+			.onSnapshot(snap => {
+				console.log(snap.data());
+				setUserMeta(
+					snap.data() as UserMeta,
+				);
+			});
+
+		return unsub;
+	}, [userId]);
+
+	return userMeta;
 }
 
 export

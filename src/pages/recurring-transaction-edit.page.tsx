@@ -19,7 +19,7 @@ import {
 import {
 	createRecurringTransaction,
 	getDoc,
-	saveDoc,
+	saveProfileDoc,
 } from '@common/api';
 import { format, parse, startOfDay } from 'date-fns';
 import { EditPage } from '@components/edit-page';
@@ -103,7 +103,7 @@ function RecurringTransactionEditPage() {
 			return;
 		}
 
-		const result = await saveDoc(transaction, Collection.RecurringTransactions);
+		const result = await saveProfileDoc(transaction, Collection.RecurringTransactions);
 		result && goBack();
 	}
 

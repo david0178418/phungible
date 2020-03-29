@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createTransaction, saveDoc, getDoc } from '@common/api';
+import { createTransaction, saveProfileDoc, getDoc } from '@common/api';
 import { Collection, Transaction } from '@common/interfaces';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { EditPage } from '@components/edit-page';
@@ -39,7 +39,7 @@ function TransactionEditPage() {
 			return;
 		}
 
-		const result = await saveDoc(transaction, Collection.Transactions);
+		const result = await saveProfileDoc(transaction, Collection.Transactions);
 		result && goBack();
 	}
 

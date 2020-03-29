@@ -11,6 +11,7 @@ import {
 	Transaction,
 	Profile,
 	UserMeta,
+	ProfileDocs,
 } from './interfaces';
 import { firestore, auth } from 'firebase/app';
 import { startOfDay } from 'date-fns';
@@ -74,7 +75,7 @@ async function userCheck() {
 	const a = auth();
 
 	if(a.currentUser) {
-		return;
+		return true;
 	}
 
 	const loader = await loadingController.create({
@@ -85,18 +86,26 @@ async function userCheck() {
 
 	const credential = await a.signInAnonymously();
 
+	let userMeta: UserMeta | false = false;
+
 	if(credential.user) {
 		// TODO Move chunks of this to server side
-		await createUserMetaDoc(credential.user.uid);
-		credential.user.updateProfile({
-			displayName: 'Rando' + ((Math.random() * 10000) | 0),
-		});
+		userMeta = await createUserMetaDoc(credential.user.uid);
+
+		if(userMeta) {
+			credential.user.updateProfile({
+				displayName: 'Rando' + ((Math.random() * 10000) | 0),
+			});
+		}
+
 	}
 
 	await loader.remove();
+
+	return userMeta;
 }
 
-async function createUserMetaDoc(userId: string) {
+async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {
 	const profile: Profile = {
 		...createProfile(),
 		name: 'Default',
@@ -105,20 +114,55 @@ async function createUserMetaDoc(userId: string) {
 
 	const savedProfile = await saveDoc(profile, Collection.Profiles);
 
-	if(!savedProfile) {
+	if(!(savedProfile && savedProfile.id)) {
 		return false;
 	}
 
-	await db.doc(`${Collection.UserMetas}/${userId}`).set({
+	const userMetaDoc: UserMeta = {
 		id: userId,
 		userId,
 		currentProfileId: savedProfile.id,
-	});
+	};
+
+	try {
+		await db.doc(`${Collection.UserMetas}/${userId}`).set(userMetaDoc);
+	} catch {
+		return false;
+	}
+
+	return userMetaDoc;
+}
+
+export
+async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Collection) {
+	const userMeta = await userCheck();
+
+	let profileId = doc.profileId;
+
+	if(userMeta === false) {
+		throw new Error('Error setting profile');
+	} else if(userMeta !== true) {
+		profileId = userMeta.currentProfileId;
+	}
+
+	const id = doc.id || db.collection(collection).doc().id;
+
+	try {
+		const newDoc: T = {
+			...doc,
+			profileId,
+			id,
+		};
+		await db.doc(`${collection}/${id}`).set(newDoc);
+		return newDoc;
+	} catch(e) {
+		console.error(`Failed to save doc ${doc.id} in collection ${collection}`, e);
+		return false;
+	}
 }
 
 export
 async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
-	await userCheck();
 	const id = doc.id || db.collection(collection).doc().id;
 
 	try {

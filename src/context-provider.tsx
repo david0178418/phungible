@@ -11,16 +11,15 @@ import {
 import {
 	Account,
 	Collection,
-	UserMeta,
 	Profile,
 	Budget,
 } from '@common/interfaces';
 import {
 	getCollectionRef,
-	getUserMeta,
 	getDoc,
 	formatCollection,
 } from '@common/api';
+import { useUserMetaDoc } from '@common/hooks';
 
 interface Props {
 	children: ReactNode;
@@ -30,10 +29,10 @@ export
 function ContextProvider(props: Props) {
 	const [authLoaded, setAuthLoaded] = useState(false);
 	const [user, setUser] = useState<User | null>(null);
-	const [userMeta, setUserMeta] = useState<UserMeta | null>(null);
 	const [profile, setProfile] = useState<Profile | null>(null);
 	const [accounts, setAccounts] = useState<Account[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
+	const userMeta = useUserMetaDoc(user?.uid || '');
 
 	useEffect(() => {
 		auth().onAuthStateChanged(async newUser => {
@@ -42,11 +41,6 @@ function ContextProvider(props: Props) {
 		});
 	}, []);
 
-	useEffect(() => {
-		(async () => {
-			user && setUserMeta(await getUserMeta());
-		})();
-	}, [user]);
 
 	useEffect(() => {
 		(async () => {

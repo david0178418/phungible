@@ -11,7 +11,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
 import { RepetitionSelector } from '@components/repetition-selector';
 import { EditPage } from '@components/edit-page';
-import { createBudget, getDoc, saveDoc } from '@common/api';
+import { createBudget, getDoc, saveProfileDoc } from '@common/api';
 import { Budget, Collection, RepeatType } from '@common/interfaces';
 import { AccountSelector } from '@components/account-selector';
 import { format, parse, startOfDay } from 'date-fns';
@@ -85,7 +85,7 @@ function BudgetEditPage() {
 			return;
 		}
 
-		const result = await saveDoc(budget, Collection.Budgets);
+		const result = await saveProfileDoc(budget, Collection.Budgets);
 		result && goBack();
 	}
 
