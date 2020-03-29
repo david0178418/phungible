@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -28,15 +28,18 @@ import { RepetitionSelector } from '@components/repetition-selector';
 import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { useStatePropSetter } from '@common/hooks';
 import { MoneyInput } from '@components/money-input';
+import { UserMetaContext } from '@common/contexts';
 
 export
 function RecurringTransactionEditPage() {
-	const [original, setOriginal] = useState(createRecurringTransaction);
+	const userMeta = useContext(UserMetaContext);
+	const profileId = userMeta?.currentProfileId || '';
+	const [original, setOriginal] = useState(() => createRecurringTransaction(profileId));
 	const [
 		transaction,
 		setTransaction,
 		setProp,
-	] = useStatePropSetter(createRecurringTransaction);
+	] = useStatePropSetter(() => createRecurringTransaction(profileId));
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const {goBack} = useHistory();

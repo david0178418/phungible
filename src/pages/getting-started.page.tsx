@@ -145,7 +145,7 @@ function GettingStartedPage() {
 						</IonList>
 					</>
 				)}
-				{step === 5 && (
+				{step === 4 && (
 					<>
 						You're all done.  Enjoy!
 						
@@ -188,7 +188,7 @@ function GettingStartedPage() {
 								Back
 							</IonButton>
 						)}
-						{step !== 3 && (
+						{step !== 4 && (
 							<IonButton
 								fill="solid"
 								color="primary"
@@ -202,7 +202,6 @@ function GettingStartedPage() {
 							<IonButton
 								fill="solid"
 								color="primary"
-								disabled={!canProgress}
 								onClick={goBack}
 							>
 								Finish

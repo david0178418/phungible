@@ -128,7 +128,7 @@ function previousOccurance(repeatRuleProps: RepeatRuleProps) {
 			interval: 1,
 		})
 		.before(new Date())
-		.toISOString();
+		?.toISOString() || '';
 	}
 
 	if(repeatType === RepeatType.Interval) {

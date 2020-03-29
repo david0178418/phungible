@@ -204,7 +204,7 @@ function createAccount(): Account {
 }
 
 export
-function createBudget(): Budget {
+function createBudget(profileId: string): Budget {
 	return {
 		amount: 0,
 		exceptions: [],
@@ -213,7 +213,7 @@ function createBudget(): Budget {
 		name: '',
 		notes: '',
 		ownerId: '',
-		profileId: '',
+		profileId,
 		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnit.Week,
 		repeatValues: [],
@@ -223,7 +223,7 @@ function createBudget(): Budget {
 }
 
 export
-function createRecurringTransaction(): RecurringTransaction {
+function createRecurringTransaction(profileId: string): RecurringTransaction {
 	return {
 		amount: 0,
 		exceptions: [],
@@ -231,7 +231,7 @@ function createRecurringTransaction(): RecurringTransaction {
 		labels: [],
 		name: '',
 		notes: '',
-		profileId: '',
+		profileId,
 		repeatType: RepeatType.Dates,
 		repeatUnit: RepeatUnit.Month,
 		repeatValues: [],

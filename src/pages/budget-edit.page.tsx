@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -16,11 +16,14 @@ import { Budget, Collection, RepeatType } from '@common/interfaces';
 import { AccountSelector } from '@components/account-selector';
 import { format, parse, startOfDay } from 'date-fns';
 import { MoneyInput } from '@components/money-input';
+import { UserMetaContext } from '@common/contexts';
 
 export
 function BudgetEditPage() {
-	const [originalBudget, setOriginalBudget] = useState(createBudget);
-	const [budget, setBudget] = useState(createBudget);
+	const userMeta = useContext(UserMetaContext);
+	const profileId = userMeta?.currentProfileId || '';
+	const [originalBudget, setOriginalBudget] = useState(() => createBudget(profileId));
+	const [budget, setBudget] = useState(() => createBudget(profileId));
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const {goBack} = useHistory();
