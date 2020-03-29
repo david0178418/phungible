@@ -59,28 +59,6 @@ function GettingStartedPage() {
 					<>
 						<IonText>
 							<h1>
-								Welcome
-							</h1>
-							<p>
-								Thank you for using Phungible!
-							</p>
-							<p>
-								We aim to provide simple budget management that doesn't require an accounting degree or giving up any sensitive account details.
-							</p>
-							<p>
-								Budget planning is hard. Phungible aims to make planning easier by allowing you to take control of your financial future if you stick to your plan today.
-							</p>
-							<p>
-								Let's get started!
-							</p>
-						</IonText>
-					</>
-				)}
-
-				{step === 2 && (
-					<>
-						<IonText>
-							<h1>
 								<IonIcon slot="end" icon={peopleOutline}/> Accounts
 							</h1>
 							<p>
@@ -105,7 +83,7 @@ function GettingStartedPage() {
 					</>
 				)}
 
-				{step === 3 && (
+				{step === 2 && (
 					<>
 						<IonText>
 							<h1>
@@ -137,7 +115,7 @@ function GettingStartedPage() {
 					</>
 				)}
 
-				{step === 4 && (
+				{step === 3 && (
 					<>
 						<IonText>
 							<h1>
@@ -211,7 +189,7 @@ function GettingStartedPage() {
 								Back
 							</IonButton>
 						)}
-						{step !== 4 && (
+						{step !== 3 && (
 							<IonButton
 								fill="solid"
 								color="primary"
@@ -221,7 +199,7 @@ function GettingStartedPage() {
 								Next
 							</IonButton>
 						)}
-						{step === 5 && (
+						{step === 4 && (
 							<IonButton
 								fill="solid"
 								color="primary"

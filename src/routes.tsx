@@ -181,7 +181,16 @@ function Routes(props: Props) {
 				<Route
 					exact
 					path="/"
-					component={DailyActivityPage}
+					render={() => (
+						<>
+							<ActiveProfileGuard noredirect>
+								<DailyActivityPage />
+							</ActiveProfileGuard>
+							<ActiveProfileGuard noredirect negate>
+								<WelcomePage />
+							</ActiveProfileGuard>
+						</>
+					)}
 				/>
 			</IonRouterOutlet>
 		</Suspense>

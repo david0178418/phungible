@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 interface Props {
 	negate?: boolean;
+	noredirect?: boolean;
 	children: JSX.Element;
 }
 
@@ -11,13 +12,16 @@ export
 function ActiveProfileGuard(props: Props) {
 	const {
 		negate,
+		noredirect,
 		children,
 	} = props;
 	const profile = useContext(ProfileContext);
 
 	if(
-		(negate && profile) ||
-		(!negate && !profile)
+		!noredirect && (
+			(negate && profile) ||
+			(!negate && !profile)
+		)
 	) {
 		return (
 			<Redirect
