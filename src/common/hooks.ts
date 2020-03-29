@@ -63,7 +63,6 @@ function useUserMetaDoc(userId: string) {
 
 		const unsub = getDocRef(`${Collection.UserMetas}/${userId}`)
 			.onSnapshot(snap => {
-				console.log(snap.data());
 				setUserMeta(
 					snap.data() as UserMeta,
 				);
