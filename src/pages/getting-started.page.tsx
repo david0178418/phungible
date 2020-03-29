@@ -38,10 +38,9 @@ function GettingStartedPage() {
 	const { goBack } = useHistory();
 
 	const canProgress = !!(
-		(step === 1) ||
-		(step === 2 && accounts.length) ||
-		(step === 3 && recurringTransactions.length) ||
-		(step === 4 && budgets.length)
+		(step === 1 && accounts.length) ||
+		(step === 2 && recurringTransactions.length) ||
+		(step === 3 && budgets.length)
 	);
 
 	return (
