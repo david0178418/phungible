@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 const {
 	NODE_ENV = '',
@@ -79,5 +80,35 @@ module.exports = {
 			title: IS_DEV ? 'Development' : 'ShopLystr',
 			template: './src/index.html',
 		}),
+		new GenerateSW({// Do not precache images
+			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+
+			// Define runtime caching rules.
+			runtimeCaching: [{
+			  // Match any request that ends with .png, .jpg, .jpeg or .svg.
+				urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+				// Apply a cache-first strategy.
+				handler: 'CacheFirst',
+				options: {
+					// Use a custom cache name.
+					cacheName: 'images',
+					// Only cache 10 images.
+					expiration: {
+						maxEntries: 10,
+					},
+				},
+			}],
+		}),
+		// new InjectManifest({
+		// 	swSrc: './src/service-worker.js',
+		// 	swDest: 'service-worker.js',
+		// 	exclude: [
+		// 		/\.map$/,
+		// 		/manifest$/,
+		// 		/\.htaccess$/,
+		// 		/service-worker\.js$/,
+		// 		/sw\.js$/,
+		// 	  ],
+		// }),
 	],
 };

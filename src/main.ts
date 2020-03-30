@@ -7,6 +7,11 @@ render(
 	document.getElementById('app'),
 );
 
+// Check that service workers are supported
+if ('serviceWorker' in navigator) {
+	import('./sw-loader').then((x) => x.init());
+}
+
 
 // if (environment.production) {
 // 	setTimeout(() => {
