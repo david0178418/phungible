@@ -190,7 +190,7 @@ async function getUserMeta() {
 }
 
 export
-function createAccount(): Account {
+function createAccount(profileId: string): Account {
 	return {
 		date: startOfDay(new Date()).toISOString(),
 		balanceUpdateHistory: [],
@@ -198,7 +198,7 @@ function createAccount(): Account {
 		name: '',
 		notes: '',
 		ownerId: '',
-		profileId: '',
+		profileId,
 		type: AccountType.Savings,
 	};
 }

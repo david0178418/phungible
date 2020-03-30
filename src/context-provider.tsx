@@ -17,7 +17,6 @@ import {
 import {
 	getCollectionRef,
 	getDoc,
-	formatCollection,
 } from '@common/api';
 import { useUserMetaDoc } from '@common/hooks';
 
@@ -48,21 +47,37 @@ function ContextProvider(props: Props) {
 				return;
 			}
 
+			console.log(111);
+
 			setProfile(await getDoc(`${Collection.Profiles}/${userMeta.currentProfileId}`));
 
-			setAccounts(
-				await formatCollection<Account>(
-					getCollectionRef(Collection.Accounts)
-						.where('profileId', '==', userMeta.currentProfileId),
-				),
-			);
+			const accountsUnsub = getCollectionRef(Collection.Accounts)
+				.where('profileId', '==', userMeta.currentProfileId)
 
-			setBudgets(
-				await formatCollection<Budget>(
-					getCollectionRef(Collection.Budgets)
-						.where('profileId', '==', userMeta.currentProfileId),
-				),
-			);
+				.orderBy('date', 'desc')
+				.onSnapshot(snap => {
+					setAccounts(
+						snap.docs.map(doc =>
+							doc.data() as Account,
+						),
+					);
+				});
+
+			const budgetsUnsub = getCollectionRef(Collection.Budgets)
+				.where('profileId', '==', userMeta.currentProfileId)
+				.orderBy('date', 'desc')
+				.onSnapshot(snap => {
+					setBudgets(
+						snap.docs.map(doc =>
+							doc.data() as Budget,
+						),
+					);
+				});
+			
+			return () => {
+				accountsUnsub();
+				budgetsUnsub();
+			};
 		})();
 	}, [userMeta]);
 

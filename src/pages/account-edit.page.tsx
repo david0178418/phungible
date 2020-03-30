@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -26,11 +26,14 @@ import { createAccount, getDoc, saveProfileDoc } from '@common/api';
 import { Collection, Account, AccountType } from '@common/interfaces';
 import { MoneyInput } from '@components/money-input';
 import { moneyFormat } from '@common/utils';
+import { UserMetaContext } from '@common/contexts';
 
 export
 function AccountEditPage() {
-	const [originalAccount, setOriginalAccount] = useState(createAccount);
-	const [account, setAccount] = useState(createAccount);
+	const userMeta = useContext(UserMetaContext);
+	const profileId = userMeta?.currentProfileId || '';
+	const [originalAccount, setOriginalAccount] = useState(() => createAccount(profileId));
+	const [account, setAccount] = useState(() => createAccount(profileId));
 	const [hasChanged, setHasChanged] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 	const [balanceAmount, setBalanceAmount] = useState(0);
