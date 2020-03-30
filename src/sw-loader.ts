@@ -52,8 +52,10 @@ function init() {
 		// event listener above.
 		// Note: for this to work, you have to add a message
 		// listener in your service worker. See below.
-		// @ts-ignore
-		messageSW(event.originalEvent.target, {type: 'SKIP_WAITING'});
+
+		if(event.sw) {
+			messageSW(event.sw, {type: 'SKIP_WAITING'});
+		}
 
 		const toast = await toastController.create({
 			duration: 3000,
