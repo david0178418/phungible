@@ -81,7 +81,14 @@ module.exports = {
 			template: './src/index.html',
 		}),
 		new GenerateSW({// Do not precache images
-			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+			exclude: [
+				/\.(?:png|jpg|jpeg|svg)$/,
+				/\.map$/,
+				/manifest$/,
+				/\.htaccess$/,
+				/service-worker\.js$/,
+				/sw\.js$/,
+			],
 
 			// Define runtime caching rules.
 			runtimeCaching: [{
