@@ -2,7 +2,7 @@
 	"name": "Phungible",
 	"short_name": "Phungible",
 	"theme_color": "#0097A7",
-	"background_color": "#FF9800",
+	"background_color": "#0097A7",
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/",
