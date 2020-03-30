@@ -36,13 +36,13 @@ function useCollection<T>(path: string) {
 		const unsub = getCollectionRef(path)
 			.where('profileId', '==', profile?.id)
 			.orderBy('date', 'desc')
-			.onSnapshot(snap =>
+			.onSnapshot(snap => {
 				setCollection(
 					snap.docs.map(doc =>
 						doc.data() as T,
 					),
-				),
-			);
+				);
+			});
 
 		return unsub;
 	},

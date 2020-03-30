@@ -18,12 +18,12 @@ function ActiveProfileGuard(props: Props) {
 	const profile = useContext(ProfileContext);
 
 	if(
-		!noredirect && (
-			(negate && profile) ||
-			(!negate && !profile)
-		)
+		(negate && profile) ||
+		(!negate && !profile)
 	) {
-		return (
+		return noredirect ? (
+			null
+		) : (
 			<Redirect
 				to="/getting-started"
 			/>

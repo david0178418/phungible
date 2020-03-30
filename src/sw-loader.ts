@@ -25,7 +25,6 @@ function init() {
 			message: 'An update is available!',
 			buttons: [{
 				text: 'Update',
-				role: 'cancel',
 				handler: () => {
 					toast.dismiss();
 					upgrade(event);
