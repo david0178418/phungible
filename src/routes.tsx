@@ -41,8 +41,9 @@ const TransactionEditPage = prefetch(() => import('@pages/transaction-edit.page'
 const TrendsPage = prefetch(() => import('@pages/trends.page'));
 const WelcomePage = prefetch(() => import('@pages/welcome.page'));
 const HelpPage = prefetch(() => import('@pages/help.page'));
-const LoginPage = prefetch(() => import('@pages/login.page'));
-const RegistrationPage = prefetch(() => import('@pages/registration.page'));
+
+const RegistrationPage = lazy(() => import('@pages/registration.page'));
+const LoginPage = lazy(() => import('@pages/login.page'));
 const GettingStartedPage = lazy(() => import('@pages/getting-started.page'));
 
 const fullScreenRoutes = [
