@@ -34,10 +34,26 @@ function WelcomePage() {
 					</p>
 					<p>
 						<IonButton
+							fill="clear"
+							expand="full"
 							routerLink="/getting-started"
 							routerDirection="forward"
 						>
 							Let's get started!
+						</IonButton>
+						<IonButton
+							fill="clear"
+							expand="full"
+							routerLink="/login"
+							routerDirection="forward"
+						>
+							Login
+						</IonButton>
+						<IonButton
+							fill="clear"
+							expand="full"
+						>
+							Register
 						</IonButton>
 					</p>
 				</IonText>

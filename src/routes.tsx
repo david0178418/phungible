@@ -46,6 +46,7 @@ const GettingStartedPage = lazy(() => import('@pages/getting-started.page'));
 
 const fullScreenRoutes = [
 	'/getting-started',
+	'/login',
 ];
 
 interface Props {
