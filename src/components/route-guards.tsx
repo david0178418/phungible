@@ -25,7 +25,7 @@ function ActiveProfileGuard(props: Props) {
 			null
 		) : (
 			<Redirect
-				to="/getting-started"
+				to="/"
 			/>
 		);
 	}

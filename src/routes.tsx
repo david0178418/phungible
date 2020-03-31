@@ -1,7 +1,7 @@
 import React, { lazy, useEffect, Suspense } from 'react';
 import { IonRouterOutlet, IonLoading } from '@ionic/react';
 import { Route, useLocation } from 'react-router-dom';
-import { ActiveProfileGuard, RegisteredUserLoginGuard } from '@components/route-guards';
+import { ActiveProfileGuard } from '@components/route-guards';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -85,17 +85,13 @@ function Routes(props: Props) {
 				<Route
 					path="/login"
 					render={() => (
-						<RegisteredUserLoginGuard negate>
-							<LoginPage />
-						</RegisteredUserLoginGuard>
+						<LoginPage />
 					)}
 				/>
 				<Route
 					path="/register"
 					render={() => (
-						<RegisteredUserLoginGuard negate>
-							<RegistrationPage />
-						</RegisteredUserLoginGuard>
+						<RegistrationPage />
 					)}
 				/>
 				<Route

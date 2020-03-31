@@ -13,7 +13,7 @@ import {
 	UserMeta,
 	ProfileDocs,
 } from './interfaces';
-import { firestore, auth } from 'firebase/app';
+import { firestore, auth, User } from 'firebase/app';
 import { startOfDay } from 'date-fns';
 import { loadingController } from '@ionic/core';
 
@@ -84,25 +84,33 @@ async function userCheck() {
 
 	await loader.present();
 
-	const credential = await a.signInAnonymously();
+	const { user } = await a.signInAnonymously();
 
 	let userMeta: UserMeta | false = false;
 
-	if(credential.user) {
+	if(user) {
 		// TODO Move chunks of this to server side
-		userMeta = await createUserMetaDoc(credential.user.uid);
-
-		if(userMeta) {
-			credential.user.updateProfile({
-				displayName: 'Rando' + ((Math.random() * 10000) | 0),
-			});
-		}
-
+		userMeta = await initUser(user);
 	}
 
 	await loader.remove();
 
 	return userMeta;
+}
+
+export
+async function initUser(user: User) {
+	const userMeta = await createUserMetaDoc(user.uid);
+
+	if(userMeta) {
+		await user.updateProfile({
+			displayName: 'Rando' + ((Math.random() * 10000) | 0),
+		});
+
+		return userMeta;
+	} else {
+		return false;
+	}
 }
 
 async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {

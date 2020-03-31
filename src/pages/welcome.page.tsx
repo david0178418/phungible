@@ -1,5 +1,4 @@
-import React, {
-} from 'react';
+import React, { useContext } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -9,9 +8,12 @@ import {
 	IonText,
 	IonButton,
 } from '@ionic/react';
+import { UserContext } from '@common/contexts';
 
 export
 function WelcomePage() {
+	const user = useContext(UserContext);
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -41,21 +43,37 @@ function WelcomePage() {
 						>
 							Let's get started!
 						</IonButton>
-						<IonButton
-							fill="clear"
-							expand="full"
-							routerLink="/login"
-							routerDirection="forward"
-						>
-							Login
-						</IonButton>
-						<IonButton
-							fill="clear"
-							expand="full"
-						>
-							Register
-						</IonButton>
+						{!user && (
+							<IonButton
+								fill="clear"
+								expand="full"
+								routerLink="/register"
+								routerDirection="forward"
+							>
+								Register
+							</IonButton>
+						)}
+						{!user?.email  && (
+							<IonButton
+								fill="clear"
+								expand="full"
+								routerLink="/login"
+								routerDirection="forward"
+							>
+								Login
+							</IonButton>
+						)}
 					</p>
+					{!!user?.displayName  && (
+						<p>
+							Signed in as: {user.displayName}
+						</p>
+					)}
+					{!!user?.email  && (
+						<p>
+							Email: {user.email}
+						</p>
+					)}
 				</IonText>
 			</IonContent>
 		</IonPage>

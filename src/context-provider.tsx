@@ -31,11 +31,16 @@ function ContextProvider(props: Props) {
 	const [profile, setProfile] = useState<Profile | null>(null);
 	const [accounts, setAccounts] = useState<Account[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
+	const [subs, setSubs] = useState<Array<() => void>>([]);
 	const userMeta = useUserMetaDoc(user?.uid || '');
 
 	useEffect(() => {
 		auth().onAuthStateChanged(async newUser => {
-			setUser(newUser);
+			if(newUser) {
+				setUser(newUser);
+			} else {
+				setUser(null);
+			}
 			setAuthLoaded(true);
 		});
 	}, []);
@@ -43,11 +48,14 @@ function ContextProvider(props: Props) {
 
 	useEffect(() => {
 		(async () => {
+			subs.map(sub => sub());
+
 			if(!userMeta?.currentProfileId) {
+				setAccounts([]);
+				setBudgets([]);
+				setProfile(null);
 				return;
 			}
-
-			console.log(111);
 
 			setProfile(await getDoc(`${Collection.Profiles}/${userMeta.currentProfileId}`));
 
@@ -74,11 +82,17 @@ function ContextProvider(props: Props) {
 					);
 				});
 			
+			setSubs([
+				accountsUnsub,
+				budgetsUnsub,
+			]);
+			
 			return () => {
 				accountsUnsub();
 				budgetsUnsub();
 			};
 		})();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userMeta]);
 
 	if(!authLoaded) {

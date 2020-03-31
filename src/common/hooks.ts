@@ -58,6 +58,7 @@ function useUserMetaDoc(userId: string) {
 
 	useEffect(() => {
 		if(!userId) {
+			setUserMeta(null);
 			return;
 		}
 
