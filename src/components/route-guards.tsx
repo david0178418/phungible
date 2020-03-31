@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ProfileContext } from '@common/contexts';
+import { ProfileContext, UserContext } from '@common/contexts';
 import { Redirect } from 'react-router-dom';
 
 interface Props {
@@ -26,6 +26,31 @@ function ActiveProfileGuard(props: Props) {
 		) : (
 			<Redirect
 				to="/getting-started"
+			/>
+		);
+	}
+
+	return children;
+}
+
+export
+function RegisteredUserLoginGuard(props: Props) {
+	const {
+		negate,
+		noredirect,
+		children,
+	} = props;
+	const user = useContext(UserContext);
+
+	if(
+		(negate && user?.email) ||
+		(!negate && !user?.email)
+	) {
+		return noredirect ? (
+			null
+		) : (
+			<Redirect
+				to="/login"
 			/>
 		);
 	}

@@ -24,7 +24,7 @@ import {
 import { logInOutline, personOutline } from 'ionicons/icons';
 
 export
-function LoginPage() {
+function RegistrationPage() {
 	return (
 		<IonPage>
 			<IonHeader>
@@ -43,7 +43,8 @@ function LoginPage() {
 						<IonCol sizeLg="6" offsetLg="3">
 							<IonCard>
 								<IonCardHeader>
-									Login
+									<IonIcon icon={logInOutline}/>
+									Register
 								</IonCardHeader>
 								<IonCardContent>
 									<IonItem>
@@ -64,17 +65,17 @@ function LoginPage() {
 									<IonToolbar>
 										<IonButtons slot="start">
 											<IonButton
-												routerLink="/register"
+												routerLink="/login"
 												routerDirection="none"
 											>
-												<IonIcon icon={personOutline}/>
-												Create an account
+												<IonIcon icon={logInOutline}/>
+												I have an account
 											</IonButton>
 										</IonButtons>
 										<IonButtons slot="end">
 											<IonButton color="primary">
-												<IonIcon icon={logInOutline}/>
-												Login
+												<IonIcon icon={personOutline}/>
+												Register
 											</IonButton>
 										</IonButtons>
 									</IonToolbar>
@@ -88,4 +89,4 @@ function LoginPage() {
 	);
 }
 
-export default LoginPage;
+export default RegistrationPage;

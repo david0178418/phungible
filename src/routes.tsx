@@ -1,7 +1,7 @@
 import React, { lazy, useEffect, Suspense } from 'react';
 import { IonRouterOutlet, IonLoading } from '@ionic/react';
 import { Route, useLocation } from 'react-router-dom';
-import { ActiveProfileGuard } from '@components/route-guards';
+import { ActiveProfileGuard, RegisteredUserLoginGuard } from '@components/route-guards';
 
 interface ComponentImport {
     default: () => JSX.Element;
@@ -42,11 +42,13 @@ const TrendsPage = prefetch(() => import('@pages/trends.page'));
 const WelcomePage = prefetch(() => import('@pages/welcome.page'));
 const HelpPage = prefetch(() => import('@pages/help.page'));
 const LoginPage = prefetch(() => import('@pages/login.page'));
+const RegistrationPage = prefetch(() => import('@pages/registration.page'));
 const GettingStartedPage = lazy(() => import('@pages/getting-started.page'));
 
 const fullScreenRoutes = [
 	'/getting-started',
 	'/login',
+	'/register',
 ];
 
 interface Props {
@@ -82,9 +84,17 @@ function Routes(props: Props) {
 				<Route
 					path="/login"
 					render={() => (
-						<ActiveProfileGuard negate>
+						<RegisteredUserLoginGuard negate>
 							<LoginPage />
-						</ActiveProfileGuard>
+						</RegisteredUserLoginGuard>
+					)}
+				/>
+				<Route
+					path="/register"
+					render={() => (
+						<RegisteredUserLoginGuard negate>
+							<RegistrationPage />
+						</RegisteredUserLoginGuard>
 					)}
 				/>
 				<Route
