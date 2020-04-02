@@ -48,14 +48,27 @@ function SettingsPage() {
 					<p>
 						Signed in as {user?.displayName}
 					</p>
-					<p>
-						Email: {user?.email} 
-					</p>
+					{user?.email && (
+						<p>
+							Email: {user?.email} 
+						</p>
+					)}
 				</IonText>
-				<IonButton expand="full" onClick={signOut}>
-					Sign Out
-					<IonIcon icon={logOutOutline} />
-				</IonButton>
+				{!user?.email && (
+					<IonButton
+						expand="full"
+						routerLink="/register"
+						routerDirection="forward"
+					>
+						Register
+					</IonButton>
+				)}
+				{!user?.email && (
+					<IonButton expand="full" onClick={signOut}>
+						Sign Out
+						<IonIcon icon={logOutOutline} />
+					</IonButton>
+				)}
 				<IonList>
 					<IonItem routerLink="/getting-started" routerDirection="forward">
 						Run Getting Started
