@@ -46,10 +46,18 @@ function ContextProvider(props: Props) {
 				setUser(newUser);
 			} else {
 				setUser(null);
+				setAuthLoaded(true);
 			}
-			setAuthLoaded(true);
 		});
 	}, []);
+
+	useEffect(() => {
+		// TODO Needs rework? Assumes profile will
+		// be loaded if a user is present.
+		if(profile) {
+			setAuthLoaded(true);
+		}
+	}, [profile]);
 
 	useEffect(() => {
 		if(!userMeta?.lastOpenProfile) {

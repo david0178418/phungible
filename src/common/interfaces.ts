@@ -1,5 +1,11 @@
 // import { firestore } from 'firebase/app';
 
+declare var process : {
+	env: {
+		NODE_ENV: string
+	}
+};
+
 export
 type ProfileDocs = Account |
 	Budget |

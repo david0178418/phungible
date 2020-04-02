@@ -67,7 +67,11 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new DefinePlugin({}),
+		new DefinePlugin({
+			'process.env': {
+				'NODE_ENV': JSON.stringify(NODE_ENV),
+			},
+		}),
 		// TODO The copy plugin contents are being blown
 		// away on rebuild for some reason
 		new CleanWebpackPlugin(),

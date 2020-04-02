@@ -2,16 +2,17 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { App } from './app';
 
+const IS_DEV = process.env.NODE_ENV === 'development';
+
 render(
 	React.createElement(App),
 	document.getElementById('app'),
 );
 
 // Check that service workers are supported
-if ('serviceWorker' in navigator) {
+if(!IS_DEV && 'serviceWorker' in navigator) {
 	import('./sw-loader').then((x) => x.init());
 }
-
 
 // if (environment.production) {
 // 	setTimeout(() => {
