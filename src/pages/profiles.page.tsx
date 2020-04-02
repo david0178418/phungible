@@ -60,7 +60,11 @@ function ProfilesPage() {
 						{!!profile.sharedUsers.length && (
 							<IonNote>
 								<em>
-									Shared with {profile.sharedUsers.join(', ')}
+									Shared with {
+										Object.values(profile.sharedUsers)
+											.map(u => u.username)
+											.join(', ')
+									}
 								</em>
 							</IonNote>
 						)}

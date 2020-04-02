@@ -273,6 +273,6 @@ function createProfile(): Profile {
 		ownerId: '',
 		notes: '',
 		date: new Date().toISOString(),
-		sharedUsers: [],
+		sharedUsers: {},
 	};
 }

@@ -63,13 +63,20 @@ interface BalanceUpdateHistoryItem {
 }
 
 export
+interface SharedUserMap {
+	[userId: string]: {
+		username: string;
+	};
+}
+
+export
 interface Profile {
 	date: string;
 	id?: string;
 	name: string;
 	notes: string;
 	ownerId: string;
-	sharedUsers: string[];
+	sharedUsers: SharedUserMap;
 }
 
 export

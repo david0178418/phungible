@@ -27,13 +27,16 @@ export
 function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 	const [collection, setCollection] = useState<T[]>([]);
 	const profile = useContext(ProfileContext);
+	const [unsub, setUnsub] = useState<() => void>(() => () => null);
 
 	useEffect(() => {
+		unsub();
+
 		if(!profile) {
 			return;
 		}
 
-		const unsub = getCollectionRef(path)
+		const newUnsub = getCollectionRef(path)
 			.where('profileId', '==', profile?.id)
 			.orderBy('date', 'desc')
 			.onSnapshot(snap => {
@@ -44,7 +47,11 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 				);
 			});
 
-		return unsub;
+		setUnsub(newUnsub);
+
+		return () => {
+			unsub();
+		};
 	},
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	[profile]);
@@ -54,49 +61,86 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 
 export
 function useProfileCollection() {
-	const [collection, setCollection] = useState<Profile[]>([]);
+	const [ownedProfiles, setOwnedProfiles] = useState<Profile[]>([]);
+	const [sharedProfiles, setSharedProfiles] = useState<Profile[]>([]);
+	const [profiles, setProfiles] = useState<Profile[]>([]);
+	const [unsubs, setUnsubs] = useState<Array<() => void>>([]);
 	const user = useContext(UserContext);
 
 	useEffect(() => {
+		unsubs.map(u => u());
+
 		if(!user) {
 			return;
 		}
-		const unsub = getCollectionRef(Collection.Profiles)
+
+		const unsubOwned = getCollectionRef(Collection.Profiles)
 			.where('ownerId', '==', user?.uid)
 			.onSnapshot(snap => {
-				setCollection(
+				setOwnedProfiles(
 					snap.docs.map(doc =>
 						doc.data() as Profile,
 					),
 				);
 			});
 
-		return unsub;
+		const unsubShared = getCollectionRef(Collection.Profiles)
+			.where(`sharedUsers.${user?.uid}.username`, '==', user?.displayName)
+			.onSnapshot(snap => {
+				setSharedProfiles(
+					snap.docs.map(doc =>
+						doc.data() as Profile,
+					),
+				);
+			});
+
+		setUnsubs([
+			unsubOwned,
+			unsubShared,
+		]);
+
+		return () => {
+			unsubs.map(u => u());
+		};
 	},
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	[user]);
 
-	return collection;
+	useEffect(() => {
+		setProfiles(ownedProfiles.concat(sharedProfiles));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ownedProfiles, sharedProfiles]);
+
+	return profiles;
 }
 
 export
 function useUserMetaDoc(userId: string) {
 	const [userMeta, setUserMeta] = useState<UserMeta | null>(null);
+	const [unsub, setUnsub] = useState<() => void>(() => () => null);
 
 	useEffect(() => {
+		console.log(unsub);
+		unsub();
+
 		if(!userId) {
 			setUserMeta(null);
 			return;
 		}
 
-		const unsub = getDocRef(`${Collection.UserMetas}/${userId}`)
+		const newUnsub = getDocRef(`${Collection.UserMetas}/${userId}`)
 			.onSnapshot(snap => {
 				setUserMeta(
 					snap.data() as UserMeta,
 				);
 			});
 
-		return unsub;
+		setUnsub(newUnsub);
+
+		return () => {
+			unsub();
+		};
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userId]);
 
 	return userMeta;

@@ -35,8 +35,8 @@ function ContextProvider(props: Props) {
 	const [profile, setProfile] = useState<Profile | null>(null);
 	const [accounts, setAccounts] = useState<Account[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
-	const [subs, setSubs] = useState<Array<() => void>>([]);
 	const userMeta = useUserMetaDoc(user?.uid || '');
+	const [unsubs, setUnsubs] = useState<Array<() => void>>([]);
 
 	useEffect(() => {
 		setActiveProfileId(localStorage.getItem(LAST_PROFILE_ID_KEY) || '');
@@ -66,7 +66,7 @@ function ContextProvider(props: Props) {
 
 	useEffect(() => {
 		(async () => {
-			subs.map(sub => sub());
+			unsubs.map(u => u());
 
 			if(!activeProfileId) {
 				setAccounts([]);
@@ -80,7 +80,6 @@ function ContextProvider(props: Props) {
 
 			const accountsUnsub = getCollectionRef(Collection.Accounts)
 				.where('profileId', '==', activeProfileId)
-
 				.orderBy('date', 'desc')
 				.onSnapshot(snap => {
 					setAccounts(
@@ -101,14 +100,13 @@ function ContextProvider(props: Props) {
 					);
 				});
 			
-			setSubs([
+			setUnsubs([
 				accountsUnsub,
 				budgetsUnsub,
 			]);
 			
 			return () => {
-				accountsUnsub();
-				budgetsUnsub();
+				unsubs.map(u => u());
 			};
 		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
