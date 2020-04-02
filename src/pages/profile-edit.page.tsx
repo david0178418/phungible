@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createProfile, saveDoc, getDoc } from '@common/api';
-import { Collection, Profile } from '@common/interfaces';
+import { Collection, Profile, Username } from '@common/interfaces';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveProfile } from '@common/validations';
-import { IonItem, IonLabel, IonInput, IonTextarea, IonButton } from '@ionic/react';
+import { IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonList, IonIcon } from '@ionic/react';
 import { ProfileContext, UserContext, ActiveProfileSetterContext } from '@common/contexts';
+import { alertController, loadingController } from '@ionic/core';
+import { personRemoveOutline } from 'ionicons/icons';
+import { filterKeys } from '@common/utils';
 
 export
 function ProfileEditPage() {
@@ -19,6 +22,7 @@ function ProfileEditPage() {
 	const user = useContext(UserContext);
 	const activeProfile = useContext(ProfileContext);
 	const activeProfileSetter = useContext(ActiveProfileSetterContext); 
+	const [newUser, setNewUser] = useState('');
 	const {goBack} = useHistory();
 	const {
 		id = '',
@@ -56,6 +60,48 @@ function ProfileEditPage() {
 			ownerId: user?.uid,
 		}, Collection.Profiles);
 		result && goBack();
+	}
+
+	async function handleAddUser() {
+		const loader = await loadingController.create({});
+		await loader.present();
+
+		const u = await getDoc<Username>(`${Collection.Usernames}/${newUser}`);
+
+		if(u?.display) {
+			setProfile({
+				...profile,
+				sharedUsers: {
+					...profile.sharedUsers,
+					[u.ownerId]: {
+						username: u.display,
+					},
+				},
+			});
+			setNewUser('');
+		} else {
+			const alert = await alertController.create({
+				header: 'Does not exist',
+				message: `User "${newUser}" does not exist.`,
+				buttons: [
+					{
+						text: 'Ok',
+						role: 'cancel',
+					},
+				],
+			});
+
+			alert.present();
+		}
+
+		loader.dismiss();
+	}
+
+	function handleRemoveUser(userId: string) {
+		setProfile({
+			...profile,
+			sharedUsers: filterKeys(profile.sharedUsers, userId),
+		});
 	}
 
 	return (
@@ -101,6 +147,26 @@ function ProfileEditPage() {
 					onIonChange={({detail}) => updateProp('notes', detail.value || '')}
 				/>
 			</IonItem>
+
+			<IonItem>
+				<IonLabel position="stacked">
+					Add User
+				</IonLabel>
+				<IonInput value={newUser} onIonChange={({detail}) => setNewUser(detail.value || '')}/>
+			</IonItem>
+			<IonButton expand="full" disabled={!newUser} onClick={handleAddUser}>
+				Add User
+			</IonButton>
+			<IonList>
+				{Object.entries(profile.sharedUsers).map(([uId, u]) => (
+					<IonItem key={u.username} onClick={() => handleRemoveUser(uId)}>
+						<IonLabel>
+							{u.username}
+						</IonLabel>
+						<IonIcon icon={personRemoveOutline} color="danger" />
+					</IonItem>
+				))}
+			</IonList>
 		</EditPage>
 	);
 }

@@ -19,15 +19,23 @@ enum Collection {
 	RecurringTransactions = 'recurring-transactions',
 	Transactions = 'transactions',
 	UserMetas = 'user-metas',
+	Usernames = 'usernames',
 }
 
 export
 type ActiveProfileSetter = (newProfileId: string) => void;
 
 export
+interface Username {
+	display: string;
+	ownerId: string;
+}
+
+export
 interface UserMeta {
 	id: string;
 	userId: string;
+	username: string;
 	lastOpenProfile: string;
 }
 

@@ -43,3 +43,13 @@ async function presentToast(message: string) {
 
 	await toast.present();
 }
+
+export
+function filterKeys<T>(obj: T, keys: keyof T | Array<keyof T>) {
+	const filteredKeys = Array.isArray(keys) ? keys: [keys];
+	const objectKeys = Object.keys(obj) as Array<keyof T>;
+	const keepKeys = objectKeys.filter(k => !filteredKeys.includes(k));
+
+	return keepKeys
+		.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), {});
+}

@@ -103,9 +103,15 @@ async function initUser(user: User) {
 	const userMeta = await createUserMetaDoc(user.uid);
 
 	if(userMeta) {
-		await user.updateProfile({
-			displayName: 'Rando' + ((Math.random() * 10000) | 0),
-		});
+		await Promise.all([
+			user.updateProfile({
+				displayName: userMeta.username,
+			}),
+			db.doc(`${Collection.Usernames}/${userMeta.username}`).set({
+				display: userMeta.username,
+				ownerId: user.uid,
+			}),
+		]);
 
 		return userMeta;
 	} else {
@@ -129,6 +135,7 @@ async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {
 	const userMetaDoc: UserMeta = {
 		id: userId,
 		userId,
+		username: 'Rando' + ((Math.random() * 10000) | 0),
 		lastOpenProfile: savedProfile.id,
 	};
 

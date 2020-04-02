@@ -36,7 +36,7 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 			return;
 		}
 
-		const newUnsub = getCollectionRef(path)
+		const newUnsubFn = getCollectionRef(path)
 			.where('profileId', '==', profile?.id)
 			.orderBy('date', 'desc')
 			.onSnapshot(snap => {
@@ -47,7 +47,7 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 				);
 			});
 
-		setUnsub(newUnsub);
+		setUnsub(() => newUnsubFn);
 
 		return () => {
 			unsub();
@@ -120,7 +120,6 @@ function useUserMetaDoc(userId: string) {
 	const [unsub, setUnsub] = useState<() => void>(() => () => null);
 
 	useEffect(() => {
-		console.log(unsub);
 		unsub();
 
 		if(!userId) {
@@ -128,14 +127,14 @@ function useUserMetaDoc(userId: string) {
 			return;
 		}
 
-		const newUnsub = getDocRef(`${Collection.UserMetas}/${userId}`)
+		const newUnsubFn = getDocRef(`${Collection.UserMetas}/${userId}`)
 			.onSnapshot(snap => {
 				setUserMeta(
 					snap.data() as UserMeta,
 				);
 			});
 
-		setUnsub(newUnsub);
+		setUnsub(() => newUnsubFn);
 
 		return () => {
 			unsub();
