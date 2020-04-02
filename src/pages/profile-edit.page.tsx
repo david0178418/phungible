@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createProfile, saveDoc, getDoc } from '@common/api';
 import { Collection, Profile } from '@common/interfaces';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveProfile } from '@common/validations';
-import { IonItem, IonLabel, IonInput, IonTextarea } from '@ionic/react';
+import { IonItem, IonLabel, IonInput, IonTextarea, IonButton } from '@ionic/react';
+import { ProfileContext, UserContext, ActiveProfileSetterContext } from '@common/contexts';
 
 export
 function ProfileEditPage() {
@@ -15,12 +16,15 @@ function ProfileEditPage() {
 		resetProfile,
 		isValid,
 	] = useEditItem(createProfile, canSaveProfile);
+	const user = useContext(UserContext);
+	const activeProfile = useContext(ProfileContext);
+	const activeProfileSetter = useContext(ActiveProfileSetterContext); 
 	const {goBack} = useHistory();
 	const {
 		id = '',
 	} = useParams();
 	const [loading, setLoading] = useState(!!id);
-
+	const isActiveProfile = activeProfile?.id === profile.id;
 
 	function updateProp<T extends keyof Profile>(prop: T, newVal: Profile[T]) {
 		setProfile({
@@ -43,11 +47,14 @@ function ProfileEditPage() {
 	}, []);
 
 	async function handleSubmit() {
-		if(!(isValid && profile)) {
+		if(!(isValid && profile && user?.uid)) {
 			return;
 		}
 
-		const result = await saveDoc(profile, Collection.Profiles);
+		const result = await saveDoc<Profile>({
+			...profile,
+			ownerId: user?.uid,
+		}, Collection.Profiles);
 		result && goBack();
 	}
 
@@ -72,6 +79,17 @@ function ProfileEditPage() {
 					}}
 				/>
 			</IonItem>
+
+			{profile.id && isActiveProfile && (
+				<IonButton expand="full" disabled color="medium">
+					"{profile.name}" is the open profile
+				</IonButton>
+			)}
+			{profile.id && !isActiveProfile && (
+				<IonButton expand="full" onClick={() => profile.id && activeProfileSetter(profile.id)}>
+					Switch to profile "{profile.name}"
+				</IonButton>
+			)}
 
 			<IonItem>
 				<IonLabel position="stacked">

@@ -7,6 +7,7 @@ import {
 	ProfileContext,
 	UserMetaContext,
 	BudgetContext,
+	ActiveProfileSetterContext,
 } from '@common/contexts';
 import {
 	Account,
@@ -20,6 +21,8 @@ import {
 } from '@common/api';
 import { useUserMetaDoc } from '@common/hooks';
 
+const LAST_PROFILE_ID_KEY = 'LAST_ACTIVE_PROFILE_ID';
+
 interface Props {
 	children: ReactNode;
 }
@@ -28,6 +31,7 @@ export
 function ContextProvider(props: Props) {
 	const [authLoaded, setAuthLoaded] = useState(false);
 	const [user, setUser] = useState<User | null>(null);
+	const [activeProfileId, setActiveProfileId] = useState('');
 	const [profile, setProfile] = useState<Profile | null>(null);
 	const [accounts, setAccounts] = useState<Account[]>([]);
 	const [budgets, setBudgets] = useState<Budget[]>([]);
@@ -35,6 +39,8 @@ function ContextProvider(props: Props) {
 	const userMeta = useUserMetaDoc(user?.uid || '');
 
 	useEffect(() => {
+		setActiveProfileId(localStorage.getItem(LAST_PROFILE_ID_KEY) || '');
+
 		auth().onAuthStateChanged(async newUser => {
 			if(newUser) {
 				setUser(newUser);
@@ -45,22 +51,35 @@ function ContextProvider(props: Props) {
 		});
 	}, []);
 
+	useEffect(() => {
+		if(!userMeta?.lastOpenProfile) {
+			return;
+		}
+
+		if(profile) {
+			return;
+		}
+
+		setActiveProfileId(userMeta.lastOpenProfile);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userMeta]);
 
 	useEffect(() => {
 		(async () => {
 			subs.map(sub => sub());
 
-			if(!userMeta?.currentProfileId) {
+			if(!activeProfileId) {
 				setAccounts([]);
 				setBudgets([]);
 				setProfile(null);
 				return;
 			}
 
-			setProfile(await getDoc(`${Collection.Profiles}/${userMeta.currentProfileId}`));
+			localStorage.setItem(LAST_PROFILE_ID_KEY, activeProfileId);
+			setProfile(await getDoc(`${Collection.Profiles}/${activeProfileId}`));
 
 			const accountsUnsub = getCollectionRef(Collection.Accounts)
-				.where('profileId', '==', userMeta.currentProfileId)
+				.where('profileId', '==', activeProfileId)
 
 				.orderBy('date', 'desc')
 				.onSnapshot(snap => {
@@ -72,7 +91,7 @@ function ContextProvider(props: Props) {
 				});
 
 			const budgetsUnsub = getCollectionRef(Collection.Budgets)
-				.where('profileId', '==', userMeta.currentProfileId)
+				.where('profileId', '==', activeProfileId)
 				.orderBy('date', 'desc')
 				.onSnapshot(snap => {
 					setBudgets(
@@ -93,7 +112,7 @@ function ContextProvider(props: Props) {
 			};
 		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userMeta]);
+	}, [activeProfileId]);
 
 	if(!authLoaded) {
 		return null;
@@ -106,7 +125,9 @@ function ContextProvider(props: Props) {
 					<UserContext.Provider value={user}>
 						<UserMetaContext.Provider value={userMeta}>
 							<ProfileContext.Provider value={profile}>
-								{props.children}
+								<ActiveProfileSetterContext.Provider value={setActiveProfileId}>
+									{props.children}
+								</ActiveProfileSetterContext.Provider>
 							</ProfileContext.Provider>
 						</UserMetaContext.Provider>
 					</UserContext.Provider>

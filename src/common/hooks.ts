@@ -52,8 +52,6 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 	return collection;
 }
 
-
-
 export
 function useProfileCollection() {
 	const [collection, setCollection] = useState<Profile[]>([]);

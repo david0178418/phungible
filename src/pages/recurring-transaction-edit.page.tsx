@@ -33,7 +33,7 @@ import { UserMetaContext } from '@common/contexts';
 export
 function RecurringTransactionEditPage() {
 	const userMeta = useContext(UserMetaContext);
-	const profileId = userMeta?.currentProfileId || '';
+	const profileId = userMeta?.lastOpenProfile || '';
 	const [original, setOriginal] = useState(() => createRecurringTransaction(profileId));
 	const [
 		transaction,

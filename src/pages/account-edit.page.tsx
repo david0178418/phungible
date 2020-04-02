@@ -31,7 +31,7 @@ import { UserMetaContext } from '@common/contexts';
 export
 function AccountEditPage() {
 	const userMeta = useContext(UserMetaContext);
-	const profileId = userMeta?.currentProfileId || '';
+	const profileId = userMeta?.lastOpenProfile || '';
 	const [originalAccount, setOriginalAccount] = useState(() => createAccount(profileId));
 	const [account, setAccount] = useState(() => createAccount(profileId));
 	const [hasChanged, setHasChanged] = useState(false);

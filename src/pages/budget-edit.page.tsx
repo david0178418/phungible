@@ -21,7 +21,7 @@ import { UserMetaContext } from '@common/contexts';
 export
 function BudgetEditPage() {
 	const userMeta = useContext(UserMetaContext);
-	const profileId = userMeta?.currentProfileId || '';
+	const profileId = userMeta?.lastOpenProfile || '';
 	const [originalBudget, setOriginalBudget] = useState(() => createBudget(profileId));
 	const [budget, setBudget] = useState(() => createBudget(profileId));
 	const [hasChanged, setHasChanged] = useState(false);

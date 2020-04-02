@@ -22,10 +22,13 @@ enum Collection {
 }
 
 export
+type ActiveProfileSetter = (newProfileId: string) => void;
+
+export
 interface UserMeta {
 	id: string;
 	userId: string;
-	currentProfileId: string;
+	lastOpenProfile: string;
 }
 
 export

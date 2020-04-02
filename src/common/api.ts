@@ -129,7 +129,7 @@ async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {
 	const userMetaDoc: UserMeta = {
 		id: userId,
 		userId,
-		currentProfileId: savedProfile.id,
+		lastOpenProfile: savedProfile.id,
 	};
 
 	try {
@@ -150,7 +150,7 @@ async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Collect
 	if(userMeta === false) {
 		throw new Error('Error setting profile');
 	} else if(userMeta !== true) {
-		profileId = userMeta.currentProfileId;
+		profileId = userMeta.lastOpenProfile;
 	}
 
 	const id = doc.id || db.collection(collection).doc().id;

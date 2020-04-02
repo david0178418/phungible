@@ -1,8 +1,9 @@
-import React, {
-} from 'react';
+import React, { useContext } from 'react';
 import {
 	IonNote,
 	IonLabel,
+	IonBadge,
+	IonText,
 } from '@ionic/react';
 import { alertController } from '@ionic/core';
 import {
@@ -11,10 +12,12 @@ import {
 import { CollectionPageBody } from '@components/collection-page-body';
 import { useProfileCollection } from '@common/hooks';
 import { deleteDoc } from '@common/api';
+import { ProfileContext } from '@common/contexts';
 
 export
 function ProfilesPage() {
 	const collection = useProfileCollection();
+	const activeProfile = useContext(ProfileContext);
 
 	return (
 		<CollectionPageBody
@@ -62,6 +65,13 @@ function ProfilesPage() {
 							</IonNote>
 						)}
 					</div>
+					{activeProfile?.id === profile.id && (
+						<IonText slot="end">
+								<IonBadge color="secondary">
+									Current Profile
+								</IonBadge>
+						</IonText>
+					)}
 				</>
 			)}
 		/>
