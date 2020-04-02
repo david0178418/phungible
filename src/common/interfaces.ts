@@ -22,13 +22,6 @@ enum Collection {
 }
 
 export
-type CollectionPageType = Account |
-	Budget |
-	RecurringTransaction |
-	Transaction |
-	Profile;
-
-export
 interface UserMeta {
 	id: string;
 	userId: string;

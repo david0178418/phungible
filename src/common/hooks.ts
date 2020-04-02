@@ -2,8 +2,8 @@ import { useState, useEffect, useContext } from 'react';
 import { getCollectionRef, getDocRef } from './api';
 import { tuple } from './utils';
 import equal from 'fast-deep-equal';
-import { ProfileContext } from './contexts';
-import { Collection, UserMeta } from './interfaces';
+import { ProfileContext, UserContext } from './contexts';
+import { Collection, UserMeta, ProfileDocs, Profile } from './interfaces';
 
 export
 function useStatePropSetter<T>(createFn: T | (() => T)) {
@@ -24,7 +24,7 @@ function useStatePropSetter<T>(createFn: T | (() => T)) {
 }
 
 export
-function useCollection<T>(path: string) {
+function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 	const [collection, setCollection] = useState<T[]>([]);
 	const profile = useContext(ProfileContext);
 
@@ -48,6 +48,35 @@ function useCollection<T>(path: string) {
 	},
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	[profile]);
+
+	return collection;
+}
+
+
+
+export
+function useProfileCollection() {
+	const [collection, setCollection] = useState<Profile[]>([]);
+	const user = useContext(UserContext);
+
+	useEffect(() => {
+		if(!user) {
+			return;
+		}
+		const unsub = getCollectionRef(Collection.Profiles)
+			.where('ownerId', '==', user?.uid)
+			.onSnapshot(snap => {
+				setCollection(
+					snap.docs.map(doc =>
+						doc.data() as Profile,
+					),
+				);
+			});
+
+		return unsub;
+	},
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	[user]);
 
 	return collection;
 }

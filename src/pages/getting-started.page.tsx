@@ -22,7 +22,7 @@ import {
 	addOutline,
 } from 'ionicons/icons';
 import { AccountsContext, BudgetContext } from '@common/contexts';
-import { useCollection } from '@common/hooks';
+import { useProfileDocCollection } from '@common/hooks';
 import { Collection, RecurringTransaction } from '@common/interfaces';
 import { RecurringTransactionItem } from '@components/recurring-transaction-item';
 import { BudgetItem } from '@components/budget-item';
@@ -34,7 +34,7 @@ function GettingStartedPage() {
 	const [step, setStep] = useState(1);
 	const accounts = useContext(AccountsContext);
 	const budgets = useContext(BudgetContext);
-	const recurringTransactions = useCollection<RecurringTransaction>(Collection.RecurringTransactions);
+	const recurringTransactions = useProfileDocCollection<RecurringTransaction>(Collection.RecurringTransactions);
 	const { goBack } = useHistory();
 
 	const canProgress = !!(

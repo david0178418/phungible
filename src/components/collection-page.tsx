@@ -1,26 +1,9 @@
 import React, { ReactNode } from 'react';
-import {
-	IonHeader,
-	IonToolbar,
-	IonTitle,
-	IonPage,
-	IonContent,
-	IonButtons,
-	IonMenuButton,
-	IonList,
-	IonIcon,
-	IonFab,
-	IonFabButton,
-	IonItemSliding,
-	IonItemOptions,
-	IonItemOption,
-	IonItem,
-} from '@ionic/react';
 import { alertController } from '@ionic/core';
-import { add } from 'ionicons/icons';
-import { useCollection } from '@common/hooks';
-import { Collection, CollectionPageType } from '@common/interfaces';
+import { useProfileDocCollection } from '@common/hooks';
+import { Collection, ProfileDocs } from '@common/interfaces';
 import { deleteDoc } from '@common/api';
+import { CollectionPageBody } from './collection-page-body';
 
 type ItemRenderFn<T> = (doc: T) => ReactNode;
 
@@ -32,14 +15,14 @@ interface Props<T> {
 }
 
 export
-function CollectionPage<T extends CollectionPageType>(props: Props<T>) {
+function CollectionPage<T extends ProfileDocs>(props: Props<T>) {
 	const {
 		collectionType,
 		label,
 		editPath,
 		itemRenderFn,
 	} = props;
-	const collection = useCollection<T>(collectionType);
+	const collection = useProfileDocCollection<T>(collectionType);
 
 	async function handleDeleteClick(doc: T) {
 		const alert = await alertController.create({
@@ -63,47 +46,12 @@ function CollectionPage<T extends CollectionPageType>(props: Props<T>) {
 	}
 
 	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar color="primary">
-					<IonButtons slot="start">
-						<IonMenuButton />
-					</IonButtons>
-					<IonTitle>{label}</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent>
-				<IonList>
-					{collection.map(doc =>(
-						<IonItemSliding key={doc.id}>
-							<IonItemOptions side="start">
-								<IonItemOption
-									expandable
-									color="danger"
-									onClick={() => handleDeleteClick(doc)}
-								>
-									Delete
-								</IonItemOption>
-							</IonItemOptions>
-							<IonItem
-								routerLink={`${editPath}/${doc.id}`}
-								routerDirection="forward"
-							>
-								{itemRenderFn(doc)}
-							</IonItem>
-						</IonItemSliding>
-					))}
-				</IonList>
-				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton
-						color="secondary"
-						routerLink={editPath}
-						routerDirection="forward"
-					>
-						<IonIcon icon={add} />
-					</IonFabButton>
-				</IonFab>
-			</IonContent>
-		</IonPage>
+		<CollectionPageBody
+			collection={collection}
+			itemRenderFn={itemRenderFn}
+			onItemDelete={handleDeleteClick}
+			label={label}
+			editPath={editPath}
+		/>
 	);
 }

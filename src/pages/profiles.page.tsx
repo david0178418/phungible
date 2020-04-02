@@ -4,20 +4,44 @@ import {
 	IonNote,
 	IonLabel,
 } from '@ionic/react';
+import { alertController } from '@ionic/core';
 import {
 	Collection,
-	Profile,
 } from '@common/interfaces';
-import { CollectionPage } from '@components/collection-page';
+import { CollectionPageBody } from '@components/collection-page-body';
+import { useProfileCollection } from '@common/hooks';
+import { deleteDoc } from '@common/api';
 
 export
 function ProfilesPage() {
+	const collection = useProfileCollection();
+
 	return (
-		<CollectionPage
-			collectionType={Collection.Profiles}
+		<CollectionPageBody
 			label="Profiles"
 			editPath="/profile"
-			itemRenderFn={(profile: Profile) => (
+			collection={collection}
+			onItemDelete={async (profile) => {
+				const alert = await alertController.create({
+					header: `Delete "${profile.name}"`,
+					message:`Permanently delete "${profile.name}"?`,
+					buttons: [
+						{
+							text: 'Cancel',
+							role: 'cancel',
+							cssClass: 'secondary',
+						}, {
+							text: 'Okay',
+							async handler() {
+								profile.id && await deleteDoc(profile.id, Collection.Profiles);
+							},
+						},
+					],
+				});
+		
+				alert.present();
+			}}
+			itemRenderFn={(profile) => (
 				<>
 					<div>
 						<IonLabel>
