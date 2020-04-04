@@ -27,7 +27,7 @@
 		"react-dom": "^16.13.1",
 		"react-hook-form": "^5.2.0",
 		"react-router-dom": "^5.1.2",
-		"react-use": "^13.27.1",
+		"react-use": "^14.0.0",
 		"rrule": "^2.6.4",
 		"rxjs": "^6.5.5",
 		"ts-key-enum": "^2.0.2",
