@@ -65,7 +65,7 @@ function TransactionTypeSelector(props: Props) {
 					<IonIcon icon={checkmark}/>Income
 				</IonSelectOption>
 				<IonSelectOption value={TransactionType.Transfer}>
-					Transfer
+					Payment/Transfer
 				</IonSelectOption>
 				<IonSelectOption value={TransactionType.Expense}>
 					Expense

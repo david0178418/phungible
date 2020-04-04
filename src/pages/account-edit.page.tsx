@@ -212,9 +212,7 @@ function AccountEditPage() {
 					<IonCol size="3">
 						<MoneyInput
 							amount={balanceAmount}
-							onUpdate={amount => {
-								setBalanceAmount(amount);
-							}}
+							onUpdate={setBalanceAmount}
 						/>
 					</IonCol>
 				</IonRow>

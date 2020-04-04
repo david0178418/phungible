@@ -22,7 +22,7 @@ function moneyFormat(intAmount: number, decimalPlaces = 2) {
 
 export
 function moneyParse(decimalAmount: number, decimalPlaces = -2) {
-	return numberFormat(decimalAmount, decimalPlaces);
+	return Math.round(numberFormat(decimalAmount, decimalPlaces));
 }
 
 export

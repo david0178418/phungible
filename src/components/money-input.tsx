@@ -26,8 +26,9 @@ function MoneyInput(props: Props) {
 				type="number"
 				value={moneyFormat(amount)}
 				onIonChange={({detail}) => {
-					typeof detail.value === 'string' &&
-					onUpdate(moneyParse(+detail.value));
+					if(typeof detail.value === 'string') {
+						onUpdate(moneyParse(+detail.value));
+					}
 				}}
 			/>
 		</IonItem>
