@@ -18,6 +18,7 @@ import {
 import {
 	getCollectionRef,
 	getDoc,
+	saveDoc,
 } from '@common/api';
 import { useUserMetaDoc } from '@common/hooks';
 
@@ -85,6 +86,13 @@ function ContextProvider(props: Props) {
 
 			localStorage.setItem(LAST_PROFILE_ID_KEY, activeProfileId);
 			setProfile(await getDoc(`${Collection.Profiles}/${activeProfileId}`));
+
+			if(userMeta && userMeta.lastOpenProfile !== activeProfileId) {
+				saveDoc({
+					...userMeta,
+					lastOpenProfile: activeProfileId,
+				}, Collection.UserMetas);
+			}
 
 			const accountsUnsub = getCollectionRef(Collection.Accounts)
 				.where('profileId', '==', activeProfileId)
