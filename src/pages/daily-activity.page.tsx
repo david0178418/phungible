@@ -35,7 +35,7 @@ import { BudgetItem } from '@components/budget-item';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
-import { close, checkmark } from 'ionicons/icons';
+import { close, checkmark, addCircleOutline } from 'ionicons/icons';
 import { BudgetContext, ProfileContext } from '@common/contexts';
 
 enum PageTab {
@@ -156,6 +156,20 @@ function HomePage() {
 									<BudgetItem budget={budget} />
 								</IonItem>
 							))}
+							{!budgets.length && (
+								<IonItem
+									lines="none"
+									routerLink="/budget"
+									routerDirection="forward"
+								>
+									<IonLabel>
+										<em>
+											Create a budget
+										</em>
+									</IonLabel>
+									<IonIcon slot="end" icon={addCircleOutline} />
+								</IonItem>
+							)}
 						</IonList>
 					</div>
 				)}
