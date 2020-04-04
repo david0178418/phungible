@@ -23,7 +23,7 @@ function TrendsPage() {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className="ion-padding">
-					Trends Page
+				<em>Coming Soon...</em>
 			</IonContent>
 		</IonPage>
 	);
