@@ -24,7 +24,6 @@ import {
 import { logInOutline, personOutline } from 'ionicons/icons';
 import { loadingController } from '@ionic/core';
 import { presentToast } from '@common/utils';
-import { initUser } from '@common/api';
 import { useHistory } from 'react-router-dom';
 
 export
@@ -39,8 +38,7 @@ function LoginPage() {
 		await loader.present();
 
 		try {
-			const {user} = await  auth().signInWithEmailAndPassword(email, password);
-			user && await initUser(user);
+			await  auth().signInWithEmailAndPassword(email, password);
 		} catch (e) {
 			presentToast(e.message);
 		}

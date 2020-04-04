@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createProfile, saveDoc, getDoc } from '@common/api';
-import { Collection, Profile, Username } from '@common/interfaces';
+import { createProfile, saveDoc, getDoc, getUsername } from '@common/api';
+import { Collection, Profile } from '@common/interfaces';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveProfile } from '@common/validations';
@@ -66,7 +66,7 @@ function ProfileEditPage() {
 		const loader = await loadingController.create({});
 		await loader.present();
 
-		const u = await getDoc<Username>(`${Collection.Usernames}/${newUser}`);
+		const u = await getUsername(newUser);
 
 		if(u?.display) {
 			setProfile({

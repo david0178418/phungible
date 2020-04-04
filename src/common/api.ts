@@ -12,6 +12,7 @@ import {
 	Profile,
 	UserMeta,
 	ProfileDocs,
+	Username,
 } from './interfaces';
 import { firestore, auth, User } from 'firebase/app';
 import { startOfDay } from 'date-fns';
@@ -132,10 +133,20 @@ async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {
 		return false;
 	}
 
+	let username = '';
+
+	do {
+		const tryUsername = 'Rando' + ((Math.random() * 10000) | 0);
+
+		username = (await getUsername(tryUsername)) ?
+			'' : // username taken
+			tryUsername;
+	} while(!username);
+
 	const userMetaDoc: UserMeta = {
 		id: userId,
 		userId,
-		username: 'Rando' + ((Math.random() * 10000) | 0),
+		username,
 		lastOpenProfile: savedProfile.id,
 	};
 
@@ -191,6 +202,11 @@ async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
 		console.error(`Failed to save doc ${doc.id} in collection ${collection}`, e);
 		return false;
 	}
+}
+
+export
+function getUsername(username: string) {
+	return getDoc<Username>(`${Collection.Usernames}/${username}`);
 }
 
 export
