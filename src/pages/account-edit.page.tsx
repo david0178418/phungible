@@ -26,12 +26,12 @@ import { createAccount, getDoc, saveProfileDoc } from '@common/api';
 import { Collection, Account, AccountType } from '@common/interfaces';
 import { MoneyInput } from '@components/money-input';
 import { moneyFormat } from '@common/utils';
-import { UserMetaContext } from '@common/contexts';
+import { ProfileContext } from '@common/contexts';
 
 export
 function AccountEditPage() {
-	const userMeta = useContext(UserMetaContext);
-	const profileId = userMeta?.lastOpenProfile || '';
+	const profile = useContext(ProfileContext);
+	const profileId = profile?.id || '';
 	const [originalAccount, setOriginalAccount] = useState(() => createAccount(profileId));
 	const [account, setAccount] = useState(() => createAccount(profileId));
 	const [hasChanged, setHasChanged] = useState(false);

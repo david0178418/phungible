@@ -28,12 +28,12 @@ import { RepetitionSelector } from '@components/repetition-selector';
 import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { useStatePropSetter } from '@common/hooks';
 import { MoneyInput } from '@components/money-input';
-import { UserMetaContext } from '@common/contexts';
+import { ProfileContext } from '@common/contexts';
 
 export
 function RecurringTransactionEditPage() {
-	const userMeta = useContext(UserMetaContext);
-	const profileId = userMeta?.lastOpenProfile || '';
+	const profile = useContext(ProfileContext);
+	const profileId = profile?.id || '';
 	const [original, setOriginal] = useState(() => createRecurringTransaction(profileId));
 	const [
 		transaction,

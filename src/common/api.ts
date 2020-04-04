@@ -257,7 +257,7 @@ function createRecurringTransaction(profileId: string): RecurringTransaction {
 }
 
 export
-function createTransaction(budget?: Budget): Transaction {
+function createTransaction(profileId: string, budget?: Budget): Transaction {
 	return {
 		amount: 0,
 		fromAccountId: budget?.fromAccountId || '',
@@ -265,7 +265,7 @@ function createTransaction(budget?: Budget): Transaction {
 		name: budget ? `${budget.name} Expense` : '',
 		date: startOfDay(new Date()).toISOString(),
 		notes: '',
-		profileId: budget?.profileId || '',
+		profileId,
 		towardAccountId: '',
 		type: TransactionType.Expense,
 		parentBudgetId: budget?.id || '',

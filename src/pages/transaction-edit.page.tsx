@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createTransaction, saveProfileDoc, getDoc } from '@common/api';
 import { Collection, Transaction } from '@common/interfaces';
@@ -6,15 +6,18 @@ import { TransactionEditForm } from '@components/transaction-edit-form';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
+import { ProfileContext } from '@common/contexts';
 
 export
 function TransactionEditPage() {
+	const profile = useContext(ProfileContext);
+	const profileId = profile?.id || '';
 	const [
 		transaction,
 		setTransaction,
 		resetTransaction,
 		isValid,
-	] = useEditItem(createTransaction, canSaveTransaction);
+	] = useEditItem(() => createTransaction(profileId), canSaveTransaction);
 	const {goBack} = useHistory();
 	const {
 		id = '',

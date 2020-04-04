@@ -36,7 +36,7 @@ import { TransactionEditForm } from '@components/transaction-edit-form';
 import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
 import { close, checkmark } from 'ionicons/icons';
-import { BudgetContext } from '@common/contexts';
+import { BudgetContext, ProfileContext } from '@common/contexts';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -45,6 +45,8 @@ enum PageTab {
 
 export
 function HomePage() {
+	const profile = useContext(ProfileContext);
+	const profileId = profile?.id || '';
 	const [
 		activeTransaction,
 		setActiveTransaction,
@@ -67,7 +69,7 @@ function HomePage() {
 
 	function createTransactionForSelectedDate(): Transaction {
 		return {
-			...createTransaction(),
+			...createTransaction(profileId),
 			date: selectedDate,
 		};
 	}
@@ -130,7 +132,7 @@ function HomePage() {
 				{(selectedTab === PageTab.Budgets) && (
 					<div>
 						<p>
-							<IonButton expand="full" onClick={() => setActiveTransaction(createTransaction())}>
+							<IonButton expand="full" onClick={() => setActiveTransaction(createTransaction(profileId))}>
 								Add Unplanned Expense
 							</IonButton>
 						</p>
@@ -149,7 +151,7 @@ function HomePage() {
 								<IonItem
 									button
 									key={budget.id}
-									onClick={() => setActiveTransaction(createTransaction(budget))}
+									onClick={() => setActiveTransaction(createTransaction(profileId, budget))}
 								>
 									<BudgetItem budget={budget} />
 								</IonItem>
