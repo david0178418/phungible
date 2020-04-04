@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, Fragment } from 'react';
 import {
 	IonHeader,
 	IonToolbar,
@@ -25,6 +25,7 @@ interface Props<T> {
 	itemRenderFn: ItemRenderFn<T>;
 	collection: T[];
 	onItemDelete: (item: T) => void
+	canEdit?: (item: T) => boolean;
 	label: string;
 	editPath: string;
 }
@@ -37,6 +38,7 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 		itemRenderFn,
 		onItemDelete,
 		collection,
+		canEdit = () => true,
 	} = props;
 
 	return (
@@ -51,24 +53,35 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 			</IonHeader>
 			<IonContent>
 				<IonList>
-					{collection.map(doc =>(
-						<IonItemSliding key={doc.id}>
-							<IonItemOptions side="start">
-								<IonItemOption
-									expandable
-									color="danger"
-									onClick={() => onItemDelete(doc)}
+					{collection.map(doc => (
+						<Fragment key={doc.id}>
+							{canEdit(doc) ? (
+								<IonItemSliding>
+									<IonItemOptions side="start">
+										<IonItemOption
+											expandable
+											color="danger"
+											onClick={() => onItemDelete(doc)}
+										>
+											Delete
+										</IonItemOption>
+									</IonItemOptions>
+									<IonItem
+										routerLink={`${editPath}/${doc.id}`}
+										routerDirection="forward"
+									>
+										{itemRenderFn(doc)}
+									</IonItem>
+								</IonItemSliding>
+							) : (
+								<IonItem
+									routerLink={`${editPath}/${doc.id}`}
+									routerDirection="forward"
 								>
-									Delete
-								</IonItemOption>
-							</IonItemOptions>
-							<IonItem
-								routerLink={`${editPath}/${doc.id}`}
-								routerDirection="forward"
-							>
-								{itemRenderFn(doc)}
-							</IonItem>
-						</IonItemSliding>
+									{itemRenderFn(doc)}
+								</IonItem>
+							)}
+						</Fragment>
 					))}
 				</IonList>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">

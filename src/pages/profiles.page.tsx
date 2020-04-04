@@ -24,6 +24,7 @@ function ProfilesPage() {
 			label="Profiles"
 			editPath="/profile"
 			collection={collection}
+			canEdit={profile => profile.id !== activeProfile?.id}
 			onItemDelete={async (profile) => {
 				const alert = await alertController.create({
 					header: `Delete "${profile.name}"`,
