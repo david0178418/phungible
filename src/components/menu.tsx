@@ -9,8 +9,9 @@ import {
 	IonHeader,
 	IonToolbar,
 	IonTitle,
+	IonListHeader,
 } from '@ionic/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
 	trendingUp,
@@ -22,6 +23,7 @@ import {
 	repeat,
 	peopleOutline,
 } from 'ionicons/icons';
+import { ProfileContext } from '@common/contexts';
 
 interface AppPage {
 	url: string;
@@ -74,6 +76,7 @@ const appPages: AppPage[] = [
 
 export
 function Menu() {
+	const profile = useContext(ProfileContext);
 	const {pathname} = useLocation();
 	return (
 		<IonMenu contentId="main" type="overlay">
@@ -84,6 +87,11 @@ function Menu() {
 			</IonHeader>
 			<IonContent>
 				<IonList>
+					{profile && (
+						<IonListHeader lines="inset">
+							Profile: {profile?.name}
+						</IonListHeader>
+					)}
 					{appPages.map((appPage, index) => {
 						const routerProps: any = pathname === appPage.url ? {
 								detail: true,
