@@ -26,7 +26,7 @@ import { UserContext } from '@common/contexts';
 import { loadingController } from '@ionic/core';
 import { presentToast } from '@common/utils';
 import { useHistory } from 'react-router-dom';
-import { initUser } from '@common/api';
+import { getNextProfile } from '@common/api';
 
 export
 function RegistrationPage() {
@@ -45,7 +45,7 @@ function RegistrationPage() {
 			
 			try {
 				await user.linkWithCredential(cred);
-				await initUser(user);
+				await getNextProfile(user.uid);
 				history.push('/');
 			} catch (e) {
 				presentToast(e.message);
@@ -54,7 +54,7 @@ function RegistrationPage() {
 			try {
 				const cred = await  auth().createUserWithEmailAndPassword(email, password);
 
-				cred.user && await initUser(cred.user);
+				cred.user && await getNextProfile(cred.user.uid);
 			} catch (e) {
 				presentToast(e.message);
 			}

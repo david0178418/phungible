@@ -9,7 +9,7 @@ import {
 	IonSelect,
 	IonSelectOption,
 } from '@ionic/react';
-import { RepeatUnit } from '@common/interfaces';
+import { RepeatUnit } from '@shared/interfaces';
 
 interface Props {
 	value: number;

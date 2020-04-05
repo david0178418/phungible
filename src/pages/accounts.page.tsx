@@ -3,7 +3,7 @@ import React, {
 import {
 	Collection,
 	Account,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { CollectionPage } from '@components/collection-page';
 import { AccountItem } from '@components/account-item';
 

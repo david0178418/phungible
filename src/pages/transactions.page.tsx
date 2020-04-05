@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	Transaction,
 	Collection,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { CollectionPage } from '@components/collection-page';
 import { TransactionItem } from '@components/transaction-item';
 

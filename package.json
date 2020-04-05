@@ -5,8 +5,8 @@
 	"homepage": "https://phungible.com/",
 	"scripts": {
 		"start": "NODE_ENV=development webpack-dev-server",
-		"fn:serve": "npm run fn:build && GOOGLE_APPLICATION_CREDENTIALS='./functions/phungible-key.json' firebase emulators:start --only functions",
-		"fn:build": "tsc --project functions/tsconfig.json",
+		"fn:serve": "npm run fn:build && GOOGLE_APPLICATION_CREDENTIALS='./src/functions/phungible-key.json' firebase emulators:start --only functions",
+		"fn:build": "tsc --project src/functions/tsconfig.json",
 		"build:watch": "webpack --watch",
 		"build:prod": "NODE_ENV=production webpack",
 		"lint": "eslint --ext .ts,tsx,.js,.jsx src/",

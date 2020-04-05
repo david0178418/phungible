@@ -6,7 +6,7 @@ import {
 	IonIcon,
 } from '@ionic/react';
 import { cashOutline, card, swapHorizontal, checkmark } from 'ionicons/icons';
-import { TransactionType } from '@common/interfaces';
+import { TransactionType } from '@shared/interfaces';
 import './transaction-type-selector.scss';
 
 const TransactionIcon = {

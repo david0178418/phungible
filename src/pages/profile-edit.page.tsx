@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createProfile, saveDoc, getDoc, getUsername } from '@common/api';
-import { Collection, Profile } from '@common/interfaces';
+import { Collection, Profile } from '@shared/interfaces';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveProfile } from '@common/validations';

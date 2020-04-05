@@ -1,4 +1,4 @@
-import { TransactionType, Transaction, Profile } from './interfaces';
+import { TransactionType, Transaction, Profile } from '@shared/interfaces';
 
 export
 function canSaveTransaction(transaction: Transaction) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { createTransaction, saveProfileDoc, getDoc } from '@common/api';
-import { Collection, Transaction } from '@common/interfaces';
+import { Collection, Transaction } from '@shared/interfaces';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';

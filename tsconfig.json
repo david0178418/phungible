@@ -23,6 +23,8 @@
 		],
 		"paths": {
 			"@common/*": ["common/*"],
+			"@shared/*": [
+				"functions/src/shared/*"],
 			"@components/*": ["components/*"],
 			"@pages/*": ["pages/*"],
 			"@root/*": ["./*"]

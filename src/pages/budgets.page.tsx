@@ -1,6 +1,6 @@
 import React, {
 } from 'react';
-import { Budget, Collection } from '@common/interfaces';
+import { Budget, Collection } from '@shared/interfaces';
 import { CollectionPage } from '@components/collection-page';
 import { BudgetItem } from '@components/budget-item';
 

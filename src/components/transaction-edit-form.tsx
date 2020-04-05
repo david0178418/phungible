@@ -10,7 +10,7 @@ import {
 } from '@ionic/react';
 import { format, parse } from 'date-fns';
 import { AccountSelector } from '@components/account-selector';
-import { TransactionType, Transaction } from '@common/interfaces';
+import { TransactionType, Transaction } from '@shared/interfaces';
 import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { MoneyInput } from '@components/money-input';
 

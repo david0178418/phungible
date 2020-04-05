@@ -3,7 +3,7 @@ import { getCollectionRef, getDocRef } from './api';
 import { tuple } from './utils';
 import equal from 'fast-deep-equal';
 import { ProfileContext, UserContext } from './contexts';
-import { Collection, UserMeta, ProfileDocs, Profile } from './interfaces';
+import { Collection, UserMeta, ProfileDocs, Profile } from '@shared/interfaces';
 
 export
 function useStatePropSetter<T>(createFn: T | (() => T)) {

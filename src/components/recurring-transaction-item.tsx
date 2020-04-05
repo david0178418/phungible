@@ -7,7 +7,7 @@ import {
 import {
 	RecurringTransaction,
 	TransactionType,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { arrowUp, arrowDown } from 'ionicons/icons';
 import { moneyFormat, findById } from '@common/utils';
 import { AccountsContext } from '@common/contexts';

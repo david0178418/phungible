@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { IonIcon, IonLabel, IonText } from '@ionic/react';
 import { arrowUp, arrowDown } from 'ionicons/icons';
-import { Transaction, TransactionType } from '@common/interfaces';
+import { Transaction, TransactionType } from '@shared/interfaces';
 import { AccountsContext } from '@common/contexts';
 import { findById, moneyFormat } from '@common/utils';
 

@@ -29,7 +29,7 @@ import {
 import {
 	Collection,
 	Transaction,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { TransactionItem } from '@components/transaction-item';
 import { BudgetItem } from '@components/budget-item';
 import { TransactionEditForm } from '@components/transaction-edit-form';

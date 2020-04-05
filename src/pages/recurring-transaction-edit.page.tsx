@@ -15,7 +15,7 @@ import {
 	Collection,
 	RepeatType,
 	TransactionType,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import {
 	createRecurringTransaction,
 	getDoc,

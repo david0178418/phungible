@@ -14,7 +14,7 @@ import {
 	Collection,
 	Profile,
 	Budget,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import {
 	getCollectionRef,
 	getDoc,

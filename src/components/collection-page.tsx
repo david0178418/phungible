@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { alertController } from '@ionic/core';
 import { useProfileDocCollection } from '@common/hooks';
-import { Collection, ProfileDocs } from '@common/interfaces';
+import { Collection, ProfileDocs } from '@shared/interfaces';
 import { deleteDoc } from '@common/api';
 import { CollectionPageBody } from './collection-page-body';
 

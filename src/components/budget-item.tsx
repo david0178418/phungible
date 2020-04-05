@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonLabel, IonText, IonNote, IonSpinner } from '@ionic/react';
-import { Budget, Collection, Transaction } from '@common/interfaces';
+import { Budget, Collection, Transaction } from '@shared/interfaces';
 import { moneyFormat } from '@common/utils';
 import { nextOccuranceText, currentPeriod } from '@common/budget-fns';
 import { getCollectionRef } from '@common/api';

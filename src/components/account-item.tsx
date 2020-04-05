@@ -14,7 +14,7 @@ import {
 	Account,
 	Collection,
 	Transaction,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { moneyFormat } from '@common/utils';
 import { getCollectionRef } from '@common/api';
 

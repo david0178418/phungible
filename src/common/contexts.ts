@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { User } from 'firebase/app';
-import { Account, UserMeta, Profile, Budget, ActiveProfileSetter } from './interfaces';
+import { Account, UserMeta, Profile, Budget, ActiveProfileSetter } from '@shared/interfaces';
 
 export
 const UserContext = createContext<User | null>(null);

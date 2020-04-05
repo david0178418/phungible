@@ -13,8 +13,8 @@ import {
 	UserMeta,
 	ProfileDocs,
 	Username,
-} from './interfaces';
-import { firestore, auth, User } from 'firebase/app';
+} from '@shared/interfaces';
+import { firestore, auth } from 'firebase/app';
 import { startOfDay } from 'date-fns';
 import { loadingController } from '@ionic/core';
 
@@ -72,11 +72,11 @@ function getCollectionRef(path: string) {
 	return db.collection(path);
 }
 
-async function userCheck() {
+async function userSetup(): Promise<string> {
 	const a = auth();
 
 	if(a.currentUser) {
-		return true;
+		throw new Error('User already exists');
 	}
 
 	const loader = await loadingController.create({
@@ -87,90 +87,36 @@ async function userCheck() {
 
 	const { user } = await a.signInAnonymously();
 
-	let userMeta: UserMeta | false = false;
-
-	if(user) {
-		// TODO Move chunks of this to server side
-		userMeta = await initUser(user);
+	if(!user) {
+		throw new Error('Could not create anonymous user.');
 	}
 
-	await loader.remove();
+	const profileId = await getNextProfile(user.uid);
 
-	return userMeta;
+	await loader.dismiss();
+
+	return profileId;
 }
 
 export
-async function initUser(user: User) {
-	const userMeta = await createUserMetaDoc(user.uid);
+async function getNextProfile(userId: string) {
+	return new Promise<string>((resolve) => {
+		const unsub = getDocRef(`${Collection.UserMetas}/${userId}`)
+			.onSnapshot(doc => {
+				if(!doc.exists) {
+					return;
+				}
 
-	if(userMeta) {
-		await Promise.all([
-			user.updateProfile({
-				displayName: userMeta.username,
-			}),
-			db.doc(`${Collection.Usernames}/${userMeta.username}`).set({
-				display: userMeta.username,
-				ownerId: user.uid,
-			}),
-		]);
-
-		return userMeta;
-	} else {
-		return false;
-	}
-}
-
-async function createUserMetaDoc(userId: string): Promise<UserMeta | false> {
-	const profile: Profile = {
-		...createProfile(),
-		name: 'Default',
-		ownerId: userId,
-	};
-
-	const savedProfile = await saveDoc(profile, Collection.Profiles);
-
-	if(!(savedProfile && savedProfile.id)) {
-		return false;
-	}
-
-	let username = '';
-
-	do {
-		const tryUsername = 'Rando' + ((Math.random() * 10000) | 0);
-
-		username = (await getUsername(tryUsername)) ?
-			'' : // username taken
-			tryUsername;
-	} while(!username);
-
-	const userMetaDoc: UserMeta = {
-		id: userId,
-		userId,
-		username,
-		lastOpenProfile: savedProfile.id,
-	};
-
-	try {
-		await db.doc(`${Collection.UserMetas}/${userId}`).set(userMetaDoc);
-	} catch {
-		return false;
-	}
-
-	return userMetaDoc;
+				const {lastOpenProfile} = doc.data() as UserMeta;
+				resolve(lastOpenProfile);
+				unsub();
+			});
+	});
 }
 
 export
 async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Collection) {
-	const userMeta = await userCheck();
-
-	let profileId = doc.profileId;
-
-	if(userMeta === false) {
-		throw new Error('Error setting profile');
-	} else if(userMeta !== true) {
-		profileId = userMeta.lastOpenProfile;
-	}
-
+	const profileId = doc.profileId || await userSetup();
 	const id = doc.id || db.collection(collection).doc().id;
 
 	try {

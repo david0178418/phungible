@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	Collection,
 	RecurringTransaction,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { RecurringTransactionItem } from '@components/recurring-transaction-item';
 import { CollectionPage } from '@components/collection-page';
 

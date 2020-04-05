@@ -8,7 +8,7 @@ import {
 import { alertController } from '@ionic/core';
 import {
 	Collection,
-} from '@common/interfaces';
+} from '@shared/interfaces';
 import { CollectionPageBody } from '@components/collection-page-body';
 import { useProfileCollection } from '@common/hooks';
 import { deleteDoc } from '@common/api';

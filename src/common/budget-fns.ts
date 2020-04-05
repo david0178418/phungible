@@ -7,7 +7,7 @@ import {
 import {
 	RepeatType,
 	RepeatUnit,
-} from './interfaces';
+} from '@shared/interfaces';
 
 const RepeatDaysToRRuleDays = [
 	RRule.SU,

@@ -17,7 +17,7 @@ import {
 	IonItem,
 } from '@ionic/react';
 import { add } from 'ionicons/icons';
-import { ProfileDocs, Profile } from '@common/interfaces';
+import { ProfileDocs, Profile } from '@shared/interfaces';
 
 type ItemRenderFn<T> = (doc: T) => ReactNode;
 

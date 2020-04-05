@@ -23,7 +23,7 @@ import {
 } from 'ionicons/icons';
 import { AccountsContext, BudgetContext } from '@common/contexts';
 import { useProfileDocCollection } from '@common/hooks';
-import { Collection, RecurringTransaction } from '@common/interfaces';
+import { Collection, RecurringTransaction } from '@shared/interfaces';
 import { RecurringTransactionItem } from '@components/recurring-transaction-item';
 import { BudgetItem } from '@components/budget-item';
 import { AccountItem } from '@components/account-item';
