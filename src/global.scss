@@ -75,6 +75,13 @@ html ion-app {
 	vertical-align: bottom;
 }
 
+.alert-danger-action {
+	button.alert-danger-action-confirm {
+		background-color: var(--ion-color-danger);
+		color: white;
+	}
+}
+
 :root {
 	--ion-grid-padding: 0;
 }

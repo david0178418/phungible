@@ -48,6 +48,7 @@ function ContextProvider(props: Props) {
 			} else {
 				setUser(null);
 				setAuthLoaded(true);
+				clearActiveProfile();
 			}
 		});
 	}, []);
@@ -62,6 +63,7 @@ function ContextProvider(props: Props) {
 
 	useEffect(() => {
 		if(!userMeta?.lastOpenProfile) {
+			clearActiveProfile();
 			return;
 		}
 
@@ -130,6 +132,11 @@ function ContextProvider(props: Props) {
 
 	if(!authLoaded) {
 		return null;
+	}
+
+	function clearActiveProfile() {
+		localStorage.removeItem(LAST_PROFILE_ID_KEY);
+		setActiveProfileId('');
 	}
 
 	return (

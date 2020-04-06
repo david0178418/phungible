@@ -16,7 +16,7 @@ import {
 import { config } from '@root/config';
 import { UserContext } from '@common/contexts';
 import { logOutOutline } from 'ionicons/icons';
-import { loadingController } from '@ionic/core';
+import { alertController, loadingController } from '@ionic/core';
 import { auth } from 'firebase/app';
 import { useHistory } from 'react-router-dom';
 
@@ -25,12 +25,35 @@ function SettingsPage() {
 	const user = useContext(UserContext);
 	const { push } = useHistory();
 
-	async function signOut() {
+	async function handleSignOut() {
 		const loader = await loadingController.create({});
 		await loader.present();
 		await auth().signOut();
 		await loader.dismiss();
 		push('/');
+	}
+
+	async function handleDeleteUserPrompt() {
+		const alert = await alertController.create({
+			message: 'Deleting is permanent.  Are you sure?',
+			cssClass: 'alert-danger-action',
+			buttons: [{
+				text: 'Cancel',
+				role: 'cancel',
+			}, {
+				text: 'Delete',
+				cssClass: 'alert-danger-action-confirm',
+				async handler() {
+					const loader = await loadingController.create({});
+					await loader.present();
+					await user?.delete();
+					await loader.dismiss();
+					push('/');
+				},
+			}],
+		});
+
+		alert.present();
 	}
 
 	return (
@@ -64,7 +87,7 @@ function SettingsPage() {
 					</IonButton>
 				)}
 				{!user?.email && (
-					<IonButton expand="full" onClick={signOut}>
+					<IonButton expand="full" onClick={handleSignOut}>
 						Sign Out
 						<IonIcon icon={logOutOutline} />
 					</IonButton>
@@ -77,6 +100,9 @@ function SettingsPage() {
 						Version: {config.appVersion}
 					</IonItem>
 				</IonList>
+				<IonButton expand="full" color="danger" onClick={handleDeleteUserPrompt}>
+					Delete Account
+				</IonButton>
 			</IonContent>
 		</IonPage>
 	);
