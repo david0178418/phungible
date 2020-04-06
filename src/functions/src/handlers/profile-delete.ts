@@ -1,10 +1,16 @@
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 import { EventContext } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
-import { Collection, RecurringTransaction, Account, Transaction, Budget } from '../shared/interfaces';
+import {
+	Collection,
+	RecurringTransaction,
+	Account,
+	Transaction,
+	Budget,
+} from '../shared/interfaces';
 
 export
-async function onProfileDelete(snapshot: DocumentSnapshot, context: EventContext) {
+async function handleProfileDelete(snapshot: DocumentSnapshot, context: EventContext) {
 	const {
 		profileId = '',
 	} = context.params;

@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase-admin';
 import { Collection } from './shared/interfaces';
 import { handleUserCreate } from './handlers/user-create';
 import { handleUserDelete } from './handlers/user-delete';
-import { onProfileDelete } from './handlers/profile-delete';
+import { handleProfileDelete } from './handlers/profile-delete';
 
 initializeApp();
 
@@ -20,4 +20,4 @@ const userDelete = auth
 export
 const profileDelete = firestore
 	.document(`${Collection.Profiles}/{profileId}`)
-	.onDelete(onProfileDelete);
+	.onDelete(handleProfileDelete);
