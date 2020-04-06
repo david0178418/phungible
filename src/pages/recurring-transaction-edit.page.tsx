@@ -17,7 +17,6 @@ import {
 	TransactionType,
 } from '@shared/interfaces';
 import {
-	createRecurringTransaction,
 	getDoc,
 	saveProfileDoc,
 } from '@common/api';
@@ -29,6 +28,7 @@ import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { useStatePropSetter } from '@common/hooks';
 import { MoneyInput } from '@components/money-input';
 import { ProfileContext } from '@common/contexts';
+import { createRecurringTransaction } from '@shared/create-docs';
 
 export
 function RecurringTransactionEditPage() {

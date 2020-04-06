@@ -11,12 +11,13 @@ import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
 import { RepetitionSelector } from '@components/repetition-selector';
 import { EditPage } from '@components/edit-page';
-import { createBudget, getDoc, saveProfileDoc } from '@common/api';
+import { getDoc, saveProfileDoc } from '@common/api';
 import { Budget, Collection, RepeatType } from '@shared/interfaces';
 import { AccountSelector } from '@components/account-selector';
 import { format, parse, startOfDay } from 'date-fns';
 import { MoneyInput } from '@components/money-input';
 import { ProfileContext } from '@common/contexts';
+import { createBudget } from '@shared/create-docs';
 
 export
 function BudgetEditPage() {

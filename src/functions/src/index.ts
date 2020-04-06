@@ -1,73 +1,23 @@
-import * as functions from 'firebase-functions';
+import { auth, firestore } from 'firebase-functions';
+import { initializeApp } from 'firebase-admin';
+import { Collection } from './shared/interfaces';
+import { handleUserCreate } from './handlers/user-create';
+import { handleUserDelete } from './handlers/user-delete';
+import { onProfileDelete } from './handlers/profile-delete';
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-	response.send('Hello from Firebase!');
-});
+initializeApp();
 
 export
-const userCreate = functions.auth.user().onCreate(() => {
+const userCreate = auth
+	.user()
+	.onCreate(handleUserCreate);
 
-});
+export
+const userDelete = auth
+	.user()
+	.onDelete(handleUserDelete);
 
-
-// ////////
-// async function initUserMOVINGTOSERVER(user: User) {
-// 	const userMeta = await createUserMetaDocMOVINGTOSERVER(user.uid);
-
-// 	if(userMeta) {
-// 		await Promise.all([
-// 			user.updateProfile({
-// 				displayName: userMeta.username,
-// 			}),
-// 			db.doc(`${Collection.Usernames}/${userMeta.username}`).set({
-// 				display: userMeta.username,
-// 				ownerId: user.uid,
-// 			}),
-// 		]);
-
-// 		return userMeta;
-// 	} else {
-// 		return false;
-// 	}
-// }
-// async function createUserMetaDocMOVINGTOSERVER(userId: string): Promise<UserMeta | false> {
-// 	const profile: Profile = {
-// 		...createProfile(),
-// 		name: 'Default',
-// 		ownerId: userId,
-// 	};
-
-// 	const savedProfile = await saveDoc(profile, Collection.Profiles);
-
-// 	if(!(savedProfile && savedProfile.id)) {
-// 		return false;
-// 	}
-
-// 	let username = '';
-
-// 	do {
-// 		const tryUsername = 'Rando' + ((Math.random() * 10000) | 0);
-
-// 		username = (await getUsername(tryUsername)) ?
-// 			'' : // username taken
-// 			tryUsername;
-// 	} while(!username);
-
-// 	const userMetaDoc: UserMeta = {
-// 		id: userId,
-// 		userId,
-// 		username,
-// 		lastOpenProfile: savedProfile.id,
-// 	};
-
-// 	try {
-// 		await db.doc(`${Collection.UserMetas}/${userId}`).set(userMetaDoc);
-// 	} catch {
-// 		return false;
-// 	}
-
-// 	return userMetaDoc;
-// }
+export
+const profileDelete = firestore
+	.document(`${Collection.Profiles}/{profileId}`)
+	.onDelete(onProfileDelete);

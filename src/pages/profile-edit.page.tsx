@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createProfile, saveDoc, getDoc, getUsername } from '@common/api';
+import { saveDoc, getDoc, getUsername } from '@common/api';
 import { Collection, Profile } from '@shared/interfaces';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
@@ -10,6 +10,7 @@ import { ProfileContext, UserContext, ActiveProfileSetterContext } from '@common
 import { alertController, loadingController } from '@ionic/core';
 import { personRemoveOutline } from 'ionicons/icons';
 import { filterKeys } from '@common/utils';
+import { createProfile } from '@shared/create-docs';
 
 export
 function ProfileEditPage() {

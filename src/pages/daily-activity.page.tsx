@@ -22,7 +22,6 @@ import {
 } from '@ionic/react';
 import { startOfDay, endOfDay } from 'date-fns';
 import {
-	createTransaction,
 	getCollectionRef,
 	saveDoc,
 } from '@common/api';
@@ -37,6 +36,7 @@ import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
 import { close, checkmark, addCircleOutline } from 'ionicons/icons';
 import { BudgetContext, ProfileContext } from '@common/contexts';
+import { createTransaction } from '@shared/create-docs';
 
 enum PageTab {
 	Budgets = 'budgets',

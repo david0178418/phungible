@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { createTransaction, saveProfileDoc, getDoc } from '@common/api';
+import { saveProfileDoc, getDoc } from '@common/api';
 import { Collection, Transaction } from '@shared/interfaces';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
 import { ProfileContext } from '@common/contexts';
+import { createTransaction } from '@shared/create-docs';
 
 export
 function TransactionEditPage() {

@@ -22,11 +22,12 @@ import { useParams, useHistory } from 'react-router-dom';
 import equal from 'fast-deep-equal';
 import { cashOutline, trash, cardOutline } from 'ionicons/icons';
 import { EditPage } from '@components/edit-page';
-import { createAccount, getDoc, saveProfileDoc } from '@common/api';
+import { getDoc, saveProfileDoc } from '@common/api';
 import { Collection, Account, AccountType } from '@shared/interfaces';
 import { MoneyInput } from '@components/money-input';
 import { moneyFormat } from '@common/utils';
 import { ProfileContext } from '@common/contexts';
+import { createAccount } from '@shared/create-docs';
 
 export
 function AccountEditPage() {
