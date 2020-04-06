@@ -15,6 +15,11 @@ type DocReference = firestore.DocumentReference<firestore.DocumentData>;
 type CollectionReference = firebase.firestore.Query<firebase.firestore.DocumentData>;
 
 export
+function getBatch() {
+	return db.batch();
+}
+
+export
 async function formatDocument<T = any>(request: DocReference) {
 	const result = await request.get();
 
@@ -115,8 +120,13 @@ async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Collect
 }
 
 export
+function getCollectionId(collection: Collection) {
+	return db.collection(collection).doc().id;
+}
+
+export
 async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
-	const id = doc.id || db.collection(collection).doc().id;
+	const id = doc.id || getCollectionId(collection);
 
 	try {
 		const newDoc: T = {
