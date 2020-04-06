@@ -18,19 +18,19 @@ import { UserContext } from '@common/contexts';
 import { logOutOutline } from 'ionicons/icons';
 import { alertController, loadingController } from '@ionic/core';
 import { auth } from 'firebase/app';
-import { useHistory } from 'react-router-dom';
 
 export
 function SettingsPage() {
 	const user = useContext(UserContext);
-	const { push } = useHistory();
 
 	async function handleSignOut() {
 		const loader = await loadingController.create({});
 		await loader.present();
 		await auth().signOut();
 		await loader.dismiss();
-		push('/');
+		// Hard redirect page to clean up some
+		// subscriptions that I can't get a handle on
+		window.location.href = '/';
 	}
 
 	async function handleDeleteUserPrompt() {
@@ -48,7 +48,9 @@ function SettingsPage() {
 					await loader.present();
 					await user?.delete();
 					await loader.dismiss();
-					push('/');
+					// Hard redirect page to clean up some
+					// subscriptions that I can't get a handle on
+					window.location.href = '/';
 				},
 			}],
 		});
