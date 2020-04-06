@@ -18,6 +18,24 @@ import {
 import { moneyFormat } from '@shared/utils';
 import { getCollectionRef } from '@common/api';
 
+function fromAccount(type: AccountType) {
+	return (transaction: Transaction) => (
+		transaction.amount * (
+			type === AccountType.Debt ?
+				1: -1
+		)
+	);
+}
+
+function towardAccount(type: AccountType) {
+	return (transaction: Transaction) => (
+		transaction.amount * (
+			type === AccountType.Debt ?
+				-1: 1
+		)
+	);
+}
+
 interface Props {
 	account: Account;
 }
@@ -27,6 +45,7 @@ function AccountItem(props: Props) {
 	const [fromTransactions, setFromTransactions] = useState<Transaction[]>([]);
 	const [towardTransactions, setTowardTransactions] = useState<Transaction[]>([]);
 	const [balance, setBalance] = useState(0);
+	const [pendingAmount, setPendingAmount] = useState(0);
 	const {
 		account,
 	} = props;
@@ -68,23 +87,27 @@ function AccountItem(props: Props) {
 
 	useEffect(() => {
 		const fromTotal = fromTransactions
-			.map(t =>
-				t.amount * (
-					account.type === AccountType.Debt ?
-						1: -1
-				),
-			)
+			.filter(t => !t.pending)
+			.map(fromAccount(account.type))
 			.reduce((sum, x) => sum + x, 0);
+
+		const fromPendingTotal = fromTransactions
+			.filter(t => t.pending)
+			.map(fromAccount(account.type))
+			.reduce((sum, x) => sum + x, 0);
+
 		const towardTotal = towardTransactions
-			.map(t =>
-				t.amount * (
-					account.type === AccountType.Debt ?
-						-1: 1
-				),
-			)
+			.filter(t => !t.pending)
+			.map(towardAccount(account.type))
+			.reduce((sum, x) => sum + x, 0);
+
+		const towardPendingTotal = towardTransactions
+			.filter(t => t.pending)
+			.map(towardAccount(account.type))
 			.reduce((sum, x) => sum + x, 0);
 
 		setBalance(account.balanceUpdateHistory[0].balance + fromTotal + towardTotal);
+		setPendingAmount(fromPendingTotal + towardPendingTotal);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fromTransactions, towardTransactions]);
 
@@ -107,11 +130,13 @@ function AccountItem(props: Props) {
 				<IonLabel>
 					{account.name}
 				</IonLabel>
-				<IonNote>
-					<em>
-						$X.XX pending
-					</em>
-				</IonNote>
+				{pendingAmount && (
+					<IonNote>
+						<em>
+							${pendingAmount} pending
+						</em>
+					</IonNote>
+				)}
 			</div>
 			<IonText
 				slot="end"
