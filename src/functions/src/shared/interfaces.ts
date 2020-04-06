@@ -87,6 +87,7 @@ export
 interface Profile {
 	date: string;
 	id?: string;
+	lastProcessing: string;
 	name: string;
 	notes: string;
 	ownerId: string;

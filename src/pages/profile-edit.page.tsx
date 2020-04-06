@@ -9,7 +9,7 @@ import { IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonList, IonIcon }
 import { ProfileContext, UserContext, ActiveProfileSetterContext } from '@common/contexts';
 import { alertController, loadingController } from '@ionic/core';
 import { personRemoveOutline } from 'ionicons/icons';
-import { filterKeys } from '@common/utils';
+import { filterKeys } from '@shared/utils';
 import { createProfile } from '@shared/create-docs';
 
 export

@@ -12,7 +12,7 @@ import { IntervalSelector } from './components/interval-selector';
 import { WeekdaySelector } from './components/weekday-selector';
 
 import './repetition-selector.scss';
-import { nextOccuranceText } from '@common/budget-fns';
+import { nextOccuranceText } from '@common/occurrence-fns';
 
 interface Props {
 	date: string,

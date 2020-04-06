@@ -9,9 +9,9 @@ import {
 	TransactionType,
 } from '@shared/interfaces';
 import { arrowUp, arrowDown } from 'ionicons/icons';
-import { moneyFormat, findById } from '@common/utils';
+import { moneyFormat, findById } from '@shared/utils';
 import { AccountsContext } from '@common/contexts';
-import { nextOccuranceText } from '@common/budget-fns';
+import { nextOccuranceText } from '@common/occurrence-fns';
 
 interface Props {
 	recurringTransaction: RecurringTransaction;

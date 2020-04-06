@@ -119,7 +119,6 @@ function previousOccurance(repeatRuleProps: RepeatRuleProps) {
 		.toISOString();
 	}
 
-
 	if(repeatType === RepeatType.Days) {
 		return new RRule({
 			dtstart: startOfDay(new Date(date)),
@@ -159,4 +158,55 @@ function currentPeriod(repeatRuleProps: RepeatRuleProps) {
 		previousOccurance(repeatRuleProps),
 		nextOccurance(repeatRuleProps),
 	];
+}
+
+export
+function occurrancesInRange(repeatRuleProps: RepeatRuleProps, from: string, to: string): string[] {
+	const {
+		date,
+		repeatType,
+		repeatUnit,
+		repeatValues,
+	} = repeatRuleProps;
+	let rule: RRule | null = null;
+
+	if(repeatType === RepeatType.Dates) {
+		rule = new RRule({
+			dtstart: startOfDay(new Date(date)),
+			freq: RRule.MONTHLY,
+			bymonthday: repeatValues,
+			interval: 1,
+		});
+	}
+
+	if(repeatType === RepeatType.Days) {
+		rule = new RRule({
+			dtstart: startOfDay(new Date(date)),
+			freq: RRule.WEEKLY,
+			byweekday: repeatValues.map(val => RepeatDaysToRRuleDays[val]),
+			interval: 1,
+		});
+	}
+
+	if(repeatType === RepeatType.Interval) {
+		const RRuleInterval = RepeatUnitToRRuleInterval[repeatUnit];
+		const startDate = startOfDay(new Date(date));
+
+		if(!RRuleInterval) {
+			return isBefore(new Date(), startDate) ?
+				[startDate.toISOString()] :
+				[];
+		}
+
+		rule = new RRule({
+			dtstart: startDate,
+			freq: RRuleInterval,
+			interval: repeatValues[0],
+		});
+	}
+
+	return rule
+		?.between(new Date(from), new Date(to))
+		.map(d => d.toISOString())
+		|| [];
 }

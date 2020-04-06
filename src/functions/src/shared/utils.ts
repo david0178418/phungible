@@ -53,3 +53,11 @@ function filterKeys<T>(obj: T, keys: keyof T | Array<keyof T>) {
 	return keepKeys
 		.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), {});
 }
+
+export
+function pick<T extends object, U extends keyof T>(obj: T, paths: Array<U>): Partial<T> {
+	return paths.reduce((o, k) => {
+		o[k] = obj[k];
+		return o;
+	}, Object.create(null));
+}

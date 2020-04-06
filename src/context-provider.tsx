@@ -14,6 +14,7 @@ import {
 	Collection,
 	Profile,
 	Budget,
+	RecurringTransaction,
 } from '@shared/interfaces';
 import {
 	getCollectionRef,
@@ -21,6 +22,8 @@ import {
 	saveDoc,
 } from '@common/api';
 import { useUserMetaDoc } from '@common/hooks';
+import { occurrancesInRange } from '@common/occurrence-fns';
+import { createTransactionFromRecurringTransaction } from '@shared/create-docs';
 
 const LAST_PROFILE_ID_KEY = 'LAST_ACTIVE_PROFILE_ID';
 
@@ -38,6 +41,7 @@ function ContextProvider(props: Props) {
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const userMeta = useUserMetaDoc(user?.uid || '');
 	const [unsubs, setUnsubs] = useState<Array<() => void>>([]);
+	const [intervalId, setIntervalId] = useState(0);
 
 	useEffect(() => {
 		setActiveProfileId(localStorage.getItem(LAST_PROFILE_ID_KEY) || '');
@@ -58,7 +62,33 @@ function ContextProvider(props: Props) {
 		// be loaded if a user is present.
 		if(profile) {
 			setAuthLoaded(true);
+
+			intervalId && clearInterval(intervalId);
+
+			setIntervalId(
+				window.setInterval(async () => {
+					const now = (new Date()).toISOString();
+					const lastUpdated = profile.lastProcessing || profile.date;
+
+					const rtsSnap = await getCollectionRef(Collection.RecurringTransactions)
+						.where('profileId', '==', profile.id)
+						.get();
+					
+					const transactions = rtsSnap.docs
+						.map(doc => doc.data() as RecurringTransaction)
+						.map(rt =>
+							occurrancesInRange(rt, lastUpdated, now)
+								.map(date => createTransactionFromRecurringTransaction(date, rt)),
+						)
+						.flat();
+					
+					console.log('new transactions', transactions);
+
+					// Every hour
+				}, 60 * 60 * 1000),
+			);
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profile]);
 
 	useEffect(() => {

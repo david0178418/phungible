@@ -2,7 +2,7 @@ import React from 'react';
 import { IonRippleEffect, IonIcon } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
 
-import '@common/budget-fns';
+import '@common/occurrence-fns';
 
 interface Props {
 	label: string;

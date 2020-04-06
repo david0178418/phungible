@@ -44,15 +44,6 @@ function getDoc<T = any>(path: string) {
 }
 
 export
-async function getCollection<T = any>(path: Collection) {
-	const results = await db.collection(path).get();
-
-	return results
-		.docs
-		.map(doc => doc.data() as T);
-}
-
-export
 function getDocRef(path: string) {
 	return db.doc(path);
 }

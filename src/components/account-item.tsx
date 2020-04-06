@@ -15,7 +15,7 @@ import {
 	Collection,
 	Transaction,
 } from '@shared/interfaces';
-import { moneyFormat } from '@common/utils';
+import { moneyFormat } from '@shared/utils';
 import { getCollectionRef } from '@common/api';
 
 interface Props {

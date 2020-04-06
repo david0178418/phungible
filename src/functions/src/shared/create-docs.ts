@@ -9,7 +9,8 @@ import {
 	Transaction,
 	Profile,
 } from './interfaces';
-import { startOfDay } from 'date-fns';
+import { startOfDay, format } from 'date-fns';
+import { filterKeys } from './utils';
 
 export
 function createAccount(profileId: string): Account {
@@ -81,12 +82,31 @@ function createTransaction(profileId: string, budget?: Budget): Transaction {
 }
 
 export
+function createTransactionFromRecurringTransaction(date: string, rt: RecurringTransaction): Transaction {
+	return {
+		...filterKeys(rt, [
+			'exceptions',
+			'repeatUnit',
+			'repeatValues',
+			'repeatType',
+		]) as Transaction,
+		date,
+		name: `${rt.name} (${format(new Date(date), 'dd/MM/yyyy')})`,
+		parentScheduledTransactionId: rt.id || '',
+		parentBudgetId: '',
+	};
+}
+
+export
 function createProfile(): Profile {
+	const date = new Date().toISOString();
+
 	return {
 		name: '',
 		ownerId: '',
+		lastProcessing: date,
 		notes: '',
-		date: new Date().toISOString(),
+		date,
 		sharedUsers: {},
 	};
 }

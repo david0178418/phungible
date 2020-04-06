@@ -23,7 +23,7 @@ import {
 } from '@ionic/react';
 import { logInOutline, personOutline } from 'ionicons/icons';
 import { loadingController } from '@ionic/core';
-import { presentToast } from '@common/utils';
+import { presentToast } from '@shared/utils';
 import { useHistory } from 'react-router-dom';
 
 export

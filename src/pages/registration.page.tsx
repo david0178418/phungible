@@ -24,7 +24,7 @@ import {
 import { logInOutline, personOutline } from 'ionicons/icons';
 import { UserContext } from '@common/contexts';
 import { loadingController } from '@ionic/core';
-import { presentToast } from '@common/utils';
+import { presentToast } from '@shared/utils';
 import { useHistory } from 'react-router-dom';
 import { getNextProfile } from '@common/api';
 

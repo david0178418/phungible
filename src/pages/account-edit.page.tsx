@@ -25,7 +25,7 @@ import { EditPage } from '@components/edit-page';
 import { getDoc, saveProfileDoc } from '@common/api';
 import { Collection, Account, AccountType } from '@shared/interfaces';
 import { MoneyInput } from '@components/money-input';
-import { moneyFormat } from '@common/utils';
+import { moneyFormat } from '@shared/utils';
 import { ProfileContext } from '@common/contexts';
 import { createAccount } from '@shared/create-docs';
 

@@ -3,7 +3,7 @@ import { IonIcon, IonLabel, IonText } from '@ionic/react';
 import { arrowUp, arrowDown } from 'ionicons/icons';
 import { Transaction, TransactionType } from '@shared/interfaces';
 import { AccountsContext } from '@common/contexts';
-import { findById, moneyFormat } from '@common/utils';
+import { findById, moneyFormat } from '@shared/utils';
 
 interface Props {
 	transaction: Transaction;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { getCollectionRef, getDocRef } from './api';
-import { tuple } from './utils';
+import { tuple } from '../functions/src/shared/utils';
 import equal from 'fast-deep-equal';
 import { ProfileContext, UserContext } from './contexts';
 import { Collection, UserMeta, ProfileDocs, Profile } from '@shared/interfaces';
