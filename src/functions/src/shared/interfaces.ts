@@ -1,5 +1,3 @@
-// import { firestore } from 'firebase/app';
-
 declare var process : {
 	env: {
 		NODE_ENV: string
@@ -143,6 +141,7 @@ interface CommonTransaction {
 
 export
 interface Transaction extends CommonTransaction {
+	pending?: boolean;
 	parentScheduledTransactionId: string;
 	parentBudgetId: string;
 }

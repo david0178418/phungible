@@ -60,6 +60,7 @@ async function foo(profile: Profile) {
 			const id = getCollectionId(Collection.Transactions);
 			batch.set(getDocRef(`${Collection.Transactions}/${id}`), {
 				...t,
+				pending: true,
 				id,
 			});
 		});
