@@ -127,7 +127,6 @@ function Menu() {
 					<IonMenuToggle autoHide={false}>
 						<IonItem
 							{...pathProps(pathname, '/profiles')}
-							disabled={!accounts.length}
 						>
 							<IonIcon slot="start" icon={peopleOutline} />
 							<IonLabel>
