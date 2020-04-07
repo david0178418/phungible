@@ -31,7 +31,7 @@ import { createTransactionFromRecurringTransaction } from '@shared/create-docs';
 const LAST_PROFILE_ID_KEY = 'LAST_ACTIVE_PROFILE_ID';
 
 // TODO Find a place for this
-async function foo(profile: Profile) {
+async function runRecurringTransactionCheck(profile: Profile) {
 	const now = (new Date()).toISOString();
 	const lastUpdated = profile.lastProcessing || profile.date;
 
@@ -74,8 +74,6 @@ async function foo(profile: Profile) {
 	}
 	
 	console.log('new transactions', transactions);
-
-	// Every hour
 }
 
 interface Props {
@@ -115,9 +113,13 @@ function ContextProvider(props: Props) {
 			setAuthLoaded(true);
 
 			intervalId && clearInterval(intervalId);
-			foo(profile);
+			runRecurringTransactionCheck(profile);
 			setIntervalId(
-				window.setInterval(() => foo(profile), 60 * 60 * 1000),
+				window.setInterval(
+					() => runRecurringTransactionCheck(profile),
+					// Every hour
+					60 * 60 * 1000,
+				),
 			);
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
