@@ -9,7 +9,7 @@ import {
 	Transaction,
 	Profile,
 } from './interfaces';
-import { startOfDay, format } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import { filterKeys } from './utils';
 
 export
@@ -91,7 +91,7 @@ function createTransactionFromRecurringTransaction(date: string, rt: RecurringTr
 			'repeatType',
 		]) as Transaction,
 		date,
-		name: `${rt.name} (${format(new Date(date), 'dd/MM/yyyy')})`,
+		name: `${rt.name}`,
 		parentScheduledTransactionId: rt.id || '',
 		parentBudgetId: '',
 	};

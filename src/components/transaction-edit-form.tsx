@@ -7,6 +7,7 @@ import {
 	IonRow,
 	IonCol,
 	IonTextarea,
+	IonCheckbox,
 } from '@ionic/react';
 import { format, parse } from 'date-fns';
 import { AccountSelector } from '@components/account-selector';
@@ -93,6 +94,7 @@ function TransactionEditForm(props: Props) {
 							Notes
 						</IonLabel>
 						<IonTextarea
+							value={transaction.notes}
 							onIonChange={({detail}) => updateProp('notes', detail.value || '')}
 						/>
 					</IonItem>
@@ -101,6 +103,16 @@ function TransactionEditForm(props: Props) {
 
 			<IonRow>
 				<IonCol>
+					<IonItem>
+						<IonLabel>
+							Pending
+						</IonLabel>
+						<IonCheckbox
+							slot="start"
+							checked={transaction.pending}
+							onIonChange={({detail}) => updateProp('pending', detail.checked)}
+						/>
+					</IonItem>
 					<IonItem>
 						<IonLabel position="stacked">
 							Date

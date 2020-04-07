@@ -7,12 +7,14 @@ import { findById, moneyFormat } from '@shared/utils';
 
 interface Props {
 	transaction: Transaction;
+	onClick?: () => any;
 }
 
 export
 function TransactionItem(props: Props) {
 	const {
 		transaction,
+		onClick = () => null,
 	} = props;
 
 	const accounts = useContext(AccountsContext);
@@ -35,7 +37,7 @@ function TransactionItem(props: Props) {
 				/>
 			)}
 			<div>
-				<IonLabel>
+				<IonLabel onClick={onClick}>
 					{transaction.name}
 					{fromAccount && (
 						<p>
