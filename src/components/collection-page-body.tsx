@@ -22,6 +22,7 @@ import { ProfileDocs, Profile } from '@shared/interfaces';
 type ItemRenderFn<T> = (doc: T) => ReactNode;
 
 interface Props<T> {
+	topContent?: ReactNode | null;
 	itemRenderFn: ItemRenderFn<T>;
 	collection: T[];
 	onItemDelete: (item: T) => void
@@ -38,6 +39,7 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 		itemRenderFn,
 		onItemDelete,
 		collection,
+		topContent = null,
 		canEdit = () => true,
 	} = props;
 
@@ -52,6 +54,7 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
+				{topContent}
 				<IonList>
 					{collection.map(doc => (
 						<Fragment key={doc.id}>

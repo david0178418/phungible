@@ -21,7 +21,6 @@ function TransactionItem(props: Props) {
 
 	return (
 		<>
-			
 			{transaction.type === TransactionType.Income ? (
 				<IonIcon
 					slot="start"

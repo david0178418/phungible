@@ -3,7 +3,7 @@ import { getCollectionRef, getDocRef } from './api';
 import { tuple } from '../functions/src/shared/utils';
 import equal from 'fast-deep-equal';
 import { ProfileContext, UserContext } from './contexts';
-import { Collection, UserMeta, ProfileDocs, Profile } from '@shared/interfaces';
+import { Collection, UserMeta, ProfileDocs, Profile, Transaction } from '@shared/interfaces';
 
 export
 function useStatePropSetter<T>(createFn: T | (() => T)) {
@@ -43,6 +43,43 @@ function useProfileDocCollection<T extends ProfileDocs>(path: string) {
 				setCollection(
 					snap.docs.map(doc =>
 						doc.data() as T,
+					),
+				);
+			});
+
+		setUnsub(() => newUnsubFn);
+
+		return () => {
+			unsub();
+		};
+	},
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	[profile]);
+
+	return collection;
+}
+
+export
+function usePendingTransactionsCollection() {
+	const [collection, setCollection] = useState<Transaction[]>([]);
+	const profile = useContext(ProfileContext);
+	const [unsub, setUnsub] = useState<() => void>(() => () => null);
+
+	useEffect(() => {
+		unsub();
+
+		if(!profile) {
+			return;
+		}
+
+		const newUnsubFn = getCollectionRef(Collection.Transactions)
+			.where('profileId', '==', profile?.id)
+			.where('pending', '==', true)
+			.orderBy('date', 'desc')
+			.onSnapshot(snap => {
+				setCollection(
+					snap.docs.map(doc =>
+						doc.data() as Transaction,
 					),
 				);
 			});

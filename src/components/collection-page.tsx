@@ -8,6 +8,7 @@ import { CollectionPageBody } from './collection-page-body';
 type ItemRenderFn<T> = (doc: T) => ReactNode;
 
 interface Props<T> {
+	topContent?: ReactNode | null;
 	itemRenderFn: ItemRenderFn<T>;
 	collectionType: Collection;
 	label: string;
@@ -21,6 +22,7 @@ function CollectionPage<T extends ProfileDocs>(props: Props<T>) {
 		label,
 		editPath,
 		itemRenderFn,
+		topContent = null,
 	} = props;
 	const collection = useProfileDocCollection<T>(collectionType);
 
@@ -47,6 +49,7 @@ function CollectionPage<T extends ProfileDocs>(props: Props<T>) {
 
 	return (
 		<CollectionPageBody
+			topContent={topContent}
 			collection={collection}
 			itemRenderFn={itemRenderFn}
 			onItemDelete={handleDeleteClick}

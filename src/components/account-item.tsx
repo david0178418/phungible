@@ -130,10 +130,10 @@ function AccountItem(props: Props) {
 				<IonLabel>
 					{account.name}
 				</IonLabel>
-				{pendingAmount && (
+				{!!pendingAmount && (
 					<IonNote>
 						<em>
-							${pendingAmount} pending
+							${moneyFormat(pendingAmount)} pending
 						</em>
 					</IonNote>
 				)}

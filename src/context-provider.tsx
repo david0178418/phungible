@@ -34,7 +34,6 @@ const LAST_PROFILE_ID_KEY = 'LAST_ACTIVE_PROFILE_ID';
 async function runRecurringTransactionCheck(profile: Profile) {
 	const now = (new Date()).toISOString();
 	const lastUpdated = profile.lastProcessing || profile.date;
-
 	const rtsSnap = await getCollectionRef(Collection.RecurringTransactions)
 		.where('profileId', '==', profile.id)
 		.get();
@@ -53,25 +52,23 @@ async function runRecurringTransactionCheck(profile: Profile) {
 		)
 		.flat();
 
-	if(transactions.length) {
-		const batch = getBatch();
+	const batch = getBatch();
 
-		transactions.forEach(t => {
-			const id = getCollectionId(Collection.Transactions);
-			batch.set(getDocRef(`${Collection.Transactions}/${id}`), {
-				...t,
-				pending: true,
-				id,
-			});
+	transactions.forEach(t => {
+		const id = getCollectionId(Collection.Transactions);
+		batch.set(getDocRef(`${Collection.Transactions}/${id}`), {
+			...t,
+			pending: true,
+			id,
 		});
+	});
 
-		batch.set(getDocRef(`${Collection.Profiles}/${profile.id}`), {
-			...profile,
-			lastProcessing: now,
-		});
+	batch.set(getDocRef(`${Collection.Profiles}/${profile.id}`), {
+		...profile,
+		lastProcessing: now,
+	});
 
-		batch.commit();
-	}
+	batch.commit();
 	
 	console.log('new transactions', transactions);
 }
