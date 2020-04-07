@@ -97,7 +97,7 @@ function GettingStartedPage() {
 						<IonList>
 							<IonItem routerLink="/recurring-transaction" routerDirection="forward">
 								<IonIcon slot="start" icon={addOutline}/>
-								Create an Recurring Transaction
+								Create a Recurring Transaction
 							</IonItem>
 							{recurringTransactions.map(rt => (
 								<IonItem
@@ -131,7 +131,7 @@ function GettingStartedPage() {
 						<IonList>
 							<IonItem routerLink="/budget" routerDirection="forward">
 								<IonIcon slot="start" icon={addOutline}/>
-								Create an Budget
+								Create a Budget
 							</IonItem>
 							{budgets.map(budget => (
 								<IonItem

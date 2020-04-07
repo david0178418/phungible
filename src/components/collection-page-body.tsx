@@ -15,8 +15,9 @@ import {
 	IonItemOptions,
 	IonItemOption,
 	IonItem,
+	IonLabel,
 } from '@ionic/react';
-import { add } from 'ionicons/icons';
+import { add, addCircleOutline } from 'ionicons/icons';
 import { ProfileDocs, Profile } from '@shared/interfaces';
 
 type ItemRenderFn<T> = (doc: T) => ReactNode;
@@ -56,6 +57,20 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 			<IonContent>
 				{topContent}
 				<IonList>
+					{!collection.length && (
+						<IonItem
+							lines="none"
+							routerLink={editPath}
+							routerDirection="forward"
+						>
+							<IonLabel>
+								<em>
+									Create {label}
+								</em>
+							</IonLabel>
+							<IonIcon slot="end" icon={addCircleOutline} />
+						</IonItem>
+					)}
 					{collection.map(doc => (
 						<Fragment key={doc.id}>
 							{canEdit(doc) ? (

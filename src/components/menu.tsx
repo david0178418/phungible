@@ -23,61 +23,30 @@ import {
 	repeat,
 	peopleOutline,
 } from 'ionicons/icons';
-import { ProfileContext } from '@common/contexts';
+import { ProfileContext, AccountsContext } from '@common/contexts';
 
-interface AppPage {
-	url: string;
-	icon: string;
-	title: string;
+function pathProps(currentPath: string, targetUrl: string): any {
+	const common = {
+		routerDirection: 'root',
+		lines: 'none',
+	};
+	return (currentPath === targetUrl) ? {
+		...common,
+		detail: true,
+	} : {
+		...common,
+		className: 'selected',
+		routerLink: targetUrl,
+		detail: false,
+	};
 }
-
-const appPages: AppPage[] = [
-	{
-		title: 'Daily Activity',
-		url: '/',
-		icon: calendarOutline,
-	},
-	{
-		title: 'Trends',
-		url: '/trends',
-		icon: trendingUp,
-	},
-	{
-		title: 'Accounts',
-		url: '/accounts',
-		icon: albumsOutline,
-	},
-	{
-		title: 'Budgets',
-		url: '/budgets',
-		icon: walletOutline,
-	},
-	{
-		title: 'Recurring Transactions',
-		url: '/recurring-transactions',
-		icon: repeat,
-	},
-	{
-		title: 'Transactions',
-		url: '/transactions',
-		icon: swapHorizontal,
-	},
-	{
-		title: 'Profiles',
-		url: '/profiles',
-		icon: peopleOutline,
-	},
-	{
-		title: 'Settings',
-		url: '/settings',
-		icon: settingsOutline,
-	},
-];
 
 export
 function Menu() {
+	const accounts = useContext(AccountsContext);
 	const profile = useContext(ProfileContext);
 	const {pathname} = useLocation();
+
 	return (
 		<IonMenu contentId="main" type="overlay">
 			<IonHeader>
@@ -92,27 +61,90 @@ function Menu() {
 							Profile: {profile?.name}
 						</IonListHeader>
 					)}
-					{appPages.map((appPage, index) => {
-						const routerProps: any = pathname === appPage.url ? {
-								detail: true,
-							} : {
-								className: 'selected',
-								routerLink: appPage.url,
-								detail: false,
-							};
-						return (
-							<IonMenuToggle key={index} autoHide={false}>
-								<IonItem
-									{...routerProps}
-									routerDirection="root"
-									lines="none"
-								>
-									<IonIcon slot="start" icon={appPage.icon} />
-									<IonLabel>{appPage.title}</IonLabel>
-								</IonItem>
-							</IonMenuToggle>
-						);
-					})}
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/')}
+						>
+							<IonIcon slot="start" icon={calendarOutline} />
+							<IonLabel>
+								Daily Activity
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/trends')}
+						>
+							<IonIcon slot="start" icon={trendingUp} />
+							<IonLabel>
+								Trends
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/accounts')}
+						>
+							<IonIcon slot="start" icon={albumsOutline} />
+							<IonLabel>
+								Accounts
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/budgets')}
+							disabled={!accounts.length}
+						>
+							<IonIcon slot="start" icon={walletOutline} />
+							<IonLabel>
+								Budgets
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/recurring-transactions')}
+							disabled={!accounts.length}
+						>
+							<IonIcon slot="start" icon={repeat} />
+							<IonLabel>
+								Recurring Transactions
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/transactions')}
+							disabled={!accounts.length}
+						>
+							<IonIcon slot="start" icon={swapHorizontal} />
+							<IonLabel>
+								Transactions
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/profiles')}
+							disabled={!accounts.length}
+						>
+							<IonIcon slot="start" icon={peopleOutline} />
+							<IonLabel>
+								Profiles
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
+					<IonMenuToggle autoHide={false}>
+						<IonItem
+							{...pathProps(pathname, '/settings')}
+						>
+							<IonIcon slot="start" icon={settingsOutline} />
+							<IonLabel>
+								Settings
+							</IonLabel>
+						</IonItem>
+					</IonMenuToggle>
 				</IonList>
 			</IonContent>
 		</IonMenu>
