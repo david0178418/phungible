@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import { auth, User } from 'firebase/app';
+import { User } from 'firebase/app';
 
 import {
 	UserContext,
@@ -14,64 +14,16 @@ import {
 	Collection,
 	Profile,
 	Budget,
-	RecurringTransaction,
 } from '@shared/interfaces';
 import {
-	getCollectionRef,
 	getDoc,
 	saveDoc,
-	getBatch,
-	getDocRef,
-	getCollectionId,
+	getCollectionRef,
+	runRecurringTransactionCheck,
 } from '@common/api';
 import { useUserMetaDoc } from '@common/hooks';
-import { occurrancesInRange } from '@common/occurrence-fns';
-import { createTransactionFromRecurringTransaction } from '@shared/create-docs';
 
 const LAST_PROFILE_ID_KEY = 'LAST_ACTIVE_PROFILE_ID';
-
-// TODO Find a place for this
-async function runRecurringTransactionCheck(profile: Profile) {
-	const now = (new Date()).toISOString();
-	const lastUpdated = profile.lastProcessing || profile.date;
-	const rtsSnap = await getCollectionRef(Collection.RecurringTransactions)
-		.where('profileId', '==', profile.id)
-		.get();
-
-	const transactions = rtsSnap.docs
-		.map(doc => doc.data() as RecurringTransaction)
-		.map(rt =>
-			occurrancesInRange(
-				rt,
-				lastUpdated > rt.date ?
-					lastUpdated :
-					rt.date,
-				now,
-			)
-			.map(date => createTransactionFromRecurringTransaction(date, rt)),
-		)
-		.flat();
-
-	const batch = getBatch();
-
-	transactions.forEach(t => {
-		const id = getCollectionId(Collection.Transactions);
-		batch.set(getDocRef(`${Collection.Transactions}/${id}`), {
-			...t,
-			pending: true,
-			id,
-		});
-	});
-
-	batch.set(getDocRef(`${Collection.Profiles}/${profile.id}`), {
-		...profile,
-		lastProcessing: now,
-	});
-
-	batch.commit();
-	
-	console.log('new transactions', transactions);
-}
 
 interface Props {
 	children: ReactNode;
@@ -92,14 +44,16 @@ function ContextProvider(props: Props) {
 	useEffect(() => {
 		setActiveProfileId(localStorage.getItem(LAST_PROFILE_ID_KEY) || '');
 
-		auth().onAuthStateChanged(async newUser => {
-			if(newUser) {
-				setUser(newUser);
-			} else {
-				setUser(null);
-				setAuthLoaded(true);
-				clearActiveProfile();
-			}
+		import('@common/side-effect-modules').then(({a}) => {
+			a().onAuthStateChanged(async newUser => {
+				if(newUser) {
+					setUser(newUser);
+				} else {
+					setUser(null);
+					setAuthLoaded(true);
+					clearActiveProfile();
+				}
+			});
 		});
 	}, []);
 

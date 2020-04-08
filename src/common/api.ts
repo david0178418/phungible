@@ -4,15 +4,24 @@ import {
 	UserMeta,
 	ProfileDocs,
 	Username,
+	RecurringTransaction,
+	Profile,
 } from '@shared/interfaces';
-import { firestore, auth } from 'firebase/app';
 import { loadingController } from '@ionic/core';
+import { occurrancesInRange } from '@common/occurrence-fns';
+import { createTransactionFromRecurringTransaction } from '@shared/create-docs';
+import { Firestore, Auth, DocReference } from './side-effect-modules';
+import { CollectionReference } from '@google-cloud/firestore';
+
+import('./side-effect-modules')
+	.then(({f, a}) => {
+		db = f();
+		auth = a();
+	});
 
 // type CollectionReference = firestore.Query<firestore.DocumentData>;
-let db = firestore();
-
-type DocReference = firestore.DocumentReference<firestore.DocumentData>;
-type CollectionReference = firebase.firestore.Query<firebase.firestore.DocumentData>;
+let db: Firestore;
+let auth: Auth;
 
 export
 function getBatch() {
@@ -59,9 +68,7 @@ function getCollectionRef(path: string) {
 }
 
 async function userSetup(): Promise<string> {
-	const a = auth();
-
-	if(a.currentUser) {
+	if(auth.currentUser) {
 		throw new Error('User already exists');
 	}
 
@@ -71,7 +78,7 @@ async function userSetup(): Promise<string> {
 
 	await loader.present();
 
-	const { user } = await a.signInAnonymously();
+	const { user } = await auth.signInAnonymously();
 
 	if(!user) {
 		throw new Error('Could not create anonymous user.');
@@ -148,11 +155,55 @@ function getUsername(username: string) {
 
 export
 async function getUserMeta() {
-	const userId = auth().currentUser?.uid;
+	const userId = auth.currentUser?.uid;
 
 	if(!userId) {
 		return null;
 	}
 
 	return getDoc<UserMeta>(`${Collection.UserMetas}/${userId}`);
+}
+
+export
+// TODO Find a place for this
+async function runRecurringTransactionCheck(profile: Profile) {
+	const now = (new Date()).toISOString();
+	const lastUpdated = profile.lastProcessing || profile.date;
+	const rtsSnap = await getCollectionRef(Collection.RecurringTransactions)
+		.where('profileId', '==', profile.id)
+		.get();
+
+	const transactions = rtsSnap.docs
+		.map(doc => doc.data() as RecurringTransaction)
+		.map(rt =>
+			occurrancesInRange(
+				rt,
+				lastUpdated > rt.date ?
+					lastUpdated :
+					rt.date,
+				now,
+			)
+			.map(date => createTransactionFromRecurringTransaction(date, rt)),
+		)
+		.flat();
+
+	const batch = getBatch();
+
+	transactions.forEach(t => {
+		const id = getCollectionId(Collection.Transactions);
+		batch.set(getDocRef(`${Collection.Transactions}/${id}`), {
+			...t,
+			pending: true,
+			id,
+		});
+	});
+
+	batch.set(getDocRef(`${Collection.Profiles}/${profile.id}`), {
+		...profile,
+		lastProcessing: now,
+	});
+
+	batch.commit();
+	
+	console.log('new transactions', transactions);
 }
