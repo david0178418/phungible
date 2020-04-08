@@ -74,6 +74,7 @@ function createTransaction(profileId: string, budget?: Budget): Transaction {
 		date: startOfDay(new Date()).toISOString(),
 		notes: '',
 		profileId,
+		pending: false,
 		towardAccountId: '',
 		type: TransactionType.Expense,
 		parentBudgetId: budget?.id || '',

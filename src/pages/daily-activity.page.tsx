@@ -88,10 +88,13 @@ function HomePage() {
 	async function refreshPage() {
 		setLoading(true);
 
-		if(selectedTab === PageTab.Transactions) {
+		if(!profile?.id) {
+			setTransactions([]);
+		} else if(selectedTab === PageTab.Transactions) {
 			const collection = await getCollectionRef(Collection.Transactions)
 				.where('date', '>=', startOfDay(new Date(selectedDate)).toISOString())
 				.where('date', '<=', endOfDay(new Date(selectedDate)).toISOString())
+				.where('profileId', '==', profile.id)
 				.get();
 
 			setTransactions(collection.docs.map(y => y.data() as Transaction));
