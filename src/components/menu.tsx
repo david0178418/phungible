@@ -9,9 +9,8 @@ import {
 	IonHeader,
 	IonToolbar,
 	IonTitle,
-	IonListHeader,
 } from '@ionic/react';
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
 	trendingUp,
@@ -22,8 +21,11 @@ import {
 	settingsOutline,
 	repeat,
 	peopleOutline,
+	timeOutline,
 } from 'ionicons/icons';
-import { ProfileContext, AccountsContext } from '@common/contexts';
+import { AccountsContext } from '@common/contexts';
+import { usePendingTransactionsCollection } from '@common/hooks';
+import { PendingTransactionsModal } from './pending-transactions-modal';
 
 function pathProps(currentPath: string, targetUrl: string): any {
 	const common = {
@@ -44,108 +46,127 @@ function pathProps(currentPath: string, targetUrl: string): any {
 export
 function Menu() {
 	const accounts = useContext(AccountsContext);
-	const profile = useContext(ProfileContext);
-	const {pathname} = useLocation();
+	const { pathname } = useLocation();
+	const pendingTransactions = usePendingTransactionsCollection();
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setModalIsOpen(!!setModalIsOpen.length);
+		}, 1500);
+	}, []);
 
 	return (
-		<IonMenu contentId="main" type="overlay">
-			<IonHeader>
-				<IonToolbar color="primary">
-					<IonTitle>Phungible</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent>
-				<IonList>
-					{profile && (
-						<IonListHeader lines="inset">
-							Profile: {profile?.name}
-						</IonListHeader>
-					)}
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/')}
-						>
-							<IonIcon slot="start" icon={calendarOutline} />
-							<IonLabel>
-								Daily Activity
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/trends')}
-						>
-							<IonIcon slot="start" icon={trendingUp} />
-							<IonLabel>
-								Trends
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/accounts')}
-						>
-							<IonIcon slot="start" icon={albumsOutline} />
-							<IonLabel>
-								Accounts
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/budgets')}
-							disabled={!accounts.length}
-						>
-							<IonIcon slot="start" icon={walletOutline} />
-							<IonLabel>
-								Budgets
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/recurring-transactions')}
-							disabled={!accounts.length}
-						>
-							<IonIcon slot="start" icon={repeat} />
-							<IonLabel>
-								Recurring Transactions
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/transactions')}
-							disabled={!accounts.length}
-						>
-							<IonIcon slot="start" icon={swapHorizontal} />
-							<IonLabel>
-								Transactions
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/profiles')}
-						>
-							<IonIcon slot="start" icon={peopleOutline} />
-							<IonLabel>
-								Profiles
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-					<IonMenuToggle autoHide={false}>
-						<IonItem
-							{...pathProps(pathname, '/settings')}
-						>
-							<IonIcon slot="start" icon={settingsOutline} />
-							<IonLabel>
-								Settings
-							</IonLabel>
-						</IonItem>
-					</IonMenuToggle>
-				</IonList>
-			</IonContent>
-		</IonMenu>
+		<>
+			<IonMenu contentId="main" type="overlay">
+				<IonHeader>
+					<IonToolbar color="primary">
+						<IonTitle>Phungible</IonTitle>
+					</IonToolbar>
+				</IonHeader>
+				<IonContent>
+					<IonList>
+						{!!pendingTransactions.length && (
+							<IonMenuToggle autoHide={false}>
+								<IonItem button onClick={() => setModalIsOpen(true)}>
+									<IonIcon slot="start" icon={timeOutline} />
+									<IonLabel>
+										Pending ({pendingTransactions.length})
+									</IonLabel>
+								</IonItem>
+							</IonMenuToggle>
+						)}
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/')}
+							>
+								<IonIcon slot="start" icon={calendarOutline} />
+								<IonLabel>
+									Daily Activity
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/trends')}
+							>
+								<IonIcon slot="start" icon={trendingUp} />
+								<IonLabel>
+									Trends
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/accounts')}
+							>
+								<IonIcon slot="start" icon={albumsOutline} />
+								<IonLabel>
+									Accounts
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/budgets')}
+								disabled={!accounts.length}
+							>
+								<IonIcon slot="start" icon={walletOutline} />
+								<IonLabel>
+									Budgets
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/recurring-transactions')}
+								disabled={!accounts.length}
+							>
+								<IonIcon slot="start" icon={repeat} />
+								<IonLabel>
+									Recurring Transactions
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/transactions')}
+								disabled={!accounts.length}
+							>
+								<IonIcon slot="start" icon={swapHorizontal} />
+								<IonLabel>
+									Transactions
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/profiles')}
+							>
+								<IonIcon slot="start" icon={peopleOutline} />
+								<IonLabel>
+									Profiles
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+						<IonMenuToggle autoHide={false}>
+							<IonItem
+								{...pathProps(pathname, '/settings')}
+							>
+								<IonIcon slot="start" icon={settingsOutline} />
+								<IonLabel>
+									Settings
+								</IonLabel>
+							</IonItem>
+						</IonMenuToggle>
+					</IonList>
+				</IonContent>
+			</IonMenu>
+			<PendingTransactionsModal
+				isOpen={modalIsOpen}
+				onClose={() => setModalIsOpen(false)}
+				transactions={pendingTransactions}
+			/>
+		</>
 	);
 }

@@ -12,6 +12,7 @@ import './global.scss';
 
 import { ContextProvider } from './context-provider';
 import { Routes } from './routes';
+import { ProfileTag } from '@components/profile-tag';
 
 export
 function App() {
@@ -29,6 +30,7 @@ function App() {
 						<Routes onPathChange={setPaneDisabled} />
 					</IonSplitPane>
 				</IonReactRouter>
+				<ProfileTag />
 			</IonApp>
 		</ContextProvider>
 	);
