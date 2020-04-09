@@ -70,5 +70,5 @@
 		"webpack-merge": "^4.2.2",
 		"workbox-webpack-plugin": "^5.1.2"
 	},
-	"description": "ShopLystr shopping app"
+	"description": "Phungible: Simple budgeting"
 }
