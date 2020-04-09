@@ -52,8 +52,9 @@ function Menu() {
 
 	useEffect(() => {
 		setTimeout(() => {
-			setModalIsOpen(!!setModalIsOpen.length);
+			setModalIsOpen(!!pendingTransactions.length);
 		}, 1500);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
