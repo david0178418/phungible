@@ -61,3 +61,16 @@ function pick<T extends object, U extends keyof T>(obj: T, paths: Array<U>): Par
 		return o;
 	}, Object.create(null));
 }
+
+export
+function dynamicallyLoadScript(url: string, onLoad?: () => any) {
+	const script = document.createElement('script');
+	script.src = url;
+	script.async = true;
+
+	if(onLoad) {
+		script.onload = onLoad;
+	}
+
+	document.body && document.body.appendChild(script);
+}
