@@ -35,7 +35,7 @@ module.exports = merge(envConfig, {
 		},
 	},
 	output: {
-		path: resolve(__dirname, 'build'),
+		path: resolve(__dirname, '../build'),
 		publicPath: '/',
 	},
 	module: {
