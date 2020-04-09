@@ -105,6 +105,11 @@ function ProfileEditPage() {
 		});
 	}
 
+	function setActiveProfile() {
+		profile.id && activeProfileSetter(profile.id);
+		goBack();
+	}
+
 	return (
 		<EditPage
 			defaultHref="/profiles"
@@ -133,7 +138,7 @@ function ProfileEditPage() {
 				</IonButton>
 			)}
 			{profile.id && !isActiveProfile && (
-				<IonButton expand="full" onClick={() => profile.id && activeProfileSetter(profile.id)}>
+				<IonButton expand="full" onClick={setActiveProfile}>
 					Switch to profile "{profile.name}"
 				</IonButton>
 			)}
