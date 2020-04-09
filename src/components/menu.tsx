@@ -10,7 +10,7 @@ import {
 	IonToolbar,
 	IonTitle,
 } from '@ionic/react';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
 	trendingUp,
@@ -49,13 +49,18 @@ function Menu() {
 	const { pathname } = useLocation();
 	const pendingTransactions = usePendingTransactionsCollection();
 	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const autoOpen = useRef(false);
 
 	useEffect(() => {
 		setTimeout(() => {
-			setModalIsOpen(!!pendingTransactions.length);
+			setModalIsOpen(autoOpen.current);
 		}, 1500);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		autoOpen.current = !!pendingTransactions.length;
+	}, [pendingTransactions]);
 
 	return (
 		<>
