@@ -8,12 +8,16 @@ import {
 	IonCol,
 	IonTextarea,
 	IonCheckbox,
+	IonCard,
+	IonButton,
 } from '@ionic/react';
 import { format, parse } from 'date-fns';
 import { AccountSelector } from '@components/account-selector';
-import { TransactionType, Transaction } from '@shared/interfaces';
+import { Collection, TransactionType, Transaction } from '@shared/interfaces';
 import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { MoneyInput } from '@components/money-input';
+import { alertController } from '@ionic/core';
+import { saveDoc } from '@common/api';
 
 interface Props {
 	transaction: Transaction;
@@ -49,6 +53,38 @@ function TransactionEditForm(props: Props) {
 			towardAccountId,
 			fromAccountId,
 		});
+	}
+
+	async function removeImage(imageIndex: number) {
+		const alert = await alertController.create({
+			header: 'Delete Receipt',
+			message: 'Permanently delete receipt?',
+			buttons: [
+				{
+					text: 'Cancel',
+					role: 'cancel',
+					cssClass: 'secondary',
+				}, {
+					text: 'Delete',
+					async handler() {
+						alert.dismiss();
+						const receiptUrls = transaction
+								.receiptUrls
+								.filter((url, i) => i !== imageIndex);
+						await saveDoc<Transaction>({
+								...transaction,
+								receiptUrls,
+							},
+							Collection.Transactions,
+						);
+
+						updateProp('receiptUrls', receiptUrls);
+					},
+				},
+			],
+		});
+
+		alert.present();
 	}
 
 	return (
@@ -153,6 +189,15 @@ function TransactionEditForm(props: Props) {
 					)}
 				</IonCol>
 			</IonRow>
+
+			{transaction.receiptUrls.map((url, i) => (
+				<IonCard key={i} >
+					<img src={url} />
+					<IonButton expand="full" color="danger" onClick={() => removeImage(i)}>
+						Delete
+					</IonButton>
+				</IonCard>
+			))}
 
 		</IonGrid>
 	);

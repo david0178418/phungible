@@ -74,6 +74,7 @@ function createTransaction(profileId: string, budget?: Budget): Transaction {
 		date: startOfDay(new Date()).toISOString(),
 		notes: '',
 		profileId,
+		receiptUrls: [],
 		pending: false,
 		towardAccountId: '',
 		type: TransactionType.Expense,

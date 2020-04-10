@@ -4,7 +4,7 @@
 	"author": "David Granado",
 	"homepage": "https://phungible.com/",
 	"scripts": {
-		"start": "NODE_ENV=development webpack-dev-server --config webpack/webpack.config.js",
+		"start": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --config webpack/webpack.config.js",
 		"fn:serve": "npm run fn:build && GOOGLE_APPLICATION_CREDENTIALS='./src/functions/phungible-key.json' firebase emulators:start --only functions",
 		"fn:build": "tsc --project src/functions/tsconfig.json",
 		"fn:deploy": "firebase deploy --only functions",

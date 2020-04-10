@@ -31,10 +31,15 @@ import {
 } from '@shared/interfaces';
 import { TransactionItem } from '@components/transaction-item';
 import { BudgetItem } from '@components/budget-item';
+import { ReceiptUploadButton } from '@components/receipt-upload-button';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { useEditItem } from '@common/hooks';
 import { canSaveTransaction } from '@common/validations';
-import { close, checkmark, addCircleOutline } from 'ionicons/icons';
+import {
+	close,
+	checkmark,
+	addCircleOutline,
+} from 'ionicons/icons';
 import { BudgetContext, ProfileContext } from '@common/contexts';
 import { createTransaction } from '@shared/create-docs';
 
@@ -244,6 +249,7 @@ function HomePage() {
 						</>
 					)}
 				</IonModal>
+				<ReceiptUploadButton />
 			</IonContent>
 		</IonPage>
 	);

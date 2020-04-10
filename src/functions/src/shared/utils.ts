@@ -55,6 +55,15 @@ function filterKeys<T>(obj: T, keys: keyof T | Array<keyof T>) {
 }
 
 export
+function uuid() {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+		// eslint-disable-next-line eqeqeq, no-mixed-operators
+		const r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+		return v.toString(16);
+	});
+}
+
+export
 function pick<T extends object, U extends keyof T>(obj: T, paths: Array<U>): Partial<T> {
 	return paths.reduce((o, k) => {
 		o[k] = obj[k];

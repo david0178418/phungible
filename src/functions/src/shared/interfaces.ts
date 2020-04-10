@@ -144,6 +144,7 @@ interface Transaction extends CommonTransaction {
 	pending?: boolean;
 	parentScheduledTransactionId: string;
 	parentBudgetId: string;
+	receiptUrls: string[];
 }
 
 export
