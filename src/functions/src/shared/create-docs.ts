@@ -86,6 +86,7 @@ function createTransaction(profileId: string, budget?: Budget): Transaction {
 export
 function createTransactionFromRecurringTransaction(date: string, rt: RecurringTransaction): Transaction {
 	return {
+		...createTransaction(rt.profileId),
 		...filterKeys(rt, [
 			'exceptions',
 			'repeatUnit',
