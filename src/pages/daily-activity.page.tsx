@@ -249,7 +249,13 @@ function HomePage() {
 						</>
 					)}
 				</IonModal>
-				<ReceiptUploadButton />
+				<IonFab
+					vertical="bottom"
+					horizontal="end"
+					slot="fixed"
+				>
+					<ReceiptUploadButton />
+				</IonFab>
 			</IonContent>
 		</IonPage>
 	);

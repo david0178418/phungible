@@ -74,7 +74,7 @@ function EditPage(props: Props) {
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding">
+			<IonContent className="ion-padding content-overscroll">
 
 				{!loading && children}
 

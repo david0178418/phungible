@@ -6,7 +6,6 @@ import React, {
 	useContext,
 } from 'react';
 import {
-	IonFab,
 	IonFabButton,
 	IonIcon,
 	IonFabList,
@@ -31,6 +30,7 @@ function checkCaptureSupport() {
 
 interface ReceiptUploadButtonProps {
 	transaction?: Transaction;
+	onUpload?: (receiptUrls: string[]) => void;
 }
 
 export
@@ -74,13 +74,14 @@ function ReceiptUploadButton(props: ReceiptUploadButtonProps) {
 		const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
 
 		if(props.transaction) {
+			const receiptUrls = [downloadURL,
+				...props.transaction.receiptUrls,
+			];
 			await saveDoc({
 				...props.transaction,
-				receiptUrls: [
-					downloadURL,
-					...props.transaction.receiptUrls,
-				],
+				receiptUrls,
 			}, Collection.Transactions);
+			props.onUpload && props.onUpload(receiptUrls);
 			loadingController.dismiss();
 		} else if(profile?.id) {
 			const newTransaction = await saveDoc<Transaction>({
@@ -137,30 +138,28 @@ function ReceiptUploadButton(props: ReceiptUploadButtonProps) {
 				accept="image/*"
 				onChange={uploadImage}
 			/>
-			<IonFab vertical="bottom" horizontal="end" slot="fixed">
-				{supportsCapture && (
-					<>
-						<IonFabButton color="secondary">
-							<IonIcon icon={receipt} />
-						</IonFabButton>
-						<IonFabList side="top">
-							<IonFabButton onClick={() => cameraEl.current?.click()}>
-								<IonIcon icon={camera} />
-							</IonFabButton>
-						</IonFabList>
-						<IonFabList side="start">
-							<IonFabButton onClick={() => fileEl.current?.click()}>
-								<IonIcon icon={image} />
-							</IonFabButton>
-						</IonFabList>
-					</>
-				)}
-				{!supportsCapture && (
-					<IonFabButton color="secondary" onClick={() => fileEl.current?.click()}>
+			{supportsCapture && (
+				<>
+					<IonFabButton color="secondary">
 						<IonIcon icon={receipt} />
 					</IonFabButton>
-				)}
-			</IonFab>
+					<IonFabList side="top">
+						<IonFabButton onClick={() => cameraEl.current?.click()}>
+							<IonIcon icon={camera} />
+						</IonFabButton>
+					</IonFabList>
+					<IonFabList side="start">
+						<IonFabButton onClick={() => fileEl.current?.click()}>
+							<IonIcon icon={image} />
+						</IonFabButton>
+					</IonFabList>
+				</>
+			)}
+			{!supportsCapture && (
+				<IonFabButton color="secondary" onClick={() => fileEl.current?.click()}>
+					<IonIcon icon={receipt} />
+				</IonFabButton>
+			)}
 		</>
 	);
 }

@@ -75,7 +75,7 @@ function CollectionPageBody<T extends (Profile | ProfileDocs)>(props: Props<T>) 
 						<Fragment key={doc.id}>
 							{canEdit(doc) ? (
 								<IonItemSliding>
-									<IonItemOptions side="start">
+									<IonItemOptions side="start" onIonSwipe={() => onItemDelete(doc)}>
 										<IonItemOption
 											expandable
 											color="danger"

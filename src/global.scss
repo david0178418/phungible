@@ -106,6 +106,12 @@ html ion-app {
 	position: relative;
 }
 
+
+// TODO figure how nicer solution
+.content-overscroll {
+	margin-bottom: 75px
+}
+
 ion-list {
 	& > {
 		ion-item-sliding:last-child,

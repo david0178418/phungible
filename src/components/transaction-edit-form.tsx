@@ -10,6 +10,7 @@ import {
 	IonCheckbox,
 	IonCard,
 	IonButton,
+	IonFab,
 } from '@ionic/react';
 import { format, parse } from 'date-fns';
 import { AccountSelector } from '@components/account-selector';
@@ -18,6 +19,7 @@ import { TransactionTypeSelector } from '@components/transaction-type-selector';
 import { MoneyInput } from '@components/money-input';
 import { alertController } from '@ionic/core';
 import { saveDoc } from '@common/api';
+import { ReceiptUploadButton } from './receipt-upload-button';
 
 interface Props {
 	transaction: Transaction;
@@ -88,118 +90,131 @@ function TransactionEditForm(props: Props) {
 	}
 
 	return (
-		<IonGrid>
-			<IonRow>
-				<IonCol>
-					<IonItem>
-						<IonLabel position="stacked">
-							Name
-						</IonLabel>
-						<IonInput
-							value={transaction.name}
-							onIonChange={({detail}) => {
-								typeof detail.value === 'string' &&
-								updateProp('name', detail.value);
-							}}
-						/>
-					</IonItem>
-				</IonCol>
-				<IonCol size="3">
-					<MoneyInput
-						amount={transaction.amount}
-						onUpdate={(amount) => updateProp('amount', amount)}
-					/>
-				</IonCol>
-			</IonRow>
-		
-			{!transaction.parentBudgetId && (
+		<>
+			<IonGrid>
 				<IonRow>
 					<IonCol>
-						<TransactionTypeSelector
-							type={transaction.type}
-							onSelect={handleTransactionTypeUpdate}
+						<IonItem>
+							<IonLabel position="stacked">
+								Name
+							</IonLabel>
+							<IonInput
+								value={transaction.name}
+								onIonChange={({detail}) => {
+									typeof detail.value === 'string' &&
+									updateProp('name', detail.value);
+								}}
+							/>
+						</IonItem>
+					</IonCol>
+					<IonCol size="3">
+						<MoneyInput
+							amount={transaction.amount}
+							onUpdate={(amount) => updateProp('amount', amount)}
 						/>
 					</IonCol>
 				</IonRow>
-			)}
-
-			<IonRow>
-				<IonCol>
-					<IonItem>
-						<IonLabel position="stacked">
-							Notes
-						</IonLabel>
-						<IonTextarea
-							value={transaction.notes}
-							onIonChange={({detail}) => updateProp('notes', detail.value || '')}
-						/>
-					</IonItem>
-				</IonCol>
-			</IonRow>
-
-			<IonRow>
-				<IonCol>
-					<IonItem>
-						<IonLabel>
-							Pending
-						</IonLabel>
-						<IonCheckbox
-							slot="start"
-							checked={transaction.pending}
-							onIonChange={({detail}) => updateProp('pending', detail.checked)}
-						/>
-					</IonItem>
-					<IonItem>
-						<IonLabel position="stacked">
-							Date
-						</IonLabel>
-						<IonInput
-							type="date"
-							value={format(new Date(transaction.date), 'yyyy-MM-dd')}
-							onIonChange={({detail}) => {
-								if(typeof detail.value === 'string') {
-									detail.value && updateProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
-								}
-							}}
-						/>
-					</IonItem>
-				</IonCol>
-			</IonRow>
 			
-			<IonRow>
-				<IonCol>
-					{transaction.type !== TransactionType.Income && (
-						<AccountSelector
-							label="From Account"
-							value={transaction.fromAccountId}
-							onChange={account => updateProp('fromAccountId', account)}
-						/>
-					)}
-				</IonCol>
-			</IonRow>
+				{!transaction.parentBudgetId && (
+					<IonRow>
+						<IonCol>
+							<TransactionTypeSelector
+								type={transaction.type}
+								onSelect={handleTransactionTypeUpdate}
+							/>
+						</IonCol>
+					</IonRow>
+				)}
 
-			<IonRow>
-				<IonCol>
-					{transaction.type !== TransactionType.Expense && (
-						<AccountSelector
-							label="Toward Account"
-							value={transaction.towardAccountId}
-							onChange={account => updateProp('towardAccountId', account)}
-						/>
-					)}
-				</IonCol>
-			</IonRow>
+				<IonRow>
+					<IonCol>
+						<IonItem>
+							<IonLabel position="stacked">
+								Notes
+							</IonLabel>
+							<IonTextarea
+								value={transaction.notes}
+								onIonChange={({detail}) => updateProp('notes', detail.value || '')}
+							/>
+						</IonItem>
+					</IonCol>
+				</IonRow>
 
-			{transaction.receiptUrls.map((url, i) => (
-				<IonCard key={i} >
-					<img src={url} />
-					<IonButton expand="full" color="danger" onClick={() => removeImage(i)}>
-						Delete
-					</IonButton>
-				</IonCard>
-			))}
+				<IonRow>
+					<IonCol>
+						<IonItem>
+							<IonLabel>
+								Pending
+							</IonLabel>
+							<IonCheckbox
+								slot="start"
+								checked={transaction.pending}
+								onIonChange={({detail}) => updateProp('pending', detail.checked)}
+							/>
+						</IonItem>
+						<IonItem>
+							<IonLabel position="stacked">
+								Date
+							</IonLabel>
+							<IonInput
+								type="date"
+								value={format(new Date(transaction.date), 'yyyy-MM-dd')}
+								onIonChange={({detail}) => {
+									if(typeof detail.value === 'string') {
+										detail.value && updateProp('date', parse(detail.value, 'yyyy-MM-dd', new Date()).toISOString());
+									}
+								}}
+							/>
+						</IonItem>
+					</IonCol>
+				</IonRow>
+				
+				<IonRow>
+					<IonCol>
+						{transaction.type !== TransactionType.Income && (
+							<AccountSelector
+								label="From Account"
+								value={transaction.fromAccountId}
+								onChange={account => updateProp('fromAccountId', account)}
+							/>
+						)}
+					</IonCol>
+				</IonRow>
 
-		</IonGrid>
+				<IonRow>
+					<IonCol>
+						{transaction.type !== TransactionType.Expense && (
+							<AccountSelector
+								label="Toward Account"
+								value={transaction.towardAccountId}
+								onChange={account => updateProp('towardAccountId', account)}
+							/>
+						)}
+					</IonCol>
+				</IonRow>
+
+				{transaction.receiptUrls.map((url, i) => (
+					<IonCard key={i} >
+						<img src={url} />
+						<IonButton expand="full" color="danger" onClick={() => removeImage(i)}>
+							Delete
+						</IonButton>
+					</IonCard>
+				))}
+			</IonGrid>
+
+			<IonFab
+				edge
+				vertical="top"
+				horizontal="end"
+				slot="fixed"
+			>
+				<ReceiptUploadButton
+					transaction={transaction}
+					onUpload={(receiptUrls) => updateProp('receiptUrls', receiptUrls)}
+				/>
+			</IonFab>
+		</>
 	);
 }
 
