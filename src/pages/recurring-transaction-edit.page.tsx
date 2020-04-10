@@ -29,6 +29,7 @@ import { useStatePropSetter } from '@common/hooks';
 import { MoneyInput } from '@components/money-input';
 import { ProfileContext } from '@common/contexts';
 import { createRecurringTransaction } from '@shared/create-docs';
+import { ExpenseCategorySelector } from '@components/expense-category-selector';
 
 export
 function RecurringTransactionEditPage() {
@@ -118,10 +119,15 @@ function RecurringTransactionEditPage() {
 		const towardAccountId = type === TransactionType.Expense ?
 			'' :
 			transaction.towardAccountId;
+
+		const expenseCategory = (type !== TransactionType.Expense) ?
+			null:
+			transaction.expenseCategory;
 		
 		setTransaction({
 			...transaction,
 			type,
+			expenseCategory,
 			towardAccountId,
 			fromAccountId,
 		});
@@ -174,14 +180,18 @@ function RecurringTransactionEditPage() {
 				type={transaction.type}
 				onSelect={handleTransactionTypeUpdate}
 			/>
-			<IonItem>
-				<IonLabel position="stacked">
-					Notes
-				</IonLabel>
-				<IonTextarea
-					onIonChange={({detail}) => setProp('notes', detail.value || '')}
-				/>
-			</IonItem>
+			{transaction.type === TransactionType.Expense && (
+				<IonRow>
+					<IonCol>
+						<ExpenseCategorySelector
+							label="Expense Category"
+							value={transaction.expenseCategory}
+							onChange={expenseCategory => setProp('expenseCategory', expenseCategory)}
+						/>
+					</IonCol>
+				</IonRow>
+			)}
+
 			<IonItem>
 				<IonLabel position="stacked">
 					Starts
@@ -211,6 +221,15 @@ function RecurringTransactionEditPage() {
 					onChange={account => setProp('towardAccountId', account)}
 				/>
 			)}
+
+			<IonItem>
+				<IonLabel position="stacked">
+					Notes
+				</IonLabel>
+				<IonTextarea
+					onIonChange={({detail}) => setProp('notes', detail.value || '')}
+				/>
+			</IonItem>
 
 			<RepetitionSelector
 				date={transaction.date}

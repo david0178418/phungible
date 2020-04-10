@@ -18,6 +18,7 @@ import { format, parse, startOfDay } from 'date-fns';
 import { MoneyInput } from '@components/money-input';
 import { ProfileContext } from '@common/contexts';
 import { createBudget } from '@shared/create-docs';
+import { ExpenseCategorySelector } from '@components/expense-category-selector';
 
 export
 function BudgetEditPage() {
@@ -136,6 +137,16 @@ function BudgetEditPage() {
 					</IonCol>
 				</IonRow>
 			</IonGrid>
+
+			<IonRow>
+					<IonCol>
+						<ExpenseCategorySelector
+							label="Expense Category"
+							value={budget.expenseCategory}
+							onChange={expenseCategory => setProp('expenseCategory', expenseCategory)}
+						/>
+					</IonCol>
+				</IonRow>
 
 			<IonItem>
 				<IonLabel position="stacked">
