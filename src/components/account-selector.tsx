@@ -4,7 +4,7 @@ import { AccountsContext } from '@common/contexts';
 
 interface Props {
 	label: string;
-	value: string;
+	value: string | null;
 	onChange(id: string): void;
 }
 

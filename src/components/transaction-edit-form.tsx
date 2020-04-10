@@ -20,6 +20,7 @@ import { MoneyInput } from '@components/money-input';
 import { alertController } from '@ionic/core';
 import { saveDoc } from '@common/api';
 import { ReceiptUploadButton } from './receipt-upload-button';
+import { ExpenseCategorySelector } from './expense-category-selector';
 
 interface Props {
 	transaction: Transaction;
@@ -41,17 +42,22 @@ function TransactionEditForm(props: Props) {
 	}
 
 	function handleTransactionTypeUpdate(type: TransactionType) {
-		const fromAccountId = type === TransactionType.Income ?
+		const fromAccountId = (type === TransactionType.Income) ?
 			'' :
 			transaction.fromAccountId;
 
-		const towardAccountId = type === TransactionType.Expense ?
+		const towardAccountId = (type === TransactionType.Expense) ?
 			'' :
 			transaction.towardAccountId;
 		
+		const expenseCategory = (type !== TransactionType.Expense) ?
+			null:
+			transaction.expenseCategory;
+
 		onUpdate({
 			...transaction,
 			type,
+			expenseCategory,
 			towardAccountId,
 			fromAccountId,
 		});
@@ -126,19 +132,17 @@ function TransactionEditForm(props: Props) {
 					</IonRow>
 				)}
 
-				<IonRow>
-					<IonCol>
-						<IonItem>
-							<IonLabel position="stacked">
-								Notes
-							</IonLabel>
-							<IonTextarea
-								value={transaction.notes}
-								onIonChange={({detail}) => updateProp('notes', detail.value || '')}
+				{transaction.type === TransactionType.Expense && (
+					<IonRow>
+						<IonCol>
+							<ExpenseCategorySelector
+								label="Expense Category"
+								value={transaction.expenseCategory}
+								onChange={expenseCategory => updateProp('expenseCategory', expenseCategory)}
 							/>
-						</IonItem>
-					</IonCol>
-				</IonRow>
+						</IonCol>
+					</IonRow>
+				)}
 
 				<IonRow>
 					<IonCol>
@@ -169,27 +173,41 @@ function TransactionEditForm(props: Props) {
 					</IonCol>
 				</IonRow>
 				
-				<IonRow>
-					<IonCol>
-						{transaction.type !== TransactionType.Income && (
+				{transaction.type !== TransactionType.Income && (
+					<IonRow>
+						<IonCol>
 							<AccountSelector
 								label="From Account"
 								value={transaction.fromAccountId}
 								onChange={account => updateProp('fromAccountId', account)}
 							/>
-						)}
-					</IonCol>
-				</IonRow>
+						</IonCol>
+					</IonRow>
+				)}
 
-				<IonRow>
-					<IonCol>
-						{transaction.type !== TransactionType.Expense && (
+				{transaction.type !== TransactionType.Expense && (
+					<IonRow>
+						<IonCol>
 							<AccountSelector
 								label="Toward Account"
 								value={transaction.towardAccountId}
 								onChange={account => updateProp('towardAccountId', account)}
 							/>
-						)}
+						</IonCol>
+					</IonRow>
+				)}
+
+				<IonRow>
+					<IonCol>
+						<IonItem>
+							<IonLabel position="stacked">
+								Notes
+							</IonLabel>
+							<IonTextarea
+								value={transaction.notes}
+								onIonChange={({detail}) => updateProp('notes', detail.value || '')}
+							/>
+						</IonItem>
 					</IonCol>
 				</IonRow>
 

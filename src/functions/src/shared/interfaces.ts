@@ -27,6 +27,53 @@ enum Collection {
 }
 
 export
+interface ExpenseCategory {
+	id: string;
+	label: string;
+}
+
+export
+const ExpenseCategories: ExpenseCategory[] = [
+	{
+		id: 'home',
+		label: 'Home',
+	}, {
+		id: 'transportation',
+		label: 'Transportation',
+	}, {
+		id: 'food',
+		label: 'Food',
+	}, {
+		id: 'utilities',
+		label: 'Utilities',
+	}, {
+		id: 'health',
+		label: 'Health',
+	}, {
+		id: 'medical',
+		label: 'Medical',
+	}, {
+		id: 'savings',
+		label: 'Savings',
+	}, {
+		id: 'debt-payment',
+		label: 'Debt Payment',
+	}, {
+		id: 'taxes',
+		label: 'Taxes',
+	}, {
+		id: 'entertainment',
+		label: 'Entertainment',
+	}, {
+		id: 'miscellaneous-necessities',
+		label: 'Miscellaneous Necessities',
+	}, {
+		id: 'miscellaneous-extra',
+		label: 'Miscellaneous Extra',
+	},
+];
+
+export
 type ActiveProfileSetter = (newProfileId: string) => void;
 
 export
@@ -121,6 +168,7 @@ interface Budget {
 	repeatValues: number[];
 	date: string;
 	transactionType: TransactionType;
+	expenseCategory: ExpenseCategory | null;
 	// Needed??
 	// today: Date;
 	// towardAccountId: string | null;
@@ -137,6 +185,7 @@ interface CommonTransaction {
 	labels: string[];
 	name: string;
 	type: TransactionType;
+	expenseCategory: ExpenseCategory | null;
 }
 
 export

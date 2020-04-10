@@ -37,8 +37,12 @@ function EditPage(props: Props) {
 		loading,
 	} = props;
 	const loaderRef = useRef<HTMLIonLoadingElement | null>(null);
+	const loadingRef = useRef(loading);
 
 	useEffect(() => {
+		// TODO clean this crazy up
+		loadingRef.current = loading;
+
 		(async () => {
 			if(loading && !loaderRef.current) {
 				const top = await loadingController.getTop();
@@ -48,7 +52,7 @@ function EditPage(props: Props) {
 				}
 
 				loaderRef.current = await loadingController.create({});
-				loaderRef.current.present();
+				loadingRef.current && loaderRef.current.present();
 			} else if(!loading && loaderRef.current) {
 				loaderRef.current.dismiss();
 			}

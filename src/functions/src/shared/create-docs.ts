@@ -40,6 +40,7 @@ function createBudget(profileId: string): Budget {
 		repeatType: RepeatType.Days,
 		repeatUnit: RepeatUnit.Week,
 		repeatValues: [],
+		expenseCategory: null,
 		date: startOfDay(new Date()).toISOString(),
 		transactionType: TransactionType.BudgetedExpense,
 	};
@@ -55,12 +56,13 @@ function createRecurringTransaction(profileId: string): RecurringTransaction {
 		name: '',
 		notes: '',
 		profileId,
+		expenseCategory: null,
 		repeatType: RepeatType.Dates,
 		repeatUnit: RepeatUnit.Month,
 		repeatValues: [],
 		date: startOfDay(new Date()).toISOString(),
 		towardAccountId: '',
-		type: TransactionType.Income,
+		type: TransactionType.Expense,
 	};
 }
 
@@ -74,6 +76,7 @@ function createTransaction(profileId: string, budget?: Budget): Transaction {
 		date: startOfDay(new Date()).toISOString(),
 		notes: '',
 		profileId,
+		expenseCategory: null,
 		receiptUrls: [],
 		pending: false,
 		towardAccountId: '',
