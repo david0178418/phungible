@@ -228,6 +228,7 @@ function TransactionEditForm(props: Props) {
 				slot="fixed"
 			>
 				<ReceiptUploadButton
+					expandDown
 					transaction={transaction}
 					onUpload={(receiptUrls) => updateProp('receiptUrls', receiptUrls)}
 				/>

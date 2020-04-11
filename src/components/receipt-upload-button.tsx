@@ -29,6 +29,7 @@ function checkCaptureSupport() {
 }
 
 interface ReceiptUploadButtonProps {
+	expandDown?: boolean;
 	transaction?: Transaction;
 	onUpload?: (receiptUrls: string[]) => void;
 }
@@ -143,7 +144,7 @@ function ReceiptUploadButton(props: ReceiptUploadButtonProps) {
 					<IonFabButton color="secondary">
 						<IonIcon icon={receipt} />
 					</IonFabButton>
-					<IonFabList side="top">
+					<IonFabList side={props.expandDown ? 'bottom' : 'top'}>
 						<IonFabButton onClick={() => cameraEl.current?.click()}>
 							<IonIcon icon={camera} />
 						</IonFabButton>

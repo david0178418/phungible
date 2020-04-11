@@ -233,19 +233,21 @@ function HomePage() {
 									</IonTitle>
 								</IonToolbar>
 							</IonHeader>
-							<TransactionEditForm
-								transaction={activeTransaction}
-								onUpdate={(t => setActiveTransaction(t))}
-							/>
-							<IonFab vertical="bottom" horizontal="end" slot="fixed">
-								<IonFabButton
-									color="secondary"
-									disabled={!isValid}
-									onClick={handleSubmit}
-								>
-									<IonIcon icon={checkmark} />
-								</IonFabButton>
-							</IonFab>
+							<IonContent>
+								<TransactionEditForm
+									transaction={activeTransaction}
+									onUpdate={(t => setActiveTransaction(t))}
+								/>
+								<IonFab vertical="bottom" horizontal="end" slot="fixed">
+									<IonFabButton
+										color="secondary"
+										disabled={!isValid}
+										onClick={handleSubmit}
+									>
+										<IonIcon icon={checkmark} />
+									</IonFabButton>
+								</IonFab>
+							</IonContent>
 						</>
 					)}
 				</IonModal>
