@@ -12,7 +12,7 @@ function init() {
 
 	wb.register();
 
-	setInterval(() => wb.update(), 1000 * 60 * 1);
+	setInterval(() => wb.update(), 1000 * 60 * 30);
 
 	async function showSkipWaitingPrompt(event: WorkboxLifecycleWaitingEvent) {
 		// `event.wasWaitingBeforeRegister` will be false if this is
