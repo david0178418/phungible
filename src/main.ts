@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { App } from './app';
-import { setupConfig } from '@ionic/react';
 import { dynamicallyLoadScript } from '@shared/utils';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
-
-setupConfig({
-	mode: 'md',
-});
 
 render(
 	React.createElement(App),
