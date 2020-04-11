@@ -12,6 +12,8 @@ function init() {
 
 	wb.register();
 
+	setInterval(() => wb.update(), 1000 * 60 * 1);
+
 	async function showSkipWaitingPrompt(event: WorkboxLifecycleWaitingEvent) {
 		// `event.wasWaitingBeforeRegister` will be false if this is
 		// the first time the updated service worker is waiting.
