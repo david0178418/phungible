@@ -183,12 +183,6 @@ function TrendsPage() {
 				<p>
 					Expense Total: ${moneyFormat(expenseTotal)}
 				</p>
-				<hr/>
-				{Object.entries(expenseTotals).map(([cat, val]) => (
-					<p key={cat}>
-						{cat}: ${moneyFormat(val)}
-					</p>
-				))}
 				<div className="graph-container">
 					<IonGrid>
 						<IonRow>
@@ -213,6 +207,9 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											wrapperStyle={{
+												zIndex: 1000,
+											}}
 											formatter={val => `$${moneyFormat(val as number)}`}
 										/>
 										<Bar
@@ -245,6 +242,9 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											wrapperStyle={{
+												zIndex: 1000,
+											}}
 											formatter={val => `$${moneyFormat(val as number)}`}
 										/>
 										{Object.keys(expenseTotals).map(e => (
@@ -281,6 +281,9 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											wrapperStyle={{
+												zIndex: 1000,
+											}}
 											formatter={val => `$${moneyFormat(val as number)}`}
 										/>
 										<Bar
