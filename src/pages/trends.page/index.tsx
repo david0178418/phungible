@@ -45,7 +45,7 @@ import { close, checkmark } from 'ionicons/icons';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 
 enum Tabs {
-	Breakdown = 'breakdown',
+	History = 'history',
 	Projection = 'projection',
 }
 
@@ -68,7 +68,7 @@ const CategoryColors: any = {
 
 export
 function TrendsPage() {
-	const [selectedTab, setSeletedTab] = useState<Tabs>(Tabs.Breakdown);
+	const [selectedTab, setSeletedTab] = useState<Tabs>(Tabs.History);
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [fromDate, setFromDate] = useState(() => startOfDay(sub(new Date(), {months: 1})));
 	const [toDate, setToDate] = useState(() => startOfDay(new Date()));
@@ -154,8 +154,8 @@ function TrendsPage() {
 				</p>
 				<IonSegment value={selectedTab}>
 					<IonSegmentButton
-						value={Tabs.Breakdown}
-						onClick={() => setSeletedTab(Tabs.Breakdown)}
+						value={Tabs.History}
+						onClick={() => setSeletedTab(Tabs.History)}
 					>
 						Breakdown
 					</IonSegmentButton>
@@ -220,8 +220,8 @@ function TrendsPage() {
 									<BarChart
 										layout="vertical"
 										data={[{
-											name: `Income $${moneyFormat(incomeTotal)}`,
-											value: incomeTotal,
+											name: 'Income',
+											Amount: incomeTotal,
 										}]}
 									>
 										<CartesianGrid strokeDasharray="3 3" />
@@ -245,7 +245,7 @@ function TrendsPage() {
 											}}
 										/>
 										<Bar
-											dataKey="value"
+											dataKey="Amount"
 											fill={Colors.Green}
 										/>
 									</BarChart>
@@ -302,8 +302,8 @@ function TrendsPage() {
 									<BarChart
 										layout="vertical"
 										data={[{
-											name: `Cashflow ${incomeTotal > expenseTotal ? '' : '-'}$${moneyFormat(Math.abs(incomeTotal - expenseTotal))}`,
-											value: Math.abs(incomeTotal - expenseTotal),
+											name: 'Cashflow',
+											Amount: Math.abs(incomeTotal - expenseTotal),
 										}]}
 									>
 										<CartesianGrid strokeDasharray="3 3" />
@@ -318,7 +318,7 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
-											formatter={val => `$${moneyFormat(val as number)}`}
+											formatter={() => `${incomeTotal > expenseTotal ? '' : '-'}$${moneyFormat(Math.abs(incomeTotal - expenseTotal))}`}
 											wrapperStyle={{
 												zIndex: 1000,
 											}}
@@ -327,7 +327,7 @@ function TrendsPage() {
 											}}
 										/>
 										<Bar
-											dataKey="value"
+											dataKey="Amount"
 											fill={
 												incomeTotal > expenseTotal ?
 													Colors.Green :
