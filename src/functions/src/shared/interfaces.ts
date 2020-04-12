@@ -35,17 +35,17 @@ interface ExpenseCategory {
 export
 const ExpenseCategories: ExpenseCategory[] = [
 	{
-		id: 'home',
-		label: 'Home',
+		id: 'clothing',
+		label: 'Clothing',
 	}, {
-		id: 'transportation',
-		label: 'Transportation',
+		id: 'debt-payment',
+		label: 'Debt Payment',
+	}, {
+		id: 'entertainment',
+		label: 'Entertainment',
 	}, {
 		id: 'food',
 		label: 'Food',
-	}, {
-		id: 'utilities',
-		label: 'Utilities',
 	}, {
 		id: 'health',
 		label: 'Health',
@@ -53,25 +53,75 @@ const ExpenseCategories: ExpenseCategory[] = [
 		id: 'medical',
 		label: 'Medical',
 	}, {
-		id: 'savings',
-		label: 'Savings',
-	}, {
-		id: 'debt-payment',
-		label: 'Debt Payment',
-	}, {
-		id: 'taxes',
-		label: 'Taxes',
-	}, {
-		id: 'entertainment',
-		label: 'Entertainment',
+		id: 'miscellaneous-extra',
+		label: 'Miscellaneous Extra',
 	}, {
 		id: 'miscellaneous-necessities',
 		label: 'Miscellaneous Necessities',
 	}, {
-		id: 'miscellaneous-extra',
-		label: 'Miscellaneous Extra',
+		id: 'home',
+		label: 'Home',
+	}, {
+		id: 'savings',
+		label: 'Savings/Investment',
+	}, {
+		id: 'taxes',
+		label: 'Taxes',
+	}, {
+		id: 'transportation',
+		label: 'Transportation',
+	}, {
+		id: 'utilities',
+		label: 'Utilities',
 	},
 ];
+
+export
+enum Colors {
+	Aqua = '#00ffff',
+	Azure = '#f0ffff',
+	Beige = '#f5f5dc',
+	Black = '#000000',
+	Blue = '#0000ff',
+	Brown = '#a52a2a',
+	Cyan = '#00ffff',
+	DarkBlue = '#00008b',
+	DarkCyan = '#008b8b',
+	DarkGrey = '#a9a9a9',
+	DarkGreen = '#006400',
+	DarkKhaki = '#bdb76b',
+	DarkMagenta = '#8b008b',
+	DarkOliveGreen = '#556b2f',
+	DarkOrange = '#ff8c00',
+	DarkOrchid = '#9932cc',
+	DarkRed = '#8b0000',
+	DarkSalmon = '#e9967a',
+	DarkViolet = '#9400d3',
+	Fuchsia = '#ff00ff',
+	Gold = '#ffd700',
+	Green = '#008000',
+	Indigo = '#4b0082',
+	Khaki = '#f0e68c',
+	LightBlue = '#add8e6',
+	LightCyan = '#e0ffff',
+	LightGreen = '#90ee90',
+	LightGrey = '#d3d3d3',
+	LightPink = '#ffb6c1',
+	Lightyellow = '#ffffe0',
+	Lime = '#00ff00',
+	Magenta = '#ff00ff',
+	Maroon = '#800000',
+	Navy = '#000080',
+	Olive = '#808000',
+	Orange = '#ffa500',
+	Pink = '#ffc0cb',
+	Purple = '#800080',
+	Violet = '#800080',
+	Red = '#ff0000',
+	Silver = '#c0c0c0',
+	White = '#ffffff',
+	Yellow = '#ffff00',
+}
 
 export
 type ActiveProfileSetter = (newProfileId: string) => void;

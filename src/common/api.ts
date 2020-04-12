@@ -6,6 +6,7 @@ import {
 	Username,
 	RecurringTransaction,
 	Profile,
+	Transaction,
 } from '@shared/interfaces';
 import { loadingController } from '@ionic/core';
 import { occurrancesInRange } from '@common/occurrence-fns';
@@ -206,4 +207,18 @@ async function runRecurringTransactionCheck(profile: Profile) {
 	batch.commit();
 	
 	console.log('new transactions', transactions);
+}
+
+export
+async function getTransactionsInDateRage(from: Date | string, to: Date | string, profileId: string) {
+	const fromStr = from instanceof Date ? from.toISOString() : from;
+	const toStr = to instanceof Date ? to.toISOString() : to;
+	
+	const { docs } = await db.collection(Collection.Transactions)
+		.where('profileId', '==', profileId)
+		.where('date', '>=', fromStr)
+		.where('date', '<', toStr)
+		.get();
+
+	return docs.map(d => d.data() as Transaction);
 }
