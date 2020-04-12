@@ -5,7 +5,7 @@ import {
 	IonTitle,
 	IonPage,
 	IonContent,
-	IonButtons,
+	IonButton,
 	IonMenuButton,
 	IonSegment,
 	IonSegmentButton,
@@ -16,10 +16,15 @@ import {
 	IonRow,
 	IonCol,
 	IonList,
+	IonButtons,
+	IonModal,
+	IonIcon,
+	IonFabButton,
+	IonFab,
 } from '@ionic/react';
 import { format, parse, sub, startOfDay } from 'date-fns';
-import { Colors, TransactionType, Transaction } from '@shared/interfaces';
-import { getTransactionsInDateRage } from '@common/api';
+import { Colors, TransactionType, Transaction, Collection } from '@shared/interfaces';
+import { getTransactionsInDateRage, saveDoc } from '@common/api';
 import {
 	CartesianGrid,
 	XAxis,
@@ -34,6 +39,10 @@ import { moneyFormat } from '@shared/utils';
 import './trends.page.scss';
 import { ProfileContext } from '@common/contexts';
 import { TransactionItem } from '@components/transaction-item';
+import { useEditItem } from '@common/hooks';
+import { canSaveTransaction } from '@common/validations';
+import { close, checkmark } from 'ionicons/icons';
+import { TransactionEditForm } from '@components/transaction-edit-form';
 
 enum Tabs {
 	Breakdown = 'breakdown',
@@ -41,7 +50,7 @@ enum Tabs {
 }
 
 const CategoryColors: any = {
-	'Clothing': Colors.Aqua,
+	'Clothing': Colors.Cyan,
 	'Debt Payment': Colors.Beige,
 	'Entertainment': Colors.Black,
 	'Food': Colors.Brown,
@@ -66,6 +75,14 @@ function TrendsPage() {
 	const [incomeTotal, setIncomeTotal] = useState(0);
 	const [expenseTotals, setExpenseTotals] = useState<any[]>([]);
 	const profile = useContext(ProfileContext);
+	const [
+		activeTransaction,
+		setActiveTransaction,
+		resetActiveTransaction,
+		isValid,
+	] = useEditItem<Transaction | null>(null, (t) =>
+		!!t && canSaveTransaction(t),
+	);
 
 	async function update() {
 		const ts = await getTransactionsInDateRage(
@@ -105,6 +122,18 @@ function TrendsPage() {
 		update();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+
+	async function handleSubmit() {
+		if(!(isValid && activeTransaction)) {
+			return;
+		}
+
+		const result = await saveDoc(activeTransaction, Collection.Transactions);
+
+		result && resetActiveTransaction(null);
+		update();
+	}
 
 	const expenseTotal = Object.values(expenseTotals).reduce((total, val) => total + val, 0);
 	const upperBound = incomeTotal > expenseTotal ? incomeTotal : expenseTotal;
@@ -174,9 +203,9 @@ function TrendsPage() {
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<IonButtons onClick={update}>
+				<IonButton onClick={update} expand="full">
 					Update
-				</IonButtons>
+				</IonButton>
 				<p>
 					Income Total: ${moneyFormat(incomeTotal)}
 				</p>
@@ -191,7 +220,7 @@ function TrendsPage() {
 									<BarChart
 										layout="vertical"
 										data={[{
-											name: 'Income',
+											name: `Income $${moneyFormat(incomeTotal)}`,
 											value: incomeTotal,
 										}]}
 									>
@@ -207,10 +236,13 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											formatter={val => `$${moneyFormat(val as number)}`}
 											wrapperStyle={{
 												zIndex: 1000,
 											}}
-											formatter={val => `$${moneyFormat(val as number)}`}
+											labelStyle={{
+												fontWeight: 'bold',
+											}}
 										/>
 										<Bar
 											dataKey="value"
@@ -226,7 +258,7 @@ function TrendsPage() {
 									<BarChart
 										layout="vertical"
 										data={[{
-											name: 'Expenses',
+											name: `Expenses $${moneyFormat(expenseTotal)}`,
 											...expenseTotals,
 										}]}
 									>
@@ -242,19 +274,24 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											formatter={val => `$${moneyFormat(val as number)}`}
 											wrapperStyle={{
 												zIndex: 1000,
 											}}
-											formatter={val => `$${moneyFormat(val as number)}`}
+											labelStyle={{
+												fontWeight: 'bold',
+											}}
 										/>
-										{Object.keys(expenseTotals).map(e => (
-											<Bar
-												stackId="a"
-												key={e}
-												dataKey={e}
-												fill={CategoryColors[e]}
-											/>
-										))}
+										{Object.keys(expenseTotals)
+											.sort((a: any, b: any) => expenseTotals[b] - expenseTotals[a])
+											.map(e => (
+												<Bar
+													stackId="a"
+													key={e}
+													dataKey={e}
+													fill={CategoryColors[e]}
+												/>
+											))}
 									</BarChart>
 								</ResponsiveContainer>
 							</IonCol>
@@ -265,7 +302,7 @@ function TrendsPage() {
 									<BarChart
 										layout="vertical"
 										data={[{
-											name: 'Cashflow',
+											name: `Cashflow ${incomeTotal > expenseTotal ? '' : '-'}$${moneyFormat(Math.abs(incomeTotal - expenseTotal))}`,
 											value: Math.abs(incomeTotal - expenseTotal),
 										}]}
 									>
@@ -281,10 +318,13 @@ function TrendsPage() {
 											type="category"
 										/>
 										<Tooltip
+											formatter={val => `$${moneyFormat(val as number)}`}
 											wrapperStyle={{
 												zIndex: 1000,
 											}}
-											formatter={val => `$${moneyFormat(val as number)}`}
+											labelStyle={{
+												fontWeight: 'bold',
+											}}
 										/>
 										<Bar
 											dataKey="value"
@@ -302,11 +342,46 @@ function TrendsPage() {
 				</div>
 				<IonList>
 					{transactions.map(t => (
-						<IonItem key={t.id}>
-							<TransactionItem transaction={t} />
+						<IonItem button key={t.id} onClick={() => setActiveTransaction(t)}>
+							<TransactionItem
+								transaction={t}
+							/>
 						</IonItem>
 					))}
 				</IonList>
+				<IonModal isOpen={!!activeTransaction}>
+					{activeTransaction &&  (
+						<>
+							<IonHeader>
+								<IonToolbar color="primary">
+									<IonButtons slot="start">
+										<IonButton onClick={() => resetActiveTransaction(null)}>
+											<IonIcon icon={close}/>
+										</IonButton>
+									</IonButtons>
+									<IonTitle>
+										{activeTransaction.id ? activeTransaction.name : 'Add Transaction'}
+									</IonTitle>
+								</IonToolbar>
+							</IonHeader>
+							<IonContent>
+								<TransactionEditForm
+									transaction={activeTransaction}
+									onUpdate={(t => setActiveTransaction(t))}
+								/>
+								<IonFab vertical="bottom" horizontal="end" slot="fixed">
+									<IonFabButton
+										color="secondary"
+										disabled={!isValid}
+										onClick={handleSubmit}
+									>
+										<IonIcon icon={checkmark} />
+									</IonFabButton>
+								</IonFab>
+							</IonContent>
+						</>
+					)}
+				</IonModal>
 			</IonContent>
 		</IonPage>
 	);
