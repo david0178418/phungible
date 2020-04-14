@@ -17,7 +17,7 @@ function numberFormat(num: number, decimalPlaces: number) {
 
 export
 function moneyFormat(intAmount: number, decimalPlaces = 2) {
-	return numberFormat(intAmount, decimalPlaces).toFixed(2);
+	return numberFormat(intAmount, decimalPlaces);
 }
 
 export
