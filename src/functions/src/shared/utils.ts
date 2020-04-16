@@ -1,4 +1,5 @@
 import { toastController } from '@ionic/core';
+import { parseISO, differenceInDays, addDays } from 'date-fns';
 
 export
 function range(startValue: number, size: number) {
@@ -28,6 +29,16 @@ function moneyParse(decimalAmount: number, decimalPlaces = -2) {
 export
 function findById<T extends {id?: string}>(id: string, accounts: T[]) {
 	return accounts.find(a => a.id === id);
+}
+
+export
+function first<T>(list: T[]) {
+	return list[0] || null;
+}
+
+export
+function last<T>(list: T[]) {
+	return list[list.length - 1] || null;
 }
 
 export
@@ -82,4 +93,18 @@ function dynamicallyLoadScript(url: string, onLoad?: () => any) {
 	}
 
 	document.body && document.body.appendChild(script);
+}
+
+export
+function dateRange(from: Date | string, to: Date | string) {
+	const fromDate = from instanceof Date ? from : parseISO(from);
+	const toDate = to instanceof Date ? to : parseISO(to);
+
+	return range(0, Math.abs(differenceInDays(fromDate, toDate)))
+		.map((val, i) => addDays(fromDate, i));
+}
+
+export
+function notNull<TValue>(value: TValue | null | undefined): value is TValue {
+    return value !== null && value !== undefined;
 }

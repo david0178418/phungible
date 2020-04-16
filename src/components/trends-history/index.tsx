@@ -19,8 +19,8 @@ import {
 	IonFab,
 } from '@ionic/react';
 import { format, parse, sub, startOfDay } from 'date-fns';
-import { Colors, TransactionType, Transaction, Collection } from '@shared/interfaces';
-import { getTransactionsInDateRage, saveDoc } from '@common/api';
+import { Colors, TransactionType, Transaction, ProfileCollection } from '@shared/interfaces';
+import { getProfileDocsInRange, saveProfileDoc } from '@common/api';
 import {
 	CartesianGrid,
 	XAxis,
@@ -75,10 +75,11 @@ function TrendsHistory() {
 	);
 
 	async function update() {
-		const ts = await getTransactionsInDateRage(
+		const ts = await getProfileDocsInRange<Transaction>(
 			fromDate,
 			toDate,
 			profile?.id || '',
+			ProfileCollection.Transactions,
 		);
 
 		setTransactions(ts);
@@ -119,7 +120,7 @@ function TrendsHistory() {
 			return;
 		}
 
-		const result = await saveDoc(activeTransaction, Collection.Transactions);
+		const result = await saveProfileDoc(activeTransaction, ProfileCollection.Transactions);
 
 		result && resetActiveTransaction(null);
 		update();
@@ -130,7 +131,9 @@ function TrendsHistory() {
 
 	return (
 		<>
-
+			<p>
+				Work in progress
+			</p>
 			<IonGrid>
 				<IonRow>
 					<IonCol>

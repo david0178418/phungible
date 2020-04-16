@@ -4,6 +4,17 @@ declare var process : {
 	}
 };
 
+declare global {
+	interface Array<T> {
+		concat<U>(...items: (U | ConcatArray<U>)[]): (T | U)[]
+	}
+}
+
+export
+enum Constants {
+	SandardDateFormat = 'yyyy-MM-dd',
+}
+
 export
 type ProfileDocs = Account |
 	Budget |
@@ -14,6 +25,14 @@ export
 type Docs = ProfileDocs |
 	Profile |
 	UserMeta;
+
+export
+enum ProfileCollection {
+	Accounts = 'accounts',
+	Budgets = 'budgets',
+	RecurringTransactions = 'recurring-transactions',
+	Transactions = 'transactions',
+}
 
 export
 enum Collection {
@@ -206,7 +225,7 @@ export
 interface Budget {
 	amount: number;
 	exceptions: string[];
-	fromAccountId: string | null;
+	fromAccountId: string;
 	id?: string;
 	labels: Label[];
 	name: string;
