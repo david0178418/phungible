@@ -42,6 +42,7 @@ import {
 } from 'ionicons/icons';
 import { BudgetContext, ProfileContext } from '@common/contexts';
 import { createTransaction } from '@shared/create-docs';
+import { currentPeriod } from '@common/occurrence-fns';
 
 enum PageTab {
 	Budgets = 'budgets',
@@ -66,6 +67,7 @@ function HomePage() {
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [loading, setLoading] = useState(false);
 	const budgets = useContext(BudgetContext);
+	const currentBudgets = budgets.filter(b => currentPeriod(b).every(period => !!period));
 
 	useEffect(() => {
 		refreshPage();
@@ -155,7 +157,7 @@ function HomePage() {
 									<IonSpinner/>
 								</IonItem>
 							)}
-							{!loading && budgets.map(budget => (
+							{!loading && currentBudgets.map(budget => (
 								<IonItem
 									button
 									key={budget.id}
@@ -164,7 +166,7 @@ function HomePage() {
 									<BudgetItem budget={budget} />
 								</IonItem>
 							))}
-							{!budgets.length && (
+							{!currentBudgets.length && (
 								<IonItem
 									lines="none"
 									routerLink="/budget"

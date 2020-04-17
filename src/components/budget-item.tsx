@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IonLabel, IonText, IonNote, IonSpinner } from '@ionic/react';
+import { IonLabel, IonText, IonSpinner, IonNote } from '@ionic/react';
 import { Budget, Collection, Transaction } from '@shared/interfaces';
 import { moneyFormat } from '@shared/utils';
 import { nextOccuranceText, currentPeriod } from '@common/occurrence-fns';
@@ -11,23 +11,35 @@ interface Props {
 
 export
 function BudgetItem(props: Props) {
-	const [loading, setLoading] = useState(false);
-	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const {
 		budget,
 	} = props;
+	const [loading, setLoading] = useState(false);
+	const [transactions, setTransactions] = useState<Transaction[]>([]);
+	const [period, setPeriod] = useState<string[]>([]);
+	const notApplicable = !period.every(date => !!date);
 	const remaningAmount = budget.amount - transactions
-		.reduce((total, t) =>  total + t.amount, 0);
+		.reduce((total, t) => total + t.amount, 0);
+
+	useEffect(() => {
+		setPeriod(currentPeriod(budget));
+	}, [budget]);
 
 	useEffect(() => {
 		let isMounted = true;
-		const [start, end] = currentPeriod(budget);
+
+		const [start, end] = period;
+
+		if(!(start && end)) {
+			return;
+		}
 
 		setLoading(true);
 
 		getCollectionRef(Collection.Transactions)
 			.where('date', '>=', start)
 			.where('date', '<', end)
+			.where('parentBudgetId', '==', budget.id)
 			.get()
 			.then(collection => {
 				if(isMounted) {
@@ -39,7 +51,8 @@ function BudgetItem(props: Props) {
 		return () => {
 			isMounted = false;
 		};
-	}, [budget]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [period]);
 
 	return (
 		<>
@@ -48,7 +61,10 @@ function BudgetItem(props: Props) {
 					<IonSpinner />
 				) : (
 					<>
-						${moneyFormat(remaningAmount)}
+						{notApplicable ?
+							'N/A' :
+							`$${moneyFormat(remaningAmount)}`
+						}
 					</>
 				)}
 			</IonText>
@@ -56,12 +72,12 @@ function BudgetItem(props: Props) {
 				<IonLabel>
 					{budget.name}
 					<p>
-						Renews in {nextOccuranceText(budget)}
+						out of ${moneyFormat(budget.amount)}
 					</p>
 				</IonLabel>
 				<IonNote>
 					<em>
-						${moneyFormat(budget.amount - remaningAmount)} out of ${moneyFormat(budget.amount)} spent
+						Renews in {nextOccuranceText(budget)}
 					</em>
 				</IonNote>
 			</div>
