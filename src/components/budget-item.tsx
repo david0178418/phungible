@@ -56,7 +56,7 @@ function BudgetItem(props: Props) {
 
 	return (
 		<>
-			<IonText slot="start" color={budget.amount > 0 ? 'money' : 'debt'}>
+			<IonText slot="start" color={remaningAmount > 0 ? 'money' : 'debt'}>
 				{loading ? (
 					<IonSpinner />
 				) : (
