@@ -106,7 +106,7 @@ function PendingTransactionsModal(props: Props) {
 			<IonContent>
 				<IonList>
 					<IonListHeader>
-						Effective today
+						Check to make effective today
 					</IonListHeader>
 					{transactions.map(t => (
 						<IonItemSliding key={t.id}>	
