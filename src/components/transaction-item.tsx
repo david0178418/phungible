@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { IonIcon, IonLabel, IonText } from '@ionic/react';
+import { IonIcon, IonLabel, IonText, IonBadge } from '@ionic/react';
 import { arrowUp, arrowDown } from 'ionicons/icons';
 import { Transaction, TransactionType } from '@shared/interfaces';
-import { AccountsContext } from '@common/contexts';
+import { AccountsContext, BudgetContext } from '@common/contexts';
 import { findById, moneyFormat } from '@shared/utils';
+import { format } from 'date-fns';
 
 interface Props {
 	transaction: Transaction;
@@ -18,8 +19,13 @@ function TransactionItem(props: Props) {
 	} = props;
 
 	const accounts = useContext(AccountsContext);
+	const budgets = useContext(BudgetContext);
 	const fromAccount = findById(transaction.fromAccountId, accounts);
 	const towardAccount = findById(transaction.towardAccountId, accounts);
+	const parentBudgetName = budgets
+		.find(b => b.id === transaction.parentBudgetId)
+		?.name || '';
+
 
 	return (
 		<>
@@ -36,21 +42,27 @@ function TransactionItem(props: Props) {
 					icon={arrowDown}
 				/>
 			)}
-			<div>
-				<IonLabel onClick={onClick}>
+			<IonLabel onClick={onClick}>
+				{`${format(new Date(transaction.date), 'M/d')}: `}
+				<strong>
 					{transaction.name}
-					{fromAccount && (
-						<p>
-							From: {fromAccount.name}
-						</p>
-					)}
-					{towardAccount && (
-						<p>
-							Toward: {towardAccount.name}
-						</p>
-					)}
-				</IonLabel>
-			</div>
+				</strong>
+				{fromAccount && (
+					<p>
+						From: {fromAccount.name}
+					</p>
+				)}
+				{towardAccount && (
+					<p>
+						Toward: {towardAccount.name}
+					</p>
+				)}
+				{parentBudgetName && (
+					<IonBadge color="money">
+						{parentBudgetName}
+					</IonBadge>
+				)}
+			</IonLabel>
 			<IonText
 				slot="end"
 				color={transaction.type === TransactionType.Income ? 'money' : 'debt'}

@@ -21,6 +21,7 @@ import { alertController } from '@ionic/core';
 import { saveDoc } from '@common/api';
 import { ReceiptUploadButton } from './receipt-upload-button';
 import { ExpenseCategorySelector } from './expense-category-selector';
+import { BudgetSelector } from './budget-selector';
 
 interface Props {
 	transaction: Transaction;
@@ -195,6 +196,13 @@ function TransactionEditForm(props: Props) {
 							/>
 						</IonCol>
 					</IonRow>
+				)}
+
+				{transaction.type === TransactionType.Expense && (
+					<BudgetSelector
+						value={transaction.parentBudgetId}
+						onChange={budget => updateProp('parentBudgetId', budget)}
+					/>
 				)}
 
 				<IonRow>
