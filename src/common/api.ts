@@ -1,5 +1,6 @@
 import {
 	Collection,
+	ProfileCollection,
 	Docs,
 	UserMeta,
 	ProfileDocs,
@@ -109,7 +110,7 @@ async function getNextProfile(userId: string) {
 }
 
 export
-async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Collection) {
+async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: ProfileCollection) {
 	const profileId = doc.profileId || await userSetup();
 	const id = doc.id || db.collection(collection).doc().id;
 
@@ -210,15 +211,32 @@ async function runRecurringTransactionCheck(profile: Profile) {
 }
 
 export
-async function getTransactionsInDateRage(from: Date | string, to: Date | string, profileId: string) {
+async function getProfileDocsInRange<T>(from: Date | string, to: Date | string, profileId: string, collection: ProfileCollection) {
 	const fromStr = from instanceof Date ? from.toISOString() : from;
 	const toStr = to instanceof Date ? to.toISOString() : to;
 	
-	const { docs } = await db.collection(Collection.Transactions)
+	const { docs } = await db.collection(collection)
 		.where('profileId', '==', profileId)
 		.where('date', '>=', fromStr)
 		.where('date', '<', toStr)
 		.get();
 
-	return docs.map(d => d.data() as Transaction);
+	return docs.map(d => d.data() as T);
+}
+
+export
+async function getAccountTransactionsInRange(accountId: string, from: Date | string, to: Date | string) {
+	const fromStr = from instanceof Date ? from.toISOString() : from;
+	const toStr = to instanceof Date ? to.toISOString() : to;
+
+	const query = db.collection(Collection.Transactions)
+		.where('date', '>=', fromStr)
+		.where('date', '<', toStr);
+
+	const fromTransactions = await query.where('fromAccountId', '==', accountId).get();
+	const towardTransactions = await query.where('towardAccountId', '==', accountId).get();
+
+	return fromTransactions.docs
+		.concat(towardTransactions.docs)
+		.map(doc => doc.data() as Transaction);
 }

@@ -3,6 +3,7 @@ import {
 	isBefore,
 	formatDistance,
 	startOfDay,
+	endOfDay,
 } from 'date-fns';
 import {
 	RepeatType,
@@ -158,6 +159,15 @@ function currentPeriod(repeatRuleProps: RepeatRuleProps) {
 		previousOccurance(repeatRuleProps),
 		nextOccurance(repeatRuleProps),
 	];
+}
+
+export
+function occursOn(repeatRuleProps: RepeatRuleProps, date: Date): boolean {
+	return !!occurrancesInRange(
+		repeatRuleProps,
+		startOfDay(date).toISOString(),
+		endOfDay(date).toISOString(),
+	).length;
 }
 
 export

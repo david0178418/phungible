@@ -12,7 +12,7 @@ import equal from 'fast-deep-equal';
 import { RepetitionSelector } from '@components/repetition-selector';
 import { EditPage } from '@components/edit-page';
 import { getDoc, saveProfileDoc } from '@common/api';
-import { Budget, Collection, RepeatType } from '@shared/interfaces';
+import { Budget, ProfileCollection, RepeatType } from '@shared/interfaces';
 import { AccountSelector } from '@components/account-selector';
 import { format, parse, startOfDay } from 'date-fns';
 import { MoneyInput } from '@components/money-input';
@@ -46,7 +46,7 @@ function BudgetEditPage() {
 	useEffect(() => {
 		(async () => {
 			if(id) {
-				const a = await getDoc<Budget>(`${Collection.Budgets}/${id}`);
+				const a = await getDoc<Budget>(`${ProfileCollection.Budgets}/${id}`);
 				if(a) {
 					setOriginalBudget(a);
 					setBudget(a);
@@ -90,7 +90,7 @@ function BudgetEditPage() {
 			return;
 		}
 
-		const result = await saveProfileDoc(budget, Collection.Budgets);
+		const result = await saveProfileDoc(budget, ProfileCollection.Budgets);
 		result && goBack();
 	}
 

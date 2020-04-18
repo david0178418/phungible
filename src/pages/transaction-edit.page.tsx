@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { saveProfileDoc, getDoc } from '@common/api';
-import { Collection, Transaction } from '@shared/interfaces';
+import { ProfileCollection, Transaction } from '@shared/interfaces';
 import { TransactionEditForm } from '@components/transaction-edit-form';
 import { EditPage } from '@components/edit-page';
 import { useEditItem } from '@common/hooks';
@@ -28,7 +28,7 @@ function TransactionEditPage() {
 	useEffect(() => {
 		(async () => {
 			if(id) {
-				const a = await getDoc<Transaction>(`${Collection.Transactions}/${id}`);
+				const a = await getDoc<Transaction>(`${ProfileCollection.Transactions}/${id}`);
 				if(a) {
 					resetTransaction({...a});
 				}
@@ -43,7 +43,7 @@ function TransactionEditPage() {
 			return;
 		}
 
-		const result = await saveProfileDoc(transaction, Collection.Transactions);
+		const result = await saveProfileDoc(transaction, ProfileCollection.Transactions);
 		result && goBack();
 	}
 

@@ -12,7 +12,7 @@ import equal from 'fast-deep-equal';
 import { useParams, useHistory } from 'react-router-dom';
 import {
 	RecurringTransaction,
-	Collection,
+	ProfileCollection,
 	RepeatType,
 	TransactionType,
 } from '@shared/interfaces';
@@ -61,7 +61,7 @@ function RecurringTransactionEditPage() {
 	useEffect(() => {
 		(async () => {
 			if(id) {
-				const a = await getDoc<RecurringTransaction>(`${Collection.RecurringTransactions}/${id}`);
+				const a = await getDoc<RecurringTransaction>(`${ProfileCollection.RecurringTransactions}/${id}`);
 				if(a) {
 					setTransaction({...a});
 					setOriginal({...a});
@@ -107,7 +107,7 @@ function RecurringTransactionEditPage() {
 			return;
 		}
 
-		const result = await saveProfileDoc(transaction, Collection.RecurringTransactions);
+		const result = await saveProfileDoc(transaction, ProfileCollection.RecurringTransactions);
 		result && goBack();
 	}
 

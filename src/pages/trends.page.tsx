@@ -11,6 +11,7 @@ import {
 	IonButtons,
 } from '@ionic/react';
 import { TrendsHistory } from '@components/trends-history';
+import { TrendsProjection } from '@components/trends-projection';
 
 enum Tabs {
 	History = 'history',
@@ -32,9 +33,6 @@ function TrendsPage() {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className="ion-padding">
-				<p>
-					Work in progress
-				</p>
 				<IonSegment value={selectedTab}>
 					<IonSegmentButton
 						value={Tabs.History}
@@ -54,9 +52,7 @@ function TrendsPage() {
 					<TrendsHistory />
 				)}
 				{selectedTab === Tabs.Projection && (
-					<>
-						Work in progress.
-					</>
+					<TrendsProjection/>
 				)}
 			</IonContent>
 		</IonPage>
