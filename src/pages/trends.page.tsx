@@ -20,7 +20,7 @@ enum Tabs {
 
 export
 function TrendsPage() {
-	const [selectedTab, setSeletedTab] = useState<Tabs>(Tabs.History);
+	const [selectedTab, setSeletedTab] = useState<Tabs>(Tabs.Projection);
 
 	return (
 		<IonPage>
@@ -35,16 +35,16 @@ function TrendsPage() {
 			<IonContent className="ion-padding">
 				<IonSegment value={selectedTab}>
 					<IonSegmentButton
-						value={Tabs.History}
-						onClick={() => setSeletedTab(Tabs.History)}
-					>
-						Breakdown
-					</IonSegmentButton>
-					<IonSegmentButton
 						value={Tabs.Projection}
 						onClick={() => setSeletedTab(Tabs.Projection)}
 					>
 						Projection
+					</IonSegmentButton>
+					<IonSegmentButton
+						value={Tabs.History}
+						onClick={() => setSeletedTab(Tabs.History)}
+					>
+						Breakdown
 					</IonSegmentButton>
 				</IonSegment>
 

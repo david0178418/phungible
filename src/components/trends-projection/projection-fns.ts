@@ -152,13 +152,11 @@ function getCurrentBudgetPeriodOffsets(budgets: Budget[], accountId: string, tra
 					.reduce((total, t) => total + t.amount, 0);
 			}
 
-			const x = {
+			return {
 				date,
 				fromAccountId: b.fromAccountId,
 				amount: offset,
 			};
-			console.log(x);
-			return x;
 		});
 }
 

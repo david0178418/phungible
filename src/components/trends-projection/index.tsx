@@ -97,6 +97,11 @@ function TrendsProjection() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [accounts]);
 
+	useEffect(() => {
+		update();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
 		<div className="trends-projection">
 			<p>
