@@ -7,6 +7,11 @@ function range(startValue: number, size: number) {
 }
 
 export
+function rangeFixed(size: number, startValue = 0) {
+	return [ ...Array(size).keys() ].map( i => i + startValue );
+}
+
+export
 function tuple<T extends any[]>(...args: T): T {
 	return args;
 }
@@ -107,4 +112,15 @@ function dateRange(from: Date | string, to: Date | string) {
 export
 function notNull<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
+}
+
+export
+function selectColor(n: number) {
+	const hue = n * 137.508; // use golden angle approximation
+	return `hsl(${hue},50%,75%)`;
+}
+
+export
+function generateColors(count: number) {
+	return rangeFixed(count).map(selectColor);
 }

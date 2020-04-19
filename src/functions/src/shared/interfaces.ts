@@ -6,7 +6,9 @@ declare var process : {
 
 declare global {
 	interface Array<T> {
-		concat<U>(...items: (U | ConcatArray<U>)[]): (T | U)[]
+		concat<U>(...items: (U | ConcatArray<U>)[]): (T | U)[];
+		flat(): Array<T>;
+		flatMap(func: (x: T) => T): Array<T>;
 	}
 }
 
