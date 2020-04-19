@@ -20,6 +20,7 @@ import {
 import {
 	AccountsContext,
 	ProfileContext,
+	BudgetContext,
 } from '@common/contexts';
 import {
 	Account,
@@ -47,7 +48,7 @@ import {
 } from 'recharts';
 
 import './trends-projection.scss';
-import { occurrancesInRange } from '@common/occurrence-fns';
+import { occurrancesInRange, currentPeriod } from '@common/occurrence-fns';
 
 // function earliestUnpassedDateInRange(budget: Budget, from: Date, to = from) {
 // 	return occurrancesInRange(budget, from.toISOString(), to.toISOString())?.[0] || null;
@@ -423,6 +424,7 @@ async function generateBalanceHistory(args: BalanceOnDateArgs) {
 		to,
 		account,
 		recurringTransactions,
+		budgets,
 	} = args;
 
 	const range = dateRange(from, to)
@@ -438,11 +440,17 @@ async function generateBalanceHistory(args: BalanceOnDateArgs) {
 	));
 
 	const lastDate = last(relevantRange);
-	const relevantTransactions = await getRelevantTransactions(account.id, cutoff?.date, lastDate);
-	const futureRecurringTransactions = getUpcomingRecurringTransactions(recurringTransactions, lastDate);
 
-	const combined = relevantTransactions
-		.concat(futureRecurringTransactions);
+	const combined = []
+		.concat(
+			await getRelevantTransactions(account.id, cutoff?.date, lastDate),
+		)
+		.concat(
+			getUpcomingRecurringTransactions(recurringTransactions, lastDate),
+		)
+		.concat(
+			getUpcomingBudgetTransactions(budgets, lastDate),
+		);
 
 	return nullDates.map(date => ({
 			[account.name]: null,
@@ -456,6 +464,28 @@ async function generateBalanceHistory(args: BalanceOnDateArgs) {
 		);
 }
 
+function getUpcomingBudgetTransactions(budgets: Budget[], to: Date | null): Action[] {
+	if(!to) {
+		return [];
+	}
+
+	const toIso = to.toISOString();
+
+	return budgets
+	.map(b => {
+		const [, end] = currentPeriod(b);
+
+		return occurrancesInRange(b, end, toIso)
+			.map(date => ({
+				date,
+				fromAccountId: b.fromAccountId,
+				amount: b.amount,
+			}));
+	})
+	.flat();
+
+}
+
 function getUpcomingRecurringTransactions(recurringTransactions: RecurringTransaction[], to: Date | null): Action[] {
 	if(!to) {
 		return [];
@@ -465,12 +495,12 @@ function getUpcomingRecurringTransactions(recurringTransactions: RecurringTransa
 	const fromIso = endOfToday().toISOString();
 	return recurringTransactions.map(rt =>
 			occurrancesInRange(rt, fromIso, toIso)
-			.map(date => ({
-				date,
-				fromAccountId: rt.fromAccountId,
-				towardAccountId: rt.towardAccountId,
-				amount: rt.amount,
-			})),
+				.map(date => ({
+					date,
+					fromAccountId: rt.fromAccountId,
+					towardAccountId: rt.towardAccountId,
+					amount: rt.amount,
+				})),
 		)
 		.flat();
 }
@@ -561,7 +591,7 @@ function TrendsProjection() {
 	const profile = useContext(ProfileContext);
 	const accounts = useContext(AccountsContext);
 	const [data, setData] = useState<any[]>([]);
-	// const budgets = useContext(BudgetContext);
+	const budgets = useContext(BudgetContext);
 
 	async function update() {
 		if(!profile?.id) {
@@ -576,7 +606,7 @@ function TrendsProjection() {
 				from: fromDate,
 				to: toDate,
 				recurringTransactions,
-				budgets: [],
+				budgets,
 			})),
 		);
 
