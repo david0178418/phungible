@@ -37,6 +37,7 @@ import {
 	Tooltip,
 	Legend,
 	Line,
+	ReferenceLine,
 } from 'recharts';
 import { generateBalanceHistory, foo } from './projection-fns';
 
@@ -46,16 +47,19 @@ export
 function TrendsProjection() {
 	const [fromDate, setFromDate] = useState(() => startOfDay(subMonths(new Date(), 1)));
 	const [toDate, setToDate] = useState(() => startOfDay(addMonths(new Date(), 2)));
+	const [data, setData] = useState<any[]>([]);
+	const [colors, setColors] = useState<string[]>([]);
+	const [loading, setLoading] = useState(false);
 	const profile = useContext(ProfileContext);
 	const accounts = useContext(AccountsContext);
-	const [data, setData] = useState<any[]>([]);
 	const budgets = useContext(BudgetContext);
-	const [colors, setColors] = useState<string[]>([]);
 
 	async function update() {
 		if(!profile?.id) {
 			return;
 		}
+
+		setLoading(true);
 
 		const transactions = (await Promise.all(
 			accounts.map(a => foo(a, fromDate, toDate)),
@@ -85,6 +89,7 @@ function TrendsProjection() {
 		}
 
 		setData(combinedHistory);
+		setLoading(false);
 	}
 
 	useEffect(() => {
@@ -142,31 +147,40 @@ function TrendsProjection() {
 				<IonGrid>
 					<IonRow>
 						<IonCol>
-							<ResponsiveContainer width="100%">
-								<LineChart
-									width={730}
-									height={250}
-									data={data}
-									margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-								>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis dataKey="date" />
-									<YAxis />
-									<Tooltip
-										formatter={val => `$${moneyFormat(val as number)}`}
-									/>
-									<Legend />
-									{accounts.map((a, i) => (
-										<Line
-											key={a.id}
-											type="monotone"
-											stroke={colors[i]}
-											dataKey={a.name}
+							{!loading && !!data.length && (
+								<ResponsiveContainer width="100%">
+									<LineChart
+										width={730}
+										height={250}
+										data={data}
+										margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+									>
+										<CartesianGrid strokeDasharray="3 3" />
+										<XAxis dataKey="date" />
+										<YAxis />
+										<Tooltip
+											formatter={val => `$${moneyFormat(val as number)}`}
 										/>
-									))}
-								</LineChart>
+										<Legend />
+										<ReferenceLine
+											label="Today"
+											stroke="black"
+											strokeDasharray="16 16"
+											strokeWidth={3}
+											x={format(new Date(), 'M/d/YYY')}
+										/>
 
-							</ResponsiveContainer>
+										{accounts.map((a, i) => (
+											<Line
+												key={a.id}
+												type="monotone"
+												stroke={colors[i]}
+												dataKey={a.name}
+											/>
+										))}
+									</LineChart>
+								</ResponsiveContainer>
+							)}
 						</IonCol>
 					</IonRow>
 				</IonGrid>

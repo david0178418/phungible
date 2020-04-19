@@ -2,6 +2,7 @@ import {
 	format,
 	isBefore,
 	endOfToday,
+	isToday,
 } from 'date-fns';
 import {
 	Account,
@@ -56,7 +57,10 @@ function getNextRelevantBalanceUpdate(account: Account, date: Date) {
 export
 async function foo(account: Account, from: Date, to: Date) {
 	const range = dateRange(from, to)
-		.filter((data, i, r) => !(i % (r.length / 20 | 0)));
+		.filter((data, i, r) => (
+			isToday(data) ||
+			!(i % (r.length / 20 | 0))
+		));
 
 	const cutoff = getNextRelevantBalanceUpdate(account, from);
 
@@ -89,7 +93,10 @@ async function generateBalanceHistory(args: BalanceOnDateArgs) {
 	} = args;
 
 	const range = dateRange(from, to)
-		.filter((data, i, r) => !(i % (r.length / 20 | 0)));
+		.filter((data, i, r) => (
+			isToday(data) ||
+			!(i % (r.length / 20 | 0))
+		));
 	const cutoff = getNextRelevantBalanceUpdate(account, from);
 	const nullDates = range.filter(date => (
 		!cutoff || isBefore(date, new Date(cutoff.date))
