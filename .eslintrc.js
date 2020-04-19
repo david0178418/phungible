@@ -18,6 +18,7 @@ module.exports = {
         'no-extra-semi': WARN,
         quotes: [WARN, 'single'],
         semi: ERR,
+		'prefer-const': ERR,
         'comma-dangle': [WARN, 'always-multiline'],
 		'jsx-a11y/anchor-is-valid': OFF,
 		'jsx-a11y/alt-text': OFF,

@@ -211,6 +211,15 @@ async function runRecurringTransactionCheck(profile: Profile) {
 }
 
 export
+async function getProfileDocs<T>(profileId: string, collection: ProfileCollection) {
+	const { docs } = await db.collection(collection)
+		.where('profileId', '==', profileId)
+		.get();
+
+	return docs.map(d => d.data() as T);
+}
+
+export
 async function getProfileDocsInRange<T>(from: Date | string, to: Date | string, profileId: string, collection: ProfileCollection) {
 	const fromStr = from instanceof Date ? from.toISOString() : from;
 	const toStr = to instanceof Date ? to.toISOString() : to;
