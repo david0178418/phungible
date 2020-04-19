@@ -163,7 +163,6 @@ function TrendsProjection() {
 										/>
 										<Legend />
 										<ReferenceLine
-											label="Today"
 											stroke="black"
 											strokeDasharray="16 16"
 											strokeWidth={3}
