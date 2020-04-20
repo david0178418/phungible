@@ -252,15 +252,15 @@ async function getAccountTransactionsInRange(accountId: string, from: Date | str
 }
 
 export
-async function getCategories(userId: string) {
-	const { docs } = await db.collection(`user-metas/${userId}/transaction-categories`).get();
+async function getCategories(profileId: string) {
+	const { docs } = await db.collection(`${Collection.Profiles}/${profileId}/transaction-categories`).get();
 
 	return docs.map(d => d.data() as ExpenseCategory);
 }
 
 export
-async function createCategory(doc: ExpenseCategory, userId: string) {
-	const collection = `user-metas/${userId}/transaction-categories`;
+async function createCategory(doc: ExpenseCategory, profileId: string) {
+	const collection = `${Collection.Profiles}/${profileId}/transaction-categories`;
 	const id = doc.id || getCollectionId(collection);
 
 	try {

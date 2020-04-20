@@ -8,7 +8,7 @@ import {
 import { alertController } from '@ionic/core';
 import { ExpenseCategory } from '@shared/interfaces';
 import { getCategories, createCategory } from '@common/api';
-import { UserContext } from '@common/contexts';
+import { ProfileContext } from '@common/contexts';
 
 interface Props {
 	label: string;
@@ -25,7 +25,7 @@ function selectedCategoryComparison(a: ExpenseCategory | null, b: ExpenseCategor
 
 export
 function ExpenseCategorySelector(props: Props) {
-	const user = useContext(UserContext);
+	const profile = useContext(ProfileContext);
 	const [categories, setCategories] = useState<ExpenseCategory[]>([]);
 	const {
 		label,
@@ -40,7 +40,7 @@ function ExpenseCategorySelector(props: Props) {
 	}, []);
 	
 	async function updateCategories() {
-		user && await getCategories(user.uid).then(setCategories);
+		profile?.id && await getCategories(profile.id).then(setCategories);
 	}
 
 	async function openCreateCategory() {
@@ -55,10 +55,10 @@ function ExpenseCategorySelector(props: Props) {
 				{
 					text: 'Create Category',
 					handler: async (alertData) => {
-						if(user && alertData.catName.trim()) {
+						if(profile?.id && alertData.catName.trim()) {
 							const newCat = await createCategory({
 								label: alertData.catName,
-							}, user.uid);
+							}, profile.id);
 
 							if(!newCat) {
 								return;
