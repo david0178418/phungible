@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
 	IonButton,
 	IonItem,
@@ -50,6 +50,7 @@ function TrendsProjection() {
 	const [data, setData] = useState<any[]>([]);
 	const [colors, setColors] = useState<string[]>([]);
 	const [loading, setLoading] = useState(false);
+	const inputRef = useRef<HTMLIonInputElement | null>(null);
 	const profile = useContext(ProfileContext);
 	const accounts = useContext(AccountsContext);
 	const budgets = useContext(BudgetContext);
@@ -102,6 +103,16 @@ function TrendsProjection() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		console.log(111, inputRef.current);
+		inputRef.current?.getInputElement()
+		.then(el => {
+			el.setAttribute('list', 'ice-cream-flavors');
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [inputRef.current]);
+
+
 	return (
 		<div className="trends-projection">
 			<p>
@@ -109,6 +120,12 @@ function TrendsProjection() {
 					Work in progress
 				</strong>
 			</p>
+			<IonInput
+				ref={inputRef}
+				id="ice-cream-choice" name="ice-cream-choice" />
+			<datalist id="ice-cream-flavors">
+			</datalist>
+
 			<IonGrid>
 				<IonRow>
 					<IonCol>

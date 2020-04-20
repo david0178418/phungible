@@ -30,7 +30,7 @@ import {
 	BarChart,
 	Bar,
 } from 'recharts';
-import { moneyFormat } from '@shared/utils';
+import { moneyFormat, unique, notNull, generateColors } from '@shared/utils';
 import { ProfileContext } from '@common/contexts';
 import { TransactionItem } from '@components/transaction-item';
 import { useEditItem } from '@common/hooks';
@@ -40,23 +40,6 @@ import { TransactionEditForm } from '@components/transaction-edit-form';
 
 import './trends-history.scss';
 
-const CategoryColors: any = {
-	'Clothing': Colors.Cyan,
-	'Debt Payment': Colors.Beige,
-	'Entertainment': Colors.Black,
-	'Food': Colors.Brown,
-	'Health': Colors.Blue,
-	'Medical': Colors.Violet,
-	'Miscellaneous Extra': Colors.Orange,
-	'Miscellaneous Necessities': Colors.Olive,
-	'Home': Colors.Fuchsia,
-	'Savings/Investment': Colors.Navy,
-	'Taxes': Colors.Maroon,
-	'Transportation': Colors.Khaki,
-	'Utilities': Colors.Indigo,
-	'Uncategorized': Colors.Silver,
-};
-
 export
 function TrendsHistory() {
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -64,6 +47,7 @@ function TrendsHistory() {
 	const [toDate, setToDate] = useState(() => startOfDay(new Date()));
 	const [incomeTotal, setIncomeTotal] = useState(0);
 	const [expenseTotals, setExpenseTotals] = useState<any[]>([]);
+	const [colors, setColors] = useState<string[]>([]);
 	const profile = useContext(ProfileContext);
 	const [
 		activeTransaction,
@@ -80,6 +64,13 @@ function TrendsHistory() {
 			toDate,
 			profile?.id || '',
 			ProfileCollection.Transactions,
+		);
+		const x = ts.map(t => t.expenseCategory).filter(notNull);
+
+		setColors(
+			generateColors(
+				unique(x, 'id').length,
+			),
 		);
 
 		setTransactions(ts);
@@ -251,12 +242,12 @@ function TrendsHistory() {
 									/>
 									{Object.keys(expenseTotals)
 										.sort((a: any, b: any) => expenseTotals[b] - expenseTotals[a])
-										.map(e => (
+										.map((e, i) => (
 											<Bar
 												stackId="a"
 												key={e}
 												dataKey={e}
-												fill={CategoryColors[e]}
+												fill={colors[i]}
 											/>
 										))}
 								</BarChart>

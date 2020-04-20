@@ -49,53 +49,9 @@ enum Collection {
 
 export
 interface ExpenseCategory {
-	id: string;
+	id?: string;
 	label: string;
 }
-
-export
-const ExpenseCategories: ExpenseCategory[] = [
-	{
-		id: 'clothing',
-		label: 'Clothing',
-	}, {
-		id: 'debt-payment',
-		label: 'Debt Payment',
-	}, {
-		id: 'entertainment',
-		label: 'Entertainment',
-	}, {
-		id: 'food',
-		label: 'Food',
-	}, {
-		id: 'health',
-		label: 'Health',
-	}, {
-		id: 'medical',
-		label: 'Medical',
-	}, {
-		id: 'miscellaneous-extra',
-		label: 'Miscellaneous Extra',
-	}, {
-		id: 'miscellaneous-necessities',
-		label: 'Miscellaneous Necessities',
-	}, {
-		id: 'home',
-		label: 'Home',
-	}, {
-		id: 'savings',
-		label: 'Savings/Investment',
-	}, {
-		id: 'taxes',
-		label: 'Taxes',
-	}, {
-		id: 'transportation',
-		label: 'Transportation',
-	}, {
-		id: 'utilities',
-		label: 'Utilities',
-	},
-];
 
 export
 enum Colors {

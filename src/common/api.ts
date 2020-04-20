@@ -8,6 +8,7 @@ import {
 	RecurringTransaction,
 	Profile,
 	Transaction,
+	ExpenseCategory,
 } from '@shared/interfaces';
 import { loadingController } from '@ionic/core';
 import { occurrancesInRange } from '@common/occurrence-fns';
@@ -129,7 +130,7 @@ async function saveProfileDoc<T extends ProfileDocs>(doc: T, collection: Profile
 }
 
 export
-function getCollectionId(collection: Collection) {
+function getCollectionId(collection: Collection | string) {
 	return db.collection(collection).doc().id;
 }
 
@@ -248,4 +249,29 @@ async function getAccountTransactionsInRange(accountId: string, from: Date | str
 	return fromTransactions.docs
 		.concat(towardTransactions.docs)
 		.map(doc => doc.data() as Transaction);
+}
+
+export
+async function getCategories(userId: string) {
+	const { docs } = await db.collection(`user-metas/${userId}/transaction-categories`).get();
+
+	return docs.map(d => d.data() as ExpenseCategory);
+}
+
+export
+async function createCategory(doc: ExpenseCategory, userId: string) {
+	const collection = `user-metas/${userId}/transaction-categories`;
+	const id = doc.id || getCollectionId(collection);
+
+	try {
+		const newDoc: ExpenseCategory = {
+			...doc,
+			id,
+		};
+		await db.doc(`${collection}/${id}`).set(newDoc);
+		return newDoc;
+	} catch(e) {
+		console.error(`Failed to save doc ${doc.id} in collection ${collection}`, e);
+		return false;
+	}
 }
