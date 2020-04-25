@@ -33,12 +33,12 @@ function moneyFormat(intAmount: number, formatWithSymbol = true) {
 	return currency(adjustNumberDecimals(intAmount), {
 		formatWithSymbol,
 		separator: formatWithSymbol ? ',' : '',
-	}).format();
+	}).divide(100).format();
 }
 
 export
 function moneyParse(decimalAmount: number | string) {
-	return currency(adjustNumberDecimals(decimalAmount)).value;
+	return currency(adjustNumberDecimals(decimalAmount)).multiply(100).value;
 }
 
 export
