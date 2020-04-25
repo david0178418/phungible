@@ -19,3 +19,6 @@ const BudgetContext = createContext<Budget[]>([]);
 
 export
 const ActiveProfileSetterContext = createContext<ActiveProfileSetter>(() => null);
+
+export
+const RefreshActiveProfileContext = createContext(async () => {});

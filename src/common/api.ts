@@ -15,6 +15,7 @@ import { occurrancesInRange } from '@common/occurrence-fns';
 import { createTransactionFromRecurringTransaction } from '@shared/create-docs';
 import { Firestore, Auth, DocReference } from './side-effect-modules';
 import { CollectionReference } from '@google-cloud/firestore';
+import { uuid } from '@shared/utils';
 
 import('./side-effect-modules')
 	.then(({f, a}) => {
@@ -252,26 +253,24 @@ async function getAccountTransactionsInRange(accountId: string, from: Date | str
 }
 
 export
-async function getCategories(profileId: string) {
-	const { docs } = await db.collection(`${Collection.Profiles}/${profileId}/transaction-categories`).get();
-
-	return docs.map(d => d.data() as ExpenseCategory);
-}
-
-export
-async function createCategory(doc: ExpenseCategory, profileId: string) {
-	const collection = `${Collection.Profiles}/${profileId}/transaction-categories`;
-	const id = doc.id || getCollectionId(collection);
+async function setCategory(doc: ExpenseCategory, profile: Profile) {
+	const id = doc.id || uuid();
 
 	try {
-		const newDoc: ExpenseCategory = {
+		const newCategory = {
 			...doc,
 			id,
 		};
-		await db.doc(`${collection}/${id}`).set(newDoc);
-		return newDoc;
+		await db.doc(`${Collection.Profiles}/${profile.id}`).update({
+			transactionCategories: [
+				newCategory,
+				...profile.transactionCategories,
+			],
+		});
+
+		return newCategory;
 	} catch(e) {
-		console.error(`Failed to save doc ${doc.id} in collection ${collection}`, e);
+		console.error(`Failed to save doc transaction category ${doc.id}`, e);
 		return false;
 	}
 }

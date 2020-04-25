@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
 	IonItem,
 	IonLabel,
@@ -7,8 +7,8 @@ import {
 } from '@ionic/react';
 import { alertController } from '@ionic/core';
 import { ExpenseCategory } from '@shared/interfaces';
-import { getCategories, createCategory } from '@common/api';
-import { ProfileContext } from '@common/contexts';
+import { setCategory } from '@common/api';
+import { ProfileContext, RefreshActiveProfileContext } from '@common/contexts';
 
 interface Props {
 	label: string;
@@ -26,22 +26,13 @@ function selectedCategoryComparison(a: ExpenseCategory | null, b: ExpenseCategor
 export
 function ExpenseCategorySelector(props: Props) {
 	const profile = useContext(ProfileContext);
-	const [categories, setCategories] = useState<ExpenseCategory[]>([]);
+	const activeProfileRefresher = useContext(RefreshActiveProfileContext);
 	const {
 		label,
 		value = null,
 		onChange,
 	} = props;
-	const selectedCategory = value && categories.find(c => c.id === value.id);
-
-	useEffect(() => {
-		updateCategories();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	
-	async function updateCategories() {
-		profile?.id && await getCategories(profile.id).then(setCategories);
-	}
+	const selectedCategory = value && profile?.transactionCategories.find(c => c.id === value.id);
 
 	async function openCreateCategory() {
 		const alert = await alertController.create({
@@ -56,15 +47,16 @@ function ExpenseCategorySelector(props: Props) {
 					text: 'Create Category',
 					handler: async (alertData) => {
 						if(profile?.id && alertData.catName.trim()) {
-							const newCat = await createCategory({
+							const newCat = await setCategory({
 								label: alertData.catName,
-							}, profile.id);
+							}, profile);
 
 							if(!newCat) {
 								return;
 							}
 
-							await updateCategories();
+							await activeProfileRefresher();
+
 							onChange(newCat);
 						}
 					},
@@ -83,7 +75,7 @@ function ExpenseCategorySelector(props: Props) {
 				interfaceOptions={{
 					header: 'Categories',
 				}}
-				value={selectedCategory}
+				value={selectedCategory || value}
 				onIonChange={({detail}) => {
 					onChange(detail.value || null);
 					detail.value === false && openCreateCategory();
@@ -94,7 +86,7 @@ function ExpenseCategorySelector(props: Props) {
 					Add New Category
 				</IonSelectOption>
 				<IonSelectOption value={null}>Uncategoriezed</IonSelectOption>
-				{categories.map(category => (
+				{profile?.transactionCategories.map(category => (
 					<IonSelectOption
 						key={category.id}
 						value={category}
@@ -102,6 +94,14 @@ function ExpenseCategorySelector(props: Props) {
 						{category.label}
 					</IonSelectOption>
 				))}
+				{!selectedCategory && value && (
+					<IonSelectOption
+						key={value.id}
+						value={value}
+					>
+						{value.label}
+					</IonSelectOption>
+				)}
 			</IonSelect>
 		</IonItem>
 	);

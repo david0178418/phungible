@@ -164,6 +164,7 @@ interface Profile {
 	notes: string;
 	ownerId: string;
 	sharedUsers: SharedUserMap;
+	transactionCategories: ExpenseCategory[];
 }
 
 export

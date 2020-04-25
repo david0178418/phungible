@@ -114,5 +114,6 @@ function createProfile(): Profile {
 		notes: '',
 		date,
 		sharedUsers: {},
+		transactionCategories: [],
 	};
 }

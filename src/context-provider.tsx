@@ -8,6 +8,7 @@ import {
 	UserMetaContext,
 	BudgetContext,
 	ActiveProfileSetterContext,
+	RefreshActiveProfileContext,
 } from '@common/contexts';
 import {
 	Account,
@@ -102,7 +103,7 @@ function ContextProvider(props: Props) {
 			}
 
 			localStorage.setItem(LAST_PROFILE_ID_KEY, activeProfileId);
-			setProfile(await getDoc(`${Collection.Profiles}/${activeProfileId}`));
+			await refreshActiveProfile();
 
 			if(userMeta && userMeta.lastOpenProfile !== activeProfileId) {
 				saveDoc({
@@ -154,6 +155,10 @@ function ContextProvider(props: Props) {
 		setActiveProfileId('');
 	}
 
+	async function refreshActiveProfile() {
+		setProfile(await getDoc(`${Collection.Profiles}/${activeProfileId}`));
+	}
+
 	return (
 		<>
 			<AccountsContext.Provider value={accounts}>
@@ -161,9 +166,11 @@ function ContextProvider(props: Props) {
 					<UserContext.Provider value={user}>
 						<UserMetaContext.Provider value={userMeta}>
 							<ProfileContext.Provider value={profile}>
-								<ActiveProfileSetterContext.Provider value={setActiveProfileId}>
-									{props.children}
-								</ActiveProfileSetterContext.Provider>
+								<RefreshActiveProfileContext.Provider value={refreshActiveProfile}>
+									<ActiveProfileSetterContext.Provider value={setActiveProfileId}>
+										{props.children}
+									</ActiveProfileSetterContext.Provider>
+								</RefreshActiveProfileContext.Provider>
 							</ProfileContext.Provider>
 						</UserMetaContext.Provider>
 					</UserContext.Provider>
