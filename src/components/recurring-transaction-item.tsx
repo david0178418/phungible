@@ -62,7 +62,7 @@ function RecurringTransactionItem(props: Props) {
 				slot="end"
 				color={rt.type === TransactionType.Income ? 'money' : 'debt'}
 			>
-				${moneyFormat(rt.amount)}
+				{moneyFormat(rt.amount)}
 			</IonText>
 		</>
 	);

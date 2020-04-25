@@ -1,5 +1,9 @@
 import { toastController } from '@ionic/core';
 import { parseISO, differenceInDays, addDays } from 'date-fns';
+// @ts-ignore
+// Need to figure out whyt it's complaining about default exports
+// require esModuleInterop when it is already being set
+import currency from 'currency.js';
 
 export
 function range(startValue: number, size: number) {
@@ -16,19 +20,25 @@ function tuple<T extends any[]>(...args: T): T {
 	return args;
 }
 
-export
-function numberFormat(num: number, decimalPlaces: number) {
-	return num / Math.pow(10, decimalPlaces);
+function adjustNumberDecimals(val: number | string) {
+	return val
+		.toString()
+		.split('.')
+		.slice(0, 2)
+		.join('.');
 }
 
 export
-function moneyFormat(intAmount: number, decimalPlaces = 2) {
-	return numberFormat(intAmount, decimalPlaces);
+function moneyFormat(intAmount: number, formatWithSymbol = true) {
+	return currency(adjustNumberDecimals(intAmount), {
+		formatWithSymbol,
+		separator: formatWithSymbol ? ',' : '',
+	}).format();
 }
 
 export
-function moneyParse(decimalAmount: number, decimalPlaces = -2) {
-	return Math.round(numberFormat(decimalAmount, decimalPlaces));
+function moneyParse(decimalAmount: number | string) {
+	return currency(adjustNumberDecimals(decimalAmount)).value;
 }
 
 export

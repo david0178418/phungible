@@ -55,10 +55,12 @@ function TransactionEditPage() {
 			loading={loading}
 			onSubmit={handleSubmit}
 		>
-			<TransactionEditForm
-				transaction={transaction}
-				onUpdate={newTransaction => setTransaction(newTransaction)}
-			/>
+			<>
+				<TransactionEditForm
+					transaction={transaction}
+					onUpdate={newTransaction => setTransaction(newTransaction)}
+				/>
+			</>
 		</EditPage>
 	);
 }

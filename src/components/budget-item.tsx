@@ -63,7 +63,7 @@ function BudgetItem(props: Props) {
 					<>
 						{notApplicable ?
 							'N/A' :
-							`$${moneyFormat(remaningAmount)}`
+							`${moneyFormat(remaningAmount)}`
 						}
 					</>
 				)}

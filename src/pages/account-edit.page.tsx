@@ -240,7 +240,7 @@ function AccountEditPage() {
 					<IonItemSliding key={i}>
 						<IonItem>
 							<IonLabel>
-								${moneyFormat(a.balance)}
+								{moneyFormat(a.balance)}
 								<p>
 									as of {a.date}
 								</p>

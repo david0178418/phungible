@@ -67,7 +67,7 @@ function TransactionItem(props: Props) {
 				slot="end"
 				color={transaction.type === TransactionType.Income ? 'money' : 'debt'}
 			>
-				${moneyFormat(transaction.amount)}
+				{moneyFormat(transaction.amount)}
 			</IonText>
 		</>
 	);

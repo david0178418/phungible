@@ -133,7 +133,7 @@ function AccountItem(props: Props) {
 				{!!pendingAmount && (
 					<IonNote>
 						<em>
-							${moneyFormat(pendingAmount)} pending
+							{moneyFormat(pendingAmount)} pending
 						</em>
 					</IonNote>
 				)}
@@ -142,7 +142,7 @@ function AccountItem(props: Props) {
 				slot="end"
 				color={account.type === AccountType.Savings ? 'money' : 'debt'}
 			>
-				${moneyFormat(balance)}
+				{moneyFormat(balance)}
 			</IonText>
 		</>
 	);

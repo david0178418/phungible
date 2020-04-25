@@ -181,7 +181,7 @@ function TrendsProjection() {
 										<XAxis dataKey="date" />
 										<YAxis />
 										<Tooltip
-											formatter={val => `$${moneyFormat(val as number)}`}
+											formatter={val => `${moneyFormat(val as number)}`}
 										/>
 										<Legend />
 										<ReferenceLine

@@ -165,10 +165,10 @@ function TrendsHistory() {
 				Update
 			</IonButton>
 			<p>
-				Income Total: ${moneyFormat(incomeTotal)}
+				Income Total: {moneyFormat(incomeTotal)}
 			</p>
 			<p>
-				Expense Total: ${moneyFormat(expenseTotal)}
+				Expense Total: {moneyFormat(expenseTotal)}
 			</p>
 			<div className="graph-container">
 				<IonGrid>
@@ -186,7 +186,7 @@ function TrendsHistory() {
 									<XAxis
 										domain={[0, upperBound]}
 										type="number"
-										tickFormatter={val => `$${moneyFormat(val)}`}
+										tickFormatter={val => `${moneyFormat(val)}`}
 									/>
 									<YAxis
 										dataKey="name"
@@ -194,7 +194,7 @@ function TrendsHistory() {
 										type="category"
 									/>
 									<Tooltip
-										formatter={val => `$${moneyFormat(val as number)}`}
+										formatter={val => `${moneyFormat(val as number)}`}
 										wrapperStyle={{
 											zIndex: 1000,
 										}}
@@ -216,14 +216,14 @@ function TrendsHistory() {
 								<BarChart
 									layout="vertical"
 									data={[{
-										name: `Expenses $${moneyFormat(expenseTotal)}`,
+										name: `Expenses ${moneyFormat(expenseTotal)}`,
 										...expenseTotals,
 									}]}
 								>
 									<CartesianGrid strokeDasharray="3 3" />
 									<XAxis
 										type="number"
-										tickFormatter={val => `$${moneyFormat(val)}`}
+										tickFormatter={val => `${moneyFormat(val)}`}
 										domain={[0, upperBound]}
 									/>
 									<YAxis
@@ -232,7 +232,7 @@ function TrendsHistory() {
 										type="category"
 									/>
 									<Tooltip
-										formatter={val => `$${moneyFormat(val as number)}`}
+										formatter={val => `${moneyFormat(val as number)}`}
 										wrapperStyle={{
 											zIndex: 1000,
 										}}
@@ -268,7 +268,7 @@ function TrendsHistory() {
 									<XAxis
 										domain={[0, upperBound]}
 										type="number"
-										tickFormatter={val => `$${moneyFormat(val)}`}
+										tickFormatter={val => `${moneyFormat(val)}`}
 									/>
 									<YAxis
 										dataKey="name"
@@ -276,7 +276,7 @@ function TrendsHistory() {
 										type="category"
 									/>
 									<Tooltip
-										formatter={() => `${incomeTotal > expenseTotal ? '' : '-'}$${moneyFormat(Math.abs(incomeTotal - expenseTotal))}`}
+										formatter={() => `${incomeTotal > expenseTotal ? '' : '-'}${moneyFormat(Math.abs(incomeTotal - expenseTotal))}`}
 										wrapperStyle={{
 											zIndex: 1000,
 										}}
