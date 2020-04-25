@@ -72,7 +72,7 @@ function BudgetItem(props: Props) {
 				<IonLabel>
 					{budget.name}
 					<p>
-						out of ${moneyFormat(budget.amount)}
+						out of {moneyFormat(budget.amount)}
 					</p>
 				</IonLabel>
 				<IonNote>
