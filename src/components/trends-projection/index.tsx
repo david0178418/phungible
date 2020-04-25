@@ -104,7 +104,6 @@ function TrendsProjection() {
 	}, []);
 
 	useEffect(() => {
-		console.log(111, inputRef.current);
 		inputRef.current?.getInputElement()
 		.then(el => {
 			el.setAttribute('list', 'ice-cream-flavors');
