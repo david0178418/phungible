@@ -22,7 +22,7 @@ function ProfileEditPage() {
 	] = useEditItem(createProfile, canSaveProfile);
 	const user = useContext(UserContext);
 	const activeProfile = useContext(ProfileContext);
-	const activeProfileSetter = useContext(ActiveProfileSetterContext); 
+	const activeProfileSetter = useContext(ActiveProfileSetterContext);
 	const [newUser, setNewUser] = useState('');
 	const {goBack} = useHistory();
 	const {

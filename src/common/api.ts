@@ -154,7 +154,7 @@ async function saveDoc<T extends Docs>(doc: T, collection: Collection) {
 
 export
 function getUsername(username: string) {
-	return getDoc<Username>(`${Collection.Usernames}/${username}`);
+	return getDoc<Username>(`${Collection.Usernames}/${username.toLowerCase()}`);
 }
 
 export
