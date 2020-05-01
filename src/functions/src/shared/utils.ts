@@ -125,6 +125,12 @@ function notNull<TValue>(value: TValue | null | undefined): value is TValue {
 }
 
 export
+function notFalsy<TValue>(value: TValue | null | undefined): value is TValue {
+    return !!value;
+}
+
+
+export
 function selectColor(n: number) {
 	const hue = n * 137.508; // use golden angle approximation
 	return `hsl(${hue},50%,75%)`;

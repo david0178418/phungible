@@ -142,8 +142,8 @@ function BudgetEditPage() {
 					<IonCol>
 						<ExpenseCategorySelector
 							label="Expense Category"
-							value={budget.expenseCategory}
-							onChange={expenseCategory => setProp('expenseCategory', expenseCategory)}
+							value={budget.expenseCategoryId}
+							onChange={expenseCategoryId => setProp('expenseCategoryId', expenseCategoryId)}
 						/>
 					</IonCol>
 				</IonRow>

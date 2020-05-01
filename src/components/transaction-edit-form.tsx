@@ -51,14 +51,14 @@ function TransactionEditForm(props: Props) {
 			'' :
 			transaction.towardAccountId;
 		
-		const expenseCategory = (type !== TransactionType.Expense) ?
-			null:
-			transaction.expenseCategory;
+		const expenseCategoryId = (type !== TransactionType.Expense) ?
+			'':
+			transaction.expenseCategoryId;
 
 		onUpdate({
 			...transaction,
 			type,
-			expenseCategory,
+			expenseCategoryId,
 			towardAccountId,
 			fromAccountId,
 		});
@@ -138,8 +138,8 @@ function TransactionEditForm(props: Props) {
 						<IonCol>
 							<ExpenseCategorySelector
 								label="Expense Category"
-								value={transaction.expenseCategory}
-								onChange={expenseCategory => updateProp('expenseCategory', expenseCategory)}
+								value={transaction.expenseCategoryId}
+								onChange={expenseCategoryId => updateProp('expenseCategoryId', expenseCategoryId)}
 							/>
 						</IonCol>
 					</IonRow>

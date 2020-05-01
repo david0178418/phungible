@@ -6,21 +6,13 @@ import {
 	IonSelectOption,
 } from '@ionic/react';
 import { alertController } from '@ionic/core';
-import { ExpenseCategory } from '@shared/interfaces';
 import { setCategory } from '@common/api';
 import { ProfileContext, RefreshActiveProfileContext } from '@common/contexts';
 
 interface Props {
 	label: string;
-	value: ExpenseCategory | null;
-	onChange(category: ExpenseCategory | null): void;
-}
-
-function selectedCategoryComparison(a: ExpenseCategory | null, b: ExpenseCategory | null) {
-	const aId = a && a.id;
-	const bId = b && b.id;
-
-	return aId === bId;
+	value: string;
+	onChange(category: string): void;
 }
 
 export
@@ -29,10 +21,10 @@ function ExpenseCategorySelector(props: Props) {
 	const activeProfileRefresher = useContext(RefreshActiveProfileContext);
 	const {
 		label,
-		value = null,
+		value = '',
 		onChange,
 	} = props;
-	const selectedCategory = value && profile?.transactionCategories.find(c => c.id === value.id);
+	// const selectedCategory = value && profile?.transactionCategories.find(c => c.id === value);
 
 	async function openCreateCategory() {
 		const alert = await alertController.create({
@@ -57,7 +49,7 @@ function ExpenseCategorySelector(props: Props) {
 
 							await activeProfileRefresher();
 
-							onChange(newCat);
+							onChange(newCat.id);
 						}
 					},
 				},
@@ -75,33 +67,26 @@ function ExpenseCategorySelector(props: Props) {
 				interfaceOptions={{
 					header: 'Categories',
 				}}
-				value={selectedCategory || value}
+				value={value}
 				onIonChange={({detail}) => {
-					onChange(detail.value || null);
-					detail.value === false && openCreateCategory();
+					console.log(detail.value);
+					detail.value === null ?
+						openCreateCategory() :
+						onChange(detail.value);
 				}}
-				compareWith={selectedCategoryComparison}
 			>
-				<IonSelectOption value={false} onClick={openCreateCategory}>
+				<IonSelectOption value={null} onClick={openCreateCategory}>
 					Add New Category
 				</IonSelectOption>
-				<IonSelectOption value={null}>Uncategoriezed</IonSelectOption>
+				<IonSelectOption value="">Uncategoriezed</IonSelectOption>
 				{profile?.transactionCategories.map(category => (
 					<IonSelectOption
 						key={category.id}
-						value={category}
+						value={category.id}
 					>
 						{category.label}
 					</IonSelectOption>
 				))}
-				{!selectedCategory && value && (
-					<IonSelectOption
-						key={value.id}
-						value={value}
-					>
-						{value.label}
-					</IonSelectOption>
-				)}
 			</IonSelect>
 		</IonItem>
 	);

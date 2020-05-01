@@ -120,14 +120,14 @@ function RecurringTransactionEditPage() {
 			'' :
 			transaction.towardAccountId;
 
-		const expenseCategory = (type !== TransactionType.Expense) ?
-			null:
-			transaction.expenseCategory;
+		const expenseCategoryId = (type !== TransactionType.Expense) ?
+			'':
+			transaction.expenseCategoryId;
 		
 		setTransaction({
 			...transaction,
 			type,
-			expenseCategory,
+			expenseCategoryId,
 			towardAccountId,
 			fromAccountId,
 		});
@@ -185,8 +185,8 @@ function RecurringTransactionEditPage() {
 					<IonCol>
 						<ExpenseCategorySelector
 							label="Expense Category"
-							value={transaction.expenseCategory}
-							onChange={expenseCategory => setProp('expenseCategory', expenseCategory)}
+							value={transaction.expenseCategoryId}
+							onChange={expenseCategoryId => setProp('expenseCategoryId', expenseCategoryId)}
 						/>
 					</IonCol>
 				</IonRow>

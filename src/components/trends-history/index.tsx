@@ -18,7 +18,7 @@ import {
 	IonFabButton,
 	IonFab,
 } from '@ionic/react';
-import { format, parse, sub, startOfDay } from 'date-fns';
+import { format, parse, sub, endOfDay, startOfDay } from 'date-fns';
 import { Colors, TransactionType, Transaction, ProfileCollection } from '@shared/interfaces';
 import { getProfileDocsInRange, saveProfileDoc } from '@common/api';
 import {
@@ -30,7 +30,7 @@ import {
 	BarChart,
 	Bar,
 } from 'recharts';
-import { moneyFormat, unique, notNull, generateColors } from '@shared/utils';
+import { moneyFormat, generateColors, findById, notFalsy } from '@shared/utils';
 import { ProfileContext } from '@common/contexts';
 import { TransactionItem } from '@components/transaction-item';
 import { useEditItem } from '@common/hooks';
@@ -44,7 +44,7 @@ export
 function TrendsHistory() {
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [fromDate, setFromDate] = useState(() => startOfDay(sub(new Date(), {months: 1})));
-	const [toDate, setToDate] = useState(() => startOfDay(new Date()));
+	const [toDate, setToDate] = useState(() => endOfDay(new Date()));
 	const [incomeTotal, setIncomeTotal] = useState(0);
 	const [expenseTotals, setExpenseTotals] = useState<any[]>([]);
 	const [colors, setColors] = useState<string[]>([]);
@@ -59,22 +59,21 @@ function TrendsHistory() {
 	);
 
 	async function update() {
+		if(!profile) {
+			return;
+		}
 		const ts = await getProfileDocsInRange<Transaction>(
 			fromDate,
 			toDate,
 			profile?.id || '',
 			ProfileCollection.Transactions,
 		);
-		const x = ts.map(t => t.expenseCategory).filter(notNull);
+		const categories = ts
+			.map(t => t.expenseCategoryId)
+			.filter(notFalsy);
 
-		setColors(
-			generateColors(
-				unique(x, 'id').length,
-			),
-		);
-
+		setColors(generateColors(categories.length));
 		setTransactions(ts);
-
 		setIncomeTotal(
 			ts
 				.filter(t => t.type === TransactionType.Income)
@@ -88,12 +87,11 @@ function TrendsHistory() {
 					].includes(t.type),
 				)
 				.reduce((catTotals, current) => {
-					const category = current.expenseCategory ?
-						current.expenseCategory.label:
-						'Uncategorized';
-					
-					catTotals[category] = catTotals[category] || 0;
-					catTotals[category] += current.amount;
+					const category = findById(current.expenseCategoryId, profile.transactionCategories);
+					const categoryLabel = category?.label || 'Uncategorized';
+
+					catTotals[categoryLabel] = catTotals[categoryLabel] || 0;
+					catTotals[categoryLabel] += current.amount;
 
 					return catTotals;
 				}, {} as any),
@@ -153,7 +151,7 @@ function TrendsHistory() {
 								value={format(toDate, 'yyyy-MM-dd')}
 								onIonChange={({detail}) =>{
 									if(typeof detail.value === 'string') {
-										detail.value && setToDate(parse(detail.value, 'yyyy-MM-dd', new Date()));
+										detail.value && setToDate(endOfDay(parse(detail.value, 'yyyy-MM-dd', new Date())));
 									}
 								}}
 							/>

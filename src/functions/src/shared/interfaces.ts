@@ -196,7 +196,7 @@ interface Budget {
 	repeatValues: number[];
 	date: string;
 	transactionType: TransactionType;
-	expenseCategory: ExpenseCategory | null;
+	expenseCategoryId: string;
 	// Needed??
 	// today: Date;
 	// towardAccountId: string | null;
@@ -213,7 +213,7 @@ interface CommonTransaction {
 	labels: string[];
 	name: string;
 	type: TransactionType;
-	expenseCategory: ExpenseCategory | null;
+	expenseCategoryId: string;
 }
 
 export
