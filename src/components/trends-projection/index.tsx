@@ -178,7 +178,7 @@ function TrendsProjection() {
 									>
 										<CartesianGrid strokeDasharray="3 3" />
 										<XAxis dataKey="date" />
-										<YAxis />
+										<YAxis tickFormatter={val => `${moneyFormat(val as number)}`}/>
 										<Tooltip
 											formatter={val => `${moneyFormat(val as number)}`}
 										/>
