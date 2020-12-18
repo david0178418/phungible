@@ -29,6 +29,10 @@ import { moneyFormat } from '@shared/utils';
 import { ProfileContext } from '@common/contexts';
 import { createAccount } from '@shared/create-docs';
 
+interface Params {
+	id?: string;
+}
+
 export
 function AccountEditPage() {
 	const profile = useContext(ProfileContext);
@@ -44,7 +48,7 @@ function AccountEditPage() {
 	const {goBack} = useHistory();
 	const {
 		id = '',
-	} = useParams();
+	} = useParams<Params>();
 	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {

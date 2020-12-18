@@ -12,6 +12,10 @@ import { personRemoveOutline } from 'ionicons/icons';
 import { filterKeys } from '@shared/utils';
 import { createProfile } from '@shared/create-docs';
 
+interface Params {
+	id?: string;
+}
+
 export
 function ProfileEditPage() {
 	const [
@@ -27,7 +31,7 @@ function ProfileEditPage() {
 	const {goBack} = useHistory();
 	const {
 		id = '',
-	} = useParams();
+	} = useParams<Params>();
 	const [loading, setLoading] = useState(!!id);
 	const isActiveProfile = activeProfile?.id === profile.id;
 

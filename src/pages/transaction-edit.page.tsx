@@ -9,6 +9,10 @@ import { canSaveTransaction } from '@common/validations';
 import { ProfileContext } from '@common/contexts';
 import { createTransaction } from '@shared/create-docs';
 
+interface Params {
+	id?: string;
+}
+
 export
 function TransactionEditPage() {
 	const profile = useContext(ProfileContext);
@@ -22,7 +26,7 @@ function TransactionEditPage() {
 	const {goBack} = useHistory();
 	const {
 		id = '',
-	} = useParams();
+	} = useParams<Params>();
 	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {

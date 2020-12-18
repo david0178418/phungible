@@ -31,6 +31,10 @@ import { ProfileContext } from '@common/contexts';
 import { createRecurringTransaction } from '@shared/create-docs';
 import { ExpenseCategorySelector } from '@components/expense-category-selector';
 
+interface Params {
+	id?: string;
+}
+
 export
 function RecurringTransactionEditPage() {
 	const profile = useContext(ProfileContext);
@@ -46,7 +50,7 @@ function RecurringTransactionEditPage() {
 	const {goBack} = useHistory();
 	const {
 		id = '',
-	} = useParams();
+	} = useParams<Params>();
 	const [loading, setLoading] = useState(!!id);
 
 	useEffect(() => {
